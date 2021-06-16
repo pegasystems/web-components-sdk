@@ -1,0 +1,272 @@
+# Web Components SDK
+
+The **Web Components SDK** provides Pega customers with a bridge from the Pega **Constellation JavaScript Engine** (part of the Pega Infinity&trade; product) to the Web Component bridge and components in this repository.
+
+# Prerequisites
+
+## Pega Infinity Server and Constellation-enabled Application 
+
+The Web Components SDK assumes that you have access to a Pega Infinity server (8.6 or higher) running an application that is configured to run using the Constellation UI service.
+
+We provide a sample application - **MediaCo** - to licensed Pega Infinity customers that is configured as a Constellation application.
+
+
+<br>
+
+---
+# Installing and Running the Application
+
+### Installing the Web Component SDK 
+
+1. Install 
+   ```
+   $ npm install
+   ```
+
+### Configure the Web Component SDK
+
+1. Edit **sdk-config.js** and, if necessary, update the values that will be used
+    * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
+    * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
+
+2. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from https://community.pega.com/ or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
+
+
+### Running the application
+
+1. **Development build and start** (1 or 2 terminal windows)
+   * full development clean and install of npm modules, and build; then start the server
+   ```
+   $ npm run build:dev:ci
+   $ npm run start (or starthttps)
+   ```
+   
+   * with live reload (use 2 terminals):
+   ```
+   $ npm run watch (with live reload) - in terminal 1
+   $ npm run start (or npm run starthttps) - in terminal 2
+   ```
+   or 
+   * without live reload (use 1 terminal)
+   ```
+   $ npm run build:dev (without live reload)
+   $ npm run start (or npm run starthttps)
+   ```
+
+2. **Production build and start (1 terminal)**
+   * full production clean and install of npm modules, and build; then start the server
+   ```
+   $ npm run build:prod:ci
+   $ npm run start (or starthttps)
+   ```
+   or
+   * build and start the server
+   ```
+   $ npm run build:prod
+   $ npm run start (or starthttps)
+   ```
+
+<br>
+
+### Access the sample application from your browser
+
+#### **Portal**
+1. Access **http://localhost:8484/** or **https://localhost:8484/** (if run starthttps was used)
+2. Use Login button to login to the configured application.
+
+#### **Mashup**
+1. Access **http://localhost:8484/mashup** or **https://localhost:8484/mashup** (if run starthttps was used)
+
+Note that these examples are for the default configuration. If you change the configuration to use a different host and/or port, adapt these URLs to your host:port as necessary.
+
+<br>
+
+---
+
+## Some setup tips
+<br>
+
+
+> **NOTE**: These setup tips are abstracted from the Web Components SDK Installation document that is available to licensed Pega Infinity customers at https://community.pega.com/
+
+<br>
+
+### Verify/update Cross Origin Resource Sharing (CORS) Infinity record
+
+The **APIHeadersAllowed** record on your Infinity server (found in Security | Cross Origin Resource Sharing) may need to be updated to allow the Web Components SDK calls to Pega REST APIs and DX APIs to interact with Infinity.
+
+For the **APIHeadersAllowed** CORS record, please confirm of update the record as follows:
+
+* **Allowed methods**
+  * **All 5 methods** should be checked: 
+  <br>
+  **GET, POST, PUT, PATCH, and DELETE**
+
+* **Allowed headers**
+  * The list of allowed request header should include the following:
+  <br>
+   **authorization, content-type, Access-Control-Expose-Headers, If-Match, pzCTKn, context, remotesystemid**
+
+* Exposed headers
+  * The list of allowed exposed headers should include the following:
+  <br>
+  **etag, remotesystemid**
+
+* **Save** the 2 record - **APIHeadersAllowed** – after making any changes.
+
+<br>
+
+---
+
+### Verify/update OAuth 2.0 Client Registration Infinity records
+
+The MediaCo sample application (available to Pega licensed users) includes OAuth Client Registration records that it uses for authentication in your Infinity server (available in Security | OAuth 2.0 Client Registration): **MediaCoOauthNoLogin** (for the mashup use case) and **MediaCoOauth** (for the portal use case).
+
+You may use these records. If you want to create your own OAuth 2.0 Client Registration record, please refer to the **How to create OAuth2 registration in Infinity** section found below.
+
+* For the **mashup** use case, you will use the OAuth 2.0 Client Registration record’s **Client ID** and **Client secret** as the values for **mashupClientId** and **mashupClientSecret** in the SDK’s **sdk-config.js** file.
+
+* For the **portal** use case, you will use the OAuth 2.0 Client Registration record’s **Client ID** as the value of **portalClientId** in the SDK’s **sdk-config.js** file.
+
+
+To ensure that the application is redirected to the proper page after authentication succeeds, you may need to update the OAuth 2.0 Client Registration record’s **List of redirect URIs** shown in the record’s **Supported grant types** section.
+
+The MediaCoOauth and MediaCoOauthNoLogin records that are included with the MediaCo sample application include the necessary redirect URIs for the default configuration:
+
+* http://localhost:8484/auth.html and https://localhost:8484/auth.html for the portal use case
+
+*	http://localhost:8484/mashup/auth.html and https://localhost:8484/mashup/auth.html for the mashup use case
+
+If you configure your installation to have the Web Components static content served from a different **host:port** than the default, you should add new Redirect URIs to the list:
+
+* In the **Supported grant types** section add the following URLS to the list of redirect URLs by clicking on the + sign. (Note that the default port is 8484.)
+
+  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/auth.html (for the portal use case)
+
+  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/auth.html (for the portal use case)
+
+  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/mashup/auth.html
+
+  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/mashup/auth.html
+
+  * Note that entries are needed for either **http** or **https** depending on how you access your Web Components SDK server
+
+ * **Save** the record
+
+<br>
+
+---
+
+### How to create an OAuth 2.0 Client Registration record in Infinity
+
+If the `MediaCo` app was imported to your Infinity server, a `MediaCoOAuth` OAuth 2.0 Client Registration record will have been imported as well. That record's clientId is currently referenced within sdk-config.json.  However, you can create your own OAuth 2.0 Client Registration record using the following procedure:
+   * Create a new "Security/OAuth 2.0 Client Registration" record for your app
+   * You might name it the same name as your applicaion
+   * Specify "Public" for the type of client (as browser apps are not able to prevent any "Client secret" from being compromised)
+   * Select "Authorization Code" for the Grant type
+   * Add a RedirectURI value based on the url used to access the deployed Web Components SDK (e.g., http://localhost:8484/auth.html)
+   * Enable the "Enable proof code for pkce" option
+   * Set the "Access token lifetime" for how long you want the logged in session to last.  Pega does not presently support the ability to referesh the token (for Public clients), so the user will have to reauthenticate again after this interval.
+   * Enter the appropriate values within **sdk-config.json** 
+
+<br>
+
+---
+
+### Setting up a secure self-signed certificate for localhost
+
+
+The following steps will enable setting up a secure self-signed certificate for localhost (adapted from the procedure outlined here: https://gist.github.com/pgilad/63ddb94e0691eebd502deee207ff62bd).  At the end of the process two files are expected within the root project directory: private.pem and private.key
+
+Step 1: Create a private key 
+   ```
+   $ openssl genrsa -out private.key 4096
+   ```
+
+
+Step 2: Create a Certificate configuration text file named ssl.conf within the root project directory.   Use the following (or adjusted content to reflect your location and desired organization):
+   ```
+[ req ]
+default_bits       = 4096
+distinguished_name = req_distinguished_name
+req_extensions     = req_ext
+
+[ req_distinguished_name ]
+countryName                 = US
+countryName_default         = US
+stateOrProvinceName         = Massachusetts
+stateOrProvinceName_default = Massachusetts
+localityName                = Westford
+localityName_default        = Westford
+organizationName            = Pegasystems
+organizationName_default    = Pegasystems
+organizationalUnitName      = DXIL
+organizationalUnitName_default = DXIL
+commonName                  = localhost
+commonName_max              = 64
+commonName_default          = localhost
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1   = localhost
+   ```
+
+Step 3: Create a Certificate Signing Request (will be prompted for a pass phrase for new key)
+
+   ```
+   $ openssl req -new -sha256 -out private.csr -in private.key -config ssl.conf
+   ```
+
+
+Step 4: Generate the Certificate
+   ```
+   $ openssl x509 -req -days 3650 -in private.csr -signkey private.key -out private.crt -extensions req_ext -extfile ssl.conf
+   ```
+
+Step 5: Add the Certificate to the keychain and trust it (will be prompted for Mac system password)
+   ```
+   $ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain private.crt
+   ```
+
+Step 6: Cerate a pem file from crt
+   ```
+   $ openssl x509 -in private.crt -out private.pem -outform PEM
+   ```
+Step 7: Run webpack server with arguments to use the keys (assumes private.pem and private.key are in root project directory).  May need to close prior open instances of browser (if previously accessed prior insecure localhost)
+
+   ```
+   $ npm run localhostsecure
+   ```
+<br>
+
+---
+
+   ## License
+
+This project is licensed under the terms of the **Apache 2** license.
+
+>You can see the full license [here](docs/LICENSE) or directly on [apache.org](https://www.apache.org/licenses/LICENSE-2.0).
+
+<br>
+
+---
+
+## Contributing
+
+We welcome contributions to the Web Components SDK project.
+
+Please refer to our [guidelines for contributors](./docs/CONTRIBUTING.md) if you are interested in helping. 
+
+<br>
+
+
+---
+   
+## Additional Resources
+
+* __LitElement__: https://lit-element.polymer-project.org/guide
+* __lit-html__: https://lit-html.polymer-project.org/guide
+* __Lion Web Components GitHub__: https://github.com/ing-bank/lion
+* __Lion Web Components Documentation Site__: https://lion-web.netlify.app/
