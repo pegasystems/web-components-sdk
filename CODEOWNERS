@@ -1,4 +1,5 @@
-# Either put this in a file called CODEOWNERS or .bitbucket/CODEOWNERS
+# For more info about CODEOWNERS, refer to
+#   https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners
 # Every line is a file pattern that is followed by one or more code owners.
 # Lines starting with # are comments.
 #

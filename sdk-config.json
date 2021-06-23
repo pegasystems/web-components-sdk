@@ -1,0 +1,36 @@
+{
+  "comment_sdk_config": "This is the configuration file for the Web-Components-SDK",
+  "authConfig": {
+    "comment_authConfig": "authConfig is the block for authentication config entries",
+
+    "accessAuthUris_comment": "Full paths to Infinity server access token and authorization APIs",
+    "accessTokenUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1/token",
+    "authorizationUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1/authorize",
+    
+    "authQueryParams_comment": "Additional parameters that are passed to the OpenID Connect (OIDC) Manager",
+    "authQueryParams": { "authentication_service": "pega" },
+        
+    "mashupClient_comment": "Client ID and Client secret from the OAuth 2.0 Client Registration record used for mashup use case",
+    "mashupClientId": "12595401538569726922",    
+    "mashupClientSecret": "CC374FD41B4F0726C7F2A4DD8CE1E991",
+    
+    "portalClientId_comment": "Client ID from the OAuth 2.0 Client Registration record used for portal use case",
+    "portalClientId": "88249793673398954156"
+  },
+  "serverConfig": {
+    "comment_serverConfig": "serverConfig is the block for SDK Content Server config entries",
+    
+    "infinityRestServerUrl_comment": "Full path to Infinity REST server",
+    "infinityRestServerUrl": "https://localhost:1080/prweb",
+
+    "sdkContentServerUrl_comment": "If specified, the given URL will be used. If left blank, window.location.origin will be used.",
+    "sdkContentServerUrl": "",
+    
+    "locBootstrapCSS_comment": "relative path to the Bootstrap CSS file to be used by the SDK components",
+    "locBootstrapCSS": "./assets/css/bootstrap.min.css",
+
+    "appPortal_comment": "If specified, the given appPortal will be loaded. If left blank, the operator's default Portal is used. Ignored for Mashup",
+    "appPortal": ""
+
+  }
+}
