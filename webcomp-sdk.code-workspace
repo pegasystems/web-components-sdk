@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.autoSave": "afterDelay",
+		"debug.allowBreakpointsEverywhere": true,
+		"debug.toolBarLocation": "docked",
+		"git.ignoreLimitWarning": true
+	}
+}

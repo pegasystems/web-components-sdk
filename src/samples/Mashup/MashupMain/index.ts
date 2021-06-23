@@ -1,0 +1,171 @@
+import { html, customElement, property, LitElement } from '@lion/core';
+import { SdkConfigAccess } from '../../../helpers/config_access';
+
+import '@lion/button/define';
+import '@lion/textarea/define';
+import '../../../components/OAuthLogin/oauth-login';
+import '../../../components/OAuthLogin/oauth-popup';
+
+import '../MashupMainScreen';
+
+// Declare that PCore will be defined when this code is run
+declare var PCore: any;
+
+
+// NOTE: you need to import ANY component you may render.
+
+// import the component's styles as HTML with <style>
+import { mashupMainStyles } from './mashup-main-styles';
+
+
+
+
+// Declare that PCore will be defined when this code is run
+declare var PCore: any;
+declare var myLoadMashup: any;
+
+@customElement('mashup-main-component')
+class MashupMain extends LitElement {
+
+  bHasPConnect: boolean = false;
+  
+  @property( {attribute: false, type: Object } ) props; 
+
+
+
+  // NOTE: MashupMain is NOT derived from BridgeBase; just derived from LitElement
+  constructor() {
+    super();
+
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.startMashup();
+
+  }
+
+
+  disconnectedCallback() {
+    // The super call will call storeUnsubscribe...
+    super.disconnectedCallback();
+
+
+  }
+
+
+  getToolbarHtml() : any {
+    const tBHtml = html `
+      <div class="cc-toolbar">
+        <h1>${PCore.getEnvironmentInfo().getApplicationLabel()}&nbsp;</h1><img src="./assets/img/antenna.svg" class="cc-icon">
+      </div>
+    `;
+
+    return tBHtml;
+  }
+
+  getMainHtml() : any {
+    const mHtml = html `
+      <div>
+        <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
+      </div>
+    `;
+
+  
+    return mHtml;
+  }
+
+
+  getMashupMainHtml() : any {
+
+    const mMHtml: any[] = [];
+
+    mMHtml.push(html `${this.getToolbarHtml()}`);
+
+    if (this.bHasPConnect) {
+      mMHtml.push(html `${this.getMainHtml()}`);
+    }
+
+
+
+  
+
+
+    return mMHtml;
+  }
+
+
+  render(){
+
+    const sContent = this.getMashupMainHtml();
+    const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
+
+    let arHtml: any[] = [];
+
+    // MashupMain not derived from BridgeBase, so we need to load Bootstrap CSS
+    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+
+    arHtml.push(mashupMainStyles);
+    arHtml.push(sContent);
+
+    return arHtml;
+
+  }
+
+
+  /**
+   * kick off the Mashup that we're trying to serve up
+   */
+   startMashup() {
+    
+    // NOTE: When loadMashup is complete, this will be called.
+    PCore.onPCoreReady(renderObj => {
+
+
+      // Now, do the initial render...
+      this.initialRender(renderObj);
+
+    });
+
+    // load the Mashup and handle the onPCoreEntry response that establishes the
+    //  top level Pega root element (likely a RootContainer)
+
+    // eslint-disable-next-line no-undef
+    myLoadMashup("pega-root", false);   // this is defined in bootstrap shell that's been loaded already
+
+  }
+
+  /**
+   * Callback from onPCoreReady that's called once the top-level render object
+   * is ready to be rendered
+   * @param inRenderObj the initial, top-level PConnect object to render
+   */
+  initialRender(inRenderObj) {
+
+
+    ////// This was done on login and kicked off the creation of this
+    //////  AppEntry. So don't need to to do this.
+    // With Constellation Ready, replace <div id="pega-here"></div>
+    //  with top-level ViewContainer
+    // const replaceMe = document.getElementById("pega-here");
+    // const replacement = document.createElement("app-entry");
+    // replacement.setAttribute("id", "pega-root");
+    // if (replaceMe) { replaceMe.replaceWith(replacement); }
+
+    this.bHasPConnect = true;
+
+    const { props } = inRenderObj;
+    this.props = props;
+
+    // this.thePConnComponentName = this.props.getPConnect().getComponentName();
+
+    // console.log(` --> thePConnComponentName: ${this.thePConnComponentName}`);
+
+  }
+
+
+
+}
+
+export default MashupMain;
