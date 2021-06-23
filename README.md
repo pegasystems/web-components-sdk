@@ -1,3 +1,5 @@
+<p align="center"><img width=60% src="docs/media/WebCompSDK-Logo.png">
+
 # Web Components SDK
 
 The **Web Components SDK** provides Pega customers with a bridge from the Pega **Constellation JavaScript Engine** (part of the Pega Infinity&trade; product) to the Web Component bridge and components in this repository.
@@ -6,7 +8,7 @@ The **Web Components SDK** provides Pega customers with a bridge from the Pega *
 
 ## Pega Infinity Server and Constellation-enabled Application 
 
-The Web Components SDK assumes that you have access to a Pega Infinity server (8.6 or higher) running an application that is configured to run using the Constellation UI service.
+The Web Components SDK assumes that you have access to a Pega Infinity server (8.6 GA) running an application that is configured to run using the Constellation UI service.
 
 We provide a sample application - **MediaCo** - to licensed Pega Infinity customers that is configured as a Constellation application.
 
@@ -38,44 +40,44 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
    * full development clean and install of npm modules, and build; then start the server
    ```
    $ npm run build:dev:ci
-   $ npm run start (or starthttps)
+   $ npm run start (or start-https)
    ```
    
    * with live reload (use 2 terminals):
    ```
    $ npm run watch (with live reload) - in terminal 1
-   $ npm run start (or npm run starthttps) - in terminal 2
+   $ npm run start (or npm run start-https) - in terminal 2
    ```
    or 
    * without live reload (use 1 terminal)
    ```
    $ npm run build:dev (without live reload)
-   $ npm run start (or npm run starthttps)
+   $ npm run start (or npm run start-https)
    ```
 
 2. **Production build and start (1 terminal)**
    * full production clean and install of npm modules, and build; then start the server
    ```
    $ npm run build:prod:ci
-   $ npm run start (or starthttps)
+   $ npm run start (or start-https)
    ```
    or
    * build and start the server
    ```
    $ npm run build:prod
-   $ npm run start (or starthttps)
+   $ npm run start (or start-https)
    ```
 
 <br>
 
 ### Access the sample application from your browser
 
-#### **Portal**
-1. Access **http://localhost:8484/** or **https://localhost:8484/** (if run starthttps was used)
-2. Use Login button to login to the configured application.
+#### **Embedded** (formerly known as Mashup)
+1. Access **http://localhost:8484/embedded** or **https://localhost:8484/embedded** (if run start-https was used)
 
-#### **Mashup**
-1. Access **http://localhost:8484/mashup** or **https://localhost:8484/mashup** (if run starthttps was used)
+#### **Portal**
+1. Access **http://localhost:8484/fullportal** or **https://localhost:8484/fullportal** (if run start-https was used)
+2. Use Login button to login to the configured application.
 
 Note that these examples are for the default configuration. If you change the configuration to use a different host and/or port, adapt these URLs to your host:port as necessary.
 
@@ -87,7 +89,7 @@ Note that these examples are for the default configuration. If you change the co
 <br>
 
 
-> **NOTE**: These setup tips are abstracted from the Web Components SDK Installation document that is available to licensed Pega Infinity customers at https://community.pega.com/
+> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available to licensed Pega Infinity clients at https://community.pega.com/
 
 <br>
 
@@ -99,20 +101,17 @@ For the **APIHeadersAllowed** CORS record, please confirm of update the record a
 
 * **Allowed methods**
   * **All 5 methods** should be checked: 
-  <br>
   **GET, POST, PUT, PATCH, and DELETE**
 
 * **Allowed headers**
-  * The list of allowed request header should include the following:
-  <br>
-   **authorization, content-type, Access-Control-Expose-Headers, If-Match, pzCTKn, context, remotesystemid**
+  * The list of allowed request header should include the following: 
+  **authorization, content-type, Access-Control-Expose-Headers, If-Match, pzCTKn, context, remotesystemid**
 
 * Exposed headers
   * The list of allowed exposed headers should include the following:
-  <br>
   **etag, remotesystemid**
 
-* **Save** the 2 record - **APIHeadersAllowed** – after making any changes.
+* **Save** the record - **APIHeadersAllowed** – after making any changes.
 
 <br>
 
@@ -120,22 +119,22 @@ For the **APIHeadersAllowed** CORS record, please confirm of update the record a
 
 ### Verify/update OAuth 2.0 Client Registration Infinity records
 
-The MediaCo sample application (available to Pega licensed users) includes OAuth Client Registration records that it uses for authentication in your Infinity server (available in Security | OAuth 2.0 Client Registration): **MediaCoOauthNoLogin** (for the mashup use case) and **MediaCoOauth** (for the portal use case).
+The MediaCo sample application (available to Pega licensed users) includes OAuth Client Registration records that it uses for authentication in your Infinity server (available in Security | OAuth 2.0 Client Registration): **MediaCoOauthNoLogin** (for the Embedded use case) and **MediaCoOauth** (for the Portal use case).
 
 You may use these records. If you want to create your own OAuth 2.0 Client Registration record, please refer to the **How to create OAuth2 registration in Infinity** section found below.
 
-* For the **mashup** use case, you will use the OAuth 2.0 Client Registration record’s **Client ID** and **Client secret** as the values for **mashupClientId** and **mashupClientSecret** in the SDK’s **sdk-config.js** file.
+* For the **Embedded** use case, you will use the OAuth 2.0 Client Registration record’s **Client ID** and **Client secret** as the values for **mashupClientId** and **mashupClientSecret** in the SDK’s **sdk-config.js** file.
 
-* For the **portal** use case, you will use the OAuth 2.0 Client Registration record’s **Client ID** as the value of **portalClientId** in the SDK’s **sdk-config.js** file.
+* For the **Portal** use case, you will use the OAuth 2.0 Client Registration record’s **Client ID** as the value of **portalClientId** in the SDK’s **sdk-config.js** file.
 
 
 To ensure that the application is redirected to the proper page after authentication succeeds, you may need to update the OAuth 2.0 Client Registration record’s **List of redirect URIs** shown in the record’s **Supported grant types** section.
 
 The MediaCoOauth and MediaCoOauthNoLogin records that are included with the MediaCo sample application include the necessary redirect URIs for the default configuration:
 
-* http://localhost:8484/auth.html and https://localhost:8484/auth.html for the portal use case
+* http://localhost:8484/auth.html and https://localhost:8484/auth.html for the Portal use case
 
-*	http://localhost:8484/mashup/auth.html and https://localhost:8484/mashup/auth.html for the mashup use case
+*	http://localhost:8484/mashup/auth.html and https://localhost:8484/mashup/auth.html for the Embedded use case
 
 If you configure your installation to have the Web Components static content served from a different **host:port** than the default, you should add new Redirect URIs to the list:
 

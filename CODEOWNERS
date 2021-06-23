@@ -1,0 +1,59 @@
+# Either put this in a file called CODEOWNERS or .bitbucket/CODEOWNERS
+# Every line is a file pattern that is followed by one or more code owners.
+# Lines starting with # are comments.
+#
+# This user will be the default owner for everything in the repo.
+# *                        @PeterTheHacker
+#
+# Ordering is important! The last matching file pattern has the highest precedence.
+# So if only a Java file is in the pull request, PeterTheJavaExpert is the code owner
+# and not the default owner PeterTheHacker.
+# *.java                   @PeterTheJavaExpert
+#
+# You can also use Bitbucket groups which start with '@@' compared to single users.
+# This will add all members of the Bitbucket group JSExperts.
+# * .js                     @PaulTheJSGuru @@JSExperts
+#
+# If you want, you can define your own code owner groups instead of using Bitbucket groups.
+# This will define a new group MyDevs, both including users and other groups:
+# @@@MyDevs                @PeterTheHacker  @PeterTheJavaExpert ann@scala.lang @@JSDevs
+#
+# For Bitbucket users and groups with spaces in their name, put them into double quotes.
+# *.ts                     @"Paul the JSGuru" @@"Dev Ops Team"
+#
+# You can also specify code owners by email address if you prefer:
+# docs/*                   docs@example.com
+#
+# When your glob expression contains spaces, put the glob into double quotes.
+# "a/path with spaces/*"   docs@example.com
+#
+# Files starting with a `#` can still be used by escaping them.
+# \#myfile.rb              @PeterTheHacker
+#
+# AnnTheScalaPro is the code owner of all files in the /src/main/scala directory at
+# the root and all its descendants (e.g., /src/main/scala/com/x/y/z.scala).
+# /src/main/scala/         @AnnTheScalaPro
+#
+# ci/* will match all files in the directory ci, but not deeper in
+# the directory hierarchy (so ci/jobs/prod.yml will not match).
+# ci/*                     @devops
+#
+# It's also possible to use double-asterisk globs. Here's an example that will match
+# all JS files under /src/components.
+# src/components/**/*.js   @@MyDevs
+#
+# Finally, GroovyMaster owns any files in the groovy directory anywhere in the file
+# tree (e.g., src/main/groovy/com/x/y/z.groovy).
+# groovy/                  @GroovyMaster
+#
+#######################################################################
+#
+# code owner groups follow
+
+@@@DXIL                 @JEAxero
+
+# This user/group will be the default owner for everything in the repo.
+*                       @@DXIL
+
+# CODEOWNERS best practice is to protect the CODEOWNERS file itself last
+CODEOWNERS              @@DXIL
