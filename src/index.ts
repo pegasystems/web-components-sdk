@@ -20,6 +20,7 @@ document.addEventListener("UserManagerReady", () => {
         {path: '/', component: 'mashup-portal-component'},
         {path: '/embedded', component: 'mashup-portal-component'},
         {path: '/mashup', component: 'mashup-portal-component'},
+        {path: '/portal', component: 'full-portal-component'},
         {path: '/fullportal', component: 'full-portal-component'},
         {path: '/simpleportal', component: 'simple-portal-component'},
         

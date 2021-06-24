@@ -136,11 +136,11 @@ export const authRedirectCallback = ( href, fnLoggedInCB=null ) => {
                 break;
 
             case "full-portal-component":
-                path = "fullportal";
+                path = "portal";
                 break;
 
             case "mashup-portal-component":
-                path = "mashup";
+                path = "embedded";
                 break;
 
             default:

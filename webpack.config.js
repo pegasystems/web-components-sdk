@@ -115,7 +115,7 @@ module.exports = (env, argv) => {
         historyApiFallback: true,
         host: "localhost",
         port: 8484,
-        open: true
+        open: false
     },
     devtool: argv.mode === 'production' ? false : 'inline-source-map',
     plugins: pluginsToAdd,
