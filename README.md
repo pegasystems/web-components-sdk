@@ -4,6 +4,12 @@
 
 The **Web Components SDK** provides Pega customers with a bridge from the Pega **Constellation JavaScript Engine** (part of the Pega Infinity&trade; product) to the Web Component bridge and components in this repository.
 
+Many of the components in this SDK are built using [Lion web components](https://lion-web.netlify.app/) - open source components that are designed to be extended and allow for flexible integrations. These are, in turn, built with 
+[LitElement](https://lit-element.polymer-project.org/guide) 
+and [lit-html](https://lit-html.polymer-project.org/guide).
+
+<br>
+
 # Prerequisites
 
 ## Pega Infinity Server and Constellation-enabled Application 
@@ -76,16 +82,18 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
 1. Access **http://localhost:8484/embedded** or **https://localhost:8484/embedded** (if run start-https was used)
 
 #### **Portal**
-1. Access **http://localhost:8484/fullportal** or **https://localhost:8484/fullportal** (if run start-https was used)
+1. Access **http://localhost:8484/portal** or **https://localhost:8484/portal** (if run start-https was used)
 2. Use Login button to login to the configured application.
 
-Note that these examples are for the default configuration. If you change the configuration to use a different host and/or port, adapt these URLs to your host:port as necessary.
+**If you see a blank page**, please check your JavaScript console to see if you have encountered a net::ERR_CERT_INVALID error. If you encounter this error, please see the troubleshooting section below: **Runtime Error: net::ERR_CERT_INVALID**. Due to browser interactions during login, it can be easier to find and fix this error using the Portal URL.
+
+Note that the examples above are for the default configuration. If you change the configuration to use a different host and/or port, adapt these URLs to your host:port as necessary.
 
 <br>
 
 ---
 
-## Some setup tips
+## Some setup and troubleshooting tips
 <br>
 
 
@@ -112,6 +120,26 @@ For the **APIHeadersAllowed** CORS record, please confirm of update the record a
   **etag, remotesystemid**
 
 * **Save** the record - **APIHeadersAllowed** – after making any changes.
+
+<br>
+
+### Runtime Error: net::ERR_CERT_INVALID
+
+Browsers are becoming much less tolerant with local, self-signed certificates or when no local, self-signed certificate exists. If you don’t have a trusted self-signed certificate and launch your application, you may see a blank screen accompanied by an error similar to this in your JS console:
+
+POST https://localhost:1080/prweb/PRRestService/oauth2/v1/token **net::ERR_CERT_INVALID**
+
+Typically, you can resolve this error by indicating to your browser that you are willing to trust the local certificate that’s being used. Here are a few links that we’ve found useful for solving this problem for various browsers:
+
+* https://kinsta.com/knowledgebase/neterr-cert-authority-invalid/
+
+* https://stackoverflow.com/questions/65816432/disable-any-cert-check-on-localhost-on-chrome
+
+* In Chrome, Brave, or Edge, you can temporarily resolve this error by enabling the “Allow invalid certificates for resources loaded from localhost using this URL:
+[chrome://flags/#allow-insecure-localhost](chrome://flags/#allow-insecure-localhost)
+
+
+
 
 <br>
 
