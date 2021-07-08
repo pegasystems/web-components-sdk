@@ -24,14 +24,14 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
 ---
 # Installing and Running the Application
 
-### Installing the Web Component SDK 
+### Installing the Web Components SDK 
 
 1. Install 
    ```
    $ npm install
    ```
 
-### Configure the Web Component SDK
+### Configure the Web Components SDK
 
 1. Edit **sdk-config.js** and, if necessary, update the values that will be used
     * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
@@ -164,7 +164,7 @@ The MediaCoOauth and MediaCoOauthNoLogin records that are included with the Medi
 
 *	http://localhost:8484/mashup/auth.html and https://localhost:8484/mashup/auth.html for the Embedded use case
 
-If you configure your installation to have the Web Components static content served from a different **host:port** than the default, you should add new Redirect URIs to the list:
+If you configure your installation to have the Web Components SDK static content served from a different **host:port** than the default, you should add new Redirect URIs to the list:
 
 * In the **Supported grant types** section add the following URLS to the list of redirect URLs by clicking on the + sign. (Note that the default port is 8484.)
 
@@ -257,7 +257,7 @@ Step 5: Add the Certificate to the keychain and trust it (will be prompted for M
    $ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain private.crt
    ```
 
-Step 6: Cerate a pem file from crt
+Step 6: Create a pem file from crt
    ```
    $ openssl x509 -in private.crt -out private.pem -outform PEM
    ```
