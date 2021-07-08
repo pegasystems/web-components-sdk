@@ -24,51 +24,57 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
 ---
 # Installing and Running the Application
 
-### Installing the Web Components SDK 
+### **Install** the Web Components SDK 
 
 1. Install 
-   ```
-   $ npm install
-   ```
 
-### Configure the Web Components SDK
+    ```
+    $ npm install
+    ```
 
-1. Edit **sdk-config.js** and, if necessary, update the values that will be used
+### **Configure** the Web Components SDK
+
+2. Edit **sdk-config.js** and, if necessary, update the values that will be used
     * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
     * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
+<br><br>
+3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from https://community.pega.com/ or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
 
-2. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from https://community.pega.com/ or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
 
+### **Run** the application
 
-### Running the application
+4. **Development build and start** (1 or 2 terminal windows)
 
-1. **Development build and start** (1 or 2 terminal windows)
-   * full development clean and install of npm modules, and build; then start the server
+    4.1 Full development clean and install of npm modules, and build; then start the server
    ```
    $ npm run build:dev:ci
    $ npm run start (or start-https)
    ```
-   
-   * with live reload (use 2 terminals):
+   or <br>
+
+    4.2 Build and run with live reload (use 2 terminals - assumes npm install has already been run):
    ```
    $ npm run watch (with live reload) - in terminal 1
    $ npm run start (or npm run start-https) - in terminal 2
    ```
    or 
-   * without live reload (use 1 terminal)
+
+    4.3 Build and run without live reload (use 1 terminal - assumes npm install has already been run)
    ```
    $ npm run build:dev (without live reload)
    $ npm run start (or npm run start-https)
    ```
 
-2. **Production build and start (1 terminal)**
-   * full production clean and install of npm modules, and build; then start the server
+5. **Production build and start (1 terminal)**
+
+    5.1 Full production clean and install of npm modules, and build; then start the server
    ```
    $ npm run build:prod:ci
    $ npm run start (or start-https)
    ```
-   or
-   * build and start the server
+   or <br>
+
+    5.2 Build and start the server (assumes npm install has already been run)
    ```
    $ npm run build:prod
    $ npm run start (or start-https)
@@ -76,16 +82,17 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
 
 <br>
 
-### Access the sample application from your browser
+### **Access** the sample application from your browser
 
-#### **Embedded** (formerly known as Mashup)
-1. Access **http://localhost:8484/embedded** or **https://localhost:8484/embedded** (if run start-https was used)
+6. **Embedded** (formerly known as Mashup)
 
-#### **Portal**
-1. Access **http://localhost:8484/portal** or **https://localhost:8484/portal** (if run start-https was used)
-2. Use Login button to login to the configured application.
+    6.1 Access **http://localhost:8484/embedded** or **https://localhost:8484/embedded** (if run start-https was used)
 
-**If you see a blank page**, please check your JavaScript console to see if you have encountered a net::ERR_CERT_INVALID error. If you encounter this error, please see the troubleshooting section below: **Runtime Error: net::ERR_CERT_INVALID**. Due to browser interactions during login, it can be easier to find and fix this error using the Portal URL.
+7.  **Portal**
+
+    7.1 Access **http://localhost:8484/portal** or **https://localhost:8484/portal** (if run start-https was used)
+
+    **If you see a blank page**, please check your JavaScript console to see if you have encountered a net::ERR_CERT_INVALID error. If you encounter this error, please see the troubleshooting section below: **Runtime Error: net::ERR_CERT_INVALID**. Due to browser interactions during login, it can be easier to find and fix this error using the Portal URL.
 
 Note that the examples above are for the default configuration. If you change the configuration to use a different host and/or port, adapt these URLs to your host:port as necessary.
 
