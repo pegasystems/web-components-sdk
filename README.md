@@ -8,6 +8,8 @@ Many of the components in this SDK are built using [Lion web components](https:/
 [LitElement](https://lit-element.polymer-project.org/guide) 
 and [lit-html](https://lit-html.polymer-project.org/guide).
 
+Note: The Web Components SDK is offered in early adopter mode. It is built on the new and modernized UI technology stack (the Constellation JavaScript Engine and Constellation JavaScript API). Currently offering a limited feature set, the Web Components SDK is likely not yet suitable for production applications.
+
 <br>
 
 # Prerequisites
