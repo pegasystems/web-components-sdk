@@ -16,7 +16,7 @@ and [lit-html](https://lit-html.polymer-project.org/guide).
 
 The Web Components SDK assumes that you have access to a Pega Infinity server (8.6 GA) running an application that is configured to run using the Constellation UI service.
 
-We provide a sample application - **MediaCo** - to licensed Pega Infinity customers that is configured as a Constellation application.
+We provide a sample application - **MediaCo** - to licensed Pega Infinity customers that is configured as a Constellation application. The sample application can be found in the Web Components SDK download associated with this repo available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk)
 
 
 <br>
@@ -38,7 +38,7 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
     * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
     * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
 <br><br>
-3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from https://community.pega.com/ or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
+3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from https://community.pega.com/marketplace/components/web-components-sdk or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
 
 
 ### **Run** the application
@@ -281,7 +281,7 @@ Step 7: Run webpack server with arguments to use the keys (assumes private.pem a
 
 This project is licensed under the terms of the **Apache 2** license.
 
->You can see the full license [here](docs/LICENSE) or directly on [apache.org](https://www.apache.org/licenses/LICENSE-2.0).
+>You can see the full license [here](LICENSE) or directly on [apache.org](https://www.apache.org/licenses/LICENSE-2.0).
 
 <br>
 
