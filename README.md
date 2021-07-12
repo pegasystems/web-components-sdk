@@ -38,7 +38,7 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
     * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
     * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
 <br><br>
-3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from https://community.pega.com/marketplace/components/web-components-sdk or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
+3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk) or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
 
 
 ### **Run** the application
