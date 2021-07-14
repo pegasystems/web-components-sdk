@@ -21,7 +21,7 @@ const initUserManager = () => {
         const userManagerConfig = {
             client_id: authConfig.portalClientId,
             response_type: 'code',
-            authority: authConfig.authorizationUri.split("/v1/")[0] + "/v1/",
+            authority: authConfig.authorityUri,
             loadUserInfo: false,
             metadata: {
                 authorization_endpoint: authConfig.authorizationUri,
@@ -122,7 +122,7 @@ export const authIsSignedIn = () => {
 
 export const authRedirectCallback = ( href, fnLoggedInCB=null ) => {
 
-    userManager.signinRedirectCallback(href).then( user => {
+    userManager.signinRedirectCallback(href).then( () => {
 
         userIsSignedIn = true;
 
@@ -182,7 +182,9 @@ export const authMashupLogin = () => {
     if( authConfig.mashupClientSecret ) {
         urlSearchParams.set("client_secret", authConfig.mashupClientSecret);
     }
-    urlSearchParams.set("grant_type", "client_credentials");
+
+    const grantType = authConfig.mashupGrantType;
+    urlSearchParams.set("grant_type", grantType);
 
     const response = fetch (authConfig.accessTokenUri ,
         {

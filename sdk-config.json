@@ -6,6 +6,7 @@
     "accessAuthUris_comment": "Full paths to Infinity server access token and authorization APIs",
     "accessTokenUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1/token",
     "authorizationUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1/authorize",
+    "authorityUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1",
     
     "authQueryParams_comment": "Additional parameters that are passed to the OpenID Connect (OIDC) Manager",
     "authQueryParams": { "authentication_service": "pega" },
@@ -13,6 +14,7 @@
     "mashupClient_comment": "Client ID and Client secret from the OAuth 2.0 Client Registration record used for mashup use case",
     "mashupClientId": "12595401538569726922",    
     "mashupClientSecret": "CC374FD41B4F0726C7F2A4DD8CE1E991",
+    "mashupGrantType": "client_credentials",
     
     "portalClientId_comment": "Client ID from the OAuth 2.0 Client Registration record used for portal use case",
     "portalClientId": "88249793673398954156"
