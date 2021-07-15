@@ -88,7 +88,7 @@ class CaseView extends BridgeBase {
 
     // if id has changed, mark flow container needs to init container
     if (this.hasCaseIDChanged()) {
-      window.localStorage.setItem("okToInitFlowContainer", "true");
+      window.sessionStorage.setItem("okToInitFlowContainer", "true");
     }
 
     if (!this.displayOnlyFA) {
