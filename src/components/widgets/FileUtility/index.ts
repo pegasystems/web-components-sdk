@@ -205,6 +205,14 @@ class FileUtility extends BridgeBase {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
     if (this.bDebug){ debugger; }
 
+    // adding a property to track in configProps, when ever the attachment file changes
+    // need to trigger a redraw
+    this.thePConn.registerAdditionalProps({
+      lastRefreshTime: `@P ${
+        PCore.getConstants().SUMMARY_OF_ATTACHMENTS_LAST_REFRESH_TIME
+      }`
+    });
+
     const bShouldUpdate = super.shouldComponentUpdate();
 
 
