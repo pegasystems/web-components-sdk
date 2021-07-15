@@ -110,7 +110,7 @@ class FlowContainer extends BridgeBase {
       flowContainerTarget
     );
 
-    window.localStorage.setItem("okToInitFlowContainer", "false");
+    window.sessionStorage.setItem("okToInitFlowContainer", "false");
 
     if (!isContainerItemAvailable) {
       containerMgr.initializeContainers({
@@ -259,7 +259,7 @@ class FlowContainer extends BridgeBase {
       this.todo_showTodo = false; 
 
       // this is different than Angular SDK, as we need to initContainer if root container reloaded
-      if (window.localStorage.getItem("okToInitFlowContainer") == "true") {
+      if (window.sessionStorage.getItem("okToInitFlowContainer") == "true") {
           this.initContainer();
       }
     }

@@ -76,7 +76,7 @@ class RootContainer extends BridgeBase {
 
     // becasue of Web Component frame work not calling constructor when root container updates, need to tell
     // flow container when to init
-    window.localStorage.setItem("okToInitFlowContainer", "true");
+    window.sessionStorage.setItem("okToInitFlowContainer", "true");
 
     this.modalViewContainerConn = configObjModal.getPConnect();
 
@@ -152,7 +152,7 @@ class RootContainer extends BridgeBase {
 
       // becasue of Web Component frame work not calling constructor when root container updates, need to tell
       // flow container when to init
-      window.localStorage.setItem("okToInitFlowContainer", "true");
+      window.sessionStorage.setItem("okToInitFlowContainer", "true");
       
       const theChildren = this.children;
       if (theChildren && (theChildren.length == 1)) {
