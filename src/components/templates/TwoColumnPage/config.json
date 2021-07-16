@@ -1,0 +1,23 @@
+{
+  "name": "TwoColumnPage",
+  "label": "Two column",
+  "description": "TwoColumn Page Template",
+  "type": "Template",
+  "subtype": "PAGE",
+  "icon": "TwoColumnPage.svg",
+  "viewNameLabel": "Page title",
+  "properties": [
+    {
+      "name": "A",
+      "label": "Region A",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Widgets", "Views", "Insights"]
+    },
+    {
+      "name": "B",
+      "label": "Region B",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Widgets", "Views", "Insights"]
+    }
+  ]
+}

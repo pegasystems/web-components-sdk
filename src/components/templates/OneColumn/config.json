@@ -1,0 +1,39 @@
+{
+  "name": "OneColumn",
+  "label": "One column",
+  "description": "OneColumn Template",
+  "type": "Template",
+  "subtype": "FORM",
+  "icon": "OneColumn.svg",
+  "properties": [
+    {
+      "name": "A",
+      "label": "Region A",
+      "format": "CONTENTPICKER"
+    },
+    {
+      "label": "Conditions",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "required",
+          "label": "Required",
+          "format": "REQUIRED",
+          "saveToReference": true
+        },
+        {
+          "name": "disabled",
+          "label": "Disabled",
+          "format": "DISABLED",
+          "saveToReference": true
+        },
+        {
+          "name": "visibility",
+          "label": "Visibility",
+          "format": "VISIBILITY",
+          "saveToReference": true
+        }
+      ]
+    }
+  ]
+}

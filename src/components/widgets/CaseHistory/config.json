@@ -1,0 +1,10 @@
+{
+  "name": "CaseHistory",
+  "label": "Case history",
+  "description": "Case history widget",
+  "type": "Widget",
+  "subtype": "CASE",
+  "icon": "images/pz-url-active.svg",
+  "properties": [],
+  "defaultConfig": {}
+}

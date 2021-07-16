@@ -1,0 +1,16 @@
+{
+  "name": "Details",
+  "label": "Details (One column)",
+  "description": "Details (One column)",
+  "type": "Template",
+  "subtype": "DETAILS",
+  "icon": "OneColumnDetails.svg",
+  "properties": [
+    {
+      "name": "A",
+      "label": "Region A",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Fields", "Views", "UIComponents"]
+    }
+  ]
+}

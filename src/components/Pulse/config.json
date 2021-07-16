@@ -1,0 +1,12 @@
+{
+  "name": "Pulse",
+  "label": "Pulse",
+  "description": "Pulse feed widget",
+  "type": "Widget",
+  "subtype": ["PAGE", "CASE"],
+  "properties": [],
+  "defaultConfig": {
+    "messageIDs": "@P pulse.messageIDs"
+  },
+  "hideModifyIcon": true
+}

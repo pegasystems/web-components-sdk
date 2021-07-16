@@ -1,0 +1,117 @@
+{
+  "name": "ListView",
+  "label": "Table",
+  "description": "Table Template",
+  "type": "Template",
+  "subtype": "LIST",
+  "icon": "Table.svg",
+  "hideTemplatePicker": true,
+  "hideFromTemplatePicker": true,
+  "viewNameLabel": "View name",
+  "properties": [
+    {
+      "name": "referenceList",
+      "label": "Data page",
+      "format": "CONTENTPICKERSOURCE"
+    },
+    {
+      "name": "parameters",
+      "label": "",
+      "format": "PARAMETERS"
+    },
+    {
+      "name": "presets",
+      "label": "Presets",
+      "format": "PRESETPICKER",
+      "addTypeList": ["Presets"],
+      "properties": [
+        {
+          "name": "label",
+          "label": "Display name",
+          "format": "DISPLAYNAME"
+        },
+        {
+          "format": "COMPONENTPICKER",
+          "componentsList": [
+            { "name": "Table", "description": "Table" },
+            { "name": "Gallery", "description": "Gallery" }
+          ]
+        },
+        {
+          "format": "CARDDETAILS",
+          "visibleFor": ["Gallery"]
+        },
+        {
+          "name": "Columns",
+          "label": "Columns",
+          "format": "CONTENTPICKER",
+          "addTypeList": ["Fields", "Associations"],
+          "hideModifyIcons": false,
+          "modifyPanelOverride": "ListField"
+        },
+        {
+          "name": "fillAvailableSpace",
+          "label": "Column to take up remaining width",
+          "format": "FILLCOLUMNWIDTH"
+        },
+        {
+          "name": "columnFilter",
+          "label": "Column filter",
+          "format": "COLUMNFILTER"
+        },
+        {
+          "name": "columnSort",
+          "label": "Column sort",
+          "format": "COLUMNSORT"
+        },
+        {
+          "name": "groupBy",
+          "label": "Group By",
+          "format": "GROUPBY",
+          "visibleFor": ["Table"]
+        }
+      ]
+    },
+    {
+      "name": "editing",
+      "label": "Editing",
+      "format": "EDITING"
+    },
+    {
+      "label": "User personalization",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "personalization",
+          "label": "Allow saving custom views",
+          "format": "BOOLEAN"
+        },
+        {
+          "name": "grouping",
+          "label": "Allow grouping",
+          "format": "BOOLEAN"
+        },
+        {
+          "name": "reorderFields",
+          "label": "Allow column reordering",
+          "format": "BOOLEAN"
+        },
+        {
+          "name": "globalSearch",
+          "label": "Allow global search",
+          "format": "BOOLEAN"
+        },
+        {
+          "name": "toggleFieldVisibility",
+          "label": "Allow user edit column visibility",
+          "format": "BOOLEAN"
+        },
+        {
+          "name": "showHeaderIcons",
+          "label": "Show column header icons",
+          "format": "BOOLEAN"
+        }
+      ]
+    }
+  ]
+}

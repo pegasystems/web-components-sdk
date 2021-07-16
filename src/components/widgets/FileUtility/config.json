@@ -1,0 +1,16 @@
+{
+  "name": "FileUtility",
+  "label": "Attachments",
+  "description": "Attachments",
+  "type": "Widget",
+  "subtype": "CASE",
+  "icon": "images/pz-url-active.svg",
+  "properties": [
+    {
+      "name": "label",
+      "label": "Header text",
+      "format": "TEXT",
+      "defaultValue": "Attachments"
+    }
+  ]
+}

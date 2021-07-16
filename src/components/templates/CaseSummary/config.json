@@ -1,0 +1,24 @@
+{
+  "name": "CaseSummary",
+  "label": "Summary data",
+  "description": "Case summary template",
+  "type": "Template",
+  "subtype": "SUMMARY",
+  "icon": "Summary.svg",
+  "hideViewName": true,
+  "hideTemplateEdit": true,
+  "properties": [
+    {
+      "name": "Primary fields",
+      "label": "Primary fields",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Fields"]
+    },
+    {
+      "name": "Secondary fields",
+      "label": "Secondary fields",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Widgets", "Fields"]
+    }
+  ]
+}
