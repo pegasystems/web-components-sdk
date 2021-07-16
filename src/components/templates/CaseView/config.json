@@ -1,0 +1,40 @@
+{
+  "name": "CaseView",
+  "label": "Case page",
+  "description": "Standard case page",
+  "type": "Template",
+  "subtype": "CASEVIEW",
+  "icon": "CasePage.svg",
+  "hideTemplateEdit": true,
+  "hideViewName": true,
+  "properties": [
+    {
+      "name": "header",
+      "label": "Header",
+      "format": "PROPERTY"
+    },
+    {
+      "name": "subheader",
+      "label": "Subheader",
+      "format": "PROPERTY"
+    },
+    {
+      "name": "showIconInHeader",
+      "label": "Show icon in header",
+      "format": "BOOLEAN"
+    },
+    {
+      "name": "Tabs",
+      "label": "Tabs",
+      "format": "CONTENTPICKER",
+      "modifyPanelOverride": "DeferLoad",
+      "addTypeList": ["Tabs"]
+    },
+    {
+      "name": "Utilities",
+      "label": "Utilities",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Widgets"]
+    }
+  ]
+}

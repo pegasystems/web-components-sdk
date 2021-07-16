@@ -1,0 +1,33 @@
+{
+  "name": "CaseOperator",
+  "description": "CaseOperator",
+  "type": "Widget",
+  "label": "Case Operator",
+  "subtype": "CASE",
+  "properties": [
+    {
+      "format": "SELECT",
+      "label": "Usage",
+      "name": "label",
+      "defaultValue": "Create operator",
+      "source": [
+        {
+          "key": "Create operator",
+          "value": "Create operator"
+        },
+        {
+          "key": "Update operator",
+          "value": "Update operator"
+        }
+      ]
+    }
+  ],
+  "defaultConfig": {
+    "createLabel": "@L Created",
+    "updateLabel": "@L Updated",
+    "createOperator": "@USER .pxCreateOperator",
+    "updateOperator": "@USER .pxUpdateOperator",
+    "createDateTime": "@P .pxCreateDateTime",
+    "updateDateTime": "@P .pxUpdateDateTime"
+  }
+}
