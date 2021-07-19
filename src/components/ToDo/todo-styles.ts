@@ -29,6 +29,7 @@ export const todoStyles = html`
 
         .psdk-todo-id {
             color: var(--app-primary-color);
+            cursor: pointer;
         }
 
         .psdk-avatar {
