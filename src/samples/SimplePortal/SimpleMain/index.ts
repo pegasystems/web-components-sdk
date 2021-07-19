@@ -121,7 +121,7 @@ class SimpleMain extends LitElement {
       <simple-side-bar-component .pConn="${this.props}" .arButtons="${this.arCreateButtons}" .arWorkItems="${this.arOpenWorkItems}"></simple-side-bar-component>
     </aside>
     <main class="psdk-main-root">
-      <root-container .pConn="${this.props}" style="display:${sDisplay}"></root-container>
+      <root-container .pConn="${this.props}" style="display:${sDisplay}" ?isMashup="${true}"></root-container>
     </main>
     </div>
     `;
