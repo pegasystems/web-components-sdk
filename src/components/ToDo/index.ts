@@ -283,8 +283,8 @@ class ToDo extends BridgeBase {
                       <div class="psdk-todo-card">
                           <div class="psdk-todo-assignment-title">${ assignment.stepName }</div>
                           <div class="psdk-todo-assignment-data">
-                              <div class="psdk-todo-assignment-task" @click=${() => { this.clickGo([assignment]) }}>Task 
-                                in <span class="psdk-todo-id">${ assignment.name } ${this.getID(assignment)}</span>
+                              <div class="psdk-todo-assignment-task">Task 
+                                in <span class="psdk-todo-id" @click=${() => { this.clickGo([assignment]) }}>${ assignment.name } ${this.getID(assignment)}</span>
                                   <span *ngIf="assignment.status != undefined">
                                       &bull; <span class="psdk-todo-assignment-status">${assignment?.status}</span> 
                                   </span>

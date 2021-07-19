@@ -15,6 +15,10 @@ export const listViewStyles = html`
      box-sizing: content-box;
     }
 
+    vaadin-grid-cell-content {
+      cursor: pointer;
+    }
+
 
 
     /* for use with "table" grid */
