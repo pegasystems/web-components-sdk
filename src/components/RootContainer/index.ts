@@ -16,6 +16,7 @@ class RootContainer extends BridgeBase {
   @property( {attribute: false, type: Object} ) modalViewContainerConn = null;
   @property( {attribute: false, type: Object} ) createdPConnect;
   @property( {attribute: true, type: Boolean} ) displayOnlyFA = false; 
+  @property( {attribute: true, type: Boolean} ) isMashup = false;
 
 
   componentName: string = "";
@@ -40,7 +41,13 @@ class RootContainer extends BridgeBase {
     if (this.bDebug){ debugger; }
 
     // Adapted from Angular SDK
-    const options = { context: "app" };
+    let myContext = "app";
+    if (this.isMashup) {
+      myContext = "root";
+    }
+
+    const options = { "context": myContext };
+
 
     const { containers } = PCore.getStore().getState();
     const items = Object.keys(containers).filter((item) =>
@@ -70,7 +77,7 @@ class RootContainer extends BridgeBase {
       },
       options: {
         "pageReference": "pyPortal",
-        "context": "app"
+        "context": myContext
       }
     });
 
@@ -108,7 +115,13 @@ class RootContainer extends BridgeBase {
 
     const renderingModes = ["portal", "view"];
     const noPortalMode = "noPortal";
-    const options = { context: "app" };
+
+    let myContext = "app";
+    if (this.isMashup) {
+      myContext = "root";
+    }
+
+    const options = { "context": myContext };
 
     //const { renderingMode, viewConfig, children, skeleton } = myProps;
     const {

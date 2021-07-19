@@ -163,7 +163,7 @@ class MashupMainScreen extends LitElement {
       <div>
         <div class="cc-info">
             <div class="cc-info-pega">
-                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}"></root-container>
+                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
                 <br>
                 <div style="padding-left: 50px;"> * - required fields</div>
             </div>
