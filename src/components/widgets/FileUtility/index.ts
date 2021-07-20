@@ -148,40 +148,43 @@ class FileUtility extends BridgeBase {
     const attachmentUtils = PCore.getAttachmentUtils();
     const caseID = this.thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
 
-    let attPromise = attachmentUtils.getCaseAttachments(caseID, this.thePConn.getContextName());
+    if (caseID && caseID != "" ) {
+      let attPromise = attachmentUtils.getCaseAttachments(caseID, this.thePConn.getContextName());
 
-    this.lu_bLoading = true;
-
-    attPromise
-      .then( (resp) => {
-        this.arFullListAttachments = this.addAttachments(resp);
-        this.lu_count = this.arFullListAttachments.length;
-        this.lu_arActions = this.addAttachmentsActions;
-
-        this.lu_arItems= this.arFullListAttachments.slice(0, 3).map((att) => {
-          return this.getListUtilityItemProps({
-            att,
-            downloadFile: !att.progress ? () => this.downloadFile(att) : null,
-            cancelFile: att.progress ? () => this.cancelFile(att.ID) : null,
-            deleteFile: !att.progress ? () => this.deleteFile(att) : null,
-            removeFile: att.error ? () => this.removeFile(att.ID) : null
+      this.lu_bLoading = true;
+  
+      attPromise
+        .then( (resp) => {
+          this.arFullListAttachments = this.addAttachments(resp);
+          this.lu_count = this.arFullListAttachments.length;
+          this.lu_arActions = this.addAttachmentsActions;
+  
+          this.lu_arItems= this.arFullListAttachments.slice(0, 3).map((att) => {
+            return this.getListUtilityItemProps({
+              att,
+              downloadFile: !att.progress ? () => this.downloadFile(att) : null,
+              cancelFile: att.progress ? () => this.cancelFile(att.ID) : null,
+              deleteFile: !att.progress ? () => this.deleteFile(att) : null,
+              removeFile: att.error ? () => this.removeFile(att.ID) : null
+            });
           });
-        });
-
-        this.va_arItems= this.arFullListAttachments.map((att) => {
-          return this.getListUtilityItemProps({
-            att,
-            downloadFile: !att.progress ? () => this.downloadFile(att) : null,
-            cancelFile: att.progress ? () => this.cancelFile(att.ID) : null,
-            deleteFile: !att.progress ? () => this.deleteFile(att) : null,
-            removeFile: att.error ? () => this.removeFile(att.ID) : null
+  
+          this.va_arItems= this.arFullListAttachments.map((att) => {
+            return this.getListUtilityItemProps({
+              att,
+              downloadFile: !att.progress ? () => this.downloadFile(att) : null,
+              cancelFile: att.progress ? () => this.cancelFile(att.ID) : null,
+              deleteFile: !att.progress ? () => this.deleteFile(att) : null,
+              removeFile: att.error ? () => this.removeFile(att.ID) : null
+            });
           });
+  
+          this.requestUpdate();
+  
+  
         });
-
-        this.requestUpdate();
-
-
-      });
+    }
+    
 
   }
   
