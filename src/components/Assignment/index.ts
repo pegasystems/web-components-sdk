@@ -244,51 +244,55 @@ class Assignment extends BridgeBase {
     if (oWorkData) {
 
       this.actionsAPI = oWorkItem.getActionsApi();
-  
-      this.containerName = oWorkData.caseInfo.assignments[0].name;
-  
-      // get caseInfo
-      let oCaseInfo = oData.caseInfo;
-  
-      if (oCaseInfo && oCaseInfo.actionButtons) {
-  
-        if (this.bLogging) { console.log("assignment container buttons"); }
-  
-        this.arMainButtons = oCaseInfo.actionButtons.main;
-        this.arSecondaryButtons = oCaseInfo.actionButtons.secondary;
-  
-      }
-  
-      if (oCaseInfo.navigation != null) {
-  
-        this.bHasNavigation = true;
-  
-        if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === "standard") {
-          this.bHasNavigation = false;
-        }
-        else if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === "vertical") {
-          this.bIsVertical = true;
-        }
-        else {
-          this.bIsVertical = false;
-        }
-  
-  
-        // iterate through steps to find current one(s)
-        // immutable, so we want to change the local copy, so need to make a copy
-  
-  
-        // what comes back now in configObject is the children of the flowContainer
-        this.arNavigationSteps = JSON.parse(JSON.stringify(oCaseInfo.navigation.steps));
-        this.arCurrentStepIndicies = new Array();
-        this.arCurrentStepIndicies = this.findCurrentIndicies(this.arNavigationSteps, this.arCurrentStepIndicies, 0);
-  
-  
-  
-  
-      }
 
-    }
+      if (oWorkData.caseInfo && oWorkData.caseInfo.assignments != null) {
+        this.containerName = oWorkData.caseInfo.assignments[0].name;
+  
+        // get caseInfo
+        let oCaseInfo = oData.caseInfo;
+    
+        if (oCaseInfo && oCaseInfo.actionButtons) {
+    
+          if (this.bLogging) { console.log("assignment container buttons"); }
+    
+          this.arMainButtons = oCaseInfo.actionButtons.main;
+          this.arSecondaryButtons = oCaseInfo.actionButtons.secondary;
+    
+        }
+    
+        if (oCaseInfo.navigation != null) {
+    
+          this.bHasNavigation = true;
+    
+          if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === "standard") {
+            this.bHasNavigation = false;
+          }
+          else if (oCaseInfo.navigation.template && oCaseInfo.navigation.template.toLowerCase() === "vertical") {
+            this.bIsVertical = true;
+          }
+          else {
+            this.bIsVertical = false;
+          }
+    
+    
+          // iterate through steps to find current one(s)
+          // immutable, so we want to change the local copy, so need to make a copy
+    
+    
+          // what comes back now in configObject is the children of the flowContainer
+          this.arNavigationSteps = JSON.parse(JSON.stringify(oCaseInfo.navigation.steps));
+          this.arCurrentStepIndicies = new Array();
+          this.arCurrentStepIndicies = this.findCurrentIndicies(this.arNavigationSteps, this.arCurrentStepIndicies, 0);
+    
+    
+    
+    
+        }
+  
+      }
+      }
+  
+ 
 
  
   }
