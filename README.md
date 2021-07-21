@@ -16,10 +16,11 @@ Note: The Web Components SDK is offered in early adopter mode. It is built on th
 
 ## Pega Infinity Server and Constellation-enabled Application 
 
-The Web Components SDK assumes that you have access to a Pega Infinity server (8.6 GA) running an application that is configured to run using the Constellation UI service.
+The Web Components SDK assumes that you have access to a Pega Infinity server (8.6.1 GA) running an application that is configured to run using the Constellation UI service.
 
 We provide a sample application - **MediaCo** - to licensed Pega Infinity customers that is configured as a Constellation application. The sample application can be found in the Web Components SDK download associated with this repo available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk)
 
+Please refer to the **Web Components SDK Guide** provided in the Marketplace download for steps to prepare your Infinity server and node environment for steps in the next section.
 
 <br>
 
@@ -31,6 +32,11 @@ We provide a sample application - **MediaCo** - to licensed Pega Infinity custom
 1. Install 
 
     ```
+    $ cd <kit location>
+
+    (This next step is strongly recommended if you have a node_modules directory installed from an earlier version of the kit)
+    $ rm node_modules
+
     $ npm install
     ```
 
