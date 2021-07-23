@@ -16,7 +16,7 @@ Note: The Web Components SDK is offered in early adopter mode. It is built on th
 
 ## Pega Infinity Server and Constellation-enabled Application 
 
-The Web Components SDK assumes that you have access to a Pega Infinity server (8.6.1 GA) running an application that is configured to run using the Constellation UI service.
+The Web Components SDK assumes that you have access to a Pega Infinity server (8.6 GA) running an application that is configured to run using the Constellation UI service.
 
 We provide a sample application - **MediaCo** - to licensed Pega Infinity customers that is configured as a Constellation application. The sample application can be found in the Web Components SDK download associated with this repo available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk)
 
@@ -94,11 +94,11 @@ Please refer to the **Web Components SDK Guide** provided in the Marketplace dow
 
 6. **Embedded** (formerly known as Mashup)
 
-    6.1 Access **http://localhost:8484/embedded** or **https://localhost:8484/embedded** (if run start-https was used)
+    6.1 Access **http://localhost:3501/embedded** or **https://localhost:3501/embedded** (if run start-https was used)
 
 7.  **Portal**
 
-    7.1 Access **http://localhost:8484/portal** or **https://localhost:8484/portal** (if run start-https was used)
+    7.1 Access **http://localhost:3501/portal** or **https://localhost:3501/portal** (if run start-https was used)
 
     **If you see a blank page**, please check your JavaScript console to see if you have encountered a net::ERR_CERT_INVALID error. If you encounter this error, please see the troubleshooting section below: **Runtime Error: net::ERR_CERT_INVALID**. Due to browser interactions during login, it can be easier to find and fix this error using the Portal URL.
 
@@ -175,13 +175,13 @@ To ensure that the application is redirected to the proper page after authentica
 
 The MediaCoOauth and MediaCoOauthNoLogin records that are included with the MediaCo sample application include the necessary redirect URIs for the default configuration:
 
-* http://localhost:8484/auth.html and https://localhost:8484/auth.html for the Portal use case
+* http://localhost:3501/auth.html and https://localhost:3501/auth.html for the Portal use case
 
-*	http://localhost:8484/mashup/auth.html and https://localhost:8484/mashup/auth.html for the Embedded use case
+*	http://localhost:3501/mashup/auth.html and https://localhost:3501/mashup/auth.html for the Embedded use case
 
 If you configure your installation to have the Web Components SDK static content served from a different **host:port** than the default, you should add new Redirect URIs to the list:
 
-* In the **Supported grant types** section add the following URLS to the list of redirect URLs by clicking on the + sign. (Note that the default port is 8484.)
+* In the **Supported grant types** section add the following URLS to the list of redirect URLs by clicking on the + sign. (Note that the default port is 3501.)
 
   * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/auth.html (for the portal use case)
 
@@ -206,7 +206,7 @@ If the `MediaCo` app was imported to your Infinity server, a `MediaCoOAuth` OAut
    * You might name it the same name as your applicaion
    * Specify "Public" for the type of client (as browser apps are not able to prevent any "Client secret" from being compromised)
    * Select "Authorization Code" for the Grant type
-   * Add a RedirectURI value based on the url used to access the deployed Web Components SDK (e.g., http://localhost:8484/auth.html)
+   * Add a RedirectURI value based on the url used to access the deployed Web Components SDK (e.g., http://localhost:3501/auth.html)
    * Enable the "Enable proof code for pkce" option
    * Set the "Access token lifetime" for how long you want the logged in session to last.  Pega does not presently support the ability to referesh the token (for Public clients), so the user will have to reauthenticate again after this interval.
    * Enter the appropriate values within **sdk-config.json** 
