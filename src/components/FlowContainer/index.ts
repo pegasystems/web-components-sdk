@@ -13,9 +13,12 @@ import { flowContainerStyles } from './flow-container-styles';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
+//
+// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with 
+// Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
+// is totally at your own risk.
+//
 
-// NOTE: this is just a boilerplate component definition intended
-//  to be used as a starting point for any new components as they're built out
 @customElement('flow-container')
 class FlowContainer extends BridgeBase {
 
