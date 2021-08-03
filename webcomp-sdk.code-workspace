@@ -5,9 +5,8 @@
 		}
 	],
 	"settings": {
-		"files.autoSave": "afterDelay",
 		"debug.allowBreakpointsEverywhere": true,
-		"debug.toolBarLocation": "docked",
+		"debug.toolBarLocation": "floating",
 		"git.ignoreLimitWarning": true
 	}
 }

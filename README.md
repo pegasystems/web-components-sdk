@@ -56,36 +56,39 @@ Please refer to the **Web Components SDK Guide** provided in the Marketplace dow
     4.1 Full development clean and install of npm modules, and build; then start the server
    ```
    $ npm run build:dev:ci
-   $ npm run start (or start-https)
+   $ npm run start-dev (or start-dev-https)
    ```
    or <br>
 
     4.2 Build and run with live reload (use 2 terminals - assumes npm install has already been run):
    ```
    $ npm run watch (with live reload) - in terminal 1
-   $ npm run start (or npm run start-https) - in terminal 2
+   $ npm run start-dev (or npm run start-dev-https) - in terminal 2
    ```
    or 
 
     4.3 Build and run without live reload (use 1 terminal - assumes npm install has already been run)
    ```
    $ npm run build:dev (without live reload)
-   $ npm run start (or npm run start-https)
+   $ npm run start-dev (or npm run start-dev-https)
    ```
 
 5. **Production build and start (1 terminal)**
 
-    5.1 Full production clean and install of npm modules, and build; then start the server
+    5.1 Full production clean and install of npm modules, and build; then start the server. (Building in production mode 
+    generates gzip and Brotli compressed versions of the static content. Serving in production mode will serve the
+    gzip or Brotli static content when available.)
+
    ```
    $ npm run build:prod:ci
-   $ npm run start (or start-https)
+   $ npm run start-prod (or start-prod-https)
    ```
    or <br>
 
     5.2 Build and start the server (assumes npm install has already been run)
    ```
    $ npm run build:prod
-   $ npm run start (or start-https)
+   $ npm run start-prod (or start-prod-https)
    ```
 
 <br>
@@ -94,11 +97,11 @@ Please refer to the **Web Components SDK Guide** provided in the Marketplace dow
 
 6. **Embedded** (formerly known as Mashup)
 
-    6.1 Access **http://localhost:3501/embedded** or **https://localhost:3501/embedded** (if run start-https was used)
+    6.1 Access **http://localhost:3501/embedded** or **https://localhost:3501/embedded** (if starting with HTTPS)
 
 7.  **Portal**
 
-    7.1 Access **http://localhost:3501/portal** or **https://localhost:3501/portal** (if run start-https was used)
+    7.1 Access **http://localhost:3501/portal** or **https://localhost:3501/portal** (if starting with HTTPS)
 
     **If you see a blank page**, please check your JavaScript console to see if you have encountered a net::ERR_CERT_INVALID error. If you encounter this error, please see the troubleshooting section below: **Runtime Error: net::ERR_CERT_INVALID**. Due to browser interactions during login, it can be easier to find and fix this error using the Portal URL.
 
