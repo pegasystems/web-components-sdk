@@ -18,6 +18,12 @@ import { viewContainerStyles } from './view-container-styles';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
+//
+// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with 
+// Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
+// is totally at your own risk.
+//
+
 @customElement('view-container')
 class ViewContainer extends BridgeBase {
   @property( {attribute: true, type: Boolean} ) displayOnlyFA = false; 

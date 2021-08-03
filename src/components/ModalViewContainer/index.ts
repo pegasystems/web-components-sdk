@@ -11,6 +11,12 @@ import '../CancelAlert';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
+//
+// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with 
+// Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
+// is totally at your own risk.
+//
+
 
 @customElement('modal-view-container-component')
 class ModalViewContainer extends BridgeBase {
