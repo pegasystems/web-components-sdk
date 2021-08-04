@@ -43,7 +43,12 @@ Please refer to the **Web Components SDK Guide** provided in the Marketplace dow
 ### **Configure** the Web Components SDK
 
 2. Edit **sdk-config.js** and, if necessary, update the values that will be used
-    * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
+    * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.<br><br>
+      * **Note:** it is **required** that you configure a value for **authConfig.mashupClientSecret**.
+      * Navigate to Records / Security / OAuth 2.0 Client Registration landing page and open the `MediaCoOauthNoLogin` record
+      * Click the **Regenerate Client Secret** button, download the Client Credentials (as the ClientID and Secret values will be needed) and save the record.
+      * Then, use the generated **Client Secret** value as the value for**authConfig.mashupClientSecret**. (The ClientID value should remain unchanged.)
+      <br><br>
     * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
 <br><br>
 3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk) or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
