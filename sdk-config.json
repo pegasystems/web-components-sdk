@@ -12,6 +12,7 @@
     "authQueryParams": { "authentication_service": "pega" },
         
     "mashupClient_comment": "Client ID and Client secret from the OAuth 2.0 Client Registration record used for mashup use case",
+    "mashupClient_comment2": "See SDK Guide for instructions on how to generate and obtain the proper values for the following entries",
     "mashupClientId": "12595401538569726922",    
     "mashupClientSecret": "",
     "mashupGrantType": "client_credentials",
