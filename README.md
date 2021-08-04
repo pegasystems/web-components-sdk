@@ -45,7 +45,7 @@ Please refer to the **Web Components SDK Guide** provided in the Marketplace dow
 2. Edit **sdk-config.js** and, if necessary, update the values that will be used
     * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.<br><br>
       * **Note:** it is **required** that you configure a value for **authConfig.mashupClientSecret**.
-      * Navigate to Records / Security / OAuth 2.0 Client Registration landing page and open the `MediaCoOauth` record
+      * Navigate to Records / Security / OAuth 2.0 Client Registration landing page and open the `MediaCoOauthNoLogin` record
       * Click the **Regenerate Client Secret** button, download the Client Credentials (as the ClientID and Secret values will be needed) and save the record.
       * Then, use the generated **Client Secret** value as the value for**authConfig.mashupClientSecret**. (The ClientID value should remain unchanged.)
       <br><br>
