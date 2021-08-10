@@ -187,7 +187,7 @@ class View extends BridgeBase {
     }
 
     const theOuterTemplate = html`
-      <div class="ng-view-top">
+      <div class="psdk-view-top">
         ${ (this.title !== "") ? html`<h4>${this.title}</h4>` : nothing }
         ${theInnerTemplate}
       </div>

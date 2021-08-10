@@ -7,7 +7,7 @@ export const viewStyles = html`
         margin-left: 0.8rem;
     }
 
-    .ng-view-top {
+    .psdk-view-top {
         padding: 0;
     }
   </style>
