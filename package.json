@@ -50,7 +50,7 @@
     "eslint": "^6.7.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.1",
-    "http-server": "^0.12.3",
+    "http-server": "^13.0.0",
     "rimraf-standalone": "^2.6.1-7",
     "sass-loader": "^10.1.1",
     "shx": "^0.3.3",
