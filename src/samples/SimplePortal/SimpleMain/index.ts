@@ -5,6 +5,7 @@ import '@lion/button/define';
 import '@lion/textarea/define';
 import '../../../components/OAuthLogin/oauth-login';
 import '../../../components/OAuthLogin/oauth-popup';
+import { compareSdkPCoreVersions } from '../../../helpers/versionHelpers';
 
 import '../SimpleSideBar';
 
@@ -246,7 +247,8 @@ class SimpleMain extends LitElement {
 
     // NOTE: When loadMashup is complete, this will be called.
     PCore.onPCoreReady(renderObj => {
-
+      // Check that we're seeing the PCore version we expect
+      compareSdkPCoreVersions();
 
       // Now, do the initial render...
       this.initialRender(renderObj);

@@ -2,6 +2,7 @@ import { html, customElement, property, LitElement, nothing } from '@lion/core';
 import '../RootContainer';
 import '../NotSupported';
 import { SdkConfigAccess } from '../../helpers/config_access';
+import { compareSdkPCoreVersions } from '../../helpers/versionHelpers';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -53,6 +54,9 @@ class AppEntry extends LitElement {
     
     // NOTE: When loadMashup is complete, this will be called.
     PCore.onPCoreReady(renderObj => {
+      // Check that we're seeing the PCore version we expect
+      compareSdkPCoreVersions();
+
       this.initialRender(renderObj);
     });
 
