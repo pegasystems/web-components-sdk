@@ -5,7 +5,6 @@ import * as isEqual from 'fast-deep-equal';
 import { bootstrapStyles } from './bootstrap-styles';
 
 
-
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
@@ -46,7 +45,7 @@ export class BridgeBase extends LitElement {
   constructor(inDebug = false, inLogging = false) {      
       super();
 
-      if (inDebug) { this.bDebug = true; debugger; }  // If you change the assignment of this.bDebug for your local development preference, please don't commit that change
+      if (inDebug) { this.bDebug = true; }  // If you change the assignment of this.bDebug for your local development preference, please don't commit that change
       if (inLogging) { this.bLogging = true; }        // If you change the assignment of this.bLogging for your local development preference, please don't commit that change
 
       // turn off logging
@@ -461,6 +460,7 @@ updated(changedProperties) {
     }
     
     this.thePConn.processActions(this.eventHandler);
+
     if (this.thePConn.isEditable()) {
       this.thePConn.setAction("onChange", this.changeHandler.bind(this));
       this.thePConn.setAction("onBlur", this.eventHandler.bind(this));
@@ -728,6 +728,11 @@ updated(changedProperties) {
           case "View":
             theChildTemplates.push( html`<view-component .pConn=${child} ?dislayOnlyFA=${displayOnlyFA}></view-component>` );
             break;
+
+          default:
+            theChildTemplates.push( html`<p>${this.theComponentName}: displayFAOnly - unknown rendering for ${childType}</p>` );
+            break;
+  
         }
       }
       else {
