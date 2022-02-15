@@ -59,7 +59,8 @@ class RootContainer extends BridgeBase {
     const items = Object.keys(containers).filter((item) =>
       item.includes("root")
     );
-    PCore.getContainerItems().addContainerItems(items);
+
+    PCore.getContainerUtils().getContainerAPI().addContainerItems(items);
 
     const configObjPreview = PCore.createPConnect({
       meta: {
@@ -243,9 +244,20 @@ class RootContainer extends BridgeBase {
       case "View" :
         arKidHtml.push(html`<view-component .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></view-component>`);
         break;
+
       case "ViewContainer":
         arKidHtml.push(html`<view-container .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></view-container>`);
         break;
+
+      case "Reference":
+      case "reference":
+        arKidHtml.push( html`<p>${this.theComponentName}: unknown rendering for ${this.componentName}</p>` );
+        break;
+      
+      default:
+        arKidHtml.push( html`<p>${this.theComponentName}: unknown rendering for ${this.componentName}</p>` );
+      break;
+
     }
 
     return arKidHtml;

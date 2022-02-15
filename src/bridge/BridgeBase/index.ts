@@ -459,8 +459,6 @@ updated(changedProperties) {
       return;
     }
     
-    this.thePConn.processActions(this.eventHandler);
-
     if (this.thePConn.isEditable()) {
       this.thePConn.setAction("onChange", this.changeHandler.bind(this));
       this.thePConn.setAction("onBlur", this.eventHandler.bind(this));
