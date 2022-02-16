@@ -6,6 +6,7 @@ import '../ViewContainer';
 import '../PreviewViewContainer';
 import '../ModalViewContainer';
 import '../ReAuthenticationModal';
+import '../Reference';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -251,7 +252,7 @@ class RootContainer extends BridgeBase {
 
       case "Reference":
       case "reference":
-        arKidHtml.push( html`<p>${this.theComponentName}: unknown rendering for ${this.componentName}</p>` );
+        arKidHtml.push( html`<reference-component .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></reference-component>` );
         break;
       
       default:
