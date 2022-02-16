@@ -125,6 +125,28 @@ class MashupMain extends LitElement {
       // Check that we're seeing the PCore version we expect
       compareSdkPCoreVersions();
 
+      // Need to register the callback function for PCore.registerComponentCreator
+      //  This callback is invoked if/when you call a PConnect createComponent
+      PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
+        // debugger;
+
+        return c11nEnv;
+
+        // REACT implementaion:
+        // const PConnectComp = createPConnectComponent();
+        // return (
+        //     <PConnectComp {
+        //       ...{
+        //         ...c11nEnv,
+        //         ...c11nEnv.getPConnect().getConfigProps(),
+        //         ...c11nEnv.getPConnect().getActions(),
+        //         additionalProps
+        //       }}
+        //     />
+        //   );
+      });
+
+
       // Now, do the initial render...
       this.initialRender(renderObj);
 

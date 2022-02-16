@@ -843,6 +843,11 @@ updated(changedProperties) {
             theChildTemplates.push( html`<radio-buttons-form .pConn=${child}></radio-buttons-form>` );
             break;
             
+          case "Reference":
+          case "reference":
+            theChildTemplates.push( html`<reference-component .pConn=${child}></reference-component>` );
+            break;
+              
           case "Region":
             theChildTemplates.push( html`<region-component .pConn=${child}></region-component>` );
             break;
