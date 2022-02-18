@@ -176,9 +176,15 @@ class DeferLoad extends BridgeBase {
     const arComponent: Array<any> = [];
 
     switch (this.componentName) {
-      case "View" :
+      case "View":
         arComponent.push( html `<view-component .pConn=${this.loadedPConn}></view-component>`);
         break;
+
+      case "Reference":
+      case "reference":
+        arComponent.push( html `<reference-component .pConn=${this.loadedPConn}></reference-component>`);
+        break;
+
       default: 
         arComponent.push( html `<div>Defer load missing: ${this.componentName}</div>`);
         break;

@@ -28,7 +28,6 @@ declare var PCore: any;
 class ViewContainer extends BridgeBase {
   @property( {attribute: true, type: Boolean} ) displayOnlyFA = false; 
 
-//  @property( {attribute: false, type: Object} ) children;
   @property( {attribute: false, type: String} ) templateName;
   @property({attribute: false, type: String}) title:string = `${this.theComponentName}: placeholder`;
   @property( {attribute: false, type: String} ) theBuildName;
@@ -208,7 +207,7 @@ class ViewContainer extends BridgeBase {
           //  component is a View (and not a ViewContainer). We now look for the
           //  "template" type directly in the created component (newComp) and NOT
           //  as a child of the newly created component.
-          if (this.bLogging) { console.log(`---> ${this.theComponentName} created new ${newCompName}`); }
+          if (true) { console.log(`---> ${this.theComponentName} created new ${newCompName}`); }
 
           // Use the newly created component (View) info but DO NOT replace
           //  this ViewContainer's pConn$, etc.
@@ -221,9 +220,16 @@ class ViewContainer extends BridgeBase {
           this.templateName = ('template' in newConfigProps) ? newConfigProps["template"] : "";
           this.title = ('title' in newConfigProps) ? newConfigProps["title"] : "";
 
-          // update children with new view's children
-          this.children = newComp.getChildren();
+          debugger;     // NOW a reference component!!!
 
+          // update children with new view's children
+          // JA experiment. Only replace if the newComp has children!
+          //  The new Reference component does NOT have children!
+          if (newComp.getChildren() && newComp.getChildren().length > 0) {
+            this.children = newComp.getChildren();
+          }
+
+          debugger;     // NOW a reference component!!!
 
         }
       }
@@ -272,6 +278,8 @@ class ViewContainer extends BridgeBase {
     // NOTE: We're handling the possible Title and children in the templates below
     let theInnerTemplate = nothing;
 
+    debugger;
+
     if (this.templateName !== "") {
       theInnerTemplate = html`
         ${this.getTemplateForTemplate(this.templateName, this.createdViewPConn, this.displayOnlyFA)}
@@ -298,7 +306,13 @@ class ViewContainer extends BridgeBase {
 
     `;
 
-    this.renderTemplates.push(theOuterTemplate);
+    debugger;
+
+    // Try simplifying to only render the createdViewPConn (that's now a reference)
+    const theCreatedRefComponent = html`<reference-component .pConn=${this.createdViewPConn} ?displayOnlyFA=${this.displayOnlyFA}></reference-component>`;
+
+    this.renderTemplates.push(theCreatedRefComponent);
+    // was: this.renderTemplates.push(theOuterTemplate);
     
 
     // NOTE: lit-html knows how to render array of lit-html templates!

@@ -89,13 +89,21 @@ class AssignmentCard extends BridgeBase {
     for (let kid of this.arChildren) {
       let kidPConn = kid.getPConnect();
       switch (kid.getPConnect().getComponentName()) {
-        case "View" :
+        case "View":
           arKidHtml.push(html`<view-component .pConn=${kidPConn}></view-component>`);
           break;
+
+        case "Reference":
+        case "reference":
+            arKidHtml.push(html`<reference-component .pConn=${kidPConn}></reference-component>`);
+          break;
+
         case "CaseCreateStage" :
           arKidHtml.push(html`<case-create-stage-component .pConn=${kidPConn}></case-create-stage-component>`);
           break;
+
         default :
+          console.error(`${this.theComponentName} trying to render unknown child type: ${kid.getPConnect().getComponentName()}`);
           break;
       }
     }
