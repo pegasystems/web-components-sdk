@@ -35,9 +35,9 @@ const forcePopupForReauths = ( bForce ) => {
 export const setIsEmbedded = (isEmbedded) => {
   if( isEmbedded ) {
     forcePopupForReauths(true);
-    sessionStorage.setItem("wcsdk_Embedded", "1");
+    sessionStorage.setItem("wcsdk_embedded", "1");
   } else {
-    sessionStorage.removeItem("wcsdk_Embedded");
+    sessionStorage.removeItem("wcsdk_embedded");
   }
 };
 
@@ -69,7 +69,7 @@ const isLoginExpired = () => {
 };
 
 export const authIsEmbedded = () => {
-  return sessionStorage.getItem("wcsdk_Embedded") === "1";
+  return sessionStorage.getItem("wcsdk_embedded") === "1";
 };
 
 /**
@@ -155,7 +155,7 @@ const getAuthMgr = ( bInit ) => {
     let idNextCheck = null;
     const fnCheckForAuthMgr = () => {
       if( PegaAuth && !authMgr ) {
-        initOAuth( bInit );
+        initAuthMgr( bInit );
       }
       if(authMgr) {
         if( idNextCheck ) {
@@ -225,10 +225,14 @@ const fireTokenAvailable = (token) => {
     }
   }
 
+  authPostLogin(token);
+
+  /*
   if( !window.PCore ) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     constellationInit( authConfig, token, authTokenUpdated, authFullReauth );
   }
+  */
 
 /*
   // Create and dispatch the SdkLoggedIn event to trigger constellationInit
@@ -279,7 +283,7 @@ export const login = (bFullReauth=false) => {
     // If portal will redirect to main page, otherwise will authorize in a popup window
     if (bPortalLogin && !bFullReauth) {
       // update redirect uri to be the root
-      updateRedirectUri(aMgr, `${window.location.origin}/`);
+      updateRedirectUri(aMgr, `${window.location.origin}${window.location.pathname}`);
       aMgr.loginRedirect();
       // Don't have token til after the redirect
       return Promise.resolve(undefined);
@@ -317,14 +321,14 @@ export const loginIfNecessary = (appName, isEmbedded=false, deferLogin=false) =>
   setIsEmbedded(isEmbedded);
   if( window.location.href.indexOf("?code") !== -1 ) {
     // initialize authMgr
-    initOAuth(false);
+    initAuthMgr(false);
     authRedirectCallback(window.location.href, ()=> {
       window.location.href = window.location.pathname;
     });
     return;
   }
   if( !deferLogin && (!gbLoginInProgress || isLoginExpired()) ) {
-    initOAuth(false);
+    initAuthMgr(false);
     updateLoginStatus();
     if( gbLoggedIn ) {
       fireTokenAvailable(getCurrentTokens());
@@ -442,17 +446,19 @@ export const authFullReauth = () => {
 
 export const authPostLogin = (tokens) => {
 
-  const sSI = sessionStorage.getItem("wcsdk_CI");
+  const sCI = sessionStorage.getItem("wcsdk_CI");
   let authConfig = null;
-  if( sSI ) {
+  if( sCI ) {
     try {
-        authConfig = JSON.parse(sSI);
+        authConfig = JSON.parse(sCI);
     } catch(e) {
       // do nothing
     }
   }
 
-  constellationInit( authConfig, tokens, authTokenUpdated, authFullReauth );
+  if( !window.PCore ) {
+    constellationInit( authConfig, tokens, authTokenUpdated, authFullReauth );
+  }
 }
 
 // Don't initialize the AuthManager until the SdkConfigFile has been loaded and is ready

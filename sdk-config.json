@@ -9,12 +9,12 @@
     
     "mashupClient_comment": "Client ID from the OAuth 2.0 Client Registration record used for mashup use case",
     "mashupClient_comment2": "See SDK Guide for instructions on how to generate and obtain the proper values for the following entries",
-    "mashupClientId": "88249793673398954156",    
+    "mashupClientId": "17809302101260076926",    
     "mashupUserIdentifier": "customer@mediaco",
     "mashupPassword": "cGVnYQ==",
     
     "portalClientId_comment": "Client ID from the OAuth 2.0 Client Registration record used for portal use case",
-    "portalClientId": "88249793673398954156"
+    "portalClientId": "17809302101260076926"
   },
   "serverConfig": {
     "comment_serverConfig": "serverConfig is the block for SDK Content Server config entries",

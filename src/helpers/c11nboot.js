@@ -5,18 +5,20 @@ import { SdkConfigAccess } from './config_access';
  * @param {String} access_token 
  */
 export const constellationInit = ( authConfig, tokenInfo, authTokenUpdated, authFullReauth ) => {
-
-  let constellationBootConfig = {};
+  const constellationBootConfig = {};
+  const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
 
   // Set up constellationConfig with data that bootstrapWithAuthHeader expects
-  // constellationConfig.appAlias = "";
-  constellationBootConfig.authorizationHeader = "Bearer " + access_token;
   constellationBootConfig.customRendering = true;
-  constellationBootConfig.restServerUrl = SdkConfigAccess.getSdkConfigServer().infinityRestServerUrl;
+  constellationBootConfig.restServerUrl = sdkConfigServer.infinityRestServerUrl;
   // NOTE: Needs a trailing slash! So add one if not provided
-  constellationBootConfig.staticContentServerUrl = SdkConfigAccess.getSdkConfigServer().sdkContentServerUrl + "/constellation/";
-  if (constellationBootConfig.staticContentServerUrl.slice(-1) !== "/") {
-    constellationBootConfig.staticContentServerUrl = constellationBootConfig.staticContentServerUrl + "/";
+  constellationBootConfig.staticContentServerUrl = `${sdkConfigServer.sdkContentServerUrl}/constellation/`;
+  if (constellationBootConfig.staticContentServerUrl.slice(-1) !== '/') {
+    constellationBootConfig.staticContentServerUrl = `${constellationBootConfig.staticContentServerUrl}/`;
+  }
+  // If appAlias specified, use it
+  if( sdkConfigServer.appAlias ) {
+    constellationBootConfig.appAlias = sdkConfigServer.appAlias;
   }
 
   // Pass in auth info to Constellation

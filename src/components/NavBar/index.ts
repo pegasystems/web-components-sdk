@@ -186,9 +186,10 @@ class NavBar extends BridgeBase {
     
     try {
       if (this.bLogging) { console.log(`--> navPanelLogoutClick clicked`); }
-      this.thePConn.getActionsApi().logout().then(() => {
+      /*
+        this.thePConn.getActionsApi().logout().then(() => {
         if (this.bLogging) { console.log(`logout completed`); }
-      },
+      }*/,
       error => {
         console.error('onRejected function called: ' + error.message);
       })
@@ -196,7 +197,9 @@ class NavBar extends BridgeBase {
       if (this.bLogging) { console.log(`--> Attempt to call logout api failed: ${err}`); }
     }
     finally {
-      logout();
+      logout().then(() => {
+        window.location.reload();
+      });
     }
   }
 

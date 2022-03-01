@@ -33,7 +33,7 @@ class SimplePortal extends LitElement {
     super.connectedCallback();
 
     // To eliminate the login button/component, login directly
-    loginIfNecessary("simpleportal", true);
+    loginIfNecessary("simpleportal", false);
   
   }
 
