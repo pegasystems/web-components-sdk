@@ -1,21 +1,17 @@
 {
-  "comment_sdk_config": "This is the configuration file for the Web-Components-SDK",
+  "comment_sdk_config": "This is the configuration file for the Web Components SDK",
   "authConfig": {
-    "comment_authConfig": "authConfig is the block for authentication config entries",
+    "authConfig_comment": "authConfig is the block for authentication config entries",
 
-    "accessAuthUris_comment": "Full paths to Infinity server access token and authorization APIs",
-    "accessTokenUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1/token",
-    "authorizationUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1/authorize",
-    "authorityUri": "https://localhost:1080/prweb/PRRestService/oauth2/v1",
+    "authConfig_comment2": "Optional Full paths to Infinity server OAuth endpoints (Only needed if using custom OAuth service)",
+    "authConfig_comment3": "Optional attributes are: authorize, token, revoke, authService, silentTimeout",
+    "authService": "pega",
     
-    "authQueryParams_comment": "Additional parameters that are passed to the OpenID Connect (OIDC) Manager",
-    "authQueryParams": { "authentication_service": "pega" },
-        
-    "mashupClient_comment": "Client ID and Client secret from the OAuth 2.0 Client Registration record used for mashup use case",
+    "mashupClient_comment": "Client ID from the OAuth 2.0 Client Registration record used for mashup use case",
     "mashupClient_comment2": "See SDK Guide for instructions on how to generate and obtain the proper values for the following entries",
-    "mashupClientId": "12595401538569726922",    
-    "mashupClientSecret": "",
-    "mashupGrantType": "client_credentials",
+    "mashupClientId": "88249793673398954156",    
+    "mashupUserIdentifier": "customer@mediaco",
+    "mashupPassword": "cGVnYQ==",
     
     "portalClientId_comment": "Client ID from the OAuth 2.0 Client Registration record used for portal use case",
     "portalClientId": "88249793673398954156"
@@ -24,7 +20,10 @@
     "comment_serverConfig": "serverConfig is the block for SDK Content Server config entries",
     
     "infinityRestServerUrl_comment": "Full path to Infinity REST server",
-    "infinityRestServerUrl": "https://localhost:1080/prweb",
+    "infinityRestServerUrl": "https://lab0641.lab.pega.com/prweb",
+
+    "appAlias_comment": "appAlias of the application which operators will be accessing (e.g., MediaCo)",
+    "appAlias": "MediaCo",
 
     "sdkContentServerUrl_comment": "If specified, the given URL will be used. If left blank, window.location.origin will be used.",
     "sdkContentServerUrl": "",

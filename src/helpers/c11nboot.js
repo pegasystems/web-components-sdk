@@ -4,7 +4,7 @@ import { SdkConfigAccess } from './config_access';
  * Initiate the process to get the Constellation bootstrap shell loaded and initialized
  * @param {String} access_token 
  */
-export const constellationInit = ( access_token ) => {
+export const constellationInit = ( authConfig, tokenInfo, authTokenUpdated, authFullReauth ) => {
 
   let constellationBootConfig = {};
 
@@ -19,8 +19,28 @@ export const constellationInit = ( access_token ) => {
     constellationBootConfig.staticContentServerUrl = constellationBootConfig.staticContentServerUrl + "/";
   }
 
-  window.sessionStorage.setItem("accessToken", access_token);
-
+  // Pass in auth info to Constellation
+  constellationBootConfig.authInfo = {
+    authType: "OAuth2.0",
+    tokenInfo,
+    // Set whether we want constellation to try to do a full re-Auth or not ()
+    // true doesn't seem to be working in SDK scenario so always passing false for now
+    popupReauth: false /* !authIsEmbedded() */,
+    client_id: authConfig.clientId,
+    authentication_service: authConfig.authService,
+    redirect_uri: authConfig.redirectUri,
+    endPoints: {
+        authorize: authConfig.authorizeUri,
+        token: authConfig.tokenUri,
+        revoke: authConfig.revokeUri
+    },
+    // TODO: setup callback so we can update own storage
+    onTokenRetrieval: authTokenUpdated
+  }
+  
+  // Turn off dynamic load components (should be able to do it here instead of after load?)
+  constellationBootConfig.dynamicLoadComponents = false;
+  
   // Note that staticContentServerUrl already ends with a slash (see above), so no slash added.
   // In order to have this import succeed and to have it done with the webpackIgnore magic comment tag.  See:  https://webpack.js.org/api/module-methods/ 
   import(/* webpackIgnore: true */ `${constellationBootConfig.staticContentServerUrl}bootstrap-shell.js`).then((bootstrapShell) => {
@@ -31,18 +51,22 @@ export const constellationInit = ( access_token ) => {
       // For experimentation, save a reference to loadPortal, too!
       window.myLoadPortal = bootstrapShell.loadPortal;
 
-
+      // What is the 2nd argument 'shell' what DOM element has that id
       bootstrapShell.bootstrapWithAuthHeader(constellationBootConfig, 'shell').then(() => {
           console.log('Bootstrap successful!');
-          // If logging in via oauth-login component...it creates its own window
-          if(window.myWindow) {
-              window.myWindow.close();
-          }
+
+          PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_FULL_REAUTH, authFullReauth, "authFullReauth");
 
           var event = new CustomEvent("ConstellationReady", { });
           document.dispatchEvent(event);
 
-      });
+      })
+      .catch( e => {
+        // Assume error caught is because token is not valid and attempt a full reauth
+        // eslint-disable-next-line no-console
+        console.log(e);
+        authFullReauth();
+      })
   });
   /** Ends here **/
 };
@@ -66,10 +90,6 @@ export const constellationTerm = () => {
 // Code that sets up use of Constellation once it's been loaded and ready
 
 document.addEventListener("ConstellationReady", () => {
-
-  // For now, we are not dynamically loading components. So, turn
-  //  off this behavior and assume that all components are loaded at the beginning.
-  PCore.setBehaviorOverride("dynamicLoadComponents", false);
 
   const replaceMe = document.getElementById("pega-here");
 

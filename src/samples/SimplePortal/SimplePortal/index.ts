@@ -3,8 +3,6 @@ import { SdkConfigAccess } from '../../../helpers/config_access';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
-import '../../../components/OAuthLogin/oauth-login';
-import '../../../components/OAuthLogin/oauth-popup';
 
 import '../SimpleMain';
 
@@ -12,7 +10,7 @@ import '../SimpleMain';
 
 // import the component's styles as HTML with <style>
 import { simplePortalStyles } from './simple-portal-styles';
-import { authLogin, authIsSignedIn } from "../../../helpers/auth";
+import { loginIfNecessary } from "../../../helpers/authManager";
 
 
 
@@ -35,9 +33,7 @@ class SimplePortal extends LitElement {
     super.connectedCallback();
 
     // To eliminate the login button/component, login directly
-    if( !authIsSignedIn() ) {
-      authLogin();
-    }
+    loginIfNecessary("simpleportal", true);
   
   }
 

@@ -1,8 +1,6 @@
 import './components/hello-world/hello-world';
 import '@lion/button/define';
 import '@lion/textarea/define';
-import './components/OAuthLogin/oauth-login';
-import './components/OAuthLogin/oauth-popup';
 import './samples/FullPortal/FullPortal';
 import './samples/SimplePortal/SimplePortal';
 import './samples/Mashup/MashupPortal';
@@ -14,7 +12,7 @@ const router = new Router(outlet);
 
 // Don't process the routes until the UserManager has been initialized
 //  and is ready
-document.addEventListener("UserManagerReady", () => {
+document.addEventListener("AuthManagerReady", () => {
 
     router.setRoutes([
         {path: '/', component: 'mashup-portal-component'},
