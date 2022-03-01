@@ -18,7 +18,7 @@ export let gbLoginInProgress = sessionStorage.getItem("wcsdk_loggingIn") === "1"
 let authMgr = null;
 // Since this variable is loaded in a separate instance in the popup scenario, use storage to coordinate across the two
 let usePopupForRestOfSession = sessionStorage.getItem("wcsdk_popup") === "1";
-let gbC11NInitInProgress = false;
+let gbC11NInitStarted = false;
 
 /*
  * Set to use popup experience for rest of session
@@ -457,9 +457,9 @@ export const authPostLogin = (tokens) => {
     }
   }
 
-  if( !window.PCore && !gbC11NInitInProgress) {
+  if( !window.PCore && !gbC11NInitStarted) {
     // Take care to not try to load constellation more than once
-    gbC11NInitInProgress = true;
+    gbC11NInitStarted = true;
     constellationInit( authConfig, tokens, authTokenUpdated, authFullReauth );
   }
 }
