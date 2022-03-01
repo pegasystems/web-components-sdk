@@ -11,7 +11,7 @@
     "mashupClient_comment2": "See SDK Guide for instructions on how to generate and obtain the proper values for the following entries",
     "mashupClientId": "17809302101260076926",    
     "mashupUserIdentifier": "customer@mediaco",
-    "mashupPassword": "cGVnYQ==",
+    "mashupPassword": "",
     
     "portalClientId_comment": "Client ID from the OAuth 2.0 Client Registration record used for portal use case",
     "portalClientId": "17809302101260076926"
@@ -20,7 +20,7 @@
     "comment_serverConfig": "serverConfig is the block for SDK Content Server config entries",
     
     "infinityRestServerUrl_comment": "Full path to Infinity REST server",
-    "infinityRestServerUrl": "https://lab0641.lab.pega.com/prweb",
+    "infinityRestServerUrl": "https://localhost:1080/prweb",
 
     "appAlias_comment": "appAlias of the application which operators will be accessing (e.g., MediaCo)",
     "appAlias": "MediaCo",
