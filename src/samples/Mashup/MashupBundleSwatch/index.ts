@@ -3,8 +3,6 @@ import { SdkConfigAccess } from '../../../helpers/config_access';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
-import '../../../components/OAuthLogin/oauth-login';
-import '../../../components/OAuthLogin/oauth-popup';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;

@@ -3,10 +3,6 @@ import { SdkConfigAccess } from '../../../helpers/config_access';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
-import '../../../components/OAuthLogin/oauth-login';
-import '../../../components/OAuthLogin/oauth-popup';
-
-import { authLogin, authLogout, authIsSignedIn, authMashupLogin } from "../../../helpers/auth";
 
 import '../MashupMain';
 
@@ -14,7 +10,7 @@ import '../MashupMain';
 
 // import the component's styles as HTML with <style>
 import { mashupPortalStyles } from './mashup-portal-styles';
-
+import { loginIfNecessary } from "../../../helpers/authManager";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -27,12 +23,9 @@ class MashupPortal extends LitElement {
   constructor() {
     super();
 
-    // Force use of mashupClientId and mashupClientSecret (that chooses the right flow)
-    //  by making sure any currently logged in user is logged out.
-    if (authIsSignedIn()) {
-      authLogout();
-    }
     window.sessionStorage.setItem("startingComponent", "mashup-portal-component");
+
+    loginIfNecessary("embedded", true);
 
   }
 
@@ -60,10 +53,6 @@ class MashupPortal extends LitElement {
       </div>
       <div id="pega-here"></div>
     </div>`;
-
-  if( !authIsSignedIn() ) {
-    authMashupLogin();
-  }
 
     return sPHtml;
   }

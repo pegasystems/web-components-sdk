@@ -3,14 +3,12 @@ import { SdkConfigAccess } from '../../../helpers/config_access';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
-import '../../../components/OAuthLogin/oauth-login';
-import '../../../components/OAuthLogin/oauth-popup';
 
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { fullPortalStyles } from './full-portal-styles';
-import { authLogin, authIsSignedIn } from "../../../helpers/auth";
+import { loginIfNecessary } from "../../../helpers/authManager";
 
 
 // Declare that PCore will be defined when this code is run
@@ -32,9 +30,7 @@ class FullPortal extends LitElement {
     window.sessionStorage.setItem("startingComponent", "full-portal-component");
 
     // To eliminate the login button/component, login directly
-    if( !authIsSignedIn() ) {
-      authLogin();
-    }
+    loginIfNecessary("portal", false);
     
   }
 
