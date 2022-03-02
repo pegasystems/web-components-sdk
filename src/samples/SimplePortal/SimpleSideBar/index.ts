@@ -3,8 +3,6 @@ import { SdkConfigAccess } from '../../../helpers/config_access';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
-import '../../../components/OAuthLogin/oauth-login';
-import '../../../components/OAuthLogin/oauth-popup';
 
 // NOTE: you need to import ANY component you may render.
 
