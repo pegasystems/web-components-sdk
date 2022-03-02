@@ -1,4 +1,5 @@
 import { SdkConfigAccess } from './config_access';
+let gbC11NBootstrapInProgress = false;
 
 /**
  * Initiate the process to get the Constellation bootstrap shell loaded and initialized
@@ -42,6 +43,12 @@ export const constellationInit = ( authConfig, tokenInfo, authTokenUpdated, auth
   
   // Turn off dynamic load components (should be able to do it here instead of after load?)
   constellationBootConfig.dynamicLoadComponents = false;
+
+  if( gbC11NBootstrapInProgress ) {
+    return;
+  } else {
+    gbC11NBootstrapInProgress = true;
+  }
   
   // Note that staticContentServerUrl already ends with a slash (see above), so no slash added.
   // In order to have this import succeed and to have it done with the webpackIgnore magic comment tag.  See:  https://webpack.js.org/api/module-methods/ 
@@ -56,6 +63,7 @@ export const constellationInit = ( authConfig, tokenInfo, authTokenUpdated, auth
       // What is the 2nd argument 'shell' what DOM element has that id
       bootstrapShell.bootstrapWithAuthHeader(constellationBootConfig, 'shell').then(() => {
           console.log('Bootstrap successful!');
+          gbC11NBootstrapInProgress = false;
 
           PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_FULL_REAUTH, authFullReauth, "authFullReauth");
 
@@ -65,8 +73,9 @@ export const constellationInit = ( authConfig, tokenInfo, authTokenUpdated, auth
       })
       .catch( e => {
         // Assume error caught is because token is not valid and attempt a full reauth
+        gbC11NBootstrapInProgress = false;
         // eslint-disable-next-line no-console
-        console.log(e);
+        console.error(`Constellation JS Engine bootstrap failed. ${e}`);
         authFullReauth();
       })
   });
