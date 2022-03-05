@@ -7,17 +7,17 @@
 
 import { SdkConfigAccess } from '../helpers/config_access';
 import PegaAuth from './auth';
-import { constellationInit } from './c11nboot';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let gbLoggedIn = sessionStorage.getItem('accessToken') !== null;
 // eslint-disable-next-line import/no-mutable-exports
-export let gbLoginInProgress = sessionStorage.getItem("wcsdk_loggingIn") === "1";
+export let gbLoginInProgress = sessionStorage.getItem("wcsdk_loggingIn") !== null;
 
 // will store the PegaAuth instance
 let authMgr = null;
 // Since this variable is loaded in a separate instance in the popup scenario, use storage to coordinate across the two
 let usePopupForRestOfSession = sessionStorage.getItem("wcsdk_popup") === "1";
+let gbC11NBootstrapInProgress = false;
 
 /*
  * Set to use popup experience for rest of session
@@ -168,6 +168,90 @@ const getAuthMgr = ( bInit ) => {
   });
 };
 
+/**
+ * Initiate the process to get the Constellation bootstrap shell loaded and initialized
+ * @param {Object} authConfig
+ * @param {Object} tokenInfo
+ * @param {Function} authTokenUpdated - callback invoked when Constellation JS Engine silently updates
+ *      an expired access_token
+ * @param {Function} authFullReauth - callback invoked when a full reauth is needed
+ */
+ const constellationInit = (authConfig, tokenInfo, authTokenUpdated, authFullReauth) => {
+  const constellationBootConfig = {};
+  const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
+
+  // Set up constellationConfig with data that bootstrapWithAuthHeader expects
+  constellationBootConfig.customRendering = true;
+  constellationBootConfig.restServerUrl = sdkConfigServer.infinityRestServerUrl;
+  // NOTE: Needs a trailing slash! So add one if not provided
+  constellationBootConfig.staticContentServerUrl = `${sdkConfigServer.sdkContentServerUrl}/constellation/`;
+  if (constellationBootConfig.staticContentServerUrl.slice(-1) !== '/') {
+    constellationBootConfig.staticContentServerUrl = `${constellationBootConfig.staticContentServerUrl}/`;
+  }
+  // If appAlias specified, use it
+  if( sdkConfigServer.appAlias ) {
+    constellationBootConfig.appAlias = sdkConfigServer.appAlias;
+  }
+
+  // Pass in auth info to Constellation
+  constellationBootConfig.authInfo = {
+    authType: "OAuth2.0",
+    tokenInfo,
+    // Set whether we want constellation to try to do a full re-Auth or not ()
+    // true doesn't seem to be working in SDK scenario so always passing false for now
+    popupReauth: false /* !authIsEmbedded() */,
+    client_id: authConfig.clientId,
+    authentication_service: authConfig.authService,
+    redirect_uri: authConfig.redirectUri,
+    endPoints: {
+        authorize: authConfig.authorizeUri,
+        token: authConfig.tokenUri,
+        revoke: authConfig.revokeUri
+    },
+    // TODO: setup callback so we can update own storage
+    onTokenRetrieval: authTokenUpdated
+  }
+  
+  // Turn off dynamic load components (should be able to do it here instead of after load?)
+  constellationBootConfig.dynamicLoadComponents = false;
+
+  if( gbC11NBootstrapInProgress ) {
+    return;
+  } else {
+    gbC11NBootstrapInProgress = true;
+  }
+  
+  // Note that staticContentServerUrl already ends with a slash (see above), so no slash added.
+  // In order to have this import succeed and to have it done with the webpackIgnore magic comment tag.  See:  https://webpack.js.org/api/module-methods/ 
+  import(/* webpackIgnore: true */ `${constellationBootConfig.staticContentServerUrl}bootstrap-shell.js`).then((bootstrapShell) => {
+      // NOTE: once this callback is done, we lose the ability to access loadMashup.
+      //  So, create a reference to it
+      window.myLoadMashup = bootstrapShell.loadMashup;
+
+      // For experimentation, save a reference to loadPortal, too!
+      window.myLoadPortal = bootstrapShell.loadPortal;
+
+      // What is the 2nd argument 'shell' what DOM element has that id
+      bootstrapShell.bootstrapWithAuthHeader(constellationBootConfig, 'shell').then(() => {
+          console.log('Bootstrap successful!');
+          gbC11NBootstrapInProgress = false;
+
+          PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_FULL_REAUTH, authFullReauth, "authFullReauth");
+
+          var event = new CustomEvent("ConstellationReady", { });
+          document.dispatchEvent(event);
+
+      })
+      .catch( e => {
+        // Assume error caught is because token is not valid and attempt a full reauth
+        gbC11NBootstrapInProgress = false;
+        // eslint-disable-next-line no-console
+        console.error(`Constellation JS Engine bootstrap failed. ${e}`);
+        authFullReauth();
+      })
+  });
+  /** Ends here **/
+};
 
 export const updateLoginStatus = () => {
   const sAuthHdr = sessionStorage.getItem('accessToken');
@@ -195,7 +279,7 @@ const getCurrentTokens = () => {
   return tokens;
 };
 
-const fireTokenAvailable = (token) => {
+const fireTokenAvailable = (token, bLoadC11n=true) => {
   if( !token ) {
     // This is used on page reload to load the token from sessionStorage and carry on
     token = getCurrentTokens();
@@ -225,7 +309,7 @@ const fireTokenAvailable = (token) => {
     }
   }
 
-  authPostLogin(token);
+  authPostLogin(token, bLoadC11n);
 
   /*
   if( !window.PCore ) {
@@ -241,12 +325,12 @@ const fireTokenAvailable = (token) => {
   */
 };
 
-const processTokenOnLogin = ( token ) => {
+const processTokenOnLogin = ( token, bLoadC11n=true ) => {
   sessionStorage.setItem("wcsdk_TI", JSON.stringify(token));
   if( window.PCore ) {
     window.PCore.getAuthUtils().setTokens(token);
   } else {
-    fireTokenAvailable(token);
+    fireTokenAvailable(token, bLoadC11n);
   }
 };
 
@@ -275,7 +359,7 @@ export const login = (bFullReauth=false) => {
 
   gbLoginInProgress = true;
   // Needed so a redirect to login screen and back will know we are still in process of logging in
-  sessionStorage.setItem("wcsdk_loggingIn", "1");
+  sessionStorage.setItem("wcsdk_loggingIn", `${Date.now()}`);
 
   getAuthMgr(!bFullReauth).then( (aMgr) => {
     const bPortalLogin = !authIsEmbedded();
@@ -357,7 +441,7 @@ export const authRedirectCallback = ( href, fnLoggedInCB=null ) => {
   getAuthMgr(false).then( aMgr => {
     aMgr.getToken(code).then(token => {
       if( token && token.access_token ) {
-          processTokenOnLogin(token);
+          processTokenOnLogin(token, false);
           if( fnLoggedInCB ) {
               fnLoggedInCB( token.access_token );
           }
@@ -444,7 +528,7 @@ export const authFullReauth = () => {
   }
 };
 
-export const authPostLogin = (tokens) => {
+export const authPostLogin = (tokens, bLoadC11n=true) => {
 
   const sCI = sessionStorage.getItem("wcsdk_CI");
   let authConfig = null;
@@ -456,7 +540,7 @@ export const authPostLogin = (tokens) => {
     }
   }
 
-  if( !window.PCore ) {
+  if( !window.PCore && bLoadC11n ) {
     // Take care to not try to load constellation more than once
     constellationInit( authConfig, tokens, authTokenUpdated, authFullReauth );
   }
@@ -477,5 +561,62 @@ document.addEventListener("SdkConfigAccessReady", () => {
   // Create and dispatch the AuthManagerReady event
   var event = new CustomEvent("AuthManagerReady", { });
   document.dispatchEvent(event);
+
+});
+
+// Code below moved here from c11nboot.js (but should be moved up to samples as very markup specific)
+// Code that sets up use of Constellation once it's been loaded and ready
+
+document.addEventListener("ConstellationReady", () => {
+
+  const replaceMe = document.getElementById("pega-here");
+
+  if (replaceMe == null) {
+
+    // shadow root
+    const startingComponent = window.sessionStorage.getItem("startingComponent");
+
+    const myShadowRoot = document.getElementsByTagName(startingComponent)[0].shadowRoot;
+    const replaceMe = myShadowRoot.getElementById("pega-here");
+    const elPrePegaHdr = myShadowRoot.getElementById("app-nopega");
+    if(elPrePegaHdr) elPrePegaHdr.style.display = "none";
+
+    let replacement = null;
+
+    switch (startingComponent) {
+      case "full-portal-component" :
+        replacement = document.createElement("app-entry");
+        break;
+      case "simple-portal-component":
+        replacement = document.createElement("simple-main-component");
+        break;
+      case "mashup-portal-component":
+        replacement = document.createElement("mashup-main-component");
+        break;
+    }
+
+    if (replacement != null) {
+      replacement.setAttribute("id", "pega-root");
+      replaceMe.replaceWith(replacement);
+    }
+
+  }
+  else {
+
+        // Hide the original prepega area
+    const elPrePegaHdr = document.getElementById("app-nopega");
+    if(elPrePegaHdr) elPrePegaHdr.style.display = "none";
+
+    // With Constellation Ready, replace <div id="pega-here"></div>
+    //  with top-level AppEntry with id="pega-root". The creation of
+    //  AppEntry will kick off the loadMashup.
+  
+    const replacement = document.createElement("app-entry");
+
+    replacement.setAttribute("id", "pega-root");
+    replaceMe.replaceWith(replacement);
+
+  }
+
 
 });
