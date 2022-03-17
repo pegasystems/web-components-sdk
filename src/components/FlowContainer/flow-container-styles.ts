@@ -6,6 +6,12 @@ export const flowContainerStyles = html`
       font-size: 1.1rem;
     }
 
+    .psdk-instruction-text {
+    font-size: 0.90rem;
+    font-weight: 400;
+    margin-bottom: 1.0rem; 
+    }
+
     .psdk-case-view-divider {
       border-bottom: 0.0625rem solid var(--app-neutral-light-color);
     }

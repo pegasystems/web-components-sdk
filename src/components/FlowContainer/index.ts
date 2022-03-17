@@ -1,4 +1,4 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement, property, nothing } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import '../Assignment';
@@ -25,6 +25,7 @@ class FlowContainer extends BridgeBase {
 
   buildName: string= "";
   containerName: string = "";
+  instructionText: string = "";
   itemKey: string = "";
   configProps : Object = {};
 
@@ -337,6 +338,7 @@ class FlowContainer extends BridgeBase {
                 // may not be available
                 if (oWorkData) { 
                   this.containerName = this.getActiveViewLabel() || oWorkData.caseInfo.assignments[0].name;
+                  this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
                 }
 
                 //this.render();
@@ -399,6 +401,7 @@ class FlowContainer extends BridgeBase {
 
     if (bLoadChildren && oWorkData) { 
       this.containerName = oWorkData.caseInfo.assignments[0].name;
+      this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
     }
   
 
@@ -451,6 +454,7 @@ class FlowContainer extends BridgeBase {
         ${!this.todo_showTodo?
           html`
           <h2>${this.containerName}</h2>
+          ${(this.instructionText !== "") ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing }
           <div>
             <assignment-component .pConn=${this.thePConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
           </div>
