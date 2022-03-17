@@ -75,8 +75,6 @@ class View extends BridgeBase {
 
     //this.buildView();
 
-    debugger;
-
     const configProps = this.thePConn.getConfigProps();
     this.templateName = ('template' in configProps) ? configProps["template"] : "";
     if (this.bLogging) { console.log(`--> ${this.theComponentName} - templateName: ${this.templateName}`); }
@@ -95,8 +93,6 @@ class View extends BridgeBase {
     // We need to bind this component's additionalProps (defined on BridgeBase)
     //  to this implementation's computeAdditionalProps
     this.additionalProps = this.computeAdditionalProps.bind(this);
-
-    debugger;
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));

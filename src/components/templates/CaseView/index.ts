@@ -395,14 +395,16 @@ class CaseView extends BridgeBase {
   }
 
 
-  editClick() {
-    debugger;
-  }
+  // editClick() {
+  //   // eslint-disable-next-line no-debugger
+  //   debugger;
+  // }
 
-  actionsClick() {
-    debugger;
+  // actionsClick() {
+  //   // eslint-disable-next-line no-debugger
+  //   debugger;
 
-  }
+  // }
 
 }
 

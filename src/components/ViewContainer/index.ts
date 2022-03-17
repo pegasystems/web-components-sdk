@@ -220,7 +220,7 @@ class ViewContainer extends BridgeBase {
           this.templateName = ('template' in newConfigProps) ? newConfigProps["template"] : "";
           this.title = ('title' in newConfigProps) ? newConfigProps["title"] : "";
 
-          debugger;     // NOW a reference component!!!
+          // debugger;     // NOW a reference component!!!
 
           // update children with new view's children
           // JA experiment. Only replace if the newComp has children!
@@ -229,7 +229,7 @@ class ViewContainer extends BridgeBase {
             this.children = newComp.getChildren();
           }
 
-          debugger;     // NOW a reference component!!!
+          // debugger;     // NOW a reference component!!!
 
         }
       }
@@ -278,7 +278,7 @@ class ViewContainer extends BridgeBase {
     // NOTE: We're handling the possible Title and children in the templates below
     let theInnerTemplate = nothing;
 
-    debugger;
+    // debugger;
 
     if (this.templateName !== "") {
       theInnerTemplate = html`
@@ -306,7 +306,7 @@ class ViewContainer extends BridgeBase {
 
     `;
 
-    debugger;
+    // debugger;
 
     // Try simplifying to only render the createdViewPConn (that's now a reference)
     const theCreatedRefComponent = html`<reference-component .pConn=${this.createdViewPConn} ?displayOnlyFA=${this.displayOnlyFA}></reference-component>`;

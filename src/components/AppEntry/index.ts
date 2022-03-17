@@ -73,10 +73,6 @@ class AppEntry extends LitElement {
         // eslint-disable-next-line no-console
         console.log(`    additionalProps: ${JSON.stringify(additionalProps)}`);
 
-        // eslint-disable-next-line no-debugger
-        debugger;
-        
-
         return c11nEnv;
 
         // REACT implementaion:

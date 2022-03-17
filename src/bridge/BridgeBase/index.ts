@@ -484,7 +484,7 @@ updated(changedProperties) {
 
     // For temporary debugging... push the current component's name onto this, renderTemplates...
     //  UNCOMMENT TO SEE WHERE COMPONENTS ARE
-    this.renderTemplates.push( html`<div style='width: fit-content; border: dotted 0.5px #DDDDDD;'>${this.theComponentName}</div>` );
+    // this.renderTemplates.push( html`<div style='width: fit-content; border: dotted 0.5px #DDDDDD;'>${this.theComponentName}</div>` );
 
     // Add in any style template that's been provided in this.theComponentStyleTemplate
     this.renderTemplates.push( this.theComponentStyleTemplate );
@@ -495,16 +495,14 @@ updated(changedProperties) {
    * iterates over this.children to add appropriate templates to this.renderTemplates
    */
   addChildTemplates() {
-    if (this.bDebug){ debugger; }
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
     if (this.children === null) {
-      if (true) {
+      if (this.bLogging) {
         // Typically, this is expected for some use cases (PreviewViewContainer, Region, etc.) but this
         //  message can be useful during debugging if your component is expecting to have children.
         console.log(`--> ${this.theComponentName}: addChildTemplate: when this.children === null !!!`);
       }
-      if (true){ debugger; }
 
       return;
     }
@@ -629,7 +627,6 @@ updated(changedProperties) {
             
         case "Reference":
         case "reference":
-          debugger;
           this.renderTemplates.push( html`<reference-component .pConn=${child}></reference-component>` );
           break;
               
@@ -683,12 +680,10 @@ updated(changedProperties) {
           break;
     
         case "WideNarrowPage":
-          debugger;
           this.renderTemplates.push( html`<wide-narrow-page .pConn=${child}></wide-narrow-page>` );
           break;
   
           default:
-          debugger;
           this.renderTemplates.push( html`<p>${this.theComponentName}: unknown rendering for ${childType}</p>` );
           break;
       }
@@ -702,16 +697,14 @@ updated(changedProperties) {
    */
   getChildTemplateArray(displayOnlyFA: boolean = false) {
     let theChildTemplates: Array<Object> = [];
-    if (true){ debugger; }
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
     if (this.children === null) {
-      if (true) {
+      if (this.bLogging) {
         // Typically, this is expected for some use cases (DefaultForm, etc.) but this
         //  message can be useful during debugging if your component is expecting to have children.
         console.log(`--> ${this.theComponentName}: getChildTemplateArray: when this.children === null !!!`);
       }
-      if (true){ debugger; }
 
       return theChildTemplates;
     }
@@ -740,7 +733,6 @@ updated(changedProperties) {
             break;
 
           default:
-            debugger;
             theChildTemplates.push( html`<p>${this.theComponentName}: displayFAOnly - unknown rendering for ${childType}</p>` );
             break;
   
@@ -915,12 +907,10 @@ updated(changedProperties) {
             break;
       
           case "WideNarrowPage":
-            debugger;
             this.renderTemplates.push( html`<wide-narrow-page .pConn=${child}></wide-narrow-page>` );
             break;
       
           default:
-            debugger;
             theChildTemplates.push( html`<p>${this.theComponentName}: unknown rendering for ${childType}</p>` );
             break;
         }
@@ -985,12 +975,10 @@ updated(changedProperties) {
         break;
 
       case "WideNarrowPage":
-        debugger;
         this.renderTemplates.push( html`<wide-narrow-page .pConn=${inPConnToUse}></wide-narrow-page>` );
         break;
           
       default:
-        debugger;
         theTemplateForTemplate = html`<boilerplate-component value="${this.baseComponentName}: getTemplateForTemplate doesn't know how to handle ${inTemplate}"></boilerplate-component>`;
         break;
 
