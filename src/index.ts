@@ -15,6 +15,13 @@ const router = new Router(outlet);
 document.addEventListener("AuthManagerReady", () => {
 
     router.setRoutes([
+
+        // External routes on top
+        {path: '/auth.html',
+            action: (ctx, commands) => {
+                window.location.pathname = ctx.pathname;
+            }
+        },
         {path: '/', component: 'mashup-portal-component'},
         {path: '/embedded', component: 'mashup-portal-component'},
         {path: '/mashup', component: 'mashup-portal-component'},
