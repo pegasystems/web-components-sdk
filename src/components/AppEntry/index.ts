@@ -62,6 +62,14 @@ class AppEntry extends LitElement {
       PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
         // debugger;
 
+        // eslint-disable no-console
+        console.log(`In registerCreateComponent callback for ${JSON.stringify(c11nEnv.getPConnect().getComponentName())}`);
+        console.log(`    c11nEnv: ${JSON.stringify(c11nEnv)}`);
+        console.log(`    c11nEnv.getPConnect().getConfigProps(): ${JSON.stringify(c11nEnv.getPConnect().getConfigProps())}`);
+        console.log(`    c11nEnv.getPConnect().getActions(): ${JSON.stringify(c11nEnv.getPConnect().getActions())}`);
+        console.log(`    additionalProps: ${JSON.stringify(additionalProps)}`);
+        // eslint-enable no-console
+
         return c11nEnv;
 
         // REACT implementaion:

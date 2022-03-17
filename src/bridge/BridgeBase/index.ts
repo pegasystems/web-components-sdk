@@ -495,7 +495,6 @@ updated(changedProperties) {
    * iterates over this.children to add appropriate templates to this.renderTemplates
    */
   addChildTemplates() {
-    if (this.bDebug){ debugger; }
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
     if (this.children === null) {
@@ -504,7 +503,6 @@ updated(changedProperties) {
         //  message can be useful during debugging if your component is expecting to have children.
         console.log(`--> ${this.theComponentName}: addChildTemplate: when this.children === null !!!`);
       }
-      if (this.bDebug){ debugger; }
 
       return;
     }
@@ -627,6 +625,11 @@ updated(changedProperties) {
           this.renderTemplates.push( html`<radio-buttons-form .pConn=${child}></radio-buttons-form>` );
           break;
             
+        case "Reference":
+        case "reference":
+          this.renderTemplates.push( html`<reference-component .pConn=${child}></reference-component>` );
+          break;
+              
         case "Region":
           this.renderTemplates.push( html`<region-component .pConn=${child}></region-component>` );
           break;
@@ -676,7 +679,11 @@ updated(changedProperties) {
           this.renderTemplates.push( html`<view-container .pConn=${child}></view-container>` );
           break;
     
-        default:
+        case "WideNarrowPage":
+          this.renderTemplates.push( html`<wide-narrow-page .pConn=${child}></wide-narrow-page>` );
+          break;
+  
+          default:
           this.renderTemplates.push( html`<p>${this.theComponentName}: unknown rendering for ${childType}</p>` );
           break;
       }
@@ -690,7 +697,6 @@ updated(changedProperties) {
    */
   getChildTemplateArray(displayOnlyFA: boolean = false) {
     let theChildTemplates: Array<Object> = [];
-    if (this.bDebug){ debugger; }
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
     if (this.children === null) {
@@ -699,7 +705,6 @@ updated(changedProperties) {
         //  message can be useful during debugging if your component is expecting to have children.
         console.log(`--> ${this.theComponentName}: getChildTemplateArray: when this.children === null !!!`);
       }
-      if (this.bDebug){ debugger; }
 
       return theChildTemplates;
     }
@@ -901,6 +906,10 @@ updated(changedProperties) {
             theChildTemplates.push( html`<view-container .pConn=${child}></view-container>` );
             break;
       
+          case "WideNarrowPage":
+            this.renderTemplates.push( html`<wide-narrow-page .pConn=${child}></wide-narrow-page>` );
+            break;
+      
           default:
             theChildTemplates.push( html`<p>${this.theComponentName}: unknown rendering for ${childType}</p>` );
             break;
@@ -964,7 +973,11 @@ updated(changedProperties) {
       case "TwoColumnPage":
         theTemplateForTemplate = html`<two-column-page .pConn=${inPConnToUse}></two-column-page>`;
         break;
-  
+
+      case "WideNarrowPage":
+        this.renderTemplates.push( html`<wide-narrow-page .pConn=${inPConnToUse}></wide-narrow-page>` );
+        break;
+          
       default:
         theTemplateForTemplate = html`<boilerplate-component value="${this.baseComponentName}: getTemplateForTemplate doesn't know how to handle ${inTemplate}"></boilerplate-component>`;
         break;
