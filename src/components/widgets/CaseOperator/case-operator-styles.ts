@@ -13,7 +13,7 @@ export const caseOperatorStyles = html`
     display: flex;
     flex-direction: row;
     /* font-size: 0.8rem; */
-    color: $app-neutral-color;
+    color: var(--app-neutral-color);
     }
 
     .psdk-operator-popover {
@@ -30,12 +30,12 @@ export const caseOperatorStyles = html`
     }
 
     .psdk-operator-name {
-        color: $app-neutral-color;
+        color: var(--app-neutral-color);
     }
 
     .psdk-operator-value {
         padding-left: 5px;
-        color: $app-neutral-dark-color
+        color: var(--app-neutral-dark-color);
     }
 
 

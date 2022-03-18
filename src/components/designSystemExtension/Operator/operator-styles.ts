@@ -7,7 +7,7 @@ export const operatorStyles = html`
     display: flex;
     flex-direction: row;
     /* font-size: 0.8rem; */
-    color: $app-neutral-color;
+    color: var(--app-neutral-color);
     }
 
     .psdk-operator-popover {
@@ -24,12 +24,12 @@ export const operatorStyles = html`
     }
 
     .psdk-operator-name {
-        color: $app-neutral-color;
+        color: var(--app-neutral-color);
     }
 
     .psdk-operator-value {
         padding-left: 5px;
-        color: $app-neutral-dark-color
+        color: var(--app-neutral-dark-color);
     }
 
 

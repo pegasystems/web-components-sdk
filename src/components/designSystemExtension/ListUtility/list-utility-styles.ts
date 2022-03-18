@@ -14,7 +14,7 @@ lion-button {
 }
 
 .psdk-utility-divider {
-    border-bottom: 0.0625rem solid $app-neutral-light-color;
+    border-bottom: 0.0625rem solid var(--app-neutral-light-color);
 }
 
 .psdk-utility-view-all {

@@ -84,7 +84,7 @@ class Reference extends BridgeBase {
     };
 
     // eslint-disable-next-line no-console
-    console.log( `Reference: about to call createComponent with pageReference: context: ${this.resolvedConfigProps["context"]}`);
+    if (this.bLogging) { console.log( `Reference: about to call createComponent with pageReference: context: ${this.resolvedConfigProps["context"]}`); }
 
     const viewComponent = this.pConn.createComponent(viewObject, null, null, {
         pageReference: this.resolvedConfigProps["context"]
@@ -100,7 +100,8 @@ class Reference extends BridgeBase {
         }
     );
 
-    console.log(`Web Component Reference component: newCompPConnect configProps: ${JSON.stringify(newCompPConnect.getConfigProps())}`);
+    // eslint-disable-next-line no-console
+    if (this.bLogging) { console.log(`Web Component Reference component: newCompPConnect configProps: ${JSON.stringify(newCompPConnect.getConfigProps())}`); }
 
     this.referencedViewComponent = newCompPConnect;
 
@@ -134,6 +135,8 @@ class Reference extends BridgeBase {
   }
 
   getComponentToRender() {
+    if (this.bLogging) { console.log(`Reference: getComponentToRender: displayOnlyFA: ${this.displayOnlyFA}`); }
+
     const viewContent = this.referencedViewComponent
       ? html`<view-component .pConn=${this.referencedViewComponent} ?displayOnlyFA=${this.displayOnlyFA}></view-component>`
       : nothing;
@@ -148,7 +151,8 @@ class Reference extends BridgeBase {
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
+    this.prepareForRender(this.displayOnlyFA);
+    
 
     this.renderTemplates.push( this.getComponentToRender() );
 

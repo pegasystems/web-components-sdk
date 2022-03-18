@@ -148,6 +148,11 @@ class CaseView extends BridgeBase {
     let theRetArray: Array<Object> = [];
     let iFound = 0;
 
+    // if no children, return theRetArray since nothing will be added...
+    if (!this.children) {
+      return theRetArray;
+    }
+
     for (var child of this.children) {
       const theMetadataType: string = child.getPConnect().getRawMetadata()['type'].toLowerCase();
       const theMetadataName: string = child.getPConnect().getRawMetadata()['name'].toLowerCase();
@@ -219,7 +224,7 @@ class CaseView extends BridgeBase {
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
+    this.prepareForRender(this.displayOnlyFA);
 
     const theContent = html`
       <div class='psdk-case-view'>

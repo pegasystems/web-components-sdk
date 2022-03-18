@@ -103,6 +103,10 @@ class Region extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
+    if (!this.children) {
+      if (this.bLogging) { console.log(`${this.theComponentName}: render with NO children: ${this.children}`); }
+    }
+
     this.addChildTemplates();
 
     return this.renderTemplates;

@@ -162,7 +162,7 @@ class View extends BridgeBase {
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
+    this.prepareForRender(this.displayOnlyFA);
 
     // NOTE: We're handling the possible Title and children in the templates below
 
@@ -174,7 +174,7 @@ class View extends BridgeBase {
 
     if (this.templateName !== "") {
       theInnerTemplate = html`
-        ${this.getTemplateForTemplate(this.templateName, this.pConn)}
+        ${this.getTemplateForTemplate(this.templateName, this.pConn, this.displayOnlyFA)}
       `;
     } else if (this.displayOnlyFA) {
       theInnerTemplate = html`
