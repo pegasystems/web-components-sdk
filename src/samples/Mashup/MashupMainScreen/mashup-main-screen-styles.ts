@@ -27,7 +27,7 @@ export const mashupMainScreenStyles = html`
 
 .cc-work-button {
     font-size: 22px;
-    color: $app-primary-color;
+    color: var(--app-primary-color);
     text-decoration: underline;
     padding-top: 10px;
 }

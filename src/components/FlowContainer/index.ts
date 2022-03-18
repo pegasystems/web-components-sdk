@@ -137,11 +137,27 @@ class FlowContainer extends BridgeBase {
 
     let hasAssignments = false;
     const assignmentsList = this.thePConn.getValue("caseInfo.assignments");
+    const thisOperator = PCore.getEnvironmentInfo().getOperatorIdentifier();
+    // 8.7 includes assignments in Assignments List that may be assigned to
+    //  a different operator. So, see if there are any assignments for
+    //  the current operator
+    let bAssignmentsForThisOperator = false;
+
+    // Bail if there is no assignmentsList
+    if (!assignmentsList) {
+      return hasAssignments;
+    }
+
+    for (const assignment of assignmentsList) {
+      if (assignment["assigneeInfo"]["ID"] === thisOperator) {
+        bAssignmentsForThisOperator = true;
+      }
+    }
 
     const hasChildCaseAssignments = this.hasChildCaseAssignments();
 
     if (
-      assignmentsList ||
+      bAssignmentsForThisOperator ||
       hasChildCaseAssignments ||
       this.isCaseWideLocalAction()
     ) {
@@ -273,6 +289,12 @@ class FlowContainer extends BridgeBase {
 
     if (this.caseMessages || !this.hasAssignments()) {
       this.bHasCaseMessages = true;
+
+      // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
+      // So, if we get here and caseMessages$ is empty, use default value in DX API response
+       if (!this.caseMessages) {
+        this.caseMessages = "Thank you! The next step in this case has been routed appropriately.";
+      }
 
 
       // publish this "assignmentFinished" for mashup, need to get approved as a standard

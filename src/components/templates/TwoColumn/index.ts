@@ -86,6 +86,12 @@ class TwoColumn extends BridgeBase {
     // We take care of the children in theChildTemplateArray
     const theChildTemplateArray: Array<Object> = [];
 
+    if (!this.children) {
+      if (this.bLogging) { console.log(`${this.theComponentName} children: ${this.children} but setting to []`); }
+      // If this.children is null, set to empty array so "for" doesn't break...
+      this.children = [];
+    }
+
     for (var child of this.children) {
       const theMetadataName: string = child.getPConnect().getRawMetadata()['name']?.toLowerCase();
       let theClassName: String = "";

@@ -271,7 +271,7 @@ class RootContainer extends BridgeBase {
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
+    this.prepareForRender(this.displayOnlyFA);
 
     if (this.createdPConnect !== null) {
       if (this.children === null) {

@@ -207,7 +207,7 @@ class ViewContainer extends BridgeBase {
           //  component is a View (and not a ViewContainer). We now look for the
           //  "template" type directly in the created component (newComp) and NOT
           //  as a child of the newly created component.
-          if (true) { console.log(`---> ${this.theComponentName} created new ${newCompName}`); }
+          if (this.bLogging) { console.log(`---> ${this.theComponentName} created new ${newCompName}`); }
 
           // Use the newly created component (View) info but DO NOT replace
           //  this ViewContainer's pConn$, etc.
@@ -269,7 +269,7 @@ class ViewContainer extends BridgeBase {
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
+    this.prepareForRender(this.displayOnlyFA);
 
     const showLoadingIndicator = this.getComponentProp("loadingInfo");
     if (this.bLogging) { console.log(`${this.theComponentName}: render with showLoadingIndicator: ${showLoadingIndicator}`); }

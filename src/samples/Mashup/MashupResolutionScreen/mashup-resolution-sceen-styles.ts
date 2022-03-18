@@ -38,7 +38,7 @@ export const mashupResolutionScreenStyles = html`
 
 .cc-chat-button {
     color: white;
-    background-color: $app-secondary-color;
+    background-color: var(--app-secondary-color);
     font-size: 25px;
     font-weight: bold;
     border-radius: 25px;

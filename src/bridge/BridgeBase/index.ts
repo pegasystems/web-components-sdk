@@ -475,8 +475,13 @@ updated(changedProperties) {
    *  ends up making the component render multiple times since the previous render templates would
    *  remain in the array
    * 
+   * Added an optional inDisplayOnlyFA argument that's **only** if you uncomment the line
+   *  that renders an extra div showing which component is rendered where. This was added to
+   *  assist in debuggin the /embedded use case when some components are set to only show
+   *  the FlowAction and not the rest of the UI around it.
   */
-  prepareForRender() {
+  // eslint-disable-next-line no-unused-vars
+  prepareForRender(inDisplayOnlyFA: boolean = false) {
     if (this.bDebug) { debugger; }
     if (this.bLogging) { console.log(`${this.theComponentName}: prepare for render`); }
 
@@ -484,7 +489,7 @@ updated(changedProperties) {
 
     // For temporary debugging... push the current component's name onto this, renderTemplates...
     //  UNCOMMENT TO SEE WHERE COMPONENTS ARE
-    // this.renderTemplates.push( html`<div style='width: fit-content; border: dotted 0.5px #DDDDDD;'>${this.theComponentName}</div>` );
+    // this.renderTemplates.push( html`<div style='width: fit-content; border: dotted 0.5px #DDDDDD;'>${this.theComponentName} ${inDisplayOnlyFA ? `displayOnlyFA: ${inDisplayOnlyFA}` : ""}</div>` );
 
     // Add in any style template that's been provided in this.theComponentStyleTemplate
     this.renderTemplates.push( this.theComponentStyleTemplate );
@@ -501,7 +506,7 @@ updated(changedProperties) {
       if (this.bLogging) {
         // Typically, this is expected for some use cases (PreviewViewContainer, Region, etc.) but this
         //  message can be useful during debugging if your component is expecting to have children.
-        console.log(`--> ${this.theComponentName}: addChildTemplate: when this.children === null !!!`);
+        console.log(`--> ${this.theComponentName}: addChildTemplates: when this.children === null !!!`);
       }
 
       return;
@@ -717,7 +722,7 @@ updated(changedProperties) {
       if (displayOnlyFA) {
         switch (childType) {
           case "CaseView":
-            theChildTemplates.push( html`<div class='psdk-case-view' ?dislayOnlyFA=${displayOnlyFA}><case-view .pConn=${child}></case-view></div>` );
+            theChildTemplates.push( html`<div class='psdk-case-view'><case-view .pConn=${child} ?dislayOnlyFA=${displayOnlyFA}></case-view></div>` );
             break;
           case "FlowContainer":
             theChildTemplates.push( html`<flow-container .pConn=${child}></flow-container>` );
