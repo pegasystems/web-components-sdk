@@ -19,7 +19,7 @@ class WideNarrowPage extends BridgeBase {
     //  1st: inDebug - sets this.bLogging: false if not provided
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
-    super(true, true);
+    super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
     if (this.bDebug){ debugger; }
 
@@ -73,7 +73,7 @@ class WideNarrowPage extends BridgeBase {
 
   render(){
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (true){ debugger; }
+    if (this.bDebug){ debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();

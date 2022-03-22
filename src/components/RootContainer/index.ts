@@ -256,7 +256,7 @@ class RootContainer extends BridgeBase {
         break;
       
       default:
-        arKidHtml.push( html`<p>${this.theComponentName}: unknown rendering for ${this.componentName}</p>` );
+        arKidHtml.push( html`<p>${this.theComponentName}: wants to render [${this.componentName}]</p>` );
       break;
 
     }
