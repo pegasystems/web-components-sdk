@@ -7,6 +7,7 @@ import '../templates/TwoColumnPage';
 import '../FlowContainer';
 import '../templates/OneColumn';
 import '../templates/OneColumnTab';
+import '../templates/WideNarrowPage';
 import '../Stages';
 import '../Boilerplate';
 import '../templates/CaseSummary';
