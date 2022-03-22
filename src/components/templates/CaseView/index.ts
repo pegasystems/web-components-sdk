@@ -5,6 +5,7 @@ import { Utils } from '../../../helpers/utils';
 // NOTE: you need to import ANY component you may render.
 import '../../Region';
 import '../../VerticalTabs';
+import '../../Reference';
 
 // import the component's styles as HTML with <style>
 import { caseViewStyles } from './case-view-styles';
@@ -155,11 +156,20 @@ class CaseView extends BridgeBase {
 
     for (var child of this.children) {
       const theMetadataType: string = child.getPConnect().getRawMetadata()['type'].toLowerCase();
-      const theMetadataName: string = child.getPConnect().getRawMetadata()['name'].toLowerCase();
 
-      if ((theMetadataType === "region") && (theMetadataName === inName )) {
-        iFound++;
-        theRetArray.push( html`<region-component .pConn=${child.getPConnect()}></region-component>`);
+      // Addition of Reference component results in 2 possible components to render...
+      if (theMetadataType === "region") {
+        // If the type is a Reference, there will not be a 'name'
+        const theMetadataName: string = child.getPConnect().getRawMetadata()['name'].toLowerCase();
+
+        if (theMetadataName === inName) {
+          iFound++;
+          theRetArray.push( html`<region-component .pConn=${child.getPConnect()}></region-component>`);
+        }
+      } else if (theMetadataType === "reference") {
+        theRetArray.push( html`<reference-component .pConn=${child.getPConnect()}></reference-component>`);
+      } else {
+        console.error(`${this.theComponentName}: getChildRegionArray got unexpected: ${theMetadataType}`);
       }
     }
 

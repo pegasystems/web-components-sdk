@@ -21,6 +21,7 @@ import '../forms/Phone';
 import '../forms/RadioButtons';
 import '../forms/Text';
 import '../forms/TextArea';
+import '../forms/TextContent';
 import '../forms/TextInput';
 import '../forms/Time';
 import '../forms/URL';

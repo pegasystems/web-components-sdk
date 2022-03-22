@@ -647,6 +647,10 @@ updated(changedProperties) {
           this.renderTemplates.push( html`<text-area-form .pConn=${child}></text-area-form>` );
           break;
 
+        case "TextContent":
+          this.renderTemplates.push( html`<text-content-form .pConn=${child}></text-content-form>` );
+          break;
+
         case "TextInput":
           this.renderTemplates.push( html`<text-input-form .pConn=${child}></text-input-form>` );
           break;
@@ -689,7 +693,7 @@ updated(changedProperties) {
           break;
   
           default:
-          this.renderTemplates.push( html`<p>${this.theComponentName}: unknown rendering for ${childType}</p>` );
+          this.renderTemplates.push( html`<p>${this.theComponentName}: wants to render [${childType}]</p>` );
           break;
       }
     }
@@ -738,7 +742,7 @@ updated(changedProperties) {
             break;
 
           default:
-            theChildTemplates.push( html`<p>${this.theComponentName}: displayFAOnly - unknown rendering for ${childType}</p>` );
+            theChildTemplates.push( html`<p>${this.theComponentName}: displayFAOnly - wants to render [${childType}]</p>` );
             break;
   
         }
@@ -873,7 +877,11 @@ updated(changedProperties) {
           case "TextArea":
             theChildTemplates.push( html`<text-area-form .pConn=${child}></text-area-form>` );
             break;
-    
+
+          case "TextContent":
+            theChildTemplates.push( html`<text-content-form .pConn=${child}></text-content-form>` );
+            break;
+        
           case "TextInput":
             theChildTemplates.push( html`<text-input-form .pConn=${child}></text-input-form>` );
             break;
@@ -916,7 +924,7 @@ updated(changedProperties) {
             break;
       
           default:
-            theChildTemplates.push( html`<p>${this.theComponentName}: unknown rendering for ${childType}</p>` );
+            theChildTemplates.push( html`<p>${this.theComponentName}: wants to render [${childType}]</p>` );
             break;
         }
 
