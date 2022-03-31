@@ -210,7 +210,7 @@ class ToDo extends BridgeBase {
   clickGo(inAssignmentArray: any) {
     if (this.bDebug){ debugger; }
 
-    let { id, classname } = inAssignmentArray[0];
+    let { id, classname='' } = inAssignmentArray[0];
     
     let sTarget = this.thePConn.getContainerName();
     let sTargetContainerName = sTarget;

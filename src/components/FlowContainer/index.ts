@@ -1,6 +1,7 @@
 import { html, customElement, property, nothing } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
+import { addContainerItem, getToDoAssignments } from './helpers';
 import '../Assignment';
 import '../ToDo';
 
@@ -121,14 +122,9 @@ class FlowContainer extends BridgeBase {
         type: containerType
       });
 
-      containerMgr.addContainerItem({
-        semanticURL: "",
-        key: this.thePConn.getValue("key"),
-        flowName: this.thePConn.getValue("flowName"),
-        caseViewMode: "perform",
-        data: this.thePConn.getDataObject(baseContext),
-        containerType
-      });
+      // updated for 8.7 - 31-Mar-2022
+      addContainerItem(this.thePConn);
+
     }
   }
 
@@ -250,23 +246,17 @@ class FlowContainer extends BridgeBase {
     
     if (caseViewMode && caseViewMode == "review") {
 
-      //setTimeout(() => {
+        // updated for 8.7 - 30-Mar-2022
+        const todoAssignments = getToDoAssignments(this.thePConn);
 
-        const assignmentsList = localPConn.getValue(
-          CASE_CONSTS.D_CASE_ASSIGNMENTS_RESULTS
-        );
-   
-        const caseActions = localPConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS);
-        
-        if (caseActions) {
-          this.todo_caseInfoID = localPConn.getValue(CASE_CONSTS.CASE_INFO_ID);
-          this.todo_datasource = { source: assignmentsList };
-
-          this.todo_showTodo = true;
-          this.todo_showTodoList = false;
+        if (todoAssignments && todoAssignments.length > 0) {
+          this.todo_caseInfoID = this.thePConn.getValue(CASE_CONSTS.CASE_INFO_ID);
+          this.todo_datasource = { source: todoAssignments };
         }
-  
-      //}, 100);
+
+        this.todo_showTodo = true;
+        this.todo_showTodoList = false;
+
 
 
       // in React, when cancel is called, somehow the constructor for flowContainer is called which
