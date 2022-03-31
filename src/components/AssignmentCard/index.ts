@@ -86,6 +86,10 @@ class AssignmentCard extends BridgeBase {
     let arKidHtml: Array<Object> = [];
 
 
+    if (!this.arChildren || this.arChildren.length === 0) {
+      return;
+    }
+
     for (let kid of this.arChildren) {
       let kidPConn = kid.getPConnect();
       switch (kid.getPConnect().getComponentName()) {
@@ -102,6 +106,10 @@ class AssignmentCard extends BridgeBase {
           arKidHtml.push(html`<case-create-stage-component .pConn=${kidPConn}></case-create-stage-component>`);
           break;
 
+        case "Region" :
+          arKidHtml.push(html`<region-component .pConn=${kidPConn}></region-component>`);
+          break;
+  
         default :
           console.error(`${this.theComponentName} trying to render unknown child type: ${kid.getPConnect().getComponentName()}`);
           break;
