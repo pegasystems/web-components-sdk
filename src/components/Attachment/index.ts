@@ -366,7 +366,7 @@ class Attachment extends BridgeBase {
             type: "File",
             attachmentFieldName: this.att_valueRef,
             category: this.att_categoryName,
-            ID: fileRes.data.ID
+            ID: fileRes.ID    // 8.7 - ID is at the top-level now.
           };
   
           const fieldName = this.thePConn.getStateProps().value;
