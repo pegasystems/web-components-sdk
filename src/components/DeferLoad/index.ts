@@ -98,6 +98,7 @@ class DeferLoad extends BridgeBase {
   }
 
   loadActiveTab(data: any = {}) {
+    if (this.bLogging) { console.log(`DeferLoad: loadActiveTab data: ${JSON.stringify(data)} | loadData: ${JSON.stringify(this.loadData)}`); }
 
     const { isModalAction } = data;
 
@@ -130,9 +131,6 @@ class DeferLoad extends BridgeBase {
         
           let configObject = PCore.createPConnect(config);
   
-          this.bShowDefer = true;
-  
-  
           if (this.loadData["config"].label == "Details") {
             // for now, prevent details from being drawn
             this.componentName = "Details";
@@ -146,8 +144,17 @@ class DeferLoad extends BridgeBase {
             this.componentName = this.loadedPConn.getComponentName();         
           }
 
-  
+          // As of 8.7, the loadedPConn may be a Reference component. When we
+          //  see one of those, update loadedPConn and componentName to be the
+          //  referenced View, not the Reference component itself
+          if (this.componentName === "reference") {
+            this.loadedPConn = this.loadedPConn.getReferencedViewPConnect().getPConnect();
+            this.componentName = "View";
+          }
+        }).then(() => {
+          this.bShowDefer = true;
         });
+
     }
 
   }
@@ -227,7 +234,7 @@ class DeferLoad extends BridgeBase {
       // check for property changes, if so, normalize and render
       if (key == "loadData") {
 
-        this.loadActiveTab({});
+        this.loadActiveTab();
  
       }
     }

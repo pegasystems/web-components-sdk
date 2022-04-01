@@ -16,7 +16,7 @@ declare var PCore: any;
 class VerticalTabs extends LitElement {
   @property( {type: Array} ) tabConfig = [];
 
-  selectedIndex: number = 0;
+  selectedIndex: number = 0;    // Default to first tab in array
 
 
   // NOTE: VerticalTabs is NOT derived from BridgeBase; just derived from LitElement
@@ -54,7 +54,8 @@ class VerticalTabs extends LitElement {
   
       // check if props changes, if so, normalize and render
       if (key == "tabConfig") {
-          this.requestUpdate();
+        // console.log(`VerticalTabs: about to requestUpdate with updated: ${this.selectedIndex}`);
+        this.requestUpdate();
       }
     }
   }
@@ -123,6 +124,7 @@ class VerticalTabs extends LitElement {
     for (let i in this.tabConfig) {
       if (tabData["tabId"] == this.tabConfig[i]["id"]) {
         this.selectedIndex = parseInt(i);
+        // console.log(`VerticalTabs: about to requestUpdate for tab: ${this.selectedIndex}`);
         this.requestUpdate();
         break;
 
