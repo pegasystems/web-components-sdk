@@ -213,7 +213,32 @@ class ModalViewContainer extends BridgeBase {
 
               this.title = actionName || `New ${caseName} (${ID})`;
               // // update children with new view's children
-              this.arNewChildren = newComp.getChildren();
+
+              // With 8.7, the newly created component can be a Reference to a View
+              //  rather than a View itself
+              if (newCompName === "reference") {
+                // Reference component doesn't have children. But we can get the
+                //  View that it references and that View's children.
+                //  So we set the children to the reference's View's children
+                //  Note: the underlying components want the children as an array
+                //  of getPConnect() and not the children components directly.
+                //  So, we need to get referenced View PConnect and get its children
+                //  and CANNOT use the simpler, getReferencedView().children
+
+                const referencedViewPConn = newComp.getReferencedViewPConnect();
+                // children needs to be an array!
+                this.arNewChildren = [ referencedViewPConn ];
+
+                // This approach below works, too. But it seems less clean to skip over
+                //  the Reference component like we do here. So, unless problems
+                //  are seen, using the approach above instead of this.
+                // const referencedChildren = newComp.getReferencedViewPConnect().getPConnect().getChildren();
+                // this.arNewChildren = referencedChildren;
+
+
+              } else {
+                this.arNewChildren = newComp.getChildren();
+              }
               this.bShowModal = true;
   
               // save off itemKey to be used for finishAssignment, etc.

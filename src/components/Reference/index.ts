@@ -71,7 +71,8 @@ class Reference extends BridgeBase {
     const viewMetadata = this.pConn.getReferencedView();
 
     if (!viewMetadata) {
-      console.error("View not found ", this.pConn.getComponentConfig());
+      // This happens rarely during some transitions but doesn't seem to have an impact.
+      console.warn(`View not found. getComponentConfig(): ${JSON.stringify(this.pConn.getComponentConfig())}`);
       return null;
     }
 
@@ -137,6 +138,16 @@ class Reference extends BridgeBase {
   getComponentToRender() {
     if (this.bLogging) { console.log(`Reference: getComponentToRender: displayOnlyFA: ${this.displayOnlyFA}`); }
 
+    if (this.bLogging) {
+      const theRefViewComp: any = this.referencedViewComponent;
+
+      if (theRefViewComp) {
+        console.log(`Reference: this.referencedViewComponent: ${JSON.stringify(theRefViewComp?.getConfigProps())}`);
+      } else {
+        console.log(`Reference: this.referencedViewComponent is NULL`);
+      }      
+    }
+    
     const viewContent = this.referencedViewComponent
       ? html`<view-component .pConn=${this.referencedViewComponent} ?displayOnlyFA=${this.displayOnlyFA}></view-component>`
       : nothing;

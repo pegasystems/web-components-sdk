@@ -184,6 +184,23 @@ class Assignment extends BridgeBase {
     this.bReInit = false;
     this.bHasNavigation = false;
 
+    // NOTE: With 8.7, the incoming child[ren], might be a reference component.
+    //  The assignment is expecting its children to be the reference's View PConnect,
+    //  NOT the reference PConnect. So, update the children as necessary.
+    const dereferencedChildren: Array<any> = [];
+    this.arChildren.forEach( (child) => {
+      const childPConn = child.getPConnect();
+      const childType = childPConn.getComponentName();
+      if (childType === "reference") {
+        dereferencedChildren.push(childPConn.getReferencedViewPConnect());
+      } else {
+        // Not a reference so pass it through as it is
+        dereferencedChildren.push(child);
+      }
+    });
+
+    this.arChildren = dereferencedChildren;
+
 
     this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
@@ -237,6 +254,13 @@ class Assignment extends BridgeBase {
     // inside
     // get fist kid, get the name and displa
     // pass first kid to a view container, which will disperse it to a view which will use one column, two column, etc.
+    
+    // if there aren't any children, there's nothing to do...
+    if (!this.arChildren || this.arChildren.length === 0) {
+      return;
+    }
+
+    // Only continue if there are children...
     let oWorkItem = this.arChildren[0].getPConnect();
     let oWorkMeta = oWorkItem.getRawMetadata();
     let oWorkData = oWorkItem.getDataObject();

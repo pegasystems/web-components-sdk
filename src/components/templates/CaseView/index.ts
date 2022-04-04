@@ -59,6 +59,29 @@ class CaseView extends BridgeBase {
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
+   
+    // Initialize this.mainData, tabData,caseTabs etc. on initialization ONLY
+    if (!this.displayOnlyFA) {
+      for (let child of this.children) {
+        let childPConn = child.getPConnect();
+        if (childPConn.getRawMetadata().name === "Tabs") {
+
+          this.mainTabs = child;
+          this.mainTabData = this.mainTabs.getPConnect().getChildren();
+          
+          //  set default to first tab
+          this.tabData = this.mainTabData[0].getPConnect().getRawMetadata();
+        }
+      }
+    
+      this.caseTabs  = this.mainTabs
+      .getPConnect()
+      .getChildren()
+      .map((child, i) => {
+        const config = child.getPConnect().getConfigProps();
+        return { name: config.label || "No label specified in config", id: i };
+      });
+    }      
     
   }
 
@@ -90,29 +113,6 @@ class CaseView extends BridgeBase {
     // if id has changed, mark flow container needs to init container
     if (this.hasCaseIDChanged()) {
       window.sessionStorage.setItem("okToInitFlowContainer", "true");
-    }
-
-    if (!this.displayOnlyFA) {
-      for (let child of this.children) {
-        let childPConn = child.getPConnect();
-        if (childPConn.getRawMetadata().name === "Tabs") {
-
-          this.mainTabs = child;
-          this.mainTabData = this.mainTabs.getPConnect().getChildren();
-          
-          // default
-          this.tabData = this.mainTabData[0].getPConnect().getRawMetadata();
-        }
-      }
-  
-    
-      this.caseTabs  = this.mainTabs
-      .getPConnect()
-      .getChildren()
-      .map((child, i) => {
-        const config = child.getPConnect().getRawMetadata().config;
-        return { name: config.label || "No label specified in config", id: i };
-      });
     }
 
 
