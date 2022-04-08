@@ -507,17 +507,30 @@ class FileUtility extends BridgeBase {
 
     for (let file of files) {
       attachmentUtils
-      .uploadAttachmentAndLinkToCase(
+      .uploadAttachment(
         file,
-        caseID,
         this.onUploadProgress,
         this.errorHandler,
         this.thePConn.getContextName()
       )
-      .then(() => {
-        this.refreshAttachments(file.ID);
+      .then((fileResponse) => {
+
+        if (fileResponse.type === "File") {
+          attachmentUtils.linkAttachmentsToCase(
+            caseID,
+            [ fileResponse ],
+            "File",
+            this.thePConn.getContextName()
+          )
+          .then((attachments) => {
+            this.refreshAttachments(file.ID);
+          })
+          .catch(console.error);
+        }
       })
       .catch(console.error);
+
+
     }
 
     // reset the list
