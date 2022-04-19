@@ -148,7 +148,7 @@ class DeferLoad extends BridgeBase {
           //  see one of those, update loadedPConn and componentName to be the
           //  referenced View, not the Reference component itself
           if (this.componentName === "reference") {
-            this.loadedPConn = this.loadedPConn.getReferencedViewPConnect().getPConnect();
+            this.loadedPConn = this.loadedPConn.getReferencedViewPConnect(true).getPConnect();
             this.componentName = "View";
           }
         }).then(() => {
