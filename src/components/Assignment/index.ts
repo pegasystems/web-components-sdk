@@ -192,7 +192,7 @@ class Assignment extends BridgeBase {
       const childPConn = child.getPConnect();
       const childType = childPConn.getComponentName();
       if (childType === "reference") {
-        dereferencedChildren.push(childPConn.getReferencedViewPConnect());
+        dereferencedChildren.push(childPConn.getReferencedViewPConnect(true));
       } else {
         // Not a reference so pass it through as it is
         dereferencedChildren.push(child);

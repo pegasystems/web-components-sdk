@@ -225,14 +225,14 @@ class ModalViewContainer extends BridgeBase {
                 //  So, we need to get referenced View PConnect and get its children
                 //  and CANNOT use the simpler, getReferencedView().children
 
-                const referencedViewPConn = newComp.getReferencedViewPConnect();
+                const referencedViewPConn = newComp.getReferencedViewPConnect(true);
                 // children needs to be an array!
                 this.arNewChildren = [ referencedViewPConn ];
 
                 // This approach below works, too. But it seems less clean to skip over
                 //  the Reference component like we do here. So, unless problems
                 //  are seen, using the approach above instead of this.
-                // const referencedChildren = newComp.getReferencedViewPConnect().getPConnect().getChildren();
+                // const referencedChildren = newComp.getReferencedViewPConnect(true).getPConnect().getChildren();
                 // this.arNewChildren = referencedChildren;
 
 
