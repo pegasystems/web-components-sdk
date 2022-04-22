@@ -469,7 +469,7 @@ updated(changedProperties) {
   /** 
    * Since we are often using the technique of iterating over this.renderTemplates to render
    *  a component derived from BridgeBase, we need to prepare the component for a "fresh"
-   *  render at the beginning of each render. This will perform common tasks such as reinitializing
+   *  render at the beginning of each render. This will perform common tasks such as re-initializing
    *  this.renderTemplates to an empty array (and optionally adding any common templates to be rendered)
    *  If a child component render fails to call this, this.renderTemplates accumulates templates that
    *  ends up making the component render multiple times since the previous render templates would
@@ -477,7 +477,7 @@ updated(changedProperties) {
    * 
    * Added an optional inDisplayOnlyFA argument that's **only** if you uncomment the line
    *  that renders an extra div showing which component is rendered where. This was added to
-   *  assist in debuggin the /embedded use case when some components are set to only show
+   *  assist in debugging the /embedded use case when some components are set to only show
    *  the FlowAction and not the rest of the UI around it.
   */
   // eslint-disable-next-line no-unused-vars
