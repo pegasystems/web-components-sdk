@@ -64,7 +64,10 @@ class Dropdown extends FormComponentBase {
     const theConfigProps = this.thePConn.getConfigProps();
 
     const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
-    optionsList.unshift({key: 'Select', value: 'Select...'});
+    const index = optionsList?.findIndex(ele => ele.key === 'Select');
+    if (index < 0) {
+      optionsList.unshift({key: 'Select', value: 'Select...'});
+    }
     this.options = optionsList;
 
   }
