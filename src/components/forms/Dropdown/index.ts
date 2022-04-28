@@ -63,7 +63,9 @@ class Dropdown extends FormComponentBase {
 
     const theConfigProps = this.thePConn.getConfigProps();
 
-    this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
+    const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
+    optionsList.unshift({key: 'Select', value: 'Select...'});
+    this.options = optionsList;
 
   }
 
@@ -135,7 +137,7 @@ class Dropdown extends FormComponentBase {
                 <lion-select 
                   id=${this.theComponentId}
                   .fieldName=${this.label} 
-                  .modelValue=${this.value}
+                  .modelValue=${(this.value === '' && !this.bReadonly) ? 'Select' : this.value}
                   .validators = ${this.lionValidatorsArray}
                   .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                   ?readonly=${this.bReadonly} 
