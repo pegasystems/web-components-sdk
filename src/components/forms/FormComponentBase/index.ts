@@ -200,7 +200,12 @@ export class FormComponentBase extends BridgeBase {
  
     if (this.bLogging) { console.log( `--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`) }
 
-    this.actions.onChange(this.thePConn, event);
+    if ((event?.type === 'model-value-changed') && (event?.target?.value === 'Select')) {
+      let value = '';
+      this.actions.onChange(this.thePConn, { value });
+    } else {
+      this.actions.onChange(this.thePConn, event);
+    }
   }
 
   // eslint-disable-next-line no-unused-vars
