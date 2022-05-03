@@ -125,7 +125,7 @@ Note that the examples above are for the default configuration. If you change th
 <br>
 
 
-> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available at https://community.pega.com/media/web-components-sdk-user-guide-87.
+> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available at [https://community.pega.com/media/web-components-sdk-user-guide-87](https://community.pega.com/media/web-components-sdk-user-guide-87).
 
 <br>
 
