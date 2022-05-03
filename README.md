@@ -41,16 +41,20 @@ Future updates to the SDK will support more recent LTS versions of node as Const
     $ cd <kit location>
 
     (This next step is strongly recommended if you have a node_modules directory installed from an earlier version of the kit)
-    $ rm node_modules
+    $ rm -rf node_modules
 
     $ npm install
     ```
 
 ### **Configure** the Web Components SDK
 
-2. Edit **sdk-config.js** and, if necessary, update the values that will be used
-    * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.<br><br>
-      * **Note:** it is **required** that you configure a value for **authConfig.mashupClientSecret**.
+See the **Web Components SDK Guide** in the Marketplace download for more complete documentation about the configuration of the Web Components SDK via the **sdk-config.json** file.
+
+2. Edit **sdk-config.json** and, if necessary, update the values that will be used
+    * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
+    The default **sdk-config.json** file is set up to use the **MediaCoOauth** and **MediaCoOauthNoLogin** records that are included with the Web Components SDK Marketplace download.
+    <br><br>
+      * **Note:** it is **required** that you configure a value for **authConfig.mashupClientSecret**. The **/embedded** use _**will not work**_ until the correct `mashupClientSecret` is provided.
       * Navigate to Records / Security / OAuth 2.0 Client Registration landing page and open the `MediaCoOauthNoLogin` record
       * Click the **Regenerate Client Secret** button, download the Client Credentials (as the ClientID and Secret values will be needed) and save the record.
       * Then, use the generated **Client Secret** value as the value for**authConfig.mashupClientSecret**. (The ClientID value should remain unchanged.)
