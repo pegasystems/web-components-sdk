@@ -2,13 +2,13 @@
 
 # Web Components SDK
 
-The **Web Components SDK** provides Pega customers with a bridge from the Pega **Constellation JavaScript Engine** (part of the Pega Infinity&trade; product) to the Web Component bridge and components in this repository.
+The **Web Components SDK** provides Pega customers with the ability to build DX components that connect Pega’s ConstellationJS Engine APIs with a design system other than Pega Cosmos.
 
-Many of the components in this SDK are built using [Lion web components](https://lion-web.netlify.app/) - open source components that are designed to be extended and allow for flexible integrations. These are, in turn, built with 
-[LitElement](https://lit-element.polymer-project.org/guide) 
+The Web Components SDK differs from out-of-the-box Cosmos React because it provides and demonstrates the use of a design system that is not the Pega **Cosmos React** design system. The alternative design system used in this Web Components SDK is based on 
+[Lion web components](https://lion-web.netlify.app/) - open-source components that are designed to be extended and allow for flexible integrations. These are, in turn, built with [LitElement](https://lit-element.polymer-project.org/guide) 
 and [lit-html](https://lit-html.polymer-project.org/guide).
 
-Note: The Web Components SDK is offered in early adopter mode. It is built on the new and modernized UI technology stack (the Constellation JavaScript Engine and Constellation JavaScript API). Currently offering a limited feature set, the Web Components SDK is likely not yet suitable for production applications.
+The Web Components SDK is built on a new and modernized UI technology stack (the Constellation JavaScript Engine and Constellation JavaScript API).  Many additional SDK features are planned for 2022 to expand the scope of supported use cases.
 
 <br>
 
@@ -16,11 +16,17 @@ Note: The Web Components SDK is offered in early adopter mode. It is built on th
 
 ## Pega Infinity Server and Constellation-enabled Application 
 
-The Web Components SDK assumes that you have access to a Pega Infinity server (8.6 GA) running an application that is configured to run using the Constellation UI service.
+This **8.6 version** of the Web Components SDK assumes that you have access to a Pega Infinity server (**8.6.0+ GA**) running an application that is configured to run using the Constellation UI service.
 
-We provide a sample application - **MediaCo** - to licensed Pega Infinity customers that is configured as a Constellation application. The sample application can be found in the Web Components SDK download associated with this repo available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk)
+The **MediaCo** sample application is already configured as a Constellation application and can be found in the Web Components SDK download associated with this repo which is available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk). The OAuth 2.0 Client Registration records associated with the **MediaCo** application are available in the same Web Components SDK download.
 
-Please refer to the **Web Components SDK Guide** provided in the Marketplace download for steps to prepare your Infinity server and node environment for steps in the next section.
+The **Web Components SDK** has been tested with:
+- node 14.18.*
+- npm 6.14.*
+
+Future updates to the SDK will support more recent LTS versions of node as Constellation supports them.
+
+**Before** installing and running the SDK code, please refer to the **Web Components SDK Guide** provided in the Marketplace download for steps to prepare your Infinity server and node environment so you can proceed with the steps in the next section.
 
 <br>
 
@@ -51,7 +57,8 @@ Please refer to the **Web Components SDK Guide** provided in the Marketplace dow
       <br><br>
     * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
 <br><br>
-3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. Licensed and authorized Pega clients can access these files from [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk) or from a Pega representative. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
+3. Obtain the necessary Constellation files (ex: bootstrap-shell, lib_asset, constellation-core) that need to be installed to enable the SDK to connect to the Constellation UI Service. These files are available in the SDK download at https://community.pega.com/marketplace/components/web-components-sdk. Instructions for installing these files can be found in **constellation/__Install-constellation-files.md**
+
 
 
 ### **Run** the application
@@ -120,7 +127,7 @@ Note that the examples above are for the default configuration. If you change th
 <br>
 
 
-> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available to licensed Pega Infinity clients at https://community.pega.com/
+> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available at https://community.pega.com/knowledgebase/documents/web-components-sdk-user-guide
 
 <br>
 
