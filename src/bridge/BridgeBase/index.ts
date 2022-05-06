@@ -639,6 +639,10 @@ updated(changedProperties) {
           this.renderTemplates.push( html`<region-component .pConn=${child}></region-component>` );
           break;
 
+        case "SimpleTableSelect":
+          this.renderTemplates.push( html`<simple-table-select .pConn=${child}></simple-table-select>`);
+          break;
+
         case "Text":
           this.renderTemplates.push( html`<text-form .pConn=${child}></text-form>` );
           break;
@@ -866,6 +870,10 @@ updated(changedProperties) {
             theChildTemplates.push( html`<region-component .pConn=${child}></region-component>` );
             break;
   
+          case "SimpleTableSelect":
+            theChildTemplates.push( html`<simple-table-select .pConn=${child}></simple-table-select>`);
+            break;
+
           case "Stages":
             theChildTemplates.push( html`<stages-component .pConn=${child}></stages-component>` );
             break;
@@ -955,6 +963,10 @@ updated(changedProperties) {
         theTemplateForTemplate = html`<case-view .pConn=${inPConnToUse} ?displayOnlyFA="${displayOnlyFA}"></case-view>` ;
         break;
 
+      case "DataReference":
+        theTemplateForTemplate = html`<data-reference-component .pConn=${inPConnToUse}></data-reference-component>`;
+        break;
+
       case "DefaultForm":
         theTemplateForTemplate = html`<default-form-component .pConn=${inPConnToUse}></default-form-component>`;
         break;        
@@ -964,11 +976,15 @@ updated(changedProperties) {
         break;
 
       case "DetailsTwoColumn":
-        theTemplateForTemplate = html`<details-two-column-component .pConn=${inPConnToUse}></details-two-columnn-component>`;
+        theTemplateForTemplate = html`<details-two-column-component .pConn=${inPConnToUse}></details-two-column-component>`;
         break;
         
       case "ListPage":
         theTemplateForTemplate = html`<list-page-component .pConn=${inPConnToUse}></list-page-component>` ;
+        break;
+
+      case "ListView":
+        theTemplateForTemplate = html`<list-view-component .pConn=${inPConnToUse}></list-view-component>`;
         break;
 
       case "OneColumn":

@@ -2,17 +2,19 @@ import { html, customElement, property, nothing } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 
 // NOTE: you need to import ANY component you may render.
-import '../templates/AppShell';
-import '../templates/TwoColumnPage';
 import '../FlowContainer';
+import '../Boilerplate';
+import '../DeferLoad';
+import '../Stages';
+import '../templates/AppShell';
+import '../templates/CaseSummary';
+import '../templates/DataReference';
+import '../templates/DefaultForm';
 import '../templates/OneColumn';
 import '../templates/OneColumnTab';
+import '../templates/SimpleTableSelect';
+import '../templates/TwoColumnPage';
 import '../templates/WideNarrowPage';
-import '../Stages';
-import '../Boilerplate';
-import '../templates/CaseSummary';
-import '../DeferLoad';
-import '../templates/DefaultForm';
 
 import { getAllFields } from '../templates/utils';
 

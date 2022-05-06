@@ -1,0 +1,125 @@
+{
+  "name": "DataReference",
+  "description": "Data Reference Template",
+  "type": "Template",
+  "icon": "DataReference.svg",
+  "subtype": "DATAVIEW",
+  "hideTemplatePicker": true,
+  "hideFromTemplatePicker": true,
+  "viewNameLabel": "Field label",
+  "properties": [
+    {
+      "label": "Input settings",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "referenceList",
+          "label": "Data page",
+          "format": "CONTENTPICKERSOURCE",
+          "visibility": "$this.mode != 'readonly'"
+        },
+        {
+          "name": "parameters",
+          "label": "Parameters",
+          "format": "PARAMETERS",
+          "visibility": "$this.mode != 'readonly'",
+          "showOverride": false
+        },
+        {
+          "name": "mode",
+          "format": "DISPLAYMODE",
+          "label": "Mode"
+        },
+        {
+          "name": "displayfield",
+          "format": "DISPLAYFIELD",
+          "label": "Display field"
+        },
+        {
+          "name": "allowAndPersistChangesInReviewMode",
+          "label": "Show as picker and persist changes in review mode",
+          "format": "BOOLEAN",
+          "visibility": "$this.displayAs != 'table' && $this.mode != 'readonly'"
+        }
+      ]
+    },
+    {
+      "name": "Views",
+      "label": "Show details (optional)",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Views"],
+      "showCreateNewOption": true,
+      "visibility": "($this.displayAs != 'table' && $this.displayAs != 'combobox') && $this.mode != 'readonly'"
+    },
+    {
+      "name": "Columns",
+      "label": "Columns",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Fields", "Associations"],
+      "hideModifyIcons": false,
+      "modifyPanelOverride": "ListField",
+      "visibility": "$this.displayAs == 'table' || $this.displayAs == 'readonlyMulti'",
+      "lookupPathOverride": "children[0].config.presets[0]"
+    },
+    {
+      "name": "showPromotedFilters",
+      "label": "Enable search",
+      "visibility": "$this.displayAs == 'table' && $this.isSearchable IS_NOT_NULL",
+      "format": "BOOLEAN"
+    },
+    {
+      "name": "promotedFilters",
+      "label": "Search fields",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Fields"],
+      "visibility": "$this.displayAs == 'table' && $this.showPromotedFilters = true && $this.isSearchable IS_NOT_NULL",
+      "isArrayOfMetadata": true,
+      "lookupPathOverride": "children[0].config"
+    },
+    {
+      "name": "fillAvailableSpace",
+      "label": "Column to take up remaining width",
+      "format": "FILLCOLUMNWIDTH",
+      "visibility": "$this.displayAs == 'table'",
+      "lookupPathOverride": "children[0].config.presets[0]"
+    },
+    {
+      "name": "columnFilter",
+      "label": "Column filter",
+      "format": "COLUMNFILTER",
+      "visibility": "$this.displayAs == 'table'",
+      "lookupPathOverride": "children[0].config.presets[0]"
+    },
+    {
+      "name": "columnSort",
+      "label": "Column sort",
+      "format": "COLUMNSORT",
+      "visibility": "$this.displayAs == 'table'",
+      "lookupPathOverride": "children[0].config.presets[0]"
+    },
+    {
+      "label": "Conditions",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "required",
+          "label": "Required",
+          "format": "REQUIRED",
+          "saveToReference": true
+        },
+        {
+          "name": "disabled",
+          "label": "Disabled",
+          "format": "DISABLED",
+          "saveToReference": true
+        },
+        {
+          "name": "visibility",
+          "label": "Visibility",
+          "format": "VISIBILITY",
+          "saveToReference": true
+        }
+      ]
+    }
+  ]
+}
