@@ -56,7 +56,7 @@ See the **Web Components SDK Guide** in the Marketplace download for more comple
     <br><br>
       * **Note:** it is **required** that you configure a value for **authConfig.mashupClientSecret**. The **/embedded** use _**will not work**_ until the correct `mashupClientSecret` is provided.
       * Navigate to Records / Security / OAuth 2.0 Client Registration landing page and open the `MediaCoOauthNoLogin` record
-      * Click the **Regenerate Client Secret** button, download the Client Credentials (as the ClientID and Secret values will be needed) and save the record.
+      * Click the **Regenerate Client Secret** button, download the Client Credentials (as the ClientID and Secret values will be needed), and save the record.
       * Then, use the generated **Client Secret** value as the value for**authConfig.mashupClientSecret**. (The ClientID value should remain unchanged.)
       <br><br>
     * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
@@ -69,7 +69,7 @@ See the **Web Components SDK Guide** in the Marketplace download for more comple
 
 4. **Development build and start** (1 or 2 terminal windows)
 
-    4.1 Full development clean and install of npm modules, and build; then start the server
+    4.1 Full clean development and installation of npm modules, and build; then start the server
    ```
    $ npm run build:dev:ci
    $ npm run start-dev (or start-dev-https)
@@ -159,7 +159,7 @@ For the **APIHeadersAllowed** CORS record, please confirm of update the record a
 
 ### Runtime Error: net::ERR_CERT_INVALID
 
-Browsers are becoming much less tolerant with local, self-signed certificates or when no local, self-signed certificate exists. If you don’t have a trusted self-signed certificate and launch your application, you may see a blank screen accompanied by an error similar to this in your JS console:
+Browsers are less tolerant of local, self-signed certificates or when no local, self-signed certificate exists. If you don’t have a trusted self-signed certificate and launch your application, you may see a blank screen accompanied by an error similar to this in your JS console:
 
 POST https://localhost:1080/prweb/PRRestService/oauth2/v1/token **net::ERR_CERT_INVALID**
 
@@ -222,12 +222,12 @@ If you configure your installation to have the Web Components SDK static content
 
 If the `MediaCo` app was imported to your Infinity server, a `MediaCoOAuth` OAuth 2.0 Client Registration record will have been imported as well. That record's clientId is currently referenced within sdk-config.json.  However, you can create your own OAuth 2.0 Client Registration record using the following procedure:
    * Create a new "Security/OAuth 2.0 Client Registration" record for your app
-   * You might name it the same name as your applicaion
+   * You might name it the same name as your application
    * Specify "Public" for the type of client (as browser apps are not able to prevent any "Client secret" from being compromised)
    * Select "Authorization Code" for the Grant type
-   * Add a RedirectURI value based on the url used to access the deployed Web Components SDK (e.g., http://localhost:3501/auth.html)
+   * Add a RedirectURI value based on the URL used to access the deployed Web Components SDK (e.g., http://localhost:3501/auth.html)
    * Enable the "Enable proof code for pkce" option
-   * Set the "Access token lifetime" for how long you want the logged in session to last.  Pega does not presently support the ability to referesh the token (for Public clients), so the user will have to reauthenticate again after this interval.
+   * Set the "Access token lifetime" for how long you want the logged-in session to last.  Pega does not presently support the ability to refresh the token (for Public clients), so the user will have to reauthenticate again after this interval.
    * Enter the appropriate values within **sdk-config.json** 
 
 <br>
@@ -274,7 +274,7 @@ subjectAltName = @alt_names
 DNS.1   = localhost
    ```
 
-Step 3: Create a Certificate Signing Request (will be prompted for a pass phrase for new key)
+Step 3: Create a Certificate Signing Request (will be prompted for a passphrase for new key)
 
    ```
    $ openssl req -new -sha256 -out private.csr -in private.key -config ssl.conf
