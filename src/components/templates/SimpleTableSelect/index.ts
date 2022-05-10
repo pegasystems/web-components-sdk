@@ -13,7 +13,12 @@ declare var PCore: any;
 //  to be used as a starting point for any new components as they're built out
 @customElement('simple-table-select')
 class SimpleTableSelect extends BridgeBase {
-  @property( {attribute: true, type: String} ) value = "";
+  @property( {attribute: false, type: String} ) label = "";
+  @property( {attribute: false, type: String} ) renderMode = "";
+  @property( {attribute: false, type: Boolean} ) showLabel = true;
+  @property( {attribute: false, type: String} ) viewName = "";
+  @property( {attribute: false, type: Object} ) parameters = {};
+  @property( {attribute: false, type: String} ) dataRelationshipContext = "";
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -55,6 +60,17 @@ class SimpleTableSelect extends BridgeBase {
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
     if (this.bDebug){ debugger; }
+
+    // Update properties based on configProps
+    const theConfigProps = this.thePConn.getConfigProps();
+
+    this.label = theConfigProps.label;
+    this.renderMode = theConfigProps. renderMode;
+    this.showLabel = theConfigProps.showLabel;
+    this.viewName = theConfigProps.viewName;
+    this.parameters = theConfigProps.parameters;
+    this.dataRelationshipContext = theConfigProps.dataRelationshipContext;
+
 
   }
 
