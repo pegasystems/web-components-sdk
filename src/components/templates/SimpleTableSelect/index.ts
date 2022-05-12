@@ -9,6 +9,13 @@ import { simpleTableSelectStyles } from './simple-table-select-styles';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
+// helper function copied from SimpleTableSelect DX Component
+const isSelfReferencedProperty = (param, referenceProp) => {
+  const [, parentPropName] = param.split(".");
+  return parentPropName === referenceProp;
+};
+
+
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('simple-table-select')
@@ -19,6 +26,11 @@ class SimpleTableSelect extends BridgeBase {
   @property( {attribute: false, type: String} ) viewName = "";
   @property( {attribute: false, type: Object} ) parameters = {};
   @property( {attribute: false, type: String} ) dataRelationshipContext = "";
+
+  // Vars from Cosmos React DX Component implementation
+  propsToUse: any = {};
+
+
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -71,8 +83,124 @@ class SimpleTableSelect extends BridgeBase {
     this.parameters = theConfigProps.parameters;
     this.dataRelationshipContext = theConfigProps.dataRelationshipContext;
 
+    // Beginning of code from DX Component: SimpleTableSelect
 
+    const propsToUse = { 
+      label: this.label, 
+      showLabel: this.showLabel,
+      ...this.thePConn.getInheritedProps() };
+
+    if (propsToUse.showLabel === false) {
+      propsToUse.label = "";
+    }
+  
+    const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
+    const { selectionMode, selectionList } = theConfigProps;
+    const isMultiSelectMode = selectionMode === MULTI;
+  
+    if (isMultiSelectMode && this.renderMode === "ReadOnly") {
+      console.warn(`${this.theComponentName} wants to return <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />`);
+      return null; // <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />;
+    }
+  
+    const pageReference = this.thePConn.getPageReference();
+    let referenceProp = isMultiSelectMode
+      ? selectionList.substring(1)
+      : pageReference.substring(pageReference.lastIndexOf(".") + 1);
+    // Replace here to use the context name instead
+    let contextPageReference = null;  
+    if (this.dataRelationshipContext !== null  && selectionMode === "single") {
+      referenceProp = this.dataRelationshipContext;
+      contextPageReference = pageReference.concat(".").concat(referenceProp);    
+    }
+      
+    // Note that this syntax looks odd but it's really just a complex destructuring
+    //  of whichever call is made: getFieldMetadata or getCurrentPageFieldMetadata
+    //  Of special note: only the fieldParameters and pageClass variables are created.
+    //  The destructuring syntax pulls fieldParameters from the 
+    //    datasource --> parameters --> fieldParameters if it exists.
+    const {
+      datasource: { parameters: fieldParameters = {} } = {},
+      pageClass
+    } = isMultiSelectMode
+      ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
+      : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
+  
+    const compositeKeys: Array<any> = [];
+    Object.values(fieldParameters).forEach((param: any) => {
+      if (isSelfReferencedProperty(param, referenceProp)) {
+        const substringOffset = param.lastIndexOf(".") + 1;
+        const theSubstring = substringOffset ? param.substring(substringOffset) : null;
+        theSubstring ? compositeKeys.push(theSubstring) : null;
+      }
+    });
+
+    // Temporarily write out some of the values that have been gathered
+    console.log(`--> dataRelationshipContext: ${this.dataRelationshipContext}`);
+    console.log(`--> fieldParameters: ${JSON.stringify(fieldParameters)}`);
+    console.log(`--> pageClass: ${pageClass}`);
+    console.log(`--> compositeKeys: ${compositeKeys}`);
+
+  
+    // setting default row height for select table
+    const defaultRowHeight = "2";
+  
+    const additionalTableConfig = {
+      rowDensity: false,
+      enableFreezeColumns: false,
+      autoSizeColumns: false,
+      resetColumnWidths: false,
+      defaultFieldDef: {
+        showMenu: false,
+        noContextMenu: true,
+        grouping: false
+      },
+      itemKey: "$key",
+      defaultRowHeight
+    };
+  
+    const listViewProps = {
+      ...theConfigProps,           // DX component has ...props,
+      title: propsToUse.label,
+      personalization: false,
+      grouping: false,
+      expandGroups: false,
+      reorderFields: false,
+      showHeaderIcons: false,
+      editing: false,
+      globalSearch: true,
+      toggleFieldVisibility: false,
+      basicMode: true,
+      additionalTableConfig,
+      compositeKeys,
+      viewName: this.viewName,
+      parameters: this.parameters
+    };
+  
+    const filters = this.thePConn.getRawMetadata().config.promotedFilters ?? [];
+  
+    const isSearchable = filters.length > 0;
+  
+    if (isSearchable) {
+      console.warn(`${this.theComponentName} wants to return <PromotedFilters with getPConnect, viewName: ${this.viewName}, pageClass: ${pageClass}, filters: ${JSON.stringify(filters)}, listViewProps: ${JSON.stringify(listViewProps)} />`);
+        //   <PromotedFilters
+        //   getPConnect={getPConnect}
+        //   viewName={viewName}
+        //   filters={filters}
+        //   listViewProps={listViewProps}
+        //   pageClass={pageClass}
+        // />
+
+      return null;
+    }
+
+    console.warn(`${this.theComponentName} wants to return <ListView {...listViewProps} />`);
+    return null;  // <ListView {...listViewProps} />;
+
+    // End of code from DX Component SimpleTableSelect
   }
+  
+
 
   /**
    * The `onStateChange()` method will be called when the state is updated.
