@@ -13,9 +13,6 @@ declare var PCore: any;
 
 const SELECTION_MODE = {SINGLE: "single", MULTI: "multi"};
 
-
-// NOTE: this is just a boilerplate component definition intended
-//  to be used as a starting point for any new components as they're built out
 @customElement('data-reference-component')
 class DataReference extends BridgeBase {
   @property( {attribute: false, type: String} ) label = undefined;
@@ -444,11 +441,6 @@ class DataReference extends BridgeBase {
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
-
-    // For test purposes, add some more content to be rendered
-    //  This isn't the best way to add inner content. Just here to see that the style's
-    //  be loaded and can be applied to some inner content.
     this.prepareForRender();
 
     const sContent = html`${this.getDataReferenceHtml()}`;

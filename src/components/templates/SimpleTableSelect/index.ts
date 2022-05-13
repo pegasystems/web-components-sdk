@@ -1,6 +1,7 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement, property, nothing } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
+import '../PromotedFilters';
 
 // import the component's styles as HTML with <style>
 import { simpleTableSelectStyles } from './simple-table-select-styles';
@@ -26,6 +27,10 @@ class SimpleTableSelect extends BridgeBase {
   @property( {attribute: false, type: String} ) viewName = "";
   @property( {attribute: false, type: Object} ) parameters = {};
   @property( {attribute: false, type: String} ) dataRelationshipContext = "";
+
+  // Set this to the component we want to render. It may get updated
+  //  whenever the component updates
+  theComponentToRender: any = nothing;
 
   // Vars from Cosmos React DX Component implementation
   propsToUse: any = {};
@@ -100,7 +105,9 @@ class SimpleTableSelect extends BridgeBase {
   
     if (isMultiSelectMode && this.renderMode === "ReadOnly") {
       console.warn(`${this.theComponentName} wants to return <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />`);
-      return null; // <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />;
+      this.theComponentToRender = html`<div>${this.theComponentName} wants to return <SimpleTableManual {...props} showLabel={propsToUse.showLabel} /></div>`;
+      // <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />;
+      return; 
     }
   
     const pageReference = this.thePConn.getPageReference();
@@ -191,11 +198,22 @@ class SimpleTableSelect extends BridgeBase {
         //   pageClass={pageClass}
         // />
 
-      return null;
+      // return null;
+      this.theComponentToRender = html`<promoted-filters-component 
+        .pConn=${this.thePConn}
+        .viewName=${this.viewName}
+        .filters=${filters}
+        .listViewProps=${listViewProps}
+        .pageClass=${pageClass}
+        ></promoted-filters-component>`;
+      return;
+
     }
 
     console.warn(`${this.theComponentName} wants to return <ListView {...listViewProps} />`);
-    return null;  // <ListView {...listViewProps} />;
+    this.theComponentToRender = html`<div>${this.theComponentName} wants to return <ListView {...listViewProps} /></div>`;
+    // <ListView {...listViewProps} />;
+    return;
 
     // End of code from DX Component SimpleTableSelect
   }
@@ -220,7 +238,7 @@ class SimpleTableSelect extends BridgeBase {
   }
 
   getSimpleTableSelectHtml() : any {
-    const dataRefHtml = html `
+    const theHtml = html `
       <div><strong></string>${this.theComponentName}</strong>: component in progress
         <br /><br />
         theComponentProps:
@@ -232,11 +250,12 @@ class SimpleTableSelect extends BridgeBase {
         ${this.thePConn.getChildren()?.map((child, index) => {
           return html`child ${index} component type: ${child.getPConnect().getComponentName()} <br />`;
         })}
-        <br />
+        <br /><br />
+        ${this.theComponentToRender}
       </div>
     `;
 
-    return dataRefHtml;
+    return theHtml;
 
   }
 
@@ -246,11 +265,6 @@ class SimpleTableSelect extends BridgeBase {
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
-
-    // For test purposes, add some more content to be rendered
-    //  This isn't the best way to add inner content. Just here to see that the style's
-    //  be loaded and can be applied to some inner content.
     this.prepareForRender();
 
     const sContent = html`${this.getSimpleTableSelectHtml()}`;
