@@ -1,6 +1,8 @@
 import { html, customElement, property } from '@lion/core';
+import { LionButton } from '@lion/button';
 import { loadViewByName } from '../../../../constellation/bootstrap-shell';
 import { BridgeBase } from '../../../bridge/BridgeBase';
+import ListView from '../ListView';
 // NOTE: you need to import ANY component you may render.
 
 // Declare that PCore will be defined when this code is run
@@ -30,7 +32,10 @@ const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
   "RichText"
 ];
 
-function Filters({ filters, transientItemID, localeReference }) {
+// Breaking down in separate pieces of (1) the filters to render and 
+//  (2) the component to render the filters.
+//  React DX Components bundled these into a single function call
+function Filters( /* { */ filters, transientItemID, localeReference /* } */ ) {
   return filters.map((filter) => {
     const filterClone = { ...filter };
     // convert any field which is not supported to TextInput and delete the placeholder as it may contain placeholder specific to original type.
@@ -50,9 +55,8 @@ function Filters({ filters, transientItemID, localeReference }) {
       }
     });
 
-    console.warn(`PromotedFilters Filters function need to return equiv to a React component`);
-    // return createElement(PComponent, c11nEnv);
-    return null;
+    console.warn(`PromotedFilters Filters function is returning an array of PConnect config objects instead of React components`);
+    return /* createElement(PComponent,*/ c11nEnv /* ) */;
   });
 }
 
@@ -75,7 +79,7 @@ class PromotedFilters extends BridgeBase {
   // Additional properties passed in
   @property( {attribute: true, type: String} ) viewName = "";
   @property( {attribute: true, type: Array } ) filters: Array<any> = [];
-  @property( {attribute: true, type: Object} ) listViewProps: Object = {};
+  @property( {attribute: true, type: Object} ) listViewProps: any = {};
   @property( {attribute: true, type: String} ) pageClass = "";
 
   // Vars from Cosmos React DX Component implementation
@@ -83,7 +87,9 @@ class PromotedFilters extends BridgeBase {
   // Moved from external to component to make sure PCore is defined
   localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
-  initTable = null;
+  initTable: Boolean = false;   // initTable is a boolean in React DX Component
+  filtersProperties = {};
+
 
 
   constructor() {
@@ -132,75 +138,15 @@ class PromotedFilters extends BridgeBase {
 
     // Start: functions from Cosmos React DX Component implementation
 
-    const filtersProperties = {};
     this.filters.forEach((filter) => {
-      filtersProperties[
+      this.filtersProperties[
         PCore.getAnnotationUtils().getPropertyName(filter.config.value)
       ] = "";
     });
 
     // Need to figure out how to make many of these work without being React
-    //  userEffect, useMemo, etc.
-
-    // const transientItemID = useMemo(() => {
-    //   const filtersWithClassID = {
-    //     ...filtersProperties,
-    //     classID: pageClass
-    //   };
-    //   return getPConnect().getContainerManager().addTransientItem({
-    //     id: viewName,
-    //     data: filtersWithClassID
-    //   });
-    // }, []);
-  
-    // const getFilterData = useCallback(
-    //   (e) => {
-    //     e.preventDefault(); // to prevent un-intended forms submission.
-  
-    //     const changes = PCore.getFormUtils().getChanges(transientItemID);
-    //     const formValues = {};
-    //     Object.keys(changes).forEach((key) => {
-    //       // getChanges is returning context_data and messages as well.
-    //       if (key !== "context_data") {
-    //         formValues[key] = changes[key];
-    //       }
-    //     });
-  
-    //     if (
-    //       PCore.getFormUtils().isFormValid(transientItemID) &&
-    //       isValidInput(formValues)
-    //     ) {
-    //       setInitTable(true);
-  
-    //       PCore.getPubSubUtils().publish(
-    //         PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS,
-    //         {
-    //           payload: formValues,
-    //           viewName
-    //         }
-    //       );
-    //     }
-    //   },
-    //   [transientItemID]
-    // );
-  
-    // const clearFilterData = useCallback(() => {
-    //   PCore.getContainerUtils().clearTransientData(transientItemID);
-    //   setInitTable(false);
-    //   getPConnect()?.getListActions?.()?.setSelectedRows([]); // Clear the selection (if any made by user)
-    // }, [transientItemID]);
-  
-    // Re-add back below state variable to enable / disable search button.
-    // const [enableSubmitBtn, setEnableSubmitBtn] = useState(() =>
-    //   isValidInput(PCore.getFormUtils().getChanges(transientItemID))
-    // );
-    const changeFilterCallback = () => {
-      //   setEnableSubmitBtn(
-      // isValidInput(PCore.getFormUtils().getChanges(transientItemID)) &&
-      //       PCore.getFormUtils().isFormValid(transientItemID)
-      //   );
-    };
-  
+    //  userEffect, useMemo, etc.  
+    
     // useEffect(() => {
     //   const subscribeIdConst = "FILTERS_CHANGE_SUBSCRIPTION";
     //   const filterPropsWithDot = Object.keys(filtersProperties).map(
@@ -248,11 +194,89 @@ class PromotedFilters extends BridgeBase {
     }
   }
 
+  // In React DX Components - was a useMemo. Won't try to cache results here.
+  transientItemID() /* = useMemo(() => */ {
+
+    const filtersWithClassID = {
+      ...this.filtersProperties,
+      classID: this.pageClass
+    };
+    // return getPConnect().getContainerManager().addTransientItem({
+    //   id: viewName,
+    //   data: filtersWithClassID
+    // });
+    return this.thePConn.getContainerManager().addTransientItem({
+      id: this.viewName,
+      data: filtersWithClassID
+    });
+  }/*, []); */
+
+
+  // In React DX Components - was a useCallback. Won't try to cache results here.
+  clearFilterData() /* = useCallback( () => */ {
+    const theTransientItem = this.transientItemID();
+
+    PCore.getContainerUtils().clearTransientData(theTransientItem);
+    this.initTable = false;
+    // getPConnect()?.getListActions?.()?.setSelectedRows([]); // Clear the selection (if any made by user)
+    this.thePConn?.getListActions?.()?.setSelectedRows([]); // Clear the selection (if any made by user)
+  } // , [transientItemID]);
+
+
+  // In React DX Components - was a useCallback. Won't try to cache results here.
+  getFilterData(e: any) { /* = useCallback( (e) => { */
+      e.preventDefault(); // to prevent un-intended forms submission.
+
+      const theTransientItem = this.transientItemID();
+      const changes = PCore.getFormUtils().getChanges(theTransientItem);
+      const formValues = {};
+      Object.keys(changes).forEach((key) => {
+        // getChanges is returning context_data and messages as well.
+        if (key !== "context_data") {
+          formValues[key] = changes[key];
+        }
+      });
+
+      if (
+        PCore.getFormUtils().isFormValid(theTransientItem) &&
+        isValidInput(formValues)
+      ) {
+        this.initTable = true;
+
+        PCore.getPubSubUtils().publish(
+          PCore.getEvents().getTransientEvent().UPDATE_PROMOTED_FILTERS,
+          {
+            payload: formValues,
+            viewName: this.viewName
+          }
+        );
+      }
+    }/* ,
+    [transientItemID]
+  ); */
+
+
+  // BEGIN NOTE: changeFilterCallback is all commented out in Cosmos React so no need to change this
+
+  // Re-add back below state variable to enable / disable search button.
+  // const [enableSubmitBtn, setEnableSubmitBtn] = useState(() =>
+  //   isValidInput(PCore.getFormUtils().getChanges(transientItemID))
+  // );
+  changeFilterCallback = () => {
+    //   setEnableSubmitBtn(
+    // isValidInput(PCore.getFormUtils().getChanges(transientItemID)) &&
+    //       PCore.getFormUtils().isFormValid(transientItemID)
+    //   );
+  };
+
+  // END NOTE: changeFilterCallback is all commented out in Cosmos React so no need to change this
   
 
+  // Breaking up the rendered UI into the multiple pieces that the
+  //  React DX Component renders as part of a large fragment
 
-  getPromotedFiltersHtml() : any {
-    const theHtml = html `
+  getPromotedFiltersLabel(): any {
+    const theHtml = html`
       <div><strong></string>${this.theComponentName}</strong>: component in progress
         <br /><br />
         theComponentProps: same pConn as calling component
@@ -262,12 +286,75 @@ class PromotedFilters extends BridgeBase {
         this.filters: ${JSON.stringify(this.filters)}<br /><br />
         this.listViewProps: ${JSON.stringify(this.listViewProps)}<br /><br />
         <br /><br />
+        From DX Component render:
+        <!--  DX Component = Fragment -->
+        <br /><br />
+        <label>${this.listViewProps?.title}</label>
+      </div>      
+    `;
+
+    return theHtml;
+  }
+
+  getPromotedFiltersGrid(): any {
+    const theHtml = html`
+      <div> <!-- /* DX Component = Grid  */ -->
+        <div>
+          Grid with Filters here!<br /><br />
+          ${Filters(this.filters, this.transientItemID(), this.listViewProps.localeReference).map((filter) => {
+            const theCompName = filter.getPConnect().getComponentName();
+            debugger;
+            return html`<div>${theCompName}</div>`;
+          })}
+        </div>
       </div>
     `;
 
     return theHtml;
-
   }
+
+  getPromotedFiltersActions(): any {
+    const theHtml = html`
+      <div>  <!-- /* DX Component = Form */ -->
+        <div> <!-- /* DX Component = actions={[...]} */ -->
+          <lion-button 
+            key="1"
+            type="button"
+            @click=${this.clearFilterData}
+            data-testid="clear"
+            variant="primary">
+            ${this.localizedVal("Clear", localeCategory)}
+          </lion-button>
+          <lion-button 
+            key="2"
+            type="button"
+            @click=${this.getFilterData}
+            data-testid="search"
+            variant="primary">
+            ${this.localizedVal("Search", localeCategory)}
+          </lion-button>
+
+        </div> <!-- end of actions  -->
+
+      </div> <!-- end of Form -->
+    `
+    return theHtml;
+  }
+
+
+  getPromotedFiltersListView() : any {
+    const theHtml = html`
+        <br /><br />
+        <div>
+          ListView component here (with results)
+        </div>
+
+      </div>
+    `;
+
+    return theHtml;
+  }
+
 
   render(){
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
@@ -286,9 +373,12 @@ class PromotedFilters extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const sContent = html`${this.getPromotedFiltersHtml()}`;
+    // For now, render the different pieces
+    this.renderTemplates.push( html`${this.getPromotedFiltersLabel()}` );
+    this.renderTemplates.push( html`${this.getPromotedFiltersGrid()}` );
+    this.renderTemplates.push( html`${this.getPromotedFiltersActions()}` );
+    this.renderTemplates.push( html`${this.getPromotedFiltersListView()}` );
 
-    this.renderTemplates.push( sContent );
     // and now add any children to renderTemplates
     this.addChildTemplates();
 
