@@ -189,7 +189,7 @@ class SimpleTableSelect extends BridgeBase {
     const isSearchable = filters.length > 0;
   
     if (isSearchable) {
-      console.warn(`${this.theComponentName} wants to return <PromotedFilters with getPConnect, viewName: ${this.viewName}, pageClass: ${pageClass}, filters: ${JSON.stringify(filters)}, listViewProps: ${JSON.stringify(listViewProps)} />`);
+      // console.warn(`${this.theComponentName} wants to return <PromotedFilters with getPConnect, viewName: ${this.viewName}, pageClass: ${pageClass}, filters: ${JSON.stringify(filters)}, listViewProps: ${JSON.stringify(listViewProps)} />`);
         //   <PromotedFilters
         //   getPConnect={getPConnect}
         //   viewName={viewName}

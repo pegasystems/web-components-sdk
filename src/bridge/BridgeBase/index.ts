@@ -1016,6 +1016,219 @@ updated(changedProperties) {
     return theTemplateForTemplate;
   }
 
+  /**
+   * Returns the lit-html component associated with the PConnect that's passed in.
+   * @param inConfigObj the Constellation component configuration object (typically 
+   * returned from createComponent) for which you want to get back the associated 
+   * lit-html component. The inConfigObj object is an object with the getPConnect() method
+   */
+  static getComponentFromConfigObj(inConfigObj: any) {
+
+    try {
+      const thePConn = inConfigObj.getPConnect();
+      const theComponentName = thePConn.getComponentName();
+      let theComp: any = null;
+      let theErr = ``;
+
+      switch(theComponentName) {
+        case "AppAnnouncement":
+          theComp = html`<app-announcement .pConn=${thePConn}></app-announcement>`;
+          break;
+
+        case "AppShell":
+          theComp = html`<div class='appshell-main'><app-shell .pConn=${thePConn}></app-shell></div>`;
+          break;
+
+        case "Attachment":
+          theComp = html`<attachment-component .pConn=${thePConn}></attachment-component>`;
+          break;
+
+        case "AutoComplete":
+          theComp = html`<autocomplete-form .pConn=${thePConn}></autocomplete-form>`;
+          break;
+                
+        case "CaseHistory":
+          theComp = html`<case-history-widget .pConn=${thePConn}></case-history-widget>`;
+          break;
+
+        case "CaseOperator":
+          theComp = html`<case-operator-widget .pConn=${thePConn}></case-operator-widget>`;
+          break;
+  
+        case "CaseSummary":
+          theComp = html`<case-summary-template .pConn=${thePConn}></case-summary-template>`;
+          break;
+  
+        case "CaseView":
+          theComp = html`<div class='psdk-case-view'><case-view .pConn=${thePConn}></case-view></div>`;
+          break;
+
+        case "Checkbox":
+          theComp = html`<check-box-form .pConn=${thePConn}></check-box-form>`;
+          break;
+
+        case "Currency":
+          theComp = html`<currency-form .pConn=${thePConn}></currency-form>`;
+          break;
+  
+        case "Date":
+          theComp = html`<date-form .pConn=${thePConn}></date-form>`;
+          break;
+          
+        case "DateTime":
+          theComp = html`<datetime-form .pConn=${thePConn}></datetime-form>`;
+          break;             
+
+        case "Decimal":
+          theComp = html`<decimal-form .pConn=${thePConn}></decimal-form>`;
+          break;                   
+
+        case "DefaultForm":
+          theComp = html`<default-form-component .pConn=${thePConn}></default-form-component>`;
+          break;
+
+        case "DeferLoad":
+          theComp = html`<defer-load-component .pConn=${thePConn}></defer-load-component>`;
+          break;
+
+        case "Dropdown":
+          theComp = html`<dropdown-form .pConn=${thePConn}></dropdown-form>`;
+          break;
+
+        case "Email":
+          theComp = html`<email-form .pConn=${thePConn}></email-form>`;
+          break;
+
+        case "FileUtility":
+          theComp = html`<file-utility-component .pConn=${thePConn}></file-utility-component>`;
+          break;
+  
+        case "FlowContainer":
+          theComp = html`<flow-container .pConn=${thePConn}></flow-container>`;
+          break;
+
+        case "FormattedText":
+          theComp = html`<formatted-text-form .pConn=${thePConn}></formatted-text-form>`;
+          break;
+
+        case "Integer":
+          theComp = html`<integer-form .pConn=${thePConn}></integer-form>`;
+          break;
+
+        case "ListPage":
+          theComp = html`<list-page-component .pConn=${thePConn}></list-page-component>`;
+          break;
+
+        case "ListView":
+          theComp = html`<list-view-component .pConn=${thePConn}></list-view-component>`;
+          break;
+                        
+        case "OneColumn":
+          theComp = html`<one-column .pConn=${thePConn}></one-column>`;
+          break;
+      
+        case "Percentage":
+          theComp = html`<percentage-form .pConn=${thePConn}></percentage-form>`;
+          break;
+
+        case "Phone":
+          theComp = html`<phone-form .pConn=${thePConn}></phone-form>`;
+          break;
+  
+        case "Pulse":
+          theComp = html`<pulse-component .pConn=${thePConn}></pulse-component>`;
+          break;
+
+        case "RadioButtons":
+          theComp = html`<radio-buttons-form .pConn=${thePConn}></radio-buttons-form>`;
+          break;
+            
+        case "Reference":
+        case "reference":
+          theComp = html`<reference-component .pConn=${thePConn}></reference-component>`;
+          break;
+              
+        case "Region":
+          theComp = html`<region-component .pConn=${thePConn}></region-component>`;
+          break;
+
+        case "SimpleTableSelect":
+          theComp = html`<simple-table-select .pConn=${thePConn}></simple-table-select>`;
+          break;
+
+        case "Text":
+          theComp = html`<text-form .pConn=${thePConn}></text-form>`;
+          break;
+
+        case "TextArea":
+          theComp = html`<text-area-form .pConn=${thePConn}></text-area-form>`;
+          break;
+
+        case "TextContent":
+          theComp = html`<text-content-form .pConn=${thePConn}></text-content-form>`;
+          break;
+
+        case "TextInput":
+          theComp = html`<text-input-form .pConn=${thePConn}></text-input-form>`;
+          break;
+
+        case "Time":
+          theComp = html`<time-form .pConn=${thePConn}></time-form>`;
+          break;  
+
+        case "ToDo":    // Special case of looking for either capitalization
+        case "Todo":
+          theComp = html`<todo-component .pConn=${thePConn}></todo-component>`;
+          break;
+
+        case "TwoColumn":
+          theComp = html`<two-column .pConn=${thePConn}></two-column>`;
+          break;
+  
+        case "TwoColumnPage":
+          theComp = html`<two-column-page .pConn=${thePConn}></two-column-page>`;
+          break;
+
+        case "URL":
+          theComp = html`<url-form .pConn=${thePConn}></url-form>`;
+          break;
+
+        case "UserReference":
+          theComp = html`<user-reference-form .pConn=${thePConn}></user-reference-form>`;
+          break;
+  
+        case "View":
+          theComp = html`<view-component .pConn=${thePConn}></view-component>`;
+          break;
+
+        case "ViewContainer":
+          theComp = html`<view-container .pConn=${thePConn}></view-container>`;
+          break;
+    
+        case "WideNarrowPage":
+          theComp = html`<wide-narrow-page .pConn=${thePConn}></wide-narrow-page>`;
+          break;
+  
+        default:
+          theErr = `BridgeBase getComponentFromConfigObj wants to render ${theComponentName}: not in switch statement`;
+          console.error(theErr);
+          theComp = html`<p>${theErr}</p>`;
+          break;        
+
+      }
+  
+      return theComp;
+  
+    }
+    catch(err) {
+      const catchErr = `BridgeBase.getComponentFromConfigObj: invalid inConfigObj: ${JSON.stringify(inConfigObj)}`
+      console.error(catchErr);
+      return html`<p>${catchErr}</p>`;
+    }
+
+  }
+
+
   // Writes a console.log of the current component's children types
   logChildren() {
     let childTypes: Array<String> = [];
