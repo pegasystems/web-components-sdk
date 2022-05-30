@@ -107,6 +107,7 @@ class Currency extends FormComponentBase {
       html`
       <lion-input-amount
         id=${this.theComponentId}
+        dataTestId=${this.testId}
         .modelValue=${parseFloat(this.value)} 
         .fieldName=${this.label}
         .formatOptions=${this.numberOptions}

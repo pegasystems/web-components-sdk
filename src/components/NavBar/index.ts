@@ -245,7 +245,7 @@ class NavBar extends BridgeBase {
                   <li class="psdk-nav-li-middle">
                       <button @click=${this.navPanelCreateButtonClick} class="psdk-appshell-buttonnav" style="width: 100%; text-align: left; padding: 1rem 0rem;">
                           <img  class="psdk-nav-svg-icon" src="${this.navExpandCollapse}" >
-                          <span class="psdk-nav-button-span">Create</span>
+                          <span class="psdk-nav-button-span" id="create-nav">Create</span>
                       </button>
                       ${ this.bShowCaseTypes ? html`<div style="padding-left: -0.75rem;">${theCaseTypeButtons}</div>` : nothing }
                   </li>

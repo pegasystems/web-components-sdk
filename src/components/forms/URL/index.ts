@@ -91,6 +91,7 @@ class URL extends FormComponentBase {
                     <lion-input-url
                         id=${this.theComponentId}
                         name="URL"
+                        dataTestId=${this.testId}
                         .modelValue=${this.value}
                         .validators = ${this.lionValidatorsArray}
                         .fieldName=${this.label}

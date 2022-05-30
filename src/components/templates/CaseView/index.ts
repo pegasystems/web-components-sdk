@@ -250,7 +250,7 @@ class CaseView extends BridgeBase {
               <img  class="psdk-case-svg-icon" src="${this.svgCase}" >  
             </div>
             <div class="psdk-case-view-heading" >        
-              <div class="psdk-case-view-heading-id">${this.id}</div>
+              <div class="psdk-case-view-heading-id" id="caseId">${this.id}</div>
               <div class="psdk-case-view-heading-h1">${this.heading}</div>
             </div>
           </div>

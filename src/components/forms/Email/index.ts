@@ -69,6 +69,7 @@ class Email extends FormComponentBase {
         <lion-input-email 
           id=${this.theComponentId}
           name="email" .modelValue=${this.value}
+          dataTestId=${this.testId}
           .fieldName=${this.label} 
           .validators=${this.lionValidatorsArray}
           .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}

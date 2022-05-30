@@ -139,6 +139,7 @@ class RadioButtons extends FormComponentBase {
                   <lion-radio-group
                     id=${this.theComponentId}
                     class="psdk-radio-vertical"
+                    dataTestId=${this.testId}
                     .fieldName=${this.label} 
                     .modelValue=${this.value}
                     .validators = ${this.lionValidatorsArray}
