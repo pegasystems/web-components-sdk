@@ -60,7 +60,7 @@ class MashupResolutionScreen extends LitElement {
           </div>
       </div>
       <div>
-          <img src="../assets/img/cablechat.png" class="cc-chat-image">
+          <img src="assets/img/cablechat.png" class="cc-chat-image">
           <button class="cc-chat-button" >Chat Now</button>
       </div>
     </div>

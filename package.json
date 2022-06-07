@@ -15,7 +15,7 @@
     "start-prod-https": "http-server ./dist --ssl --cert private.pem --key private.key --port 3501 --gzip --brotli --cors --proxy https://localhost:3501?",
     "_comment": "Commands above are those expected to be run by customers/clients",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html && shx cp dist/index.html dist/mashup.html"
+    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html"
   },
   "dependencies": {
     "@lion/button": "^0.11.1",

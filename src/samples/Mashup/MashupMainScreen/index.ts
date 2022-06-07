@@ -51,7 +51,7 @@ class MashupMainScreen extends LitElement {
       this.pConn = this.pConn.getPConnect();
     }
 
-    this.cableInfo = "./assets/img/cableinfo.png";
+    this.cableInfo = "assets/img/cableinfo.png";
 
     this.firstConfig = { 
       "play" : "Triple Play",
@@ -170,7 +170,7 @@ class MashupMainScreen extends LitElement {
                     We need to gather a little information about you.
                 </div>
                 <div>
-                    <img src="./assets/img/cableinfo.png" class="cc-info-image">
+                    <img src="assets/img/cableinfo.png" class="cc-info-image">
                 </div>
                 
             </div>
