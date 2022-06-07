@@ -8,19 +8,17 @@ const Login = async (username, password, page) => {
 };
 
 function padTo2Digits(num) {
-  return num.toString().padStart(2, '0');
+  return num.toString().padStart(2, "0");
 }
 
 const getNextDay = () => {
-  const date = new Date();
-  return [
-    padTo2Digits(date.getDate()) + 1,
-    padTo2Digits(date.getMonth() + 1),
-    date.getFullYear(),
-  ].join('-');
-}
+  const tomorrow = new Date();
+  // add 1 day to today
+  tomorrow.setDate(new Date().getDate() + 1);
+  return tomorrow.toLocaleString().split(",")[0];
+};
 
 module.exports = {
   Login,
-  getNextDay
+  getNextDay,
 };

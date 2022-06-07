@@ -43,9 +43,8 @@ test.describe('E2E test', () => {
     await page.locator('body').click(); //clicking outside to dismiss combobox
 
     await page.fill('lion-input-email[datatestid="CE8AE9DA5B7CD6C3DF2929543A9AF92D"] input', 'john@doe.com');
-    // todo: getting future date value programmatically and pass it
-    // const currentDate = common.getNextDay();
-    await page.type('lion-input-dateonly[datatestid="E0BA356AE552ACD4326D51E61F4279AC"] input', "25-10-2022");
+    const futureDate = common.getNextDay();
+    await page.type('lion-input-dateonly[datatestid="E0BA356AE552ACD4326D51E61F4279AC"] input', futureDate);
     await page.locator('button:has-text("Submit")').click();
 
     // Address Page
@@ -122,7 +121,7 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("submit")').click();
 
-    await page.locator('text=Resolved').click();
+    await page.locator('text=RESOLVED-COMPLETED').click();
   }, 10000);
 });
 
