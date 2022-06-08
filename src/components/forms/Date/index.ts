@@ -88,6 +88,7 @@ class DateComponent extends FormComponentBase {
                     <lion-input-dateonly
                         id=${this.theComponentId}
                         name="DateOnly"
+                        dataTestId=${this.testId}
                         .modelValue=${dateValue}
                         .validators = ${this.lionValidatorsArray}
                         .fieldName=${this.label}
