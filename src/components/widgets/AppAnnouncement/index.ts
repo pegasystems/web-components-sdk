@@ -101,7 +101,7 @@ class AppAnnouncement extends BridgeBase {
 
     const theAnnouncement = html`
       <article class="psdk-announcement">
-        <h2>${this.header}</h2>
+        <h2 id="announcement-header">${this.header}</h2>
         <div>
             <p>${this.description}</p>
             <div>

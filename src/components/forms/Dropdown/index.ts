@@ -139,6 +139,7 @@ class Dropdown extends FormComponentBase {
               <div class="form-group">
                 <lion-select 
                   id=${this.theComponentId}
+                  dataTestId=${this.testId}
                   .fieldName=${this.label} 
                   .modelValue=${(this.value === '' && !this.bReadonly) ? 'Select' : this.value}
                   .validators = ${this.lionValidatorsArray}

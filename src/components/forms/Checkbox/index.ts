@@ -165,6 +165,7 @@ class CheckBox extends FormComponentBase {
             html`
               <lion-checkbox 
                   id=${this.theComponentId}
+                  dataTestId=${this.testId}
                   checked
                   .fieldName=${this.label} 
                   .validators=${this.lionValidatorsArray}
@@ -178,6 +179,7 @@ class CheckBox extends FormComponentBase {
             html`
               <lion-checkbox 
                   id=${this.theComponentId}
+                  dataTestId=${this.testId}
                   .fieldName=${this.label} 
                   .validators=${this.lionValidatorsArray}
                   .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}

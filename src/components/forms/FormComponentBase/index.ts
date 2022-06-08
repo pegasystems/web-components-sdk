@@ -40,6 +40,7 @@ export class FormComponentBase extends BridgeBase {
   @property( {attribute: false} ) value = "default value";
   @property( {attribute: false} ) controlName = false;
   @property( {attribute: false, type: Object} ) annotatedLabel; // is likely a lit-html CSS object
+  @property( {attribute: false, type: String}) testId = "";
   
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -108,6 +109,7 @@ export class FormComponentBase extends BridgeBase {
     }
   
     this.label = theConfigProps["label"];
+    this.testId = theConfigProps["testId"];
 
     if (theConfigProps["required"] != null) {
       this.bRequired = Utils.getBooleanValue(theConfigProps["required"]);
