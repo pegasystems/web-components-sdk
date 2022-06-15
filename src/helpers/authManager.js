@@ -121,8 +121,8 @@ const initAuthMgr = (bInit) => {
     authConfig.userIdentifier = sdkConfigAuth.mashupUserIdentifier;
     authConfig.password = sdkConfigAuth.mashupPassword;
   }
-  if( sdkConfigAuth.iframeLoginUI ){
-    authConfig.iframeLoginUI = true;
+  if( 'iframeLoginUI' in sdkConfigAuth ){
+    authConfig.iframeLoginUI = sdkConfigAuth.iframeLoginUI;
   }
 
   // Check if sessionStorage exists (and if so if for same authorize endpoint).  Otherwise, assume
