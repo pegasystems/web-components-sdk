@@ -69,6 +69,7 @@ class Phone extends FormComponentBase {
           <lion-input 
             id=${this.theComponentId}
             type="tel"
+            dataTestId=${this.testId}
             .modelValue=${this.value} 
             .fieldName=${this.label} 
             .validators = ${this.lionValidatorsArray}

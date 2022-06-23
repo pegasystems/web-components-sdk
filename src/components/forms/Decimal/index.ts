@@ -70,6 +70,7 @@ class Decimal extends FormComponentBase {
                 <lion-input-amount
                     id=${this.theComponentId}
                     name="Amount"
+                    dataTestId=${this.testId}
                     .modelValue=${this.value}
                     .fieldName=${this.label} 
                     .validators = ${this.lionValidatorsArray}

@@ -14,8 +14,9 @@
     "start-prod": "http-server ./dist --port 3501 --gzip --brotli --cors --proxy http://localhost:3501?",
     "start-prod-https": "http-server ./dist --ssl --cert private.pem --key private.key --port 3501 --gzip --brotli --cors --proxy https://localhost:3501?",
     "_comment": "Commands above are those expected to be run by customers/clients",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html && shx cp dist/index.html dist/mashup.html"
+    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html",
+    "test": "playwright test --headed --project=chromium",
+    "test-report": "playwright show-report"
   },
   "dependencies": {
     "@lion/button": "^0.11.1",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@kooneko/livereload-webpack-plugin": "^1.2.0",
+    "@playwright/test": "^1.22.1",
     "babel-eslint": "^10.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^8.0.0",
