@@ -108,7 +108,7 @@ Future updates to the SDK will support more recent LTS versions of node as Const
 
 6. **Embedded** (formerly known as Mashup)
 
-    6.1 Access **http://localhost:3501/auth.html** or **https://localhost:3501/auth.html** (if starting with HTTPS)
+    6.1 Access **http://localhost:3501/embedded** or **https://localhost:3501/embedded** (if starting with HTTPS)
 
 7.  **Portal**
 
