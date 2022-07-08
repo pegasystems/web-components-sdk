@@ -8,7 +8,7 @@ The Web Components SDK differs from out-of-the-box Cosmos React because it provi
 [Lion web components](https://lion-web.netlify.app/) - open-source components that are designed to be extended and allow for flexible integrations. These are, in turn, built with [LitElement](https://lit-element.polymer-project.org/guide) 
 and [lit-html](https://lit-html.polymer-project.org/guide).
 
-The Web Components SDK is built on a new and modernized UI technology stack (the Constellation JavaScript Engine and Constellation JavaScript API).  Many additional SDK features are planned for 2022 to expand the scope of supported use cases.
+The Web Components SDK is built on a new and modernized UI technology stack (the Constellation JavaScript Engine and Constellation JavaScript API). Many additional SDK features are planned for 2022 to expand the scope of supported use cases.
 
 <br>
 
@@ -18,7 +18,7 @@ The Web Components SDK is built on a new and modernized UI technology stack (the
 
 This **8.6 version** of the Web Components SDK assumes that you have access to a Pega Infinity server (**8.6.0+ GA**) running an application that is configured to run using the Constellation UI service.
 
-The **MediaCo** sample application is already configured as a Constellation application and can be found in the Web Components SDK download associated with this repo which is available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk). The OAuth 2.0 Client Registration records associated with the **MediaCo** application are available in the same Web Components SDK download.
+The **MediaCo** sample application is already configured as a Constellation application and can be found in the Web Components SDK download associated with this repo which is available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk). The OAuth 2.0 Client Registration records associated with the **MediaCo** application are available in the same Web Components SDK download. For more information about the MediaCo sample application, see [MediaCo sample application](https://docs.pega.com/dx-sdks/mediaco-sample-application).
 
 The **Web Components SDK** has been tested with:
 - node 14.18.*
@@ -26,7 +26,7 @@ The **Web Components SDK** has been tested with:
 
 Future updates to the SDK will support more recent LTS versions of node as Constellation supports them.
 
-**Before** installing and running the SDK code, please refer to the **Web Components SDK Guide** provided in the Marketplace download for steps to prepare your Infinity server and node environment so you can proceed with the steps in the next section.
+**Before** installing and running the SDK code, refer to the **Web Components SDK Guide** provided in the Marketplace download for steps to prepare your Infinity server and node environment so you can proceed with the steps in the next section.
 
 <br>
 
@@ -62,7 +62,7 @@ See the **Web Components SDK Guide** in the Marketplace download for more comple
     * The **serverConfig** section contains values related to the Pega Infinity server and SDK Content Server.
 <br><br>
 
-3. Edit the **package.json** file's dependency for **[@pega/constellationjs](https://www.npmjs.com/package/@pega/constellationjs)** with the **tag name** that is appropriate for the Pega Infinity version that your application is running. For example, Infinity 8.6.3 uses the tag "**SDK-8.6.3**", Infinity 8.6.4 uses the tag "**SDK-8.6.4**", etc. You must **always** use the appropriate Constellation files that match your Infinity deployment. Please check your Infinity version and choose the correct version.
+3. Edit the **package.json** file's dependency for **[@pega/constellationjs](https://www.npmjs.com/package/@pega/constellationjs)** with the **tag name** that is appropriate for the Pega Infinity version that your application is running. For example, Infinity 8.6.3 uses the tag "**SDK-8.6.3**", Infinity 8.6.4 uses the tag "**SDK-8.6.4**", etc. You must **always** use the appropriate Constellation files that match your Infinity deployment.
 <br><br>
 
 
@@ -120,7 +120,7 @@ See the **Web Components SDK Guide** in the Marketplace download for more comple
 
     7.1 Access **http://localhost:3501/portal** or **https://localhost:3501/portal** (if starting with HTTPS)
 
-    **If you see a blank page**, please check your JavaScript console to see if you have encountered a net::ERR_CERT_INVALID error. If you encounter this error, please see the troubleshooting section below: **Runtime Error: net::ERR_CERT_INVALID**. Due to browser interactions during login, it can be easier to find and fix this error using the Portal URL.
+    **If you see a blank page**, check your JavaScript console to see if you have encountered a net::ERR_CERT_INVALID error. If you encounter this error, see the troubleshooting section below: **Runtime Error: net::ERR_CERT_INVALID**. Due to browser interactions during login, it can be easier to find and fix this error using the Portal URL.
 
 Note that the examples above are for the default configuration. If you change the configuration to use a different host and/or port, adapt these URLs to your host:port as necessary.
 
@@ -132,7 +132,7 @@ Note that the examples above are for the default configuration. If you change th
 <br>
 
 
-> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available at https://community.pega.com/knowledgebase/documents/web-components-sdk-user-guide
+> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available at https://community.pega.com/knowledgebase/documents/web-components-sdk-user-guide. For more information about troubleshooting, see [Troubleshooting the DX SDKs](https://docs.pega.com/dx-sdks/troubleshooting-dx-sdks).
 
 <br>
 
@@ -140,7 +140,7 @@ Note that the examples above are for the default configuration. If you change th
 
 The **APIHeadersAllowed** record on your Infinity server (found in Security | Cross Origin Resource Sharing) may need to be updated to allow the Web Components SDK calls to Pega REST APIs and DX APIs to interact with Infinity.
 
-For the **APIHeadersAllowed** CORS record, please confirm of update the record as follows:
+For the **APIHeadersAllowed** CORS record, confirm of update the record as follows:
 
 * **Allowed methods**
   * **All 5 methods** should be checked: 
@@ -184,7 +184,7 @@ Typically, you can resolve this error by indicating to your browser that you are
 
 The MediaCo sample application (available to Pega licensed users) includes OAuth Client Registration records that it uses for authentication in your Infinity server (available in Security | OAuth 2.0 Client Registration): **MediaCoOauthNoLogin** (for the Embedded use case) and **MediaCoOauth** (for the Portal use case).
 
-You may use these records. If you want to create your own OAuth 2.0 Client Registration record, please refer to the **How to create OAuth2 registration in Infinity** section found below.
+You may use these records. If you want to create your own OAuth 2.0 Client Registration record, refer to the **How to create OAuth2 registration in Infinity** section found below.
 
 * For the **Embedded** use case, you will use the OAuth 2.0 Client Registration record’s **Client ID** and **Client secret** as the values for **mashupClientId** and **mashupClientSecret** in the SDK’s **sdk-config.js** file.
 
@@ -195,21 +195,21 @@ To ensure that the application is redirected to the proper page after authentica
 
 The MediaCoOauth and MediaCoOauthNoLogin records that are included with the MediaCo sample application include the necessary redirect URIs for the default configuration:
 
-* http://localhost:3501/auth.html and https://localhost:3501/auth.html for the Portal use case
+* http://localhost:3501/portal and https://localhost:3501/portal for the Portal use case
 
-*	http://localhost:3501/mashup/auth.html and https://localhost:3501/mashup/auth.html for the Embedded use case
+*	http://localhost:3501/embedded and https://localhost:3501/embedded for the Embedded use case
 
 If you configure your installation to have the Web Components SDK static content served from a different **host:port** than the default, you should add new Redirect URIs to the list:
 
 * In the **Supported grant types** section add the following URLS to the list of redirect URLs by clicking on the + sign. (Note that the default port is 3501.)
 
-  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/auth.html (for the portal use case)
+  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/portal (for the portal use case)
 
-  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/auth.html (for the portal use case)
+  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/portal (for the portal use case)
 
-  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/mashup/auth.html
+  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/embedded
 
-  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/mashup/auth.html
+  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/embedded
 
   * Note that entries are needed for either **http** or **https** depending on how you access your Web Components SDK server
 
@@ -221,14 +221,14 @@ If you configure your installation to have the Web Components SDK static content
 
 ### How to create an OAuth 2.0 Client Registration record in Infinity
 
-If the `MediaCo` app was imported to your Infinity server, a `MediaCoOAuth` OAuth 2.0 Client Registration record will have been imported as well. That record's clientId is currently referenced within sdk-config.json.  However, you can create your own OAuth 2.0 Client Registration record using the following procedure:
+If the `MediaCo` app was imported to your Infinity server, a `MediaCoOAuth` OAuth 2.0 Client Registration record will have been imported as well. That record's clientId is currently referenced within sdk-config.json. However, you can create your own OAuth 2.0 Client Registration record using the following procedure:
    * Create a new "Security/OAuth 2.0 Client Registration" record for your app
    * You might name it the same name as your application
    * Specify "Public" for the type of client (as browser apps are not able to prevent any "Client secret" from being compromised)
    * Select "Authorization Code" for the Grant type
-   * Add a RedirectURI value based on the URL used to access the deployed Web Components SDK (e.g., http://localhost:3501/auth.html)
+   * Add a RedirectURI value based on the URL used to access the deployed Web Components SDK (e.g., http://localhost:3501/portal)
    * Enable the "Enable proof code for pkce" option
-   * Set the "Access token lifetime" for how long you want the logged-in session to last.  Pega does not presently support the ability to refresh the token (for Public clients), so the user will have to reauthenticate again after this interval.
+   * Set the "Access token lifetime" for how long you want the logged-in session to last. Pega does not presently support the ability to refresh the token (for Public clients), so the user will have to reauthenticate again after this interval.
    * Enter the appropriate values within **sdk-config.json** 
 
 <br>
@@ -238,7 +238,7 @@ If the `MediaCo` app was imported to your Infinity server, a `MediaCoOAuth` OAut
 ### Setting up a secure self-signed certificate for localhost
 
 
-The following steps will enable setting up a secure self-signed certificate for localhost (adapted from the procedure outlined here: https://gist.github.com/pgilad/63ddb94e0691eebd502deee207ff62bd).  At the end of the process two files are expected within the root project directory: private.pem and private.key
+The following steps will enable setting up a secure self-signed certificate for localhost (adapted from the procedure outlined here: https://gist.github.com/pgilad/63ddb94e0691eebd502deee207ff62bd). At the end of the process two files are expected within the root project directory: private.pem and private.key
 
 Step 1: Create a private key 
    ```
@@ -246,7 +246,7 @@ Step 1: Create a private key
    ```
 
 
-Step 2: Create a Certificate configuration text file named ssl.conf within the root project directory.   Use the following (or adjusted content to reflect your location and desired organization):
+Step 2: Create a Certificate configuration text file named ssl.conf within the root project directory. Use the following (or adjusted content to reflect your location and desired organization):
    ```
 [ req ]
 default_bits       = 4096
@@ -296,7 +296,7 @@ Step 6: Create a pem file from crt
    ```
    $ openssl x509 -in private.crt -out private.pem -outform PEM
    ```
-Step 7: Run webpack server with arguments to use the keys (assumes private.pem and private.key are in root project directory).  May need to close prior open instances of browser (if previously accessed prior insecure localhost)
+Step 7: Run webpack server with arguments to use the keys (assumes private.pem and private.key are in root project directory). You may need to close prior open instances of browser (if previously accessed prior insecure localhost)
 
    ```
    $ npm run localhostsecure
@@ -319,7 +319,7 @@ This project is licensed under the terms of the **Apache 2** license.
 
 We welcome contributions to the Web Components SDK project.
 
-Please refer to our [guidelines for contributors](./docs/CONTRIBUTING.md) if you are interested in helping. 
+Refer to our [guidelines for contributors](./docs/CONTRIBUTING.md) if you are interested in contributing to the project. 
 
 <br>
 
@@ -327,8 +327,10 @@ Please refer to our [guidelines for contributors](./docs/CONTRIBUTING.md) if you
 ---
    
 ## Additional Resources
-
-* __LitElement__: https://lit-element.polymer-project.org/guide
-* __lit-html__: https://lit-html.polymer-project.org/guide
-* __Lion Web Components GitHub__: https://github.com/ing-bank/lion
-* __Lion Web Components Documentation Site__: https://lion-web.netlify.app/
+* [LitElement](https://lit-element.polymer-project.org/guide)
+* [lit-html](https://lit-html.polymer-project.org/guide)
+* [Lion Web Components GitHub](https://github.com/ing-bank/lion)
+* [Lion Web Components Documentation Site](https://lion-web.netlify.app/)
+* [DX SDK Documentation](https://docs.pega.com/dx-sdks/dx-sdks)
+* [Troubleshooting the DX SDKs](https://docs.pega.com/dx-sdks/troubleshooting-dx-sdks)
+* [MediaCo sample application](https://docs.pega.com/dx-sdks/mediaco-sample-application)
