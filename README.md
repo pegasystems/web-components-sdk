@@ -108,7 +108,7 @@ Future updates to the SDK will support more recent LTS versions of node as Const
 
 6. **Embedded** (formerly known as Mashup)
 
-    6.1 Access **http://localhost:3501/embedded** or **https://localhost:3501/embedded** (if starting with HTTPS)
+    6.1 Access **http://localhost:3501/auth.html** or **https://localhost:3501/auth.html** (if starting with HTTPS)
 
 7.  **Portal**
 
@@ -243,7 +243,7 @@ The MediaCoOauth and MediaCoOauthNoLogin records that are included with the Medi
 
 * http://localhost:3501/portal and https://localhost:3501/portal for the Portal use case
 
-*	http://localhost:3501/embedded and https://localhost:3501/embedded for the Embedded use case
+*	http://localhost:3501/auth.html and https://localhost:3501/auth.html for the Embedded use case
 
 If you configure your installation to have the Web Components SDK static content served from a different **host:port** than the default, you should add new Redirect URIs to the list:
 
@@ -253,9 +253,9 @@ If you configure your installation to have the Web Components SDK static content
 
   * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/portal (for the portal use case)
 
-  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/embedded
+  * http://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/auth.html
 
-  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/embedded
+  * https://\<**host name or IP address of Web Components SDK server**>:<**port you’re using**>/auth.html
 
   * Note that entries are needed for either **http** or **https** depending on how you access your Web Components SDK server
 
