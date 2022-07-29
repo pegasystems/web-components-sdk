@@ -50,7 +50,7 @@ Future updates to the SDK will support more recent LTS versions of node as Const
 
 See the **Web Components SDK Guide** in the Marketplace download for more complete documentation about the configuration of the Web Components SDK via the **sdk-config.json** file.
 
-2. Edit **sdk-config.json** and, if necessary, update the values that will be used
+2. Edit **sdk-config.json** and, if necessary, update the values that will be used. For more information about the attributes in the **sdk-config.json** file, see [Configuring the sdk-config.json file](https://docs.pega.com/dx-sdks/configuring-sdk-configjson-file).
     * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.
     The default **sdk-config.json** file is set up to use the **MediaCoOauth** and **MediaCoOauthNoLogin** records that are included with the Web Components SDK Marketplace download.
     <br><br>
