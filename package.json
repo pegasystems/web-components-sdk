@@ -31,7 +31,7 @@
     "@lion/radio-group": "^0.15.1",
     "@lion/select": "^0.11.1",
     "@lion/textarea": "^0.11.0",
-    "@pega/constellationjs": "SDK-8.6.4",
+    "@pega/constellationjs": "SDK-8.6.5",
     "@vaadin/router": "^1.7.4",
     "@vaadin/vaadin-grid": "^6.0.1",
     "@vaadin/vaadin-text-field": "^2.8.2",
