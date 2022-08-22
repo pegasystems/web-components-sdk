@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 
 const { test } = require('@playwright/test');
-const common = require('../common');
+const common = require('../../common');
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -48,6 +48,7 @@ test.describe('E2E test', () => {
     await page.locator('h2:has-text("Service Date")').click();
 
     const futureDate = common.getNextDay();
+    console.log("Date is: ", futureDate);
     await page.type('lion-input-dateonly[datatestid="1321FA74451B96BC02663B0EF96CCBB9"] input', futureDate);
 
     await page.locator('button:has-text("next")').click();
