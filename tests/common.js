@@ -13,10 +13,11 @@ function padTo2Digits(num) {
 
 const getNextDay = () => {
   const tomorrow = new Date();
+  const theLocale = Intl.DateTimeFormat().resolvedOptions().locale;
   // add 1 day to today
   tomorrow.setDate(new Date().getDate() + 1);
   // Need to get leading zeroes on single digit months and 4 digit year
-  return tomorrow.toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "numeric"});
+  return tomorrow.toLocaleDateString(theLocale, {day: "2-digit", month: "2-digit", year: "numeric"});
 };
 
 module.exports = {
