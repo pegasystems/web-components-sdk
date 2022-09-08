@@ -131,9 +131,12 @@ class SimpleMain extends LitElement {
   }
 
   async firstUpdated() {
-    const serverUrl = SdkConfigAccess.getSdkConfigServer().infinityRestServerUrl;
+    const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
+    const serverUrl = sdkConfigServer.infinityRestServerUrl;
+    const appAlias = sdkConfigServer.appAlias;
+    const appAliasPath = appAlias ? `/app/${appAlias}` : '';
     
-    await fetch ( serverUrl + "/api/v1/casetypes" ,
+    await fetch ( `${serverUrl}${appAliasPath}/api/v1/casetypes` ,
         {
           method: 'GET',
           headers: {
@@ -147,7 +150,7 @@ class SimpleMain extends LitElement {
 
         this.getCaseTypeButtons(arCaseTypes);
 
-        await fetch ( serverUrl + "/api/v1/data/D_Worklist?Work=true",
+        await fetch ( `${serverUrl}${appAliasPath}/api/v1/data/D_Worklist?Work=true`,
             {
               method: 'GET',
               headers: {
