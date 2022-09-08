@@ -62,7 +62,7 @@ class PegaAuth {
 
       return this.#getCodeChallenge(this.config.codeVerifier).then( cc => {
         // Now includes new enable_psyncId=true and session_index params
-        return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=openid${addtlScope}&state=${state}&code_challenge=${cc}&code_challenge_method=S256${moreAuthArgs}`;
+        return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=openid+email+profile${addtlScope}&state=${state}&code_challenge=${cc}&code_challenge_method=S256${moreAuthArgs}`;
       });
   }
 
@@ -405,6 +405,35 @@ class PegaAuth {
         this.#updateConfig();
       }
   }
+
+  // For userinfo endpoint to return meaningful data, endpoint must include appAlias (if specified) and authorize must
+  //  specify profile and optionally email scope to get such info returned
+  async getUserinfo(access_token) {
+    if( !this.config || !this.config.userinfoUri ) {
+          // Must have a config structure and userInfo to proceed
+          return {};
+    }
+    const hdrs = {'authorization':`bearer ${access_token}`,'content-type':'application/json;charset=UTF-8'};
+    return fetch(this.config.userinfoUri, {
+        method: "GET",
+        headers: new Headers(hdrs)})
+    .then( response => {
+        if( response.ok) {
+            return response.json();
+        } else {
+            // eslint-disable-next-line no-console
+            console.log( `Error invoking userinfo: ${response.status}` );
+        }
+    })
+    .then( data => {
+        return data;
+    })
+    .catch(e => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+    });
+  }
+
   /* eslint-enable camelcase */
 
   // eslint-disable-next-line class-methods-use-this

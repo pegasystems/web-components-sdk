@@ -11,6 +11,7 @@ import '../SimpleSideBar';
 
 // import the component's styles as HTML with <style>
 import { simpleMainStyles } from './simple-main-styles';
+import { sdkGetAuthHeader } from '../../../helpers/authManager';
 
 
 
@@ -137,7 +138,7 @@ class SimpleMain extends LitElement {
           method: 'GET',
           headers: {
             'Content-Type' : 'application/json',
-            'Authorization' : 'Bearer ' + window.sessionStorage.getItem("accessToken"),
+            'Authorization' : 'Bearer ' + sdkGetAuthHeader(),
           },
         })
       .then( r => r.json())
@@ -151,7 +152,7 @@ class SimpleMain extends LitElement {
               method: 'GET',
               headers: {
                 'Content-Type' : 'application/json',
-                'Authorization' : 'Bearer ' + window.sessionStorage.getItem("accessToken"),
+                'Authorization' : 'Bearer ' + sdkGetAuthHeader(),
               },
 
             })
@@ -288,7 +289,6 @@ class SimpleMain extends LitElement {
    * @param inRenderObj the initial, top-level PConnect object to render
    */
      initialRender(inRenderObj) {
-
 
       ////// This was done on login and kicked off the creation of this
       //////  AppEntry. So don't need to to do this.

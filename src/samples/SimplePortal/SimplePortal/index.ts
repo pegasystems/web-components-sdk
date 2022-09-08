@@ -1,5 +1,6 @@
-import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess } from '../../../helpers/config_access';
+import { html, customElement, LitElement } from '@lion/core';
+import { getSdkConfig, SdkConfigAccess } from '../../../helpers/config_access';
+import { sampleMainInit } from '../../sampleCommon';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
@@ -25,16 +26,19 @@ class SimplePortal extends LitElement {
   constructor() {
     super();
 
-    window.sessionStorage.setItem("startingComponent", "simple-portal-component");
-
   }
 
   connectedCallback() {
     super.connectedCallback();
 
-    // To eliminate the login button/component, login directly
-    loginIfNecessary("simpleportal", false);
-  
+    sampleMainInit( this, 'simple-portal-component', 'simple-main-component' );    
+
+    // Make sure sdkConfig is loaded prior to attempting to login
+    getSdkConfig().then( sdkConfig => {
+        // To eliminate the login button/component, login directly
+      loginIfNecessary("simpleportal", false);
+    });
+    
   }
 
 
@@ -64,17 +68,19 @@ class SimplePortal extends LitElement {
   render(){
 
     const sContent = this.getSimplePortalHtml();
-    const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
+    const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
 
     let arHtml: any[] = [];
 
     // SimplePortal not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    if( locBootstrap ) {
+      arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    }
 
     arHtml.push(simplePortalStyles);
     arHtml.push(sContent);
 
-    return arHtml;
+    return arHtml;  
 
   }
 

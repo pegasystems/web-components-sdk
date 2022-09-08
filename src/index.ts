@@ -10,10 +10,6 @@ import {Router} from '@vaadin/router';
 const outlet = document.getElementById("outlet");
 const router = new Router(outlet);
 
-// Don't process the routes until the UserManager has been initialized
-//  and is ready
-document.addEventListener("AuthManagerReady", () => {
-
     router.setRoutes([
 
         // External routes on top
@@ -34,4 +30,4 @@ document.addEventListener("AuthManagerReady", () => {
         {path: '/simpleportal.html', component: 'simple-portal-component'},
         
     ]);
-});
+
