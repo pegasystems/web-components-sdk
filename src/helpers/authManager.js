@@ -209,23 +209,27 @@ export const sdkGetAuthHeader = () => {
     constellationBootConfig.appAlias = sdkConfigServer.appAlias;
   }
 
-  // Pass in auth info to Constellation
-  constellationBootConfig.authInfo = {
-    authType: "OAuth2.0",
-    tokenInfo,
-    // Set whether we want constellation to try to do a full re-Auth or not ()
-    // true doesn't seem to be working in SDK scenario so always passing false for now
-    popupReauth: false /* !authNoRedirect() */,
-    client_id: authConfig.clientId,
-    authentication_service: authConfig.authService,
-    redirect_uri: authConfig.redirectUri,
-    endPoints: {
-        authorize: authConfig.authorizeUri,
-        token: authConfig.tokenUri,
-        revoke: authConfig.revokeUri
-    },
-    // TODO: setup callback so we can update own storage
-    onTokenRetrieval: authTokenUpdated
+  if( tokenInfo ) {
+    // Pass in auth info to Constellation
+    constellationBootConfig.authInfo = {
+      authType: "OAuth2.0",
+      tokenInfo,
+      // Set whether we want constellation to try to do a full re-Auth or not ()
+      // true doesn't seem to be working in SDK scenario so always passing false for now
+      popupReauth: false /* !authNoRedirect() */,
+      client_id: authConfig.clientId,
+      authentication_service: authConfig.authService,
+      redirect_uri: authConfig.redirectUri,
+      endPoints: {
+          authorize: authConfig.authorizeUri,
+          token: authConfig.tokenUri,
+          revoke: authConfig.revokeUri
+      },
+      // TODO: setup callback so we can update own storage
+      onTokenRetrieval: authTokenUpdated
+    }
+  } else {
+    constellationBootConfig.authorizationHeader = sdkGetAuthHeader();
   }
   
   // Turn off dynamic load components (should be able to do it here instead of after load?)
@@ -381,7 +385,7 @@ const updateRedirectUri = (aMgr, sRedirectUri) => {
  * Retrieve UserInfo for current authentication service
  */
  export const getUserInfo = (bUseSS=true) => {
-  const ssUserInfo = sessionStorage.getItem("rsdk_UI");
+  const ssUserInfo = sessionStorage.getItem("wcsdk_UI");
   let userInfo = null;
   if( bUseSS && ssUserInfo ) {
     try {
@@ -396,9 +400,9 @@ const updateRedirectUri = (aMgr, sRedirectUri) => {
   return aMgr.getUserinfo(tokenInfo.access_token).then( data => {
     userInfo = data;
     if( userInfo ) {
-      sessionStorage.setItem("rsdk_UI", JSON.stringify(userInfo));
+      sessionStorage.setItem("wcsdk_UI", JSON.stringify(userInfo));
     } else {
-      sessionStorage.removeItem("rsdk_UI");
+      sessionStorage.removeItem("wcsdk_UI");
     }
     return Promise.resolve(userInfo);
   });
@@ -616,13 +620,13 @@ export const authPostLogin = (tokens, bLoadC11n=true) => {
 export const sdkSetAuthHeader = (authHeader) => {
   // set this within session storage so it survives a browser reload
   if( authHeader ) {
-    sessionStorage.setItem("rsdk_AH", authHeader);
+    sessionStorage.setItem("wcsdk_AH", authHeader);
     // setAuthorizationHeader method not available til 8.8 so do safety check
     if( window.PCore?.getAuthUtils().setAuthorizationHeader ) {
       window.PCore.getAuthUtils().setAuthorizationHeader(authHeader);
     }
   } else {
-    sessionStorage.removeItem("rsdk_AH");
+    sessionStorage.removeItem("wcsdk_AH");
   }
   gbCustomAuth = true;
 };
