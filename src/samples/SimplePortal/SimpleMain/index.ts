@@ -138,7 +138,7 @@ class SimpleMain extends LitElement {
           method: 'GET',
           headers: {
             'Content-Type' : 'application/json',
-            'Authorization' : 'Bearer ' + sdkGetAuthHeader(),
+            'Authorization' : '' + sdkGetAuthHeader(),
           },
         })
       .then( r => r.json())
@@ -152,7 +152,7 @@ class SimpleMain extends LitElement {
               method: 'GET',
               headers: {
                 'Content-Type' : 'application/json',
-                'Authorization' : 'Bearer ' + sdkGetAuthHeader(),
+                'Authorization' : '' + sdkGetAuthHeader(),
               },
 
             })
