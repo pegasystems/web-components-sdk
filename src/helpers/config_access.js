@@ -3,7 +3,9 @@
 import {sdkGetAuthHeader} from './authManager';
 
 // Create a singleton for this class (with async loading of config file) and export it
-export let SdkConfigAccess = null;
+// Note: Initialzing SdkConfigAccess to null seems to cause lots of compile issues with references
+//  within other components and the value potentially being null (so try to leave it undefined)
+export let SdkConfigAccess;
 let SdkConfigAccessCreateInProgress = false;
 
 
@@ -128,7 +130,7 @@ class ConfigAccess {
 
     const userAccessGroup = PCore.getEnvironmentInfo().getAccessGroup();
     const dataPageName = "D_OperatorAccessGroups";
-    const serverUrl = SdkConfigAccess.getSdkConfigServer().infinityRestServerUrl;
+    const serverUrl = this.sdkConfig.serverConfig.infinityRestServerUrl;
     const appAlias = this.sdkConfig.serverConfig.appAlias;
     const appAliasPath = appAlias ? `/app/${appAlias}` : '';
 
@@ -187,13 +189,14 @@ async function createSdkConfigAccess() {
   return singleton;
 };
 
-// Acquire SdkConfigAccess structure
+// Initialize exported SdkConfigAccess structure
 export async function getSdkConfig() {
   return new Promise( (resolve) => {
     let idNextCheck = null;
-    if( SdkConfigAccess === null && !SdkConfigAccessCreateInProgress ) {
+    if( !SdkConfigAccess && !SdkConfigAccessCreateInProgress ) {
       SdkConfigAccessCreateInProgress = true;
       createSdkConfigAccess().then( theConfigAccess => {
+        // Key initialization of SdkConfigAccess
         SdkConfigAccess = theConfigAccess;
         SdkConfigAccessCreateInProgress = false;
         // console.log(`SdkConfigAccess: ${JSON.stringify(SdkConfigAccess)}`);
@@ -212,7 +215,7 @@ export async function getSdkConfig() {
         }
         idNextCheck = setInterval(fnCheckForConfig, 500);
       };
-      if( SdkConfigAccess !== null ) {
+      if( SdkConfigAccess ) {
         return resolve( SdkConfigAccess.sdkConfig );
       } else {
         idNextCheck = setInterval(fnCheckForConfig, 500);
