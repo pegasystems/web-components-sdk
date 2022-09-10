@@ -269,7 +269,7 @@ class ToDo extends BridgeBase {
         <div class="psdk-todo">
           <div class="psdk-todo-header">
               ${ this.showTodoList? html`<div class='psdk-avatar'>${this.currentUserInitials}</div>` : nothing }
-              <div class="psdk-todo-text ">${this.headerText}</div>
+              <div class="psdk-todo-text " id="header-text">${this.headerText}</div>
               ${ this.showTodoList? html`<div class='psdk-assignment-count'>${this.assignmentCount}</div>` : nothing }
           </div>
           <br><br>

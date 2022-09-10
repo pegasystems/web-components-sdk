@@ -70,6 +70,7 @@ class TextArea extends FormComponentBase {
       <div class="form-group">
         <lion-textarea 
           id=${this.theComponentId}
+          dataTestId=${this.testId}
           .modelValue=${this.value} 
           .fieldName=${this.label} 
           .validators = ${this.lionValidatorsArray}

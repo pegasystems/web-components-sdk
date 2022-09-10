@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-class-members */
 class PegaAuth {
 
   constructor(ssKeyConfig) {
@@ -24,28 +25,28 @@ class PegaAuth {
       this.config = peConfig ? obj : null;
   }
 
-  updateConfig() {
+  #updateConfig() {
       const sSI = JSON.stringify(this.config);
       window.sessionStorage.setItem(this.ssKeyConfig, this.bEncodeSI ? window.btoa(sSI) : sSI);
   }
 
   // For PKCE the authorize includes a code_challenge & code_challenge_method as well
-  async buildAuthorizeUrl(state) {
+  async #buildAuthorizeUrl(state) {
       const {clientId, redirectUri, authorizeUri, authService, sessionIndex, appAlias, useLocking,
           userIdentifier, password} = this.config;
 
       // Generate random string of 64 chars for verifier.  RFC 7636 says from 43-128 chars
       let buf = new Uint8Array(64);
       window.crypto.getRandomValues(buf);
-      this.config.codeVerifier = this.base64UrlSafeEncode(buf);
+      this.config.codeVerifier = this.#base64UrlSafeEncode(buf);
       // Persist codeVerifier in session storage so it survives the redirects that are to follow
-      this.updateConfig();
+      this.#updateConfig();
 
       if( !state ) {
           // Calc random state variable
           buf = new Uint8Array(32);
           window.crypto.getRandomValues(buf);
-          state = this.base64UrlSafeEncode(buf);
+          state = this.#base64UrlSafeEncode(buf);
       }
 
       // Trim alias to include just the real alias piece
@@ -59,7 +60,7 @@ class PegaAuth {
           (userIdentifier ? `&UserIdentifier=${encodeURIComponent(userIdentifier)}` : '') +
           (userIdentifier && password ? `&Password=${encodeURIComponent(window.atob(password))}` : '');
 
-      return this.getCodeChallenge(this.config.codeVerifier).then( cc => {
+      return this.#getCodeChallenge(this.config.codeVerifier).then( cc => {
         // Now includes new enable_psyncId=true and session_index params
         return `${authorizeUri}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=openid${addtlScope}&state=${state}&code_challenge=${cc}&code_challenge_method=S256${moreAuthArgs}`;
       });
@@ -79,11 +80,12 @@ class PegaAuth {
 
       return new Promise( (resolve, reject) => {
 
-          this.buildAuthorizeUrl(state).then((url) => {
+          this.#buildAuthorizeUrl(state).then((url) => {
               let myWindow = null; // popup or iframe
               let elIframe = null;
+              let elCloseBtn = null;
               const iframeTimeout = this.config.silentTimeout !== undefined ? this.config.silentTimeout : 5000;
-              let bWinIframe = iframeTimeout > 0 && ((!!this.config.userIdentifier && !!this.config.password) || this.config.authService !== "pega");
+              let bWinIframe = iframeTimeout > 0 && ((!!this.config.userIdentifier && !!this.config.password) || this.config.iframeLoginUI || this.config.authService !== "pega");
               let tmrAuthComplete = null;
               let checkWindowClosed = null;
               const myWinOnLoad = () => {
@@ -121,16 +123,71 @@ class PegaAuth {
                       console.log("authjs(login): Exception trying to add onload handler to opened window;")
                   }
               };
+              const fnCloseIframe = () => {
+                elIframe.parentNode.removeChild(elIframe);
+                elCloseBtn.parentNode.removeChild(elCloseBtn);
+                // eslint-disable-next-line no-multi-assign
+                elIframe = elCloseBtn = null;
+                bWinIframe = false;
+              };
+              const fnCloseAndReject = () => {
+                fnCloseIframe();
+                // eslint-disable-next-line prefer-promise-reject-errors
+                reject("closed");
+              };
               // If there is a userIdentifier and password specified or an external SSO auth service,
               //  we can try to use this silently in an iFrame first
               if( bWinIframe ) {
+                  const nFrameZLevel = 99999;
                   elIframe = document.createElement('iframe');
-                  elIframe.setAttribute('id', `pe${this.config.clientId}`);
-                  elIframe.setAttribute('style','position:absolute;display:none');
+                  elIframe.id = 'pe'+this.config.clientId;
+                  const loginBoxWidth=500;
+                  const loginBoxHeight=700;
+                  const oStyle = elIframe.style;
+                  oStyle.position = 'absolute';
+                  oStyle.display = 'none';
+                  oStyle.zIndex = nFrameZLevel;
+                  oStyle.top=`${Math.round(Math.max(window.innerHeight-loginBoxHeight,0)/2)}px`;
+                  oStyle.left=`${Math.round(Math.max(window.innerWidth-loginBoxWidth,0)/2)}px`;
+                  oStyle.width='500px';
+                  oStyle.height='700px';
+                  // Add Iframe to top of document DOM to have it load
+                  document.body.insertBefore(elIframe,document.body.firstChild);
                   // Add Iframe to DOM to have it load
                   document.getElementsByTagName('body')[0].appendChild(elIframe);
                   elIframe.addEventListener("load", myWinOnLoad, true);
+                  // Disallow iframe content attempts to navigate main window
+                  elIframe.setAttribute("sandbox","allow-scripts allow-forms allow-same-origin");
                   elIframe.setAttribute('src', url);
+                  const svgCloseBtn =
+                  `<?xml version="1.0" encoding="UTF-8"?>
+                  <svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>Dismiss - Black</title>
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g transform="translate(1.000000, 1.000000)">
+                        <circle fill="#252C32" cx="16" cy="16" r="16"></circle>
+                        <g transform="translate(9.109375, 9.214844)" fill="#FFFFFF" fill-rule="nonzero">
+                          <path d="M12.7265625,0 L0,12.6210938 L1.0546875,13.5703125 L13.78125,1.0546875 L12.7265625,0 Z M13.7460938,12.5507812 L1.01953125,0 L0,1.01953125 L12.7617188,13.6054688 L13.7460938,12.5507812 Z"></path>
+                        </g>
+                      </g>
+                    </g>
+                  </svg>`;
+                  const bCloseWithinFrame = false;
+                  elCloseBtn = document.createElement('img');
+                  elCloseBtn.onclick = fnCloseAndReject;
+                  // eslint-disable-next-line prefer-template
+                  elCloseBtn.src = 'data:image/svg+xml;base64,' + window.btoa(svgCloseBtn);
+                  const oBtnStyle = elCloseBtn.style;
+                  oBtnStyle.cursor = 'pointer';
+                  // If svg doesn't set width and height might want to set oBtStyle width and height to something like '2em'
+                  oBtnStyle.position = 'absolute';
+                  oBtnStyle.display = 'none';
+                  oBtnStyle.zIndex = nFrameZLevel+1;
+                  const nTopOffset = bCloseWithinFrame ? 5 : -10;
+                  const nRightOffset = bCloseWithinFrame ? -34 : -20;
+                  oBtnStyle.top = `${Math.round(Math.max(window.innerHeight-loginBoxHeight,0)/2)+nTopOffset}px`;
+                  oBtnStyle.left = `${Math.round(Math.max(window.innerWidth-loginBoxWidth,0)/2)+loginBoxWidth+nRightOffset}px`;
+                  document.body.insertBefore(elCloseBtn,document.body.firstChild);
                   // If the password was wrong, then the login screen will be in the iframe
                   // ..and with Pega without realization of US-372314 it may replace the top (main portal) window
                   // For now set a timer and if the timer expires, remove the iFrame and use same url within
@@ -140,13 +197,16 @@ class PegaAuth {
                       // remove password from config
                       if( this.config.password ) {
                           delete this.config.password;
-                          this.updateConfig();
+                          this.#updateConfig();
                       }
-                      elIframe.parentNode.removeChild(elIframe);
-                      elIframe = null;
-                      // Now try to do regular popup open
-                      bWinIframe = false;
-                      fnOpenPopup();
+                      if( this.config.iframeLoginUI ) {
+                        elIframe.style.display="block";
+                        elCloseBtn.style.display="block";
+                      } 
+                      else {
+                        fnCloseIframe();
+                        fnOpenPopup();
+                      }
                   }, iframeTimeout);
               } else {
                   fnOpenPopup();
@@ -159,8 +219,7 @@ class PegaAuth {
                   this.getToken(code).then(token => {
                       if( bWinIframe ) {
                           clearTimeout(tmrAuthComplete);
-                          elIframe.parentNode.removeChild(elIframe);
-                          elIframe = null;
+                          fnCloseIframe();
                       } else {
                           clearInterval(checkWindowClosed);
                           myWindow.close();
@@ -197,7 +256,7 @@ class PegaAuth {
   loginRedirect() {
       // eslint-disable-next-line no-restricted-globals
       const state = btoa(location.origin);
-      this.buildAuthorizeUrl(state).then((url) => {
+      this.#buildAuthorizeUrl(state).then((url) => {
           // eslint-disable-next-line no-restricted-globals
           location.href = url;
       });
@@ -251,7 +310,7 @@ class PegaAuth {
               bUpdateConfig = true;
           }
           if( bUpdateConfig ) {
-              this.updateConfig();
+              this.#updateConfig();
           }
           return token;
       })
@@ -343,37 +402,37 @@ class PegaAuth {
       // Also clobber any sessionIndex
       if( this.config.sessionIndex ) {
         delete this.config.sessionIndex;
-        this.updateConfig();
+        this.#updateConfig();
       }
   }
   /* eslint-enable camelcase */
 
   // eslint-disable-next-line class-methods-use-this
-  sha256Hash(str) {
+  #sha256Hash(str) {
       return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
   }
 
   // Base64 encode
   // eslint-disable-next-line class-methods-use-this
-  encode64(buff) {
+  #encode64(buff) {
       return window.btoa(new Uint8Array(buff).reduce((s, b) => s + String.fromCharCode(b), ''));
   }
 
   /*
    * Base64 url safe encoding of an array
    */
-  base64UrlSafeEncode(buf) {
-      const s = this.encode64(buf).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+  #base64UrlSafeEncode(buf) {
+      const s = this.#encode64(buf).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
       return s;
   }
 
   /* Calc code verifier if necessary
    */
   /* eslint-disable camelcase */
-  getCodeChallenge(code_verifier) {
-      return this.sha256Hash(code_verifier).then (
+  #getCodeChallenge(code_verifier) {
+      return this.#sha256Hash(code_verifier).then (
           (hashed) => {
-            return this.base64UrlSafeEncode(hashed)
+            return this.#base64UrlSafeEncode(hashed)
           }
       ).catch(
           (error) => {

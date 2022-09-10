@@ -90,6 +90,7 @@ class Time extends FormComponentBase {
                     <lion-input-timeonly
                         id=${this.theComponentId}
                         name="TimeOnly"
+                        dataTestId=${this.testId}
                         .modelValue=${timeValue}
                         .validators = ${this.lionValidatorsArray}
                         .fieldName=${this.label}

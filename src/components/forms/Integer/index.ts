@@ -80,6 +80,7 @@ class Integer extends FormComponentBase {
       html`
       <lion-input-amount 
         id=${this.theComponentId}
+        dataTestId=${this.testId}
         .modelValue=${parseInt(this.value)} 
         .fieldName=${this.label}
         .formatOptions=${{ style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }}

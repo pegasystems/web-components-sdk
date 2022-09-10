@@ -27,6 +27,12 @@ pnpm-debug.log*
 /constellation/lib_asset.json
 /constellation/constellation*
 
+# Playwright report
+playwright-report
+
 # localhost cert files
 /private.*
 /ssl.conf
+
+test-results/
+playwright-report/

@@ -1,3 +1,9 @@
+## Release SDK-WC.87.1
+* Added support for Infinity 8.7.2
+* Added use of npm dependency to get necessary ConstellationJS Engine files (see package.json @pega/constellationjs dependency)
+* Added playwright smoke tests that can be run against the MediaCo sample app
+* Improvements to auth code and to make it easier to deploy the SDK on a different web server (ex: Tomcat)
+
 ## Release SDK-WC.87.0
 * This is the first release of the Web Components SDK for Infinity 8.7.
 * This SDK release supports Infinity **8.7.0** and **8.7.1**.

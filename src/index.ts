@@ -23,11 +23,15 @@ document.addEventListener("AuthManagerReady", () => {
             }
         },
         {path: '/', component: 'mashup-portal-component'},
+        {path: '/index.html', component: 'mashup-portal-component'},
         {path: '/embedded', component: 'mashup-portal-component'},
-        {path: '/mashup', component: 'mashup-portal-component'},
+        {path: '/embedded.html', component: 'mashup-portal-component'},
         {path: '/portal', component: 'full-portal-component'},
+        {path: '/portal.html', component: 'full-portal-component'},
         {path: '/fullportal', component: 'full-portal-component'},
+        {path: '/fullportal.html', component: 'full-portal-component'},
         {path: '/simpleportal', component: 'simple-portal-component'},
+        {path: '/simpleportal.html', component: 'simple-portal-component'},
         
     ]);
 });
