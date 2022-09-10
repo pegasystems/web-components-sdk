@@ -362,12 +362,14 @@ class Attachment extends BridgeBase {
         )
         .then((fileRes) => {
           
-          this.thePConn.attachmentsInfo = {
+          const reqObj = {
             type: "File",
             attachmentFieldName: this.att_valueRef,
             category: this.att_categoryName,
-            ID: fileRes.ID    // 8.7 - ID is at the top-level now.
+            ID: fileRes.ID
           };
+
+          this.thePConn.attachmentsInfo = PCore.getPCoreVersion()?.includes('8.8') ? [reqObj] : reqObj;
   
           const fieldName = this.thePConn.getStateProps().value;
           const context = this.thePConn.getContextName();
