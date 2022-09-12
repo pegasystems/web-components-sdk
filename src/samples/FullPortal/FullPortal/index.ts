@@ -1,5 +1,6 @@
-import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess } from '../../../helpers/config_access';
+import { html, customElement, LitElement } from '@lion/core';
+import { getSdkConfig, SdkConfigAccess } from '../../../helpers/config_access';
+import { sampleMainInit } from '../../sampleCommon';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
@@ -27,11 +28,14 @@ class FullPortal extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    window.sessionStorage.setItem("startingComponent", "full-portal-component");
-
-    // To eliminate the login button/component, login directly
-    loginIfNecessary("portal", false);
+    sampleMainInit( this, 'full-portal-component', 'app-entry' );
     
+    // Make sure sdkConfig is loaded prior to attempting to login
+    getSdkConfig().then( sdkConfig => {
+      // To eliminate the login button/component, login directly
+      loginIfNecessary("portal", false);
+    })
+
   }
 
 
@@ -63,12 +67,14 @@ class FullPortal extends LitElement {
   render(){
 
     const sContent = this.getFullPortalHtml();
-    const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
+    const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
 
     let arHtml: any[] = [];
 
     // FullPortal not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    if( locBootstrap ) {
+      arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    }
 
     arHtml.push(fullPortalStyles);
     arHtml.push(sContent);

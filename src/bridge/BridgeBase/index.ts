@@ -692,7 +692,7 @@ updated(changedProperties) {
           this.renderTemplates.push( html`<wide-narrow-page .pConn=${child}></wide-narrow-page>` );
           break;
   
-          default:
+        default:
           this.renderTemplates.push( html`<p>${this.theComponentName}: wants to render [${childType}]</p>` );
           break;
       }

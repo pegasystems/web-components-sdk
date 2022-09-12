@@ -1,5 +1,6 @@
 import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess } from '../../../helpers/config_access';
+import { getSdkConfig, SdkConfigAccess } from '../../../helpers/config_access';
+import { sampleMainInit } from '../../sampleCommon';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
@@ -10,7 +11,7 @@ import '../MashupMain';
 
 // import the component's styles as HTML with <style>
 import { mashupPortalStyles } from './mashup-portal-styles';
-import { loginIfNecessary } from "../../../helpers/authManager";
+import { loginIfNecessary, sdkSetAuthHeader } from "../../../helpers/authManager";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -22,15 +23,38 @@ class MashupPortal extends LitElement {
   // NOTE: MashupPortal is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
     super();
-
-    window.sessionStorage.setItem("startingComponent", "mashup-portal-component");
-
-    loginIfNecessary("embedded", true);
-
   }
 
   connectedCallback() {
     super.connectedCallback();
+
+    sampleMainInit( this, 'mashup-portal-component', 'mashup-main-component' );
+    
+    getSdkConfig().then( sdkConfig => {
+
+      const sdkConfigAuth = sdkConfig.authConfig;
+  
+      if( !sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "Basic" ) {
+        // Service package to use custom auth with Basic
+        const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}`);
+        sdkSetAuthHeader( `Basic ${sB64}`);
+      }
+  
+      if( !sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "BasicTO" ) {
+        const now = new Date();
+        const expTime = new Date( now.getTime() + 5*60*1000);
+        let sISOTime = `${expTime.toISOString().split(".")[0]}Z`;
+        const regex = /[-:]/g;
+        sISOTime = sISOTime.replace(regex,"");
+        // Service package to use custom auth with Basic
+        const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}:${sISOTime}`);
+        sdkSetAuthHeader( `Basic ${sB64}`);
+      }
+  
+  
+      loginIfNecessary("embedded", true);
+  
+    });
 
     
   }
@@ -61,12 +85,14 @@ class MashupPortal extends LitElement {
   render(){
 
     const sContent = this.getSimplePortalHtml();
-    const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
+    const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
 
     let arHtml: any[] = [];
 
     // MashupPortal not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    if( locBootstrap ) {
+      arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    }
 
     arHtml.push(mashupPortalStyles);
     arHtml.push(sContent);
