@@ -11,6 +11,7 @@ import '../SimpleSideBar';
 
 // import the component's styles as HTML with <style>
 import { simpleMainStyles } from './simple-main-styles';
+import { sdkGetAuthHeader } from '../../../helpers/authManager';
 
 
 
@@ -130,14 +131,17 @@ class SimpleMain extends LitElement {
   }
 
   async firstUpdated() {
-    const serverUrl = SdkConfigAccess.getSdkConfigServer().infinityRestServerUrl;
+    const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
+    const serverUrl = sdkConfigServer.infinityRestServerUrl;
+    const appAlias = sdkConfigServer.appAlias;
+    const appAliasPath = appAlias ? `/app/${appAlias}` : '';
     
-    await fetch ( serverUrl + "/api/v1/casetypes" ,
+    await fetch ( `${serverUrl}${appAliasPath}/api/v1/casetypes` ,
         {
           method: 'GET',
           headers: {
             'Content-Type' : 'application/json',
-            'Authorization' : 'Bearer ' + window.sessionStorage.getItem("accessToken"),
+            'Authorization' : '' + sdkGetAuthHeader(),
           },
         })
       .then( r => r.json())
@@ -146,12 +150,12 @@ class SimpleMain extends LitElement {
 
         this.getCaseTypeButtons(arCaseTypes);
 
-        await fetch ( serverUrl + "/api/v1/data/D_Worklist?Work=true",
+        await fetch ( `${serverUrl}${appAliasPath}/api/v1/data/D_Worklist?Work=true`,
             {
               method: 'GET',
               headers: {
                 'Content-Type' : 'application/json',
-                'Authorization' : 'Bearer ' + window.sessionStorage.getItem("accessToken"),
+                'Authorization' : '' + sdkGetAuthHeader(),
               },
 
             })
@@ -288,7 +292,6 @@ class SimpleMain extends LitElement {
    * @param inRenderObj the initial, top-level PConnect object to render
    */
      initialRender(inRenderObj) {
-
 
       ////// This was done on login and kicked off the creation of this
       //////  AppEntry. So don't need to to do this.

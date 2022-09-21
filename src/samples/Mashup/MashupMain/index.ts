@@ -165,7 +165,6 @@ class MashupMain extends LitElement {
    */
   initialRender(inRenderObj) {
 
-
     ////// This was done on login and kicked off the creation of this
     //////  AppEntry. So don't need to to do this.
     // With Constellation Ready, replace <div id="pega-here"></div>
