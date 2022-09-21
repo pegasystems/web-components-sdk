@@ -92,6 +92,7 @@ class DateTime extends FormComponentBase {
                     <lion-input-datetime
                         id=${this.theComponentId}
                         name="DateTime"
+                        dataTestId=${this.testId}
                         .modelValue=${dateTimeValue}
                         .validators = ${this.lionValidatorsArray}
                         .fieldName=${this.label}

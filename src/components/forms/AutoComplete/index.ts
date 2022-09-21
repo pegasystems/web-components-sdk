@@ -147,7 +147,8 @@ class AutoComplete extends FormComponentBase {
               <div class="form-group">
                 <lion-combobox 
                   id=${this.theComponentId}
-                  class="" autocomplete='inline' 
+                  class="" autocomplete='inline'
+                  dataTestId=${this.testId}
                   .modelValue=${this.value}
                   .fieldName=${this.label}
                   .validators=${this.lionValidatorsArray}

@@ -7,15 +7,17 @@
     "build:dev:ci": "npm run clean && npm install && npm run build:dev",
     "build:prod": "webpack --mode=production && npm run copy-index",
     "build:prod:ci": "npm run clean && npm install && npm run build:prod",
-    "clean": "node rimraf-standalone.js ./node_modules",
+    "clean": "node rimraf-standalone.js ./dist/** ./node_modules",
     "watch": "webpack --mode=development --watch",
     "start-dev": "webpack serve",
     "start-dev-https": "webpack serve --https",
     "start-prod": "http-server ./dist --port 3501 --gzip --brotli --cors --proxy http://localhost:3501?",
     "start-prod-https": "http-server ./dist --ssl --cert private.pem --key private.key --port 3501 --gzip --brotli --cors --proxy https://localhost:3501?",
     "_comment": "Commands above are those expected to be run by customers/clients",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html && shx cp dist/index.html dist/mashup.html"
+    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html",
+    "test": "node playwright-message.js && playwright test --project=chromium MediaCo/portal MediaCo/embedded",
+    "test:headed": "playwright test --headed --project=chromium MediaCo/portal MediaCo/embedded",
+    "test-report": "playwright show-report"
   },
   "dependencies": {
     "@lion/button": "^0.11.1",
@@ -31,6 +33,7 @@
     "@lion/radio-group": "^0.15.1",
     "@lion/select": "^0.11.1",
     "@lion/textarea": "^0.11.0",
+    "@pega/constellationjs": "SDK-8.7.3",
     "@vaadin/router": "^1.7.4",
     "@vaadin/vaadin-grid": "^6.0.1",
     "@vaadin/vaadin-text-field": "^2.8.2",
@@ -41,6 +44,7 @@
   },
   "devDependencies": {
     "@kooneko/livereload-webpack-plugin": "^1.2.0",
+    "@playwright/test": "^1.22.1",
     "babel-eslint": "^10.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^8.0.0",

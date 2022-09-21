@@ -68,11 +68,12 @@ class TextInput extends FormComponentBase {
       <div class="form-group">
         <lion-input 
           id=${this.theComponentId} 
+          dataTestId=${this.testId}
           .modelValue=${this.value}
           .fieldName=${this.label} 
           .validators=${this.lionValidatorsArray}
           .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-          ?readonly=${this.bReadonly} ?disabled=${this.bDisabled} 
+          ?readonly=${this.bReadonly} ?disabled=${this.bDisabled}
           @click=${this.fieldOnChange} @blur=${this.fieldOnBlur} @change=${this.fieldOnChange}>
           <span slot="label">${this.annotatedLabel}</span>
         </lion-input>
