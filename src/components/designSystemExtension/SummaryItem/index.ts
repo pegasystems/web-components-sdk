@@ -72,7 +72,7 @@ class SummaryItem extends LitElement {
 
     for (let actionMenu of menuActions) {
       arButtonMenuHtml.push(html`
-      <a href="#" @click=${actionMenu.onClick}>${actionMenu.icon != null?
+      <a @click=${actionMenu.onClick}>${actionMenu.icon != null?
         html`<img class="psdk-utility-card-action-actions-svg-icon" src="${this.imagePath}${actionMenu.icon}.svg">&nbsp;`
         :
         html``}

@@ -184,14 +184,14 @@ class CaseView extends BridgeBase {
 
     for (let actionMenu of availableActions) {
       arButtonMenuHtml.push(html`
-      <a href="#" @click=${ (e) => {this._actionMenuActionsClick(actionMenu)}}>
+      <a @click=${ (e) => {this._actionMenuActionsClick(actionMenu)}}>
       ${actionMenu.name}</a>
       `);
     }
 
     for (let actionMenu of availableProcesses) {
       arButtonMenuHtml.push(html`
-      <a href="#" @click=${ (e) => {this._actionMenuProcessesClick(actionMenu)}}>
+      <a @click=${ (e) => {this._actionMenuProcessesClick(actionMenu)}}>
       ${actionMenu.name}</a>
       `);
     }
