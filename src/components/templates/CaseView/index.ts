@@ -25,13 +25,14 @@ class CaseView extends BridgeBase {
   @property( {attribute: false }) id;
   @property( {attribute: false }) status;
   @property( {attribute: false }) svgCase;
-  @property( {attribute: false }) caseTabs;
   @property( {attribute: false }) tabData;
   @property( {attribute: false }) mainTabs;
   @property( {attribute: false }) mainTabData;
 
   arAvailableActions: Array<any> = [];
   arAvailableProcesses: Array<any> = [];
+
+  caseTabs: Array<any> = [];
 
   elMenu: any = null;
 
@@ -68,18 +69,32 @@ class CaseView extends BridgeBase {
 
           this.mainTabs = child;
           this.mainTabData = this.mainTabs.getPConnect().getChildren();
-          
-          //  set default to first tab
-          this.tabData = this.mainTabData[0].getPConnect().getRawMetadata();
+        
         }
       }
-    
-      this.caseTabs  = this.mainTabs
+
+      this.mainTabs
       .getPConnect()
       .getChildren()
-      .map((child, i) => {
-        const config = child.getPConnect().getConfigProps();
-        return { name: config.label || "No label specified in config", id: i };
+      .forEach((child, i) => {
+        const config = child.getPConnect().resolveConfigProps(child.getPConnect().getRawMetadata()).config;
+        let { label, inheritedProps, visibility }  = config;
+        
+        if(!label){
+          inheritedProps.forEach((inProp) => {
+            if(inProp.prop === 'label'){
+              label = inProp.value;
+            }
+          });
+        }
+        // We'll display the tabs when either visibility property doesn't exist or is true(if exists)
+        if( visibility === undefined || visibility === true){
+          this.caseTabs.push({ name: label, id: i });
+          // To make first visible tab display at the beginning
+          if(!this.tabData){
+            this.tabData = { type: "DeferLoad", config: child.getPConnect().getRawMetadata().config };
+          }
+        }
       });
     }      
     
@@ -237,7 +252,7 @@ class CaseView extends BridgeBase {
     this.prepareForRender(this.displayOnlyFA);
 
     const theContent = html`
-      <div class='psdk-case-view'>
+      <div class='psdk-case-view' id="case-view">
 
         ${this.displayOnlyFA?
         nothing
@@ -264,9 +279,16 @@ class CaseView extends BridgeBase {
             ${this.getChildRegionArray("summary")}
           </div>
 
+          ${this.caseTabs.length > 1 ?
+          html`
           <div>
             <vertical-tabs-component .tabConfig=${this.caseTabs} @VerticalTabClick="${this._vTabClick}" ></vertical-tabs-component>
           </div>
+          `
+          :
+          html``
+          }
+
       
         </div>
         `
