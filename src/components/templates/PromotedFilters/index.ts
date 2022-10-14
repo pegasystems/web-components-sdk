@@ -1,7 +1,7 @@
 
 import { html, customElement, property } from '@lion/core';
 import { LionButton } from '@lion/button';
-import { loadViewByName } from '../../../../constellation/bootstrap-shell';
+// import { loadViewByName } from '../../../../constellation/bootstrap-shell';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { promotedFiltersStyles } from './promoted-filters-styles';
 import '../ListView';

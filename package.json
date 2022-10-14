@@ -36,7 +36,7 @@
     "@pega/constellationjs": "SDK-8.7.3",
     "@vaadin/router": "^1.7.4",
     "@vaadin/vaadin-grid": "^23.2.4",
-    "@vaadin/vaadin-text-field": "^2.8.2",
+    "@vaadin/text-field": "^23.2.4",
     "dayjs": "^1.10.4",
     "downloadjs": "^1.4.7",
     "fast-deep-equal": "^3.1.3",
