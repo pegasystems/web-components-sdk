@@ -6,6 +6,14 @@ import { Utils } from '../../../helpers/utils';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-sort-column';
 import '../../designSystemExtension/ProgressIndicator';
+import '@lion/radio-group/define';
+
+// import '@vaadin/button';
+import '@vaadin/grid';
+import '@vaadin/grid/vaadin-grid-selection-column.js';
+import { columnBodyRenderer } from '@vaadin/grid/lit.js';
+
+
 
 
 // import the component's styles as HTML with <style>
@@ -14,7 +22,7 @@ import { listViewStyles } from './list-view-styles';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
-
+const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('list-view-component')
@@ -27,13 +35,13 @@ class ListView extends BridgeBase {
 
   @property( {attribute: false, type: Array} ) vaadinGridColumns;
   @property( {attribute: false, type: Array} ) vaadinRowData;
-
+  @property( {attribute: true, type: Object} ) payload: any = {};
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
   gridChoice: string = "vaadin";
   bClickEventListenerAdded: Boolean = false;
   waitingForData: Boolean = true;
-
+  selectionMode: string = '';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -70,11 +78,12 @@ class ListView extends BridgeBase {
     if (this.bDebug){ debugger; }
 
     const theConfigProps = this.thePConn.getConfigProps();
+    this.selectionMode = theConfigProps.selectionMode;
     const componentConfig = this.thePConn.getRawMetadata().config;
     const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
-
-    const workListData = PCore.getDataApiUtils().getData(refList, {});
+    console.log('this.payload1', this.payload);
+    const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
 
     workListData.then( (workListJSON: Object) => {
 
@@ -128,6 +137,11 @@ class ListView extends BridgeBase {
     
   }
 
+  attributeChangedCallback(name, oldValue, newValue) {
+    // do something when an attribute has changed
+    console.log('somethinf changes');
+  }
+
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
@@ -148,7 +162,7 @@ class ListView extends BridgeBase {
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
     if (this.bDebug){ debugger; }
-
+    console.log('Update self');
   }
 
   /**
@@ -276,12 +290,23 @@ class ListView extends BridgeBase {
 
     // initialize
     this.vaadinGridColumns = [];
-
+    console.log('this.fields', this.fields);
+    if (this.rowData.length > 0) {
+      if (this.selectionMode === SELECTION_MODE.SINGLE) {
+        this.vaadinGridColumns.push(html`<vaadin-grid-column header="select" ${columnBodyRenderer(this.avatarRenderer(), [])}></vaadin-grid-sort-column>`)
+      }
+    }
     // Iterate over this.fields to extract the data needed for vaadin-grid-column: name and path
     this.fields.forEach((field) => {
+      console.log('field', field);
       this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
     });
   }
+
+  private avatarRenderer: any = () => html`
+    <vaadin-radio-button value="pyGUID" checked></vaadin-radio-button>
+  `;
+  
 
 
   clickRowInGrid(inDetail: any) {
@@ -308,6 +333,20 @@ class ListView extends BridgeBase {
     }
   }
 
+  fieldOnChange(event) {
+
+  }
+
+  getSelectionField(row) {
+    if (this.rowData.length > 0) {
+      if (this.selectionMode === SELECTION_MODE.SINGLE) {
+        return html`<lion-radio class="psdk-radio-button" @change=${this.fieldOnChange}
+        .choiceValue=${row.pyGUID}></lion-radio>`
+      } else if (this.selectionMode === SELECTION_MODE.MULTI) {
+
+      }
+    }
+  }
 
   render(){
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
@@ -335,6 +374,7 @@ class ListView extends BridgeBase {
         // eslint-disable-next-line no-case-declarations
         const theDataRows = html`<tbody>
             ${this.rowData.map((row) => html`<tr>
+              ${this.getSelectionField(row)}
               ${row.map((rowValue) => html`<td>${rowValue}</td>`)}
             </tr>`)
             }
@@ -364,19 +404,19 @@ class ListView extends BridgeBase {
           if ( this && this.shadowRoot && this.shadowRoot.getElementById(this.theComponentId.toString()) ) {
             theVaadinGrid = this.shadowRoot.getElementById(this.theComponentId.toString());
           }
-
+          console.log('vaadinRowData', this.vaadinRowData);
           if (theVaadinGrid) {
             theVaadinGrid.items = this.vaadinRowData;
           }
 
           // Also set up a callback for the grid's "active-item-changed" to catch clicks
-          if (theVaadinGrid && !this.bClickEventListenerAdded) {
-            theVaadinGrid.addEventListener('active-item-changed', 
-            (event) => {
-              this.clickRowInGrid(event.detail);
-            });
-            this.bClickEventListenerAdded = true;
-          }
+          // if (theVaadinGrid && !this.bClickEventListenerAdded) {
+          //   theVaadinGrid.addEventListener('active-item-changed', 
+          //   (event) => {
+          //     this.clickRowInGrid(event.detail);
+          //   });
+          //   this.bClickEventListenerAdded = true;
+          // }
 
           // And set the proper vaadin-grid table height
           this._handleResize();

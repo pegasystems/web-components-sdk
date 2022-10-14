@@ -43,6 +43,15 @@ export class Utils {
                     let dataPage = configProps.datasource;
                     if (dataObject[dataPage]) {
                         alert("need to handle data page");
+                    } else {
+                      let listSourceItems = configProps.listOutput;
+                      if (typeof dataPage === "object" && !Array.isArray(listSourceItems)) {
+                        listSourceItems = dataPage.source ? dataPage.source : [];
+                      }
+                      (listSourceItems || []).forEach((item) => {
+                        item.value = item.text ? item.text : item.value;
+                      });
+                      arReturn = listSourceItems || [];
                     }
 
                     break;
