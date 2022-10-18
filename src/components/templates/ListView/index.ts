@@ -12,7 +12,7 @@ import '@lion/radio-group/define';
 import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-selection-column.js';
 import { columnBodyRenderer } from '@vaadin/grid/lit.js';
-
+// import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 
 
 
@@ -301,10 +301,11 @@ class ListView extends BridgeBase {
       console.log('field', field);
       this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
     });
+    console.log('his.vaadinGridColumns', this.vaadinGridColumns);
   }
 
   private avatarRenderer: any = () => html`
-    <vaadin-radio-button value="pyGUID" checked></vaadin-radio-button>
+    <vaadin-text-field></<vaadin-text-field>
   `;
   
 
@@ -389,39 +390,54 @@ class ListView extends BridgeBase {
         break;
 
       case "vaadin":
-        this.computeGridColumns_Vaadin();
+        // this.computeGridColumns_Vaadin();
 
-        theContent = html`
-          <vaadin-grid id=${this.theComponentId}>
-            ${this.vaadinGridColumns}
-          </vaadin-grid>`;
-
+        // theContent = html`
+        //   <vaadin-grid id=${this.theComponentId}>
+        //     ${this.vaadinGridColumns}
+        //   </vaadin-grid>`;
+        //   this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
+        console.log('this.vaadinRowData', this.vaadinRowData);
+         theContent = html`
+          <vaadin-grid .items="${this.vaadinRowData}">
+            <vaadin-grid-column header="Product Name" path="ProductName"></vaadin-grid-column>
+            <vaadin-grid-column
+              header="pyGUID"
+              auto-width
+              ${columnBodyRenderer(this.statusRenderer, [])}
+            ></vaadin-grid-column>
+         </vaadin-grid>`;
+             // ${ this.fields.forEach((field) => {
+          //   console.log('field', field);
+          //   // this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
+          //   html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`;
+          // })}
         // VAADIN: Need to load data into vaadin grid after the grid element is available
-        setTimeout((() => {
-          // debugger;
-          let theVaadinGrid: any = null;
+        // setTimeout((() => {
+        //   // debugger;
+        //   let theVaadinGrid: any = null;
 
-          if ( this && this.shadowRoot && this.shadowRoot.getElementById(this.theComponentId.toString()) ) {
-            theVaadinGrid = this.shadowRoot.getElementById(this.theComponentId.toString());
-          }
-          console.log('vaadinRowData', this.vaadinRowData);
-          if (theVaadinGrid) {
-            theVaadinGrid.items = this.vaadinRowData;
-          }
+        //   if ( this && this.shadowRoot && this.shadowRoot.getElementById(this.theComponentId.toString()) ) {
+        //     theVaadinGrid = this.shadowRoot.getElementById(this.theComponentId.toString());
+        //   }
+        //   console.log('vaadinRowData', this.vaadinRowData);
+        //   if (theVaadinGrid) {
+        //     theVaadinGrid.items = this.vaadinRowData;
+        //   }
 
-          // Also set up a callback for the grid's "active-item-changed" to catch clicks
-          // if (theVaadinGrid && !this.bClickEventListenerAdded) {
-          //   theVaadinGrid.addEventListener('active-item-changed', 
-          //   (event) => {
-          //     this.clickRowInGrid(event.detail);
-          //   });
-          //   this.bClickEventListenerAdded = true;
-          // }
+        //   // Also set up a callback for the grid's "active-item-changed" to catch clicks
+        //   // if (theVaadinGrid && !this.bClickEventListenerAdded) {
+        //   //   theVaadinGrid.addEventListener('active-item-changed', 
+        //   //   (event) => {
+        //   //     this.clickRowInGrid(event.detail);
+        //   //   });
+        //   //   this.bClickEventListenerAdded = true;
+        //   // }
 
-          // And set the proper vaadin-grid table height
-          this._handleResize();
+        //   // And set the proper vaadin-grid table height
+        //   this._handleResize();
 
-        }).bind(this), 50);
+        // }).bind(this), 50);
 
         break;
     }
@@ -438,6 +454,10 @@ class ListView extends BridgeBase {
 
   }
 
+  private statusRenderer: any = (record) => {
+    return html`<span>Hello</span>`;
+  };
+// <vaadin-radio-button value="record.pyGUID" label="In progress" checked></vaadin-radio-button>
 // vaadin-grid code snippet
 
 // <vaadin-grid>
