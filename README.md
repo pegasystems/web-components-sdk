@@ -4,7 +4,7 @@
 
 The **Web Components SDK** provides Pega customers with the ability to build DX components that connect Pega’s ConstellationJS Engine APIs with a design system other than Pega Cosmos.
 
-The Web Components SDK differs from out-of-the-box Cosmos React because it provides and demonstrates the use of a design system that is not the Pega **Cosmos React** design system. The alternative design system used in this Web Components SDK is based on 
+The Web Components SDK differs from out-of-the-box Constellation design system because it provides and demonstrates the use of a design system that is not the Pega **Constellation** design system. The alternative design system used in this Web Components SDK is based on 
 [Lion web components](https://lion-web.netlify.app/) - open-source components that are designed to be extended and allow for flexible integrations. These are, in turn, built with [LitElement](https://lit-element.polymer-project.org/guide) 
 and [lit-html](https://lit-html.polymer-project.org/guide).
 
@@ -18,13 +18,13 @@ The Web Components SDK is built on a new and modernized UI technology stack (the
 
 This **8.7 version** of the Web Components SDK assumes that you have access to a Pega Infinity server (**8.7.0+ GA**) running an application that is configured to run using the Constellation UI service.
 
-The **MediaCo** sample application is already configured as a Constellation application and can be found in the Web Components SDK download associated with this repo which is available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk). The OAuth 2.0 Client Registration records associated with the **MediaCo** application are available in the same Web Components SDK download. For more information about the MediaCo sample application, see [MediaCo sample application](https://docs.pega.com/dx-sdks/mediaco-sample-application).
+The **MediaCo** sample application is already configured as a Constellation architecture-based application and can be found in the Web Components SDK download associated with this repo which is available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk). The OAuth 2.0 Client Registration records associated with the **MediaCo** application are available in the same Web Components SDK download. For more information about the MediaCo sample application, see [MediaCo sample application](https://docs-previous.pega.com/constellation-sdks/mediaco-sample-application).
 
 The **Web Components SDK** has been tested with:
 - node 14.18.*
 - npm 6.14.*
 
-Future updates to the SDK will support more recent LTS versions of node as Constellation supports them.
+Future updates to the SDK will support more recent LTS versions of node as the Constellation architecture supports them.
 
 **Before** installing and running the SDK code, refer to the **Web Components SDK Guide** provided in the Marketplace download for steps to prepare your Infinity server and node environment so you can proceed with the steps in the next section.
 
@@ -48,7 +48,7 @@ Future updates to the SDK will support more recent LTS versions of node as Const
 
 ### **Configure** the Web Components SDK
 
-2. Edit **sdk-config.js** and, if necessary, update the values that will be used. For more information about the attributes in the **sdk-config.json** file, see [Configuring the sdk-config.json file](https://docs.pega.com/dx-sdks/configuring-sdk-configjson-file).
+2. Edit **sdk-config.js** and, if necessary, update the values that will be used. For more information about the attributes in the **sdk-config.json** file, see [Configuring the sdk-config.json file](https://docs-previous.pega.com/constellation-sdks/configuring-sdk-configjson-file).
     * The **authConfig** section contains values for the information you obtained earlier from OAuth: the Client ID, endpoints, etc.<br><br>
       * **Note:** it is **required** that you configure a value for **authConfig.mashupClientSecret**.
       * Navigate to Records / Security / OAuth 2.0 Client Registration landing page and open the `MediaCoOauthNoLogin` record
@@ -178,7 +178,7 @@ You can test both **Portal** and **Embedded** scenarios by executing the followi
 <br>
 
 
-> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available at [https://community.pega.com/media/web-components-sdk-user-guide-87](https://community.pega.com/media/web-components-sdk-user-guide-87). For more information about troubleshooting, see [Troubleshooting the DX SDKs](https://docs.pega.com/dx-sdks/troubleshooting-dx-sdks).
+> **NOTE**: These setup tips are abstracted from the Web Components SDK Guide that is available at [https://community.pega.com/media/web-components-sdk-user-guide-87](https://community.pega.com/media/web-components-sdk-user-guide-87). For more information about troubleshooting, see [Troubleshooting the Constellation SDKs](https://docs-previous.pega.com/constellation-sdks/troubleshooting-constellation-sdks).
 
 <br>
 
@@ -378,6 +378,6 @@ Refer to our [guidelines for contributors](./docs/CONTRIBUTING.md) if you are in
 * [lit-html](https://lit-html.polymer-project.org/guide)
 * [Lion Web Components GitHub](https://github.com/ing-bank/lion)
 * [Lion Web Components Documentation Site](https://lion-web.netlify.app/)
-* [DX SDK Documentation](https://docs.pega.com/dx-sdks/dx-sdks)
-* [Troubleshooting the DX SDKs](https://docs.pega.com/dx-sdks/troubleshooting-dx-sdks)
-* [MediaCo sample application](https://docs.pega.com/dx-sdks/mediaco-sample-application)
+* [Constellation SDK Documentation](https://docs-previous.pega.com/constellation-sdks/constellation-sdks)
+* [Troubleshooting the Constellation SDKs](https://docs-previous.pega.com/constellation-sdks/troubleshooting-constellation-sdks)
+* [MediaCo sample application](https://docs-previous.pega.com/constellation-sdks/mediaco-sample-application)
