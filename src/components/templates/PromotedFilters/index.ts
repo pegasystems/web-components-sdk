@@ -217,7 +217,7 @@ class PromotedFilters extends BridgeBase {
       if (Object.keys(promotedFilters).length > 0) {
         Query.query = { filter: { filterConditions: promotedFilters } };
       }
-      this.payload = Query;
+      this.payload = JSON.stringify(Query);
       this.requestUpdate();
     }
   }
@@ -299,7 +299,6 @@ class PromotedFilters extends BridgeBase {
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
-    console.log('payl', this.payload);
     this.renderTemplates.push(html`${this.getPromotedFiltersLabel()}`);
     this.renderTemplates.push(html`${this.getPromotedFiltersGrid()}`);
     this.renderTemplates.push(html`${this.getPromotedFiltersActions()}`);

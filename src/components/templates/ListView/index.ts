@@ -7,14 +7,9 @@ import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-sort-column';
 import '../../designSystemExtension/ProgressIndicator';
 import '@lion/radio-group/define';
-
-// import '@vaadin/button';
 import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-selection-column.js';
 import { columnBodyRenderer } from '@vaadin/grid/lit.js';
-// import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
-
-
 
 // import the component's styles as HTML with <style>
 import { listViewStyles } from './list-view-styles';
@@ -35,7 +30,7 @@ class ListView extends BridgeBase {
 
   @property( {attribute: false, type: Array} ) vaadinGridColumns;
   @property( {attribute: false, type: Array} ) vaadinRowData;
-  @property( {attribute: true, type: Object} ) payload: any = {};
+  @property( {attribute: true,  type: String} ) payload: any = {};
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
   gridChoice: string = "vaadin";
@@ -76,70 +71,73 @@ class ListView extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     if (this.bDebug){ debugger; }
-
-    const theConfigProps = this.thePConn.getConfigProps();
-    this.selectionMode = theConfigProps.selectionMode;
-    const componentConfig = this.thePConn.getRawMetadata().config;
-    const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
-    console.log('this.payload1', this.payload);
-    const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
+    this.getListData();
+  }
 
-    workListData.then( (workListJSON: Object) => {
+  getListData() {
+    const theConfigProps = this.thePConn?.getConfigProps();
+    if (theConfigProps) {
+      this.selectionMode = theConfigProps.selectionMode;
+      const componentConfig = this.thePConn.getRawMetadata().config;
+      const refList = theConfigProps.referenceList;
+      const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
+      workListData.then( (workListJSON: Object) => {
 
-      if (this.bDebug){ debugger; }
+        if (this.bDebug){ debugger; }
 
-      // don't update these fields until we return from promise
-      this.fields = theConfigProps.presets[0].children[0].children;
-      // this is an unresolved version of this.fields, need unresolved, so can get the property reference
-      let columnFields = componentConfig.presets[0].children[0].children;
+        // don't update these fields until we return from promise
+        this.fields = theConfigProps.presets[0].children[0].children;
+        // this is an unresolved version of this.fields, need unresolved, so can get the property reference
+        let columnFields = componentConfig.presets[0].children[0].children;
 
-      const tableDataResults = workListJSON["data"].data;
+        const tableDataResults = workListJSON["data"].data;
 
-      // displayedColumns is the array of property names associated with the columns.
-      //  Derived from columnFields (unresolved configProps - above)
-      //  Ex: ["pxRefObjectInsName", "pxTaskLabel", "pyLabel", "pyAssignmentStatus", "pxDeadlineTime", "pxUrgencyAssign"]
-      this.displayedColumns = this.getDisplayColums(columnFields);
-      
-      // fields is the array of type and config info associated with the columns that are to be shown.
-      //  Each entry in the array has the "label" to be displayed and the "name" which is the 
-      //  property used to get the data for that column.
-      //  Example entry in array: 
-      //  {"type":"TextInput", "config": {"label":"Status of the assignment","name":"pyAssignmentStatus"}}
-      this.fields = this.updateFields(this.fields, this.displayedColumns);
+        // displayedColumns is the array of property names associated with the columns.
+        //  Derived from columnFields (unresolved configProps - above)
+        //  Ex: ["pxRefObjectInsName", "pxTaskLabel", "pyLabel", "pyAssignmentStatus", "pxDeadlineTime", "pxUrgencyAssign"]
+        this.displayedColumns = this.getDisplayColums(columnFields);
+        
+        // fields is the array of type and config info associated with the columns that are to be shown.
+        //  Each entry in the array has the "label" to be displayed and the "name" which is the 
+        //  property used to get the data for that column.
+        //  Example entry in array: 
+        //  {"type":"TextInput", "config": {"label":"Status of the assignment","name":"pyAssignmentStatus"}}
+        this.fields = this.updateFields(this.fields, this.displayedColumns);
 
-      // And, after computing this.fields, update columnHeaders
-      this.computeColumnHeaders(this.fields);
+        // And, after computing this.fields, update columnHeaders
+        this.computeColumnHeaders(this.fields);
 
-      // updatedRefList is an array with an entry for each row of data to be shown in the ListView.
-      //  (Partial) Example entry in array:
-      //  {pxUrgencyAssign: 10, pxRefObjectInsName: "S-58001", pxFlowName: "NewService_Flow", pxAssignedOperatorID: "Rep.CableCo", pxUpdateDateTime: null, ...}
-      // eslint-disable-next-line no-unused-vars
-      let updatedRefList = this.updateData(tableDataResults, this.fields);
+        // updatedRefList is an array with an entry for each row of data to be shown in the ListView.
+        //  (Partial) Example entry in array:
+        //  {pxUrgencyAssign: 10, pxRefObjectInsName: "S-58001", pxFlowName: "NewService_Flow", pxAssignedOperatorID: "Rep.CableCo", pxUpdateDateTime: null, ...}
+        // eslint-disable-next-line no-unused-vars
+        let updatedRefList = this.updateData(tableDataResults, this.fields);
 
-      // vaadin-list experiment
-      if (this.gridChoice == "vaadin") {
-        this.vaadinRowData = updatedRefList;
-      }
+        // vaadin-list experiment
+        if (this.gridChoice == "vaadin") {
+          this.vaadinRowData = updatedRefList;
+        }
 
-      // After we get the updatedRefList, compute the rowData using the updatedRefList
-      this.computeRowData(updatedRefList);
-      
-      // At this point, we have data ready to render, so can stop progress indicator
-      this.waitingForData = false;
-      
-
-      // this.repeatList$ = new MatTableDataSource(updatedRefList);
-
-      /// this.repeatList$.paginator = this.paginator;
-      
-    });
+        // After we get the updatedRefList, compute the rowData using the updatedRefList
+        this.computeRowData(updatedRefList);
+        
+        // At this point, we have data ready to render, so can stop progress indicator
+        this.waitingForData = false;
+        
+      });
+    
+    }
     
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    // do something when an attribute has changed
-    console.log('somethinf changes');
+    if (name === 'payload') {
+      if (oldValue !== newValue) {
+        this.payload = newValue;
+        this.getListData();
+      }
+    }
   }
 
 
@@ -151,8 +149,6 @@ class ListView extends BridgeBase {
 
     // Remove event listener for resize
     window.removeEventListener('resize', this._handleResize);
-
-
   }
 
   
@@ -162,8 +158,9 @@ class ListView extends BridgeBase {
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
     if (this.bDebug){ debugger; }
-    console.log('Update self');
+    this.requestUpdate();
   }
+
 
   /**
    * The `onStateChange()` method will be called when the state is updated.
@@ -228,8 +225,6 @@ class ListView extends BridgeBase {
     return returnList;
   }
 
-
-
   getDisplayColums(fields = []) {
     let arReturn = fields.map(( field: any, colIndex) => {
       let theField = field.config.value.substring(field.config.value.indexOf(" ")+1);
@@ -241,7 +236,6 @@ class ListView extends BridgeBase {
     });
     return arReturn; 
   }
-
 
   computeColumnHeaders(fields = []): void {
     if (this.bDebug){ debugger; }
@@ -290,10 +284,9 @@ class ListView extends BridgeBase {
 
     // initialize
     this.vaadinGridColumns = [];
-    console.log('this.fields', this.fields);
     if (this.rowData.length > 0) {
       if (this.selectionMode === SELECTION_MODE.SINGLE) {
-        this.vaadinGridColumns.push(html`<vaadin-grid-column header="select" ${columnBodyRenderer(this.avatarRenderer(), [])}></vaadin-grid-sort-column>`)
+        // this.vaadinGridColumns.push(html`<vaadin-grid-column header="select" ${columnBodyRenderer(this.avatarRenderer(), [])}></vaadin-grid-sort-column>`)
       }
     }
     // Iterate over this.fields to extract the data needed for vaadin-grid-column: name and path
@@ -303,12 +296,6 @@ class ListView extends BridgeBase {
     });
     console.log('his.vaadinGridColumns', this.vaadinGridColumns);
   }
-
-  private avatarRenderer: any = () => html`
-    <vaadin-text-field></<vaadin-text-field>
-  `;
-  
-
 
   clickRowInGrid(inDetail: any) {
     const { pxRefObjectClass, pzInsKey } = inDetail.value;
@@ -401,12 +388,13 @@ class ListView extends BridgeBase {
          theContent = html`
           <vaadin-grid .items="${this.vaadinRowData}">
             <vaadin-grid-column header="Product Name" path="ProductName"></vaadin-grid-column>
-            <vaadin-grid-column
-              header="pyGUID"
-              auto-width
-              ${columnBodyRenderer(this.statusRenderer, [])}
-            ></vaadin-grid-column>
+            <vaadin-grid-column header="Price" path="Price"></vaadin-grid-column>
          </vaadin-grid>`;
+            // getting error while using columnBodyrender hence commented the code
+         // <vaadin-grid-column header="select" ${columnBodyRenderer(this.statusRenderer(), [])}></vaadin-grid-column>
+
+
+
              // ${ this.fields.forEach((field) => {
           //   console.log('field', field);
           //   // this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
