@@ -3,9 +3,6 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../PromotedFilters';
 
-
-
-
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
@@ -15,17 +12,14 @@ const isSelfReferencedProperty = (param, referenceProp) => {
   return parentPropName === referenceProp;
 };
 
-
-// NOTE: this is just a boilerplate component definition intended
-//  to be used as a starting point for any new components as they're built out
 @customElement('simple-table-select')
 class SimpleTableSelect extends BridgeBase {
-  @property( {attribute: false, type: String} ) label = "";
-  @property( {attribute: false, type: String} ) renderMode = "";
-  @property( {attribute: false, type: Boolean} ) showLabel = true;
-  @property( {attribute: false, type: String} ) viewName = "";
-  @property( {attribute: false, type: Object} ) parameters = {};
-  @property( {attribute: false, type: String} ) dataRelationshipContext = "";
+  @property({ attribute: false, type: String }) label = "";
+  @property({ attribute: false, type: String }) renderMode = "";
+  @property({ attribute: false, type: Boolean }) showLabel = true;
+  @property({ attribute: false, type: String }) viewName = "";
+  @property({ attribute: false, type: Object }) parameters = {};
+  @property({ attribute: false, type: String }) dataRelationshipContext = "";
 
   // Set this to the component we want to render. It may get updated
   //  whenever the component updates
@@ -43,7 +37,7 @@ class SimpleTableSelect extends BridgeBase {
     //  To get started, we set Debug to false and Logging to true here. Set to your preferred value during development.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -51,7 +45,7 @@ class SimpleTableSelect extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
@@ -63,18 +57,18 @@ class SimpleTableSelect extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
   }
 
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // Update properties based on configProps
     const theConfigProps = this.thePConn.getConfigProps();
 
     this.label = theConfigProps.label;
-    this.renderMode = theConfigProps. renderMode;
+    this.renderMode = theConfigProps.renderMode;
     this.showLabel = theConfigProps.showLabel;
     this.viewName = theConfigProps.viewName;
     this.parameters = theConfigProps.parameters;
@@ -82,10 +76,11 @@ class SimpleTableSelect extends BridgeBase {
 
     // Beginning of code from DX Component: SimpleTableSelect
 
-    const propsToUse = { 
-      label: this.label, 
+    const propsToUse = {
+      label: this.label,
       showLabel: this.showLabel,
-      ...this.thePConn.getInheritedProps() };
+      ...this.thePConn.getInheritedProps()
+    };
 
     if (propsToUse.showLabel === false) {
       propsToUse.label = "";
@@ -99,7 +94,7 @@ class SimpleTableSelect extends BridgeBase {
       console.warn(`${this.theComponentName} wants to return <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />`);
       this.theComponentToRender = html`<div>${this.theComponentName} wants to return <SimpleTableManual {...props} showLabel={propsToUse.showLabel} /></div>`;
       // <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />;
-      return; 
+      return;
     }
 
     const pageReference = this.thePConn.getPageReference();
@@ -107,10 +102,10 @@ class SimpleTableSelect extends BridgeBase {
       ? selectionList.substring(1)
       : pageReference.substring(pageReference.lastIndexOf(".") + 1);
     // Replace here to use the context name instead
-    let contextPageReference = null;  
-    if (this.dataRelationshipContext !== null  && selectionMode === "single") {
+    let contextPageReference = null;
+    if (this.dataRelationshipContext !== null && selectionMode === "single") {
       referenceProp = this.dataRelationshipContext;
-      contextPageReference = pageReference.concat(".").concat(referenceProp);    
+      contextPageReference = pageReference.concat(".").concat(referenceProp);
     }
 
     // Note that this syntax looks odd but it's really just a complex destructuring
@@ -122,8 +117,8 @@ class SimpleTableSelect extends BridgeBase {
       datasource: { parameters: fieldParameters = {} } = {},
       pageClass
     } = isMultiSelectMode
-      ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
-      : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
+        ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
+        : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
 
     const compositeKeys: Array<any> = [];
     Object.values(fieldParameters).forEach((param: any) => {
@@ -200,7 +195,7 @@ class SimpleTableSelect extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -209,8 +204,8 @@ class SimpleTableSelect extends BridgeBase {
     }
   }
 
-  getSimpleTableSelectHtml() : any {
-    const theHtml = html `
+  getSimpleTableSelectHtml(): any {
+    const theHtml = html`
         ${this.theComponentToRender}
     `;
 
@@ -218,9 +213,9 @@ class SimpleTableSelect extends BridgeBase {
 
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -228,7 +223,7 @@ class SimpleTableSelect extends BridgeBase {
 
     const sContent = html`${this.getSimpleTableSelectHtml()}`;
 
-    this.renderTemplates.push( sContent );
+    this.renderTemplates.push(sContent);
     // and now add any children to renderTemplates
     this.addChildTemplates();
 
