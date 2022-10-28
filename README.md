@@ -1,5 +1,17 @@
 <p align="center"><img width=60% src="docs/media/WebCompSDK-Logo.png">
 
+<table style="font-size: 14pt;">
+   <tr>
+   <th>Deprecation Notice</th>
+   </tr>
+   <tr><td>Enhancement and support for this version (<strong>release/8.6</strong>)
+      of the Web Components SDK has ended with the release of Pega Infinity 8.8 in
+      October 2022.
+      <br>The <strong>main</strong> branch supports Pega Infinity 8.7 and 8.8
+   </td></tr>
+   <tr><td></td></tr>
+</table>
+
 # Web Components SDK
 
 The **Web Components SDK** provides Pega customers with the ability to build DX components that connect Pega’s ConstellationJS Engine APIs with a design system other than Pega Cosmos.
