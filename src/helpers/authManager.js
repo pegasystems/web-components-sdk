@@ -180,7 +180,8 @@ const getAuthMgr = ( bInit ) => {
         return resolve(authMgr);
       }
     }
-    idNextCheck = setInterval(fnCheckForAuthMgr, 250);
+    fnCheckForAuthMgr();
+    idNextCheck = setInterval(fnCheckForAuthMgr, 10);
   });
 };
 
@@ -395,16 +396,17 @@ const updateRedirectUri = (aMgr, sRedirectUri) => {
       // do nothing
     }
   }
-  const aMgr = getAuthMgr(false);
-  const tokenInfo = getCurrentTokens();
-  return aMgr.getUserinfo(tokenInfo.access_token).then( data => {
-    userInfo = data;
-    if( userInfo ) {
-      sessionStorage.setItem("wcsdk_UI", JSON.stringify(userInfo));
-    } else {
-      sessionStorage.removeItem("wcsdk_UI");
-    }
-    return Promise.resolve(userInfo);
+  getAuthMgr(false).then( (aMgr) => {
+    const tokenInfo = getCurrentTokens();
+    return aMgr.getUserinfo(tokenInfo.access_token).then( data => {
+      userInfo = data;
+      if( userInfo ) {
+        sessionStorage.setItem("wcsdk_UI", JSON.stringify(userInfo));
+      } else {
+        sessionStorage.removeItem("wcsdk_UI");
+      }
+      return Promise.resolve(userInfo);
+    });  
   });
 
 };
@@ -477,6 +479,7 @@ export const loginIfNecessary = (appName, isEmbedded=false, deferLogin=false) =>
   if( window.location.href.indexOf("?code") !== -1 ) {
     // initialize authMgr
     initAuthMgr(false);
+    sessionStorage.removeItem("wcsdk_loggingIn");
     return getAuthMgr(false).then(() => {
       authRedirectCallback(window.location.href, ()=> {
         window.location.href = window.location.pathname;
@@ -489,6 +492,7 @@ export const loginIfNecessary = (appName, isEmbedded=false, deferLogin=false) =>
       updateLoginStatus();
       if( gbLoggedIn ) {
         fireTokenAvailable(getCurrentTokens());
+        // this.getUserInfo();
       } else {
         return login();
       }
@@ -560,7 +564,8 @@ export const logout = () => {
             });
         } else {
           getAuthMgr(false).then( aMgr => {
-            aMgr.revokeTokens(tokenInfo.access_token, tokenInfo.refresh_token).then(() => {
+            aMgr.revokeTokens(tokenInfo.access_token, tokenInfo.refresh_token)
+            .then(() => {
               // Go to finally
             })
             .finally(() => {
