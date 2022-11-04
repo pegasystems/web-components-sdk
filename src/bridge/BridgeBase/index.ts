@@ -23,7 +23,7 @@ export class BridgeBase extends LitElement {
   @property( {attribute: false} ) theComponentId: number = Date.now();    // in case we need a unique ID for this component
   @property( {attribute: false, type: Function} ) storeUnsubscribe: Function;
   @property( {attribute: false, type: String} ) validateMessage;
-  @property( {attribute: false, type: Object}) theComponentStyleTemplate = nothing;   // Any styling lit-html template that should be added to renderTemplates
+  @property( {attribute: false, type: Object}) theComponentStyleTemplate;   // Any styling lit-html template that should be added to renderTemplates
 
   @property( {attribute: false, type: Object} ) thePConn;   // Normalize incoming pConn to a PConnect object
   @property( {attribute: false, type: Object} ) children;
@@ -945,7 +945,7 @@ updated(changedProperties) {
     if (this.bDebug){ debugger; }
     if (this.bLogging) { console.log( `----> ${this.theComponentName} getTemplateForTemplate adding: ${inTemplate}`); }
 
-    let theTemplateForTemplate = nothing;
+    let theTemplateForTemplate;
     switch (inTemplate) {
       case "CaseSummary":
         theTemplateForTemplate = html`<case-summary-template .pConn=${inPConnToUse}></case-summary-template>` ;

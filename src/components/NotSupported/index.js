@@ -1,6 +1,6 @@
 import { html } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
-import '@vaadin/vaadin-text-field';
+import '@vaadin/text-field';
 
 // To experiment with BridgeMixin (functional composition mixin) along with
 //  extending the component, use the following lines:
