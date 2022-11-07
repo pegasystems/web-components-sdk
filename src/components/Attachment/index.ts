@@ -163,7 +163,7 @@ class Attachment extends BridgeBase {
 
           fileTemp.props.type = fileTemp.responseProps.pyMimeFileExtension;
           fileTemp.props.mimeType = fileTemp.responseProps.pyMimeFileExtension;
-
+          fileTemp.props.ID = fileTemp.responseProps.pzInsKey;
 
           // create the actions for the "more" menu on the attachment
           let arMenuList = new Array();
@@ -223,7 +223,7 @@ class Attachment extends BridgeBase {
       ${this.bShowSelector?
       html`
           <div class="psdk-modal-file-selector">
-          <input hidden type="file" #uploader @change="${this.uploadMyFiles}"/>
+          <input hidden type="file" #uploader id="upload-input" @change="${this.uploadMyFiles}"/>
 
           ${this.bLoading?
             html`
@@ -308,34 +308,61 @@ class Attachment extends BridgeBase {
     download(atob(data), file);
   };
 
+  getCurrentAttachmentsList(context) {
+    return PCore.getStoreValue('.attachmentsList', 'context_data', context) || [];
+  }
+
   _removeFileFromList(item: any) {
-
-    if (item != null) {
-      for (let fileIndex in this.arFileList) {
-        if (this.arFileList[fileIndex].id == item.id) {
-          // remove the file from the list and redraw
-  
-          this.arFileList.splice(parseInt(fileIndex), 1);
-
-          // call delete attachment
-          if (this.value && this.value.pxResults[0]) {
-            this.thePConn.attachmentsInfo = {
-              type: "File",
-              attachmentFieldName: this.att_valueRef,
-              delete: true
-            };
-          } else {
-            this.thePConn.attachmentsInfo = null;
-          }
-
-          this.bShowSelector = true;
-
-          this.requestUpdate();
-
-          break;
-        }
+    const fileIndex = this.arFileList.findIndex(element => element?.id === item?.id);
+    if (PCore.getPCoreVersion()?.includes('8.7')) {
+      if (this.value && this.value.pxResults[0]) {
+        this.thePConn.attachmentsInfo = {
+          type: "File",
+          attachmentFieldName: this.att_valueRef,
+          delete: true
+        };
       }
+      if (fileIndex > -1) { this.arFileList.splice(fileIndex, 1) };
+      
+    } else {
+      const attachmentsList = [];
+      const currentAttachmentList = this.getCurrentAttachmentsList(this.thePConn.getContextName()).filter(
+        (f) => f.label !== this.att_valueRef
+      );
+      if (this.value && this.value.pxResults && +this.value.pyCount > 0) {
+        const deletedFile = {
+          type: "File",
+          label: this.att_valueRef,
+          delete: true,
+          responseProps: {
+            pzInsKey: this.arFileList[fileIndex].id
+          },
+        };
+        // updating the redux store to help form-handler in passing the data to delete the file from server
+        PCore.getStateUtils().updateState(
+          this.thePConn.getContextName(),
+          'attachmentsList',
+          [...currentAttachmentList, deletedFile],
+          {
+            pageReference: 'context_data',
+            isArrayDeepMerge: false
+          }
+        );
+      } else {
+        PCore.getStateUtils().updateState(
+          this.thePConn.getContextName(),
+          'attachmentsList',
+          [...currentAttachmentList, ...attachmentsList],
+          {
+            pageReference: 'context_data',
+            isArrayDeepMerge: false
+          }
+        );
+      }
+      if (fileIndex > -1) { this.arFileList.splice(fileIndex, 1) };
     }
+    this.bShowSelector = this.arFileList?.length > 0 ? false : true;
+    this.requestUpdate();
   }
 
   uploadMyFiles($event) {
@@ -362,14 +389,33 @@ class Attachment extends BridgeBase {
         )
         .then((fileRes) => {
           
-          const reqObj = {
-            type: "File",
-            attachmentFieldName: this.att_valueRef,
-            category: this.att_categoryName,
-            ID: fileRes.ID
-          };
-
-          this.thePConn.attachmentsInfo = PCore.getPCoreVersion()?.includes('8.7') ? reqObj : [reqObj];
+          let reqObj;
+          if (PCore.getPCoreVersion()?.includes('8.7')) {
+            reqObj = {
+              type: "File",
+              attachmentFieldName: this.att_valueRef,
+              category: this.att_categoryName,
+              ID: fileRes.ID
+            };
+            this.thePConn.attachmentsInfo = reqObj;
+          } else {
+            reqObj = {
+              type: "File",
+              label: this.att_valueRef,
+              category: this.att_categoryName,
+              handle: fileRes.ID,
+              ID: fileRes.clientFileID
+            };
+            PCore.getStateUtils().updateState(
+              this.thePConn.getContextName(),
+              'attachmentsList',
+              [reqObj],
+              {
+                pageReference: 'context_data',
+                isArrayDeepMerge: false
+              }
+            );
+          }
   
           const fieldName = this.thePConn.getStateProps().value;
           const context = this.thePConn.getContextName();

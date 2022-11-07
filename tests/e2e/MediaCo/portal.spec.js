@@ -1,7 +1,8 @@
+const path = require('path');
 const { test, expect } = require('@playwright/test');
 const config = require('../../config');
 const common = require('../../common');
-
+const endpoints = require("../../../sdk-config.json");
 
 let caseID;
 
@@ -67,7 +68,23 @@ test.describe('E2E test', () => {
     // Other Notes Page
     await page.fill('lion-textarea[datatestid="F4C6F851B00D5518BF888815DE279ABA"] textarea', 'Thanks for the service!');
     await page.check('lion-checkbox[datatestid="C3B43E79AEC2D689F0CF97BD6AFB7DC4"] input');
+
+    const currentCaseID = await page.locator('div[id="current-caseID"]').textContent();
+    const filePath = path.join(__dirname, '../../../assets/img/cableinfo.png');
+    await page.setInputFiles('#upload-input', filePath);
+
+    await Promise.all([
+      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}/api/application/v2/attachments/upload`)
+    ]);
+
     await page.locator('button:has-text("submit")').click();
+
+    await Promise.all([
+      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}/api/application/v2/cases/${currentCaseID}/attachments`),
+    ]);
+
+    const attachmentCount = await page.locator('div[id="attachments-count"]').textContent();
+    await expect(Number(attachmentCount)).toBeGreaterThan(0);
 
     await page
       .locator('text=Thank you! The next step in this case has been routed appropriately.')

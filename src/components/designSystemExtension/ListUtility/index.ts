@@ -104,7 +104,7 @@ class ListUtility extends LitElement {
                 <img  class="psdk-utility-svg-icon" src="${this.headerSvgIcon}" >
               </div>
               <div class="header-text">${this.name}</div>
-              <div class="psdk-utility-count">${this.count}</div>
+              <div class="psdk-utility-count" id="attachments-count">${this.count}</div>
               <div style="flex-grow: 1"></div>
               <div class="header-icon">
 
