@@ -44,7 +44,7 @@ export class BridgeBase extends LitElement {
   //  2nd: inLogging - sets this.bLogging: false if not provided.
   constructor(inDebug = false, inLogging = false) {      
       super();
-
+      // LitElement.disableWarning?.('change-in-update');
       if (inDebug) { this.bDebug = true; }  // If you change the assignment of this.bDebug for your local development preference, please don't commit that change
       if (inLogging) { this.bLogging = true; }        // If you change the assignment of this.bLogging for your local development preference, please don't commit that change
 
@@ -130,21 +130,22 @@ export class BridgeBase extends LitElement {
   * 
   * @param changedProperties 
   */
-updated(changedProperties) {
-  for (let key of changedProperties.keys()) {
+  willUpdate(changedProperties) {
+    for (let key of changedProperties.keys()) {
 
-    // check if pConn property has changed, if so, normalize and render
-    if (key == "pConn") {
-      if (this.pConn) {
-        this.normalizePConnect();
-        this.localCallback();
-        this.requestUpdate();
+      // check if pConn property has changed, if so, normalize and render
+      if (key == "pConn") {
+        if (this.pConn) {
+          this.normalizePConnect();
+          this.localCallback();
+          this.requestUpdate();
         
-      }
+        }
 
+      }
+      super.willUpdate(changedProperties);
     }
   }
-}
 
 
   /**
