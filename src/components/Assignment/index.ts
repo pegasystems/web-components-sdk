@@ -7,7 +7,7 @@ import { assignmentStyles } from './assignment-styles';
 
 import '../MultiStep';
 import '../AssignmentCard';
-import 'lit-toast/lit-toast';
+
 
 
 // Declare that PCore will be defined when this code is run
@@ -131,7 +131,6 @@ class Assignment extends BridgeBase {
                 .arNavigationSteps=${this.arNavigationSteps}
                 @MultiStepActionButtonClick="${this._onActionButtonClick}">
             </multi-step-component>
-            <lit-toast></lit-toast>
             </div>` 
             :
           html`
@@ -140,7 +139,6 @@ class Assignment extends BridgeBase {
                   .arMainButtons=${this.arMainButtons} .arSecondaryButtons=${this.arSecondaryButtons}
                   @AssignmentActionButtonClick="${this._onActionButtonClick}">
                 </assignment-card-component>
-                <lit-toast></lit-toast>
             </div>`}
     `;
 
@@ -470,10 +468,6 @@ class Assignment extends BridgeBase {
 
   showToast(message: String, duration: Number) {
     console.error(`${this.theComponentName}: ${message}`);
-    const theToast : any = this.shadowRoot?.querySelector('lit-toast');
-    if (theToast) {
-      theToast.show(message, duration);
-    }
   }
 
 }

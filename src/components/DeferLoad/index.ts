@@ -228,7 +228,7 @@ class DeferLoad extends BridgeBase {
 
   }
 
-  updated(changedProperties) {
+  willUpdate(changedProperties) {
     for (let key of changedProperties.keys()) {
   
       // check for property changes, if so, normalize and render
