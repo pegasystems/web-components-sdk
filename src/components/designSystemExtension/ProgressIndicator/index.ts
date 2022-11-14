@@ -60,13 +60,13 @@ class ProgressExtension extends LionProgressIndicator {
     ];
   }
 
-  // _graphicTemplate() {
-  //   return html`
-  //     <svg class="progress--icon" viewBox="20 20 47 47">
-  //       <circle class="progress--icon--circle" cx="44" cy="44" r="20.2" />
-  //     </svg>
-  //   `;
-  // }
+  render() {
+    return html`
+      <svg class="progress--icon" viewBox="20 20 47 47">
+        <circle class="progress--icon--circle" cx="44" cy="44" r="20.2" />
+      </svg>
+    `;
+  }
 }
 
 export default ProgressExtension;
