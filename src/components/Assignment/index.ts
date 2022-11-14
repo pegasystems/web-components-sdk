@@ -7,6 +7,7 @@ import { assignmentStyles } from './assignment-styles';
 
 import '../MultiStep';
 import '../AssignmentCard';
+// import 'lit-toast/lit-toast' -- Not compatible with Lit2. Need to find a substitute
 
 
 
@@ -131,6 +132,7 @@ class Assignment extends BridgeBase {
                 .arNavigationSteps=${this.arNavigationSteps}
                 @MultiStepActionButtonClick="${this._onActionButtonClick}">
             </multi-step-component>
+            <!-- <lit-toast></lit-toast> -->
             </div>` 
             // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
             :
@@ -140,6 +142,7 @@ class Assignment extends BridgeBase {
                   .arMainButtons=${this.arMainButtons} .arSecondaryButtons=${this.arSecondaryButtons}
                   @AssignmentActionButtonClick="${this._onActionButtonClick}">
                 </assignment-card-component>
+                <!-- <lit-toast></lit-toast> -->
             </div>`
             // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
           }
@@ -472,6 +475,10 @@ class Assignment extends BridgeBase {
   showToast(message: String, duration: Number) {
     console.error(`${this.theComponentName}: ${message}`);
     // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
+    // const theToast : any = this.shadowRoot?.querySelector('lit-toast');
+    // if (theToast) {
+    //   theToast.show(message, duration);
+    // }
   }
 
 }
