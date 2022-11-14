@@ -44,6 +44,8 @@ export class BridgeBase extends LitElement {
   //  2nd: inLogging - sets this.bLogging: false if not provided.
   constructor(inDebug = false, inLogging = false) {      
       super();
+
+      // Disabling 'change-in-update' warnings as receiving warnings from lion components we should continue to investigate if there are updates to Lion
       LitElement.disableWarning?.('change-in-update');
       if (inDebug) { this.bDebug = true; }  // If you change the assignment of this.bDebug for your local development preference, please don't commit that change
       if (inLogging) { this.bLogging = true; }        // If you change the assignment of this.bLogging for your local development preference, please don't commit that change

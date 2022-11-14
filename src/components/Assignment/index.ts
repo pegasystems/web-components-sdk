@@ -132,6 +132,7 @@ class Assignment extends BridgeBase {
                 @MultiStepActionButtonClick="${this._onActionButtonClick}">
             </multi-step-component>
             </div>` 
+            // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
             :
           html`
             <div>
@@ -139,7 +140,9 @@ class Assignment extends BridgeBase {
                   .arMainButtons=${this.arMainButtons} .arSecondaryButtons=${this.arSecondaryButtons}
                   @AssignmentActionButtonClick="${this._onActionButtonClick}">
                 </assignment-card-component>
-            </div>`}
+            </div>`
+            // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
+          }
     `;
 
     return aHtml;
@@ -468,6 +471,7 @@ class Assignment extends BridgeBase {
 
   showToast(message: String, duration: Number) {
     console.error(`${this.theComponentName}: ${message}`);
+    // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
   }
 
 }
