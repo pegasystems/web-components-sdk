@@ -10,6 +10,7 @@ import '@lion/radio-group/define';
 import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-selection-column.js';
 import { columnBodyRenderer } from '@vaadin/grid/lit.js';
+import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 
 // import the component's styles as HTML with <style>
 import { listViewStyles } from './list-view-styles';
@@ -37,6 +38,7 @@ class ListView extends BridgeBase {
   bClickEventListenerAdded: Boolean = false;
   waitingForData: Boolean = true;
   selectionMode: string = '';
+  selectedValue: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -284,18 +286,38 @@ class ListView extends BridgeBase {
 
     // initialize
     this.vaadinGridColumns = [];
-    if (this.rowData.length > 0) {
-      if (this.selectionMode === SELECTION_MODE.SINGLE) {
-        // this.vaadinGridColumns.push(html`<vaadin-grid-column header="select" ${columnBodyRenderer(this.avatarRenderer(), [])}></vaadin-grid-sort-column>`)
-      }
-    }
     // Iterate over this.fields to extract the data needed for vaadin-grid-column: name and path
-    this.fields.forEach((field) => {
-      console.log('field', field);
-      this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
-    });
-    console.log('his.vaadinGridColumns', this.vaadinGridColumns);
+    const content: any = html`
+      <vaadin-grid .items="${this.vaadinRowData}" id=${this.theComponentId}>
+      ${this.selectionMode === SELECTION_MODE.SINGLE ? html`<vaadin-grid-column header="" flex-grow="0" auto-width ${columnBodyRenderer(this.radioRender, [])}></vaadin-grid-sort-column>` : nothing}
+      ${this.selectionMode === SELECTION_MODE.MULTI ? html`<vaadin-grid-column header="" flex-grow="0" auto-width ${columnBodyRenderer(this.checkboxRender, [])}></vaadin-grid-sort-column>` : nothing}
+      ${this.fields.map((field) => {
+        return html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`
+      })}
+    `;
+
+    return content;
   }
+
+  private radioRender: GridColumnBodyLitRenderer<any> = ({ pyGUID }) => {
+    return html`<input  name='radio-buttons' type="radio" .value="${pyGUID}" @change="${this.onRadioChange}"/>`
+  };
+
+  private checkboxRender: GridColumnBodyLitRenderer<any> = ({ pyGUID }) => {
+    return html`<input  name='checkbox' type="checkbox" .value="${pyGUID}" @change="${this.onCheckboxClick}"/>`
+  };
+
+  onRadioChange(event) {
+    const value = event.target.value;
+    this.thePConn?.getListActions?.()?.setSelectedRows([{'pyGUID': value}]);
+    this.selectedValue = value;
+  };
+
+  onCheckboxClick(event) {
+    const value = event?.target?.value;
+    const checked = event?.target?.checked;
+    this.thePConn?.getListActions()?.setSelectedRows([{'pyGUID': value, $selected: checked }]);
+  };
 
   clickRowInGrid(inDetail: any) {
     const { pxRefObjectClass, pzInsKey } = inDetail.value;
@@ -317,21 +339,6 @@ class ListView extends BridgeBase {
       if (theVaadinShadowTable) {
         // Fill the available height. Need to subtract the space that's taken for the header (which is offsetTop)
         theVaadinShadowTable.style['height'] = (window.innerHeight - this.offsetTop) + "px";
-      }
-    }
-  }
-
-  fieldOnChange(event) {
-
-  }
-
-  getSelectionField(row) {
-    if (this.rowData.length > 0) {
-      if (this.selectionMode === SELECTION_MODE.SINGLE) {
-        return html`<lion-radio class="psdk-radio-button" @change=${this.fieldOnChange}
-        .choiceValue=${row.pyGUID}></lion-radio>`
-      } else if (this.selectionMode === SELECTION_MODE.MULTI) {
-
       }
     }
   }
@@ -362,7 +369,6 @@ class ListView extends BridgeBase {
         // eslint-disable-next-line no-case-declarations
         const theDataRows = html`<tbody>
             ${this.rowData.map((row) => html`<tr>
-              ${this.getSelectionField(row)}
               ${row.map((rowValue) => html`<td>${rowValue}</td>`)}
             </tr>`)
             }
@@ -377,55 +383,35 @@ class ListView extends BridgeBase {
         break;
 
       case "vaadin":
-        // this.computeGridColumns_Vaadin();
+        theContent = this.computeGridColumns_Vaadin();
 
-        // theContent = html`
-        //   <vaadin-grid id=${this.theComponentId}>
-        //     ${this.vaadinGridColumns}
-        //   </vaadin-grid>`;
-        //   this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
-        console.log('this.vaadinRowData', this.vaadinRowData);
-         theContent = html`
-          <vaadin-grid .items="${this.vaadinRowData}">
-            <vaadin-grid-column header="Product Name" path="ProductName"></vaadin-grid-column>
-            <vaadin-grid-column header="Price" path="Price"></vaadin-grid-column>
-         </vaadin-grid>`;
-            // getting error while using columnBodyrender hence commented the code
-         // <vaadin-grid-column header="select" ${columnBodyRenderer(this.statusRenderer(), [])}></vaadin-grid-column>
-
-
-
-             // ${ this.fields.forEach((field) => {
-          //   console.log('field', field);
-          //   // this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
-          //   html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`;
-          // })}
+       
         // VAADIN: Need to load data into vaadin grid after the grid element is available
-        // setTimeout((() => {
-        //   // debugger;
-        //   let theVaadinGrid: any = null;
+        setTimeout((() => {
+          // debugger;
+          // let theVaadinGrid: any = null;
 
-        //   if ( this && this.shadowRoot && this.shadowRoot.getElementById(this.theComponentId.toString()) ) {
-        //     theVaadinGrid = this.shadowRoot.getElementById(this.theComponentId.toString());
-        //   }
-        //   console.log('vaadinRowData', this.vaadinRowData);
-        //   if (theVaadinGrid) {
-        //     theVaadinGrid.items = this.vaadinRowData;
-        //   }
+          // if ( this && this.shadowRoot && this.shadowRoot.getElementById(this.theComponentId.toString()) ) {
+          //   theVaadinGrid = this.shadowRoot.getElementById(this.theComponentId.toString());
+          // }
+          // console.log('vaadinRowData', this.vaadinRowData);
+          // if (theVaadinGrid) {
+          //   theVaadinGrid.items = this.vaadinRowData;
+          // }
 
-        //   // Also set up a callback for the grid's "active-item-changed" to catch clicks
-        //   // if (theVaadinGrid && !this.bClickEventListenerAdded) {
-        //   //   theVaadinGrid.addEventListener('active-item-changed', 
-        //   //   (event) => {
-        //   //     this.clickRowInGrid(event.detail);
-        //   //   });
-        //   //   this.bClickEventListenerAdded = true;
-        //   // }
+          // // Also set up a callback for the grid's "active-item-changed" to catch clicks
+          // // if (theVaadinGrid && !this.bClickEventListenerAdded) {
+          // //   theVaadinGrid.addEventListener('active-item-changed', 
+          // //   (event) => {
+          // //     this.clickRowInGrid(event.detail);
+          // //   });
+          // //   this.bClickEventListenerAdded = true;
+          // // }
 
-        //   // And set the proper vaadin-grid table height
-        //   this._handleResize();
+          // // And set the proper vaadin-grid table height
+          this._handleResize();
 
-        // }).bind(this), 50);
+        }).bind(this), 50);
 
         break;
     }
@@ -442,9 +428,6 @@ class ListView extends BridgeBase {
 
   }
 
-  private statusRenderer: any = (record) => {
-    return html`<span>Hello</span>`;
-  };
 // <vaadin-radio-button value="record.pyGUID" label="In progress" checked></vaadin-radio-button>
 // vaadin-grid code snippet
 
