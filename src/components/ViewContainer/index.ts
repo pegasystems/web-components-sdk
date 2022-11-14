@@ -276,7 +276,7 @@ class ViewContainer extends BridgeBase {
     // if (showLoadingIndicator) { debugger; }
 
     // NOTE: We're handling the possible Title and children in the templates below
-    let theInnerTemplate;
+    let theInnerTemplate: any = nothing;
 
     // debugger;
 

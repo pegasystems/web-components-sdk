@@ -317,7 +317,7 @@ class ListView extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    let theContent;
+    let theContent: any = nothing;
 
     switch (this.gridChoice) {
       case "table":

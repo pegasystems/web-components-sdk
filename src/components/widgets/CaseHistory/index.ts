@@ -150,7 +150,7 @@ class CaseHistory extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    let theContent;
+    let theContent: any = nothing;
 
     const theColumnHeaders = html`
       <thead class="thead-light">

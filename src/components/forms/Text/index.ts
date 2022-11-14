@@ -150,7 +150,7 @@ class Text extends BridgeBase {
       text = format(text, formatType);
     }
 
-    let theContent;
+    let theContent: any = nothing;
 
     if (this.bVisible) {
       theContent = (label !== undefined && !noLabel && text !== undefined) ?
