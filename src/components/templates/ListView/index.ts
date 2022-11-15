@@ -3,8 +3,8 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
 
 // NOTE: you need to import ANY component you may render.
-import '@vaadin/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-sort-column';
+import '@vaadin/grid';
+import '@vaadin/grid/vaadin-grid-sort-column.js';
 import '../../designSystemExtension/ProgressIndicator';
 
 
@@ -317,7 +317,7 @@ class ListView extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    let theContent = nothing;
+    let theContent: any = nothing;
 
     switch (this.gridChoice) {
       case "table":

@@ -7,7 +7,8 @@ import { assignmentStyles } from './assignment-styles';
 
 import '../MultiStep';
 import '../AssignmentCard';
-import 'lit-toast/lit-toast';
+// import 'lit-toast/lit-toast' -- Not compatible with Lit2. Need to find a substitute
+
 
 
 // Declare that PCore will be defined when this code is run
@@ -131,8 +132,9 @@ class Assignment extends BridgeBase {
                 .arNavigationSteps=${this.arNavigationSteps}
                 @MultiStepActionButtonClick="${this._onActionButtonClick}">
             </multi-step-component>
-            <lit-toast></lit-toast>
+            <!-- <lit-toast></lit-toast> -->
             </div>` 
+            // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
             :
           html`
             <div>
@@ -140,8 +142,10 @@ class Assignment extends BridgeBase {
                   .arMainButtons=${this.arMainButtons} .arSecondaryButtons=${this.arSecondaryButtons}
                   @AssignmentActionButtonClick="${this._onActionButtonClick}">
                 </assignment-card-component>
-                <lit-toast></lit-toast>
-            </div>`}
+                <!-- <lit-toast></lit-toast> -->
+            </div>`
+            // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
+          }
     `;
 
     return aHtml;
@@ -470,10 +474,11 @@ class Assignment extends BridgeBase {
 
   showToast(message: String, duration: Number) {
     console.error(`${this.theComponentName}: ${message}`);
-    const theToast : any = this.shadowRoot?.querySelector('lit-toast');
-    if (theToast) {
-      theToast.show(message, duration);
-    }
+    // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
+    // const theToast : any = this.shadowRoot?.querySelector('lit-toast');
+    // if (theToast) {
+    //   theToast.show(message, duration);
+    // }
   }
 
 }

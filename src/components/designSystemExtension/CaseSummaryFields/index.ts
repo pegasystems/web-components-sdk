@@ -62,7 +62,7 @@ class SummaryItem extends LitElement {
 
   }
 
-  updated(changedProperties: any) {
+  willUpdate(changedProperties: any) {
     for (let key of changedProperties.keys()) {
   
       // check for property changes, if so, normalize and render
