@@ -6,7 +6,9 @@ import { Utils } from '../../../helpers/utils';
 import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-sort-column.js';
 import '../../designSystemExtension/ProgressIndicator';
-
+import '@vaadin/grid/vaadin-grid-selection-column.js';
+import { columnBodyRenderer } from '@vaadin/grid/lit.js';
+import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 
 // import the component's styles as HTML with <style>
 import { listViewStyles } from './list-view-styles';
@@ -14,6 +16,8 @@ import { listViewStyles } from './list-view-styles';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
+
+const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -27,13 +31,14 @@ class ListView extends BridgeBase {
 
   @property( {attribute: false, type: Array} ) vaadinGridColumns;
   @property( {attribute: false, type: Array} ) vaadinRowData;
-
+  @property( {attribute: true,  type: String} ) payload: any = {};
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
   gridChoice: string = "vaadin";
   bClickEventListenerAdded: Boolean = false;
   waitingForData: Boolean = true;
-
+  selectionMode: string = '';
+  selectedValue: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -73,61 +78,75 @@ class ListView extends BridgeBase {
     const componentConfig = this.thePConn.getRawMetadata().config;
     const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
-
-    const workListData = PCore.getDataApiUtils().getData(refList, {});
-
-    workListData.then( (workListJSON: Object) => {
-
-      if (this.bDebug){ debugger; }
-
-      // don't update these fields until we return from promise
-      this.fields = theConfigProps.presets[0].children[0].children;
-      // this is an unresolved version of this.fields, need unresolved, so can get the property reference
-      let columnFields = componentConfig.presets[0].children[0].children;
-
-      const tableDataResults = workListJSON["data"].data;
-
-      // displayedColumns is the array of property names associated with the columns.
-      //  Derived from columnFields (unresolved configProps - above)
-      //  Ex: ["pxRefObjectInsName", "pxTaskLabel", "pyLabel", "pyAssignmentStatus", "pxDeadlineTime", "pxUrgencyAssign"]
-      this.displayedColumns = this.getDisplayColums(columnFields);
-      
-      // fields is the array of type and config info associated with the columns that are to be shown.
-      //  Each entry in the array has the "label" to be displayed and the "name" which is the 
-      //  property used to get the data for that column.
-      //  Example entry in array: 
-      //  {"type":"TextInput", "config": {"label":"Status of the assignment","name":"pyAssignmentStatus"}}
-      this.fields = this.updateFields(this.fields, this.displayedColumns);
-
-      // And, after computing this.fields, update columnHeaders
-      this.computeColumnHeaders(this.fields);
-
-      // updatedRefList is an array with an entry for each row of data to be shown in the ListView.
-      //  (Partial) Example entry in array:
-      //  {pxUrgencyAssign: 10, pxRefObjectInsName: "S-58001", pxFlowName: "NewService_Flow", pxAssignedOperatorID: "Rep.CableCo", pxUpdateDateTime: null, ...}
-      // eslint-disable-next-line no-unused-vars
-      let updatedRefList = this.updateData(tableDataResults, this.fields);
-
-      // vaadin-list experiment
-      if (this.gridChoice == "vaadin") {
-        this.vaadinRowData = updatedRefList;
-      }
-
-      // After we get the updatedRefList, compute the rowData using the updatedRefList
-      this.computeRowData(updatedRefList);
-      
-      // At this point, we have data ready to render, so can stop progress indicator
-      this.waitingForData = false;
-      
-
-      // this.repeatList$ = new MatTableDataSource(updatedRefList);
-
-      /// this.repeatList$.paginator = this.paginator;
-      
-    });
-    
+    this.getListData();   
   }
 
+  getListData() {
+    const theConfigProps = this.thePConn?.getConfigProps();
+    if (theConfigProps) {
+      this.selectionMode = theConfigProps.selectionMode;
+      const componentConfig = this.thePConn.getRawMetadata().config;
+      const refList = theConfigProps.referenceList;
+      const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
+      workListData.then( (workListJSON: Object) => {
+
+        if (this.bDebug){ debugger; }
+
+        // don't update these fields until we return from promise
+        this.fields = theConfigProps.presets[0].children[0].children;
+        // this is an unresolved version of this.fields, need unresolved, so can get the property reference
+        let columnFields = componentConfig.presets[0].children[0].children;
+
+        const tableDataResults = workListJSON["data"].data;
+
+        // displayedColumns is the array of property names associated with the columns.
+        //  Derived from columnFields (unresolved configProps - above)
+        //  Ex: ["pxRefObjectInsName", "pxTaskLabel", "pyLabel", "pyAssignmentStatus", "pxDeadlineTime", "pxUrgencyAssign"]
+        this.displayedColumns = this.getDisplayColums(columnFields);
+
+        // fields is the array of type and config info associated with the columns that are to be shown.
+        //  Each entry in the array has the "label" to be displayed and the "name" which is the 
+        //  property used to get the data for that column.
+        //  Example entry in array: 
+        //  {"type":"TextInput", "config": {"label":"Status of the assignment","name":"pyAssignmentStatus"}}
+        this.fields = this.updateFields(this.fields, this.displayedColumns);
+
+        // And, after computing this.fields, update columnHeaders
+        this.computeColumnHeaders(this.fields);
+
+        // updatedRefList is an array with an entry for each row of data to be shown in the ListView.
+        //  (Partial) Example entry in array:
+        //  {pxUrgencyAssign: 10, pxRefObjectInsName: "S-58001", pxFlowName: "NewService_Flow", pxAssignedOperatorID: "Rep.CableCo", pxUpdateDateTime: null, ...}
+        // eslint-disable-next-line no-unused-vars
+        let updatedRefList = this.updateData(tableDataResults, this.fields);
+
+        // vaadin-list experiment
+        if (this.gridChoice == "vaadin") {
+          this.vaadinRowData = updatedRefList;
+        }
+
+        // After we get the updatedRefList, compute the rowData using the updatedRefList
+        this.computeRowData(updatedRefList);
+
+        // At this point, we have data ready to render, so can stop progress indicator
+        this.waitingForData = false;
+
+        // this.repeatList$ = new MatTableDataSource(updatedRefList);
+
+        // this.repeatList$.paginator = this.paginator;
+
+      });
+    }
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'payload') {
+      if (oldValue !== newValue) {
+        this.payload = newValue;
+        this.getListData();
+      }
+    }
+  }
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
@@ -278,11 +297,37 @@ class ListView extends BridgeBase {
     this.vaadinGridColumns = [];
 
     // Iterate over this.fields to extract the data needed for vaadin-grid-column: name and path
-    this.fields.forEach((field) => {
-      this.vaadinGridColumns.push( html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`);
-    });
+    const content: any = html`
+      <vaadin-grid .items="${this.vaadinRowData}" id=${this.theComponentId}>
+      ${this.selectionMode === SELECTION_MODE.SINGLE ? html`<vaadin-grid-column header="" flex-grow="0" auto-width ${columnBodyRenderer(this.radioRender, [])}></vaadin-grid-sort-column>` : nothing}
+      ${this.selectionMode === SELECTION_MODE.MULTI ? html`<vaadin-grid-column header="" flex-grow="0" auto-width ${columnBodyRenderer(this.checkboxRender, [])}></vaadin-grid-sort-column>` : nothing}
+      ${this.fields.map((field) => {
+        return html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`
+      })}
+    `;
+
+    return content;
   }
 
+  private radioRender: GridColumnBodyLitRenderer<any> = ({ pyGUID }) => {
+    return html`<input  name='radio-buttons' type="radio" .value="${pyGUID}" @change="${this.onRadioChange}"/>`
+  };
+
+  private checkboxRender: GridColumnBodyLitRenderer<any> = ({ pyGUID }) => {
+    return html`<input  name='checkbox' type="checkbox" .value="${pyGUID}" @change="${this.onCheckboxClick}"/>`
+  };
+
+  onRadioChange(event) {
+    const value = event.target.value;
+    this.thePConn?.getListActions?.()?.setSelectedRows([{'pyGUID': value}]);
+    this.selectedValue = value;
+  };
+
+  onCheckboxClick(event) {
+    const value = event?.target?.value;
+    const checked = event?.target?.checked;
+    this.thePConn?.getListActions()?.setSelectedRows([{'pyGUID': value, $selected: checked }]);
+  };
 
   clickRowInGrid(inDetail: any) {
     const { pxRefObjectClass, pzInsKey } = inDetail.value;
@@ -349,12 +394,7 @@ class ListView extends BridgeBase {
         break;
 
       case "vaadin":
-        this.computeGridColumns_Vaadin();
-
-        theContent = html`
-          <vaadin-grid id=${this.theComponentId}>
-            ${this.vaadinGridColumns}
-          </vaadin-grid>`;
+        theContent = this.computeGridColumns_Vaadin();
 
         // VAADIN: Need to load data into vaadin grid after the grid element is available
         setTimeout((() => {
@@ -363,10 +403,6 @@ class ListView extends BridgeBase {
 
           if ( this && this.shadowRoot && this.shadowRoot.getElementById(this.theComponentId.toString()) ) {
             theVaadinGrid = this.shadowRoot.getElementById(this.theComponentId.toString());
-          }
-
-          if (theVaadinGrid) {
-            theVaadinGrid.items = this.vaadinRowData;
           }
 
           // Also set up a callback for the grid's "active-item-changed" to catch clicks
