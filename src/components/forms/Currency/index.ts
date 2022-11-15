@@ -110,7 +110,6 @@ class Currency extends FormComponentBase {
         dataTestId=${this.testId}
         .modelValue=${parseFloat(this.value)} 
         .fieldName=${this.label}
-        .formatOptions=${this.numberOptions}
         .validators=${this.lionValidatorsArray}
         .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
         currency=${this.currencyISOCode}

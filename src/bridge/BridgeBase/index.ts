@@ -642,6 +642,10 @@ export class BridgeBase extends LitElement {
           this.renderTemplates.push( html`<region-component .pConn=${child}></region-component>` );
           break;
 
+        case "SimpleTableSelect":
+          this.renderTemplates.push( html`<simple-table-select .pConn=${child}></simple-table-select>`);
+          break;
+
         case "Text":
           this.renderTemplates.push( html`<text-form .pConn=${child}></text-form>` );
           break;
@@ -868,6 +872,10 @@ export class BridgeBase extends LitElement {
           case "Region":
             theChildTemplates.push( html`<region-component .pConn=${child}></region-component>` );
             break;
+
+          case "SimpleTableSelect":
+            theChildTemplates.push( html`<simple-table-select .pConn=${child}></simple-table-select>`);
+            break;
   
           case "Stages":
             theChildTemplates.push( html`<stages-component .pConn=${child}></stages-component>` );
@@ -974,12 +982,20 @@ export class BridgeBase extends LitElement {
         theTemplateForTemplate = html`<list-page-component .pConn=${inPConnToUse}></list-page-component>` ;
         break;
 
+      case "ListView":
+        theTemplateForTemplate = html`<list-view-component .pConn=${inPConnToUse}></list-view-component>`;
+        break;
+
       case "OneColumn":
         theTemplateForTemplate = html`<one-column .pConn=${inPConnToUse}></one-column>`;
         break;
 
       case "OneColumnTab":
         theTemplateForTemplate = html`<one-column-tab-component .pConn=${inPConnToUse}></one-column-tab-component>`;
+        break;
+
+      case "DataReference":
+        theTemplateForTemplate = html`<data-reference-component .pConn=${inPConnToUse}></data-reference-component>`;
         break;
   
       case "TwoColumn":
@@ -1003,6 +1019,114 @@ export class BridgeBase extends LitElement {
     return theTemplateForTemplate;
   }
 
+   /**
+   * Returns the lit-html component associated with the PConnect that's passed in.
+   * @param inConfigObj the Constellation component configuration object (typically 
+   * returned from createComponent) for which you want to get back the associated 
+   * lit-html component. The inConfigObj object is an object with the getPConnect() method
+   */
+    static getComponentFromConfigObj(inConfigObj: any) {
+
+      try {
+        const thePConn = inConfigObj.getPConnect();
+        const theComponentName = thePConn.getComponentName();
+        let theComp: any = null;
+        let theErr = ``;
+  
+        switch(theComponentName) {
+          case "AutoComplete":
+            theComp = html`<autocomplete-form .pConn=${thePConn}></autocomplete-form>`;
+            break;
+  
+          case "Checkbox":
+            theComp = html`<check-box-form .pConn=${thePConn}></check-box-form>`;
+            break;
+  
+          case "Currency":
+            theComp = html`<currency-form .pConn=${thePConn}></currency-form>`;
+            break;
+  
+          case "Date":
+            theComp = html`<date-form .pConn=${thePConn}></date-form>`;
+            break;
+  
+          case "DateTime":
+            theComp = html`<datetime-form .pConn=${thePConn}></datetime-form>`;
+            break;             
+  
+          case "Decimal":
+            theComp = html`<decimal-form .pConn=${thePConn}></decimal-form>`;
+            break;                   
+  
+          case "Dropdown":
+            theComp = html`<dropdown-form .pConn=${thePConn}></dropdown-form>`;
+            break;
+  
+          case "Email":
+            theComp = html`<email-form .pConn=${thePConn}></email-form>`;
+            break;
+  
+          case "Integer":
+            theComp = html`<integer-form .pConn=${thePConn}></integer-form>`;
+            break;
+  
+          case "Percentage":
+            theComp = html`<percentage-form .pConn=${thePConn}></percentage-form>`;
+            break;
+  
+          case "Phone":
+            theComp = html`<phone-form .pConn=${thePConn}></phone-form>`;
+            break;
+  
+          case "RadioButtons":
+            theComp = html`<radio-buttons-form .pConn=${thePConn}></radio-buttons-form>`;
+            break;
+  
+          case "Text":
+            theComp = html`<text-form .pConn=${thePConn}></text-form>`;
+            break;
+  
+          case "TextArea":
+            theComp = html`<text-area-form .pConn=${thePConn}></text-area-form>`;
+            break;
+  
+          case "TextContent":
+            theComp = html`<text-content-form .pConn=${thePConn}></text-content-form>`;
+            break;
+  
+          case "TextInput":
+            theComp = html`<text-input-form .pConn=${thePConn}></text-input-form>`;
+            break;
+  
+          case "Time":
+            theComp = html`<time-form .pConn=${thePConn}></time-form>`;
+            break;  
+  
+          case "URL":
+            theComp = html`<url-form .pConn=${thePConn}></url-form>`;
+            break;
+  
+  
+  
+          default:
+            theErr = `BridgeBase getComponentFromConfigObj wants to render ${theComponentName}: not in switch statement`;
+            console.error(theErr);
+            theComp = html`<p>${theErr}</p>`;
+            break;        
+  
+        }
+  
+        return theComp;
+  
+      }
+      catch(err) {
+        const catchErr = `BridgeBase.getComponentFromConfigObj: invalid inConfigObj: ${JSON.stringify(inConfigObj)}`
+        console.error(catchErr);
+        return html`<p>${catchErr}</p>`;
+      }
+  
+    }
+  
   // Writes a console.log of the current component's children types
   logChildren() {
     let childTypes: Array<String> = [];
