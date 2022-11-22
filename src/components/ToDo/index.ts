@@ -23,6 +23,7 @@ class ToDo extends BridgeBase {
   @property( {attribute: false} ) target;
   @property( {attribute: false} ) type = "worklist";
   @property( {attribute: true} ) context;
+  @property( {attribute: true, type: Object} ) myWorkList;
 
   @property( {attribute: false, type: Object} ) configProps;
   @property( {attribute: false} ) currentUser;
@@ -31,6 +32,8 @@ class ToDo extends BridgeBase {
   @property( {attribute: false, type: Number} ) assignmentCount;
 
   @property( {attribute: false, type: Array}) arAssignments;
+
+  @property( {attribute: true, type: Object} ) assignmentsSource;
 
   bShowMore: boolean = true;
 
@@ -123,10 +126,16 @@ class ToDo extends BridgeBase {
       this.datasource = this.configProps["datasource"];
     }
 
+    if (this.myWorkList === undefined) {
+      this.myWorkList = this.configProps["myWorkList"];
+    }
+
+    this.assignmentsSource = this.datasource?.source || this.myWorkList.source;
+
     if (this.showTodoList) {
-      if (this.datasource) {
-        this.assignmentCount = (this.datasource.source != null) ? this.datasource.source.length : 0;
-        this.arAssignments = this.topThreeAssignments(this.datasource.source);
+      if (this.assignmentsSource) {
+        this.assignmentCount = (this.assignmentsSource != null) ? this.assignmentsSource.length : 0;
+        this.arAssignments = this.topThreeAssignments(this.assignmentsSource);
       }
       else {
         // turn off todolist
@@ -137,7 +146,7 @@ class ToDo extends BridgeBase {
     else {
       // get caseInfoId assignment.
       if (this.caseInfoID != undefined) {
-        this.arAssignments = this.getCaseInfoAssignment(this.datasource.source, this.caseInfoID);
+        this.arAssignments = this.getCaseInfoAssignment(this.assignmentsSource, this.caseInfoID);
       }
 
     }
@@ -242,14 +251,14 @@ class ToDo extends BridgeBase {
   _showMore() {
     this.bShowMore = false;
 
-    this.arAssignments = this.datasource.source;
+    this.arAssignments = this.assignmentsSource;
     this.requestUpdate();
   }
 
   _showLess() {
     this.bShowMore = false;
 
-    this.arAssignments = this.topThreeAssignments(this.datasource.source);
+    this.arAssignments = this.topThreeAssignments(this.assignmentsSource);
     this.requestUpdate();
   }
 
