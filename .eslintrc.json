@@ -1,25 +1,174 @@
 {
   "root": true,
-  "env": {
-    "node": true,
-    "browser": true,
-    "es6": true
-  },
-  "extends": [
-    "eslint:recommended"
-  ],
-  "globals": {
-    "constellationConfig": "readonly",
-    "PCore": true
-  },
-  "parser": "babel-eslint",
+  "extends": ["@pega"],
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    "project": "tsconfig.json",
+    "ecmaVersion": 13,
+    "warnOnUnsupportedTypeScriptVersion": false
   },
+  "settings": {
+    "import/resolver": {
+      "typescript": {},
+      "node": {
+        "extensions": [".js"]
+      }
+    }
+  },
+  "ignorePatterns": ["node_modules", "packages/*/lib", "!.storybook", ".storybook/public"],
   "rules": {
-    "no-debugger": "warn"
+
+    // Prettier recommends running separately from a linter.
+    // https://prettier.io/docs/en/integrating-with-linters.html#notes
+    "prettier/prettier": "off",
+
+    // Disable rules from shared configs we're not ready for yet.
+    "sonarjs/cognitive-complexity": "off",
+    "sonarjs/no-identical-functions": "off",
+    "sonarjs/no-duplicate-string": "off",
+    "sonarjs/no-nested-template-literals": "off",
+
+    //
+    // JA - Override some default lint handling here
+    "@typescript-eslint/array-type": ["error", { "default": "generic" }],
+    // "import/extensions": ["warn", "never"],    // Turning off for now (see below)
+
+    //
+    // Initial release: turning these off; phase in to "warn" or "error" over time
+    //  For "quotes" and "@typescript-eslint/quotes", see override below for .ts/.tsx files
+    "import/extensions": ["off", "never"],
+    "import/named": "off",
+    "import/no-cycle": "off",
+    "import/no-duplicates": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-self-import": "off",
+    "import/no-unresolved": "off",
+    "import/no-useless-path-segments": "off",
+    "import/order": "off",
+    "import/prefer-default-export": "off",
+
+    "no-else-return": "off",
+    "no-restricted-syntax": "off",
+    "no-underscore-dangle": "off",
+
+    "jsx-a11y/alt-text": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+
+
+    "sonarjs/prefer-immediate-return": "off",
+    "sonarjs/no-redundant-boolean": "off",
+
+    "@typescript-eslint/dot-notation": "off",       // prefer warn but needs different parserOptions
+    "@typescript-eslint/naming-convention": "off",  // prefer warn but needs different parserOptions
+    "@typescript-eslint/ban-types": "off",   // also, see override below
+
+    //
+    // Initial release: set to error
+    "@typescript-eslint/no-inferrable-types": "off",
+    "eqeqeq": "off",
+    "no-alert": "off",
+    "no-console": "off",
+    "no-fallthrough": "error",
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "no-var": "off",
+    "prefer-const": "off",
+    "yoda": "error",
+    "no-irregular-whitespace": "off",
+    "no-empty": "off",
+    "no-new-object": "off",
+
+    "import/no-mutable-exports": "error",
+    "sonarjs/max-switch-cases": "error",
+    "sonarjs/no-collapsible-if": "off",
+    "sonarjs/no-all-duplicated-branches": "off",
+    "sonarjs/no-duplicated-branches": "off",
+    "sonarjs/no-gratuitous-expressions": "off",
+    "sonarjs/no-ignored-return": "off",
+    "sonarjs/no-small-switch": "off",
+    "sonarjs/prefer-object-literal": "off",
+    "sonarjs/prefer-single-boolean-return": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "array-callback-return": "off",
+    "camelcase": "error",
+    "default-case": "off",
+    "func-names": "error",
+    "no-case-declarations": "error",
+    "no-lonely-if": "off",
+    "no-nested-ternary": "error",
+    "no-plusplus": "off",
+    "no-restricted-globals": "off",
+    "no-restricted-properties": "off",
+    "no-shadow": "off",
+    "radix": "off",
+    "spaced-comment": "off",
+
+    "import/newline-after-import": "off",
+    "sonarjs/no-nested-switch": "off",
+    "@typescript-eslint/no-array-constructor": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-useless-constructor": "off",
+    "@typescript-eslint/no-unused-expressions": "off",
+    "class-methods-use-this": "off",
+    "guard-for-in": "off",
+    "no-unneeded-ternary": "off",
+    "no-unused-expressions": "off",
+    "operator-assignment": "off",
+    "prefer-template": "off",
+    "vars-on-top": "off",
+
+    "no-use-before-define": "off",    // doc for @typescript-eslint/no-use-before-define says to turn off the base implementation
+    "@typescript-eslint/no-use-before-define": "error"
+
   },
-  "plugins": [
+  "overrides": [
+    {
+      "files": "*.@(ts|tsx)",
+      "rules": {
+        "@typescript-eslint/method-signature-style": ["off", "property"],
+        // "@typescript-eslint/ban-types": [
+        //   "warn",
+        //   {
+        //     "types": {
+        //       "Omit": "Please use the 'OmitStrict' type from 'src/types/' instead.",
+        //       "object": false,
+        //       "Function": false
+        //     },
+        //     "extendDefaults": true
+        //   }
+        // ],
+
+        "quotes": "off",
+        "@typescript-eslint/quotes": "off"
+        // [
+        //   "error",
+        //   "single",
+        //   {
+        //     "avoidEscape": true,
+        //     "allowTemplateLiterals": false
+        //   }
+        // ]
+      }
+    },
+    {
+      "files": "*.@(js|ts)",
+      "rules": {
+      }
+    },
+    {
+      "files": ".storybook/*.js",
+      "extends": ["@pega/eslint-config/script"]
+    },
+    {
+      "files": "*/**/mocks/**.@(mocks|styles).@(tsx|ts)",
+      "rules": {
+        "import/prefer-default-export": ["off"]
+      }
+    }
   ]
 }
