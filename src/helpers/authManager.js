@@ -249,8 +249,9 @@ export const sdkGetAuthHeader = () => {
       //  So, create a reference to it
       window.myLoadMashup = bootstrapShell.loadMashup;
 
-      // For experimentation, save a reference to loadPortal, too!
+      // Save a reference to loadPortal, loadDefaultPortal too!
       window.myLoadPortal = bootstrapShell.loadPortal;
+      window.myLoadDefaultPortal = bootstrapShell.loadDefaultPortal;
 
       // What is the 2nd argument 'shell' what DOM element has that id
       bootstrapShell.bootstrapWithAuthHeader(constellationBootConfig, 'shell').then(() => {
