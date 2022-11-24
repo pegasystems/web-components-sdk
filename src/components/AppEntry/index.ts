@@ -8,6 +8,7 @@ import { compareSdkPCoreVersions } from '../../helpers/versionHelpers';
 declare var PCore: any;
 declare var myLoadMashup;
 declare var myLoadPortal; // Experiment with this
+declare var myLoadDefaultPortal;
 
 
 @customElement('app-entry')
@@ -98,6 +99,26 @@ class AppEntry extends LitElement {
       const thePortal = SdkConfigAccess.getSdkConfigServer().appPortal;
       myLoadPortal("pega-root", thePortal, []);   // this is defined in bootstrap shell that's been loaded already  
     })
+
+    const thePortal = SdkConfigAccess.getSdkConfigServer().appPortal;
+
+    // Note: myLoadPortal and myLoadDefaultPortal are set when bootstrapWithAuthHeader is invoked
+    if(thePortal){
+      console.log(`Loading specified appPortal: ${thePortal}`);
+      myLoadPortal("app-root", thePortal, []);   // this is defined in bootstrap shell that's been loaded already
+    }else if(myLoadDefaultPortal){
+      console.log(`Loading default portal`);
+      myLoadDefaultPortal("app-root", []);
+    }else{
+      // This path of selecting a portal by enumerating entries within current user's access group's portals list
+      //  relies on Traditional DX APIs and should be avoided when the Constellation bootstrap supports
+      //  the loadDefaultPortal API
+      SdkConfigAccess.selectPortal()
+      .then( () => {
+        const selPortal = SdkConfigAccess.getSdkConfigServer().appPortal;
+        myLoadPortal("app-root", selPortal, []);   // this is defined in bootstrap shell that's been loaded already
+      })
+    }
 
   }
 
