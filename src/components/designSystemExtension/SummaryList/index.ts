@@ -50,7 +50,7 @@ class SummaryList extends LitElement {
   getItemsHtml(): any {
 
     
-    const arItemsHtml: any[] = [];
+    const arItemsHtml: Array<any> = [];
  
     for (let item of this.arItems) {
       arItemsHtml.push(html`
@@ -76,7 +76,7 @@ class SummaryList extends LitElement {
     const sContent = html`${this.getItemsHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
     
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // SummaryList not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

@@ -207,7 +207,7 @@ class SimpleMain extends LitElement {
 
   getSimpleMainHtml() : any {
 
-    const sMHtml: any[] = [];
+    const sMHtml: Array<any> = [];
 
     sMHtml.push(html `${this.getToolbarHtml()}`);
 
@@ -227,7 +227,7 @@ class SimpleMain extends LitElement {
     const sContent = this.getSimpleMainHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // SimpleMain not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
@@ -281,7 +281,7 @@ class SimpleMain extends LitElement {
     // load the Mashup and handle the onPCoreEntry response that establishes the
     //  top level Pega root element (likely a RootContainer)
 
-    // eslint-disable-next-line no-undef
+     
     myLoadMashup("pega-root", false);   // this is defined in bootstrap shell that's been loaded already
 
   }

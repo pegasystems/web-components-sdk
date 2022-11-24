@@ -211,7 +211,7 @@ class Operator extends LitElement {
     if (this.bDebug){ debugger; }
 
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // Operator not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

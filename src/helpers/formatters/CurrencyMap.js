@@ -1,4 +1,4 @@
-/* eslint-disable sonarjs/no-duplicate-string */
+ 
 /* eslint-disable no-template-curly-in-string */
 const EURO = {
   name: "Euro (EUR)",

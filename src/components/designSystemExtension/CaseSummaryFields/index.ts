@@ -149,7 +149,7 @@ class SummaryItem extends LitElement {
   }
 
   getPrimaryFieldsHtml() : any {
-    let pFHtml: any[] = [];
+    let pFHtml: Array<any> = [];
 
     for (let field of this.arPrimaryFieldsWithStatus) {
       pFHtml.push( html`
@@ -171,7 +171,7 @@ class SummaryItem extends LitElement {
 
   getSecondaryFieldsHtml() : any {
 
-    let sFHtml: any[] = [];
+    let sFHtml: Array<any> = [];
 
     for (let field of this.arSecondaryFields) {
       sFHtml.push( html`
@@ -222,7 +222,7 @@ class SummaryItem extends LitElement {
     const sContent = html`${this.getCaseSummaryFieldsHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // SummaryItem not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

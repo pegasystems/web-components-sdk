@@ -161,7 +161,7 @@ const initAuthMgr = (bInit) => {
       sessionStorage.setItem('wcsdk_CI', JSON.stringify(authConfig));
     }
     authMgr = new PegaAuth('wcsdk_CI');
-    return 
+     
   })
 };
 
@@ -260,14 +260,14 @@ export const sdkGetAuthHeader = () => {
 
           // Setup listener for the reauth event
           if( tokenInfo ) {
-            // eslint-disable-next-line no-undef
+             
             PCore.getPubSubUtils().subscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_FULL_REAUTH, authFullReauth, "authFullReauth");
           } else {
             // customReauth event introduced with 8.8
-            // eslint-disable-next-line no-undef
+             
             const sEvent = PCore.getConstants().PUB_SUB_EVENTS.EVENT_CUSTOM_REAUTH;
             if( sEvent ) {
-              // eslint-disable-next-line no-undef
+               
               PCore.getPubSubUtils().subscribe(sEvent, authFullReauth, "doReauth");
             }
           }
@@ -279,7 +279,7 @@ export const sdkGetAuthHeader = () => {
       .catch( e => {
         // Assume error caught is because token is not valid and attempt a full reauth
         gbC11NBootstrapInProgress = false;
-        // eslint-disable-next-line no-console
+         
         console.error(`Constellation JS Engine bootstrap failed. ${e}`);
         authFullReauth();
       })
@@ -340,7 +340,7 @@ const fireTokenAvailable = (token, bLoadC11n=true) => {
       // do nothing
     }
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   authPostLogin(token, bLoadC11n);
 
   /*
@@ -446,7 +446,7 @@ export const login = (bFullReauth=false) => {
         }).catch( (e) => {
             gbLoginInProgress = false;
             sessionStorage.removeItem("wcsdk_loggingIn");
-            // eslint-disable-next-line no-console
+             
             console.log(e);
             reject(e);
         })
@@ -482,6 +482,7 @@ export const loginIfNecessary = (appName, isEmbedded=false, deferLogin=false) =>
     initAuthMgr(false);
     sessionStorage.removeItem("wcsdk_loggingIn");
     return getAuthMgr(false).then(() => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       authRedirectCallback(window.location.href, ()=> {
         window.location.href = window.location.pathname;
       });
@@ -560,7 +561,7 @@ export const logout = () => {
             window.PCore.getAuthUtils().revokeTokens().then(() => {
                 fnClearAndResolve();
             }).catch(err => {
-                // eslint-disable-next-line no-console
+                 
                 console.log("Error:",err?.message);
             });
         } else {

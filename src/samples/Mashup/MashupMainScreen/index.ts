@@ -7,16 +7,10 @@ import '@lion/textarea/define';
 import '../MashupBundleSwatch';
 import '../MashupResolutionScreen';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { mashupMainScreenStyles } from './mashup-main-screen-styles';
-
-
-
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -207,7 +201,7 @@ class MashupMainScreen extends LitElement {
     const sContent = this.getMashupMainScreenHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // MashupMainScreen not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

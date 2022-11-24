@@ -84,7 +84,7 @@ class Reference extends BridgeBase {
       }
     };
 
-    // eslint-disable-next-line no-console
+     
     if (this.bLogging) { console.log( `Reference: about to call createComponent with pageReference: context: ${this.resolvedConfigProps["context"]}`); }
 
     const viewComponent = this.pConn.createComponent(viewObject, null, null, {
@@ -101,7 +101,7 @@ class Reference extends BridgeBase {
         }
     );
 
-    // eslint-disable-next-line no-console
+     
     if (this.bLogging) { console.log(`Web Component Reference component: newCompPConnect configProps: ${JSON.stringify(newCompPConnect.getConfigProps())}`); }
 
     this.referencedViewComponent = newCompPConnect;

@@ -61,7 +61,7 @@ class SimpleSideBar extends LitElement {
 
 
   getCaseTypes() {
-    const sCTHtml: any[] = [];
+    const sCTHtml: Array<any> = [];
 
     for (let caseTypeButton of this.arButtons) {
       sCTHtml.push(html `
@@ -76,7 +76,7 @@ class SimpleSideBar extends LitElement {
   }
 
   getWorkItems() {
-    const sWIHtml: any[] = [];
+    const sWIHtml: Array<any> = [];
 
     for (let workItem of this.arWorkItems) {
       sWIHtml.push(html `
@@ -92,7 +92,7 @@ class SimpleSideBar extends LitElement {
 
   getSimpleSideBarHtml() : any {
 
-    const sSBHtml: any[] = [];
+    const sSBHtml: Array<any> = [];
 
     sSBHtml.push(html `<h2>Create Work</h2>`);
     sSBHtml.push(html `<div class="psdk-create-work">${this.getCaseTypes()}</div>`);
@@ -107,7 +107,7 @@ class SimpleSideBar extends LitElement {
     const sContent = this.getSimpleSideBarHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // SimpleSideBar not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

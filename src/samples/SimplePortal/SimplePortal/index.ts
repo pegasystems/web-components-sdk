@@ -70,7 +70,7 @@ class SimplePortal extends LitElement {
     const sContent = this.getSimplePortalHtml();
     const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // SimplePortal not derived from BridgeBase, so we need to load Bootstrap CSS
     if( locBootstrap ) {

@@ -4,14 +4,14 @@ import { SdkConfigAccess } from '../../../helpers/config_access';
 import '@lion/button/define';
 import '@lion/textarea/define';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { mashupBundleSwatchStyles } from './mashup-bundle-swatch-styles';
+
+// Declare that PCore will be defined when this code is run
+declare var PCore: any;
 
 
 
@@ -128,7 +128,7 @@ class MashupBundleSwatch extends LitElement {
     const sContent = this.getButtonSwatchHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // MashupBundleSwatch not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

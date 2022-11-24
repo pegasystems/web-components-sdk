@@ -1,5 +1,7 @@
 // Lion doc - https://lion-web.netlify.app/docs/systems/core/overview/ - says
 //  best practice to ensure compatible versions is to import LitElement from @lion/core
+
+/* eslint-disable sonarjs/max-switch-cases */
 import { LitElement, property, html, nothing } from '@lion/core';
 import * as isEqual from 'fast-deep-equal';
 import { bootstrapStyles } from './bootstrap-styles';
@@ -309,7 +311,7 @@ export class BridgeBase extends LitElement {
     }
 
     // and update the component's validation message (if undefined, it should be set to "")
-    // eslint-disable-next-line no-undef
+     
     this.validateMessage = (currentComponentProps.validatemessage === undefined) ? "" : currentComponentProps.validatemessage;
 
     // if have an error message, force update of component
@@ -354,7 +356,7 @@ export class BridgeBase extends LitElement {
     }
 
     
-    if ((undefined === this.thePConn) || (null === this.thePConn)) {
+    if ((undefined === this.thePConn) || (this.thePConn === null)) {
       console.error(`${this.baseComponentName}: bad call to getComponentProps: thePConn: ${this.thePConn} from component: ${this.theComponentName}. Expected for Boilerplate example`);
       return compProps;
     } else {
@@ -457,7 +459,7 @@ export class BridgeBase extends LitElement {
   */
   processActions() {
     if (this.bDebug) { debugger; }
-    if ((undefined === this.thePConn) || (null === this.thePConn)) {
+    if ((undefined === this.thePConn) || (this.thePConn === null)) {
       console.error(`${this.baseComponentName}: bad call to processActions: thePConn: ${this.thePConn} from component: ${this.theComponentName}. Expected for Boilerplate example`);
       return;
     }
@@ -483,7 +485,7 @@ export class BridgeBase extends LitElement {
    *  assist in debugging the /embedded use case when some components are set to only show
    *  the FlowAction and not the rest of the UI around it.
   */
-  // eslint-disable-next-line no-unused-vars
+   
   prepareForRender(inDisplayOnlyFA: boolean = false) {
     if (this.bDebug) { debugger; }
     if (this.bLogging) { console.log(`${this.theComponentName}: prepare for render`); }
