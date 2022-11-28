@@ -14,6 +14,7 @@ import '../templates/CaseSummary';
 import '../DeferLoad';
 import '../templates/DefaultForm';
 import '../templates/DataReference';
+import '../templates/SimpleTable'
 
 import { getAllFields } from '../templates/utils';
 
