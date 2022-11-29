@@ -128,7 +128,7 @@ class Stages extends BridgeBase {
       lastStage = arStageResults[arStageResults.length -1];
     }
 
-    const arStagesHtml: any[] = [];
+    const arStagesHtml: Array<any> = [];
 
     for (let stage of arStageResults) {
       arStagesHtml.push(html`${this.getStageOuterHtml(stage)}`);

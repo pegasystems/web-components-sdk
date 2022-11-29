@@ -1,10 +1,12 @@
 // Helper singleton class to assist with loading and accessing
 //  the SDK Config JSON
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import {sdkGetAuthHeader} from './authManager';
 
 // Create a singleton for this class (with async loading of config file) and export it
 // Note: Initialzing SdkConfigAccess to null seems to cause lots of compile issues with references
 //  within other components and the value potentially being null (so try to leave it undefined)
+/* eslint-disable-next-line import/no-mutable-exports */
 export let SdkConfigAccess;
 let SdkConfigAccessCreateInProgress = false;
 
@@ -51,14 +53,14 @@ class ConfigAccess {
 
   // Adjust any settings like setting up defaults or making sure URIs have a trailing slash
   fixupConfigSettings() {
-    const oServerConfig = this.sdkConfig["serverConfig"];
+    const oServerConfig = this.sdkConfig.serverConfig;
     // If not present, then use current root path
     oServerConfig.sdkContentServerUrl = oServerConfig.sdkContentServerUrl || window.location.origin;
     // Needs a trailing slash so add one if not there
     if( !oServerConfig.sdkContentServerUrl.endsWith('/') ) {
       oServerConfig.sdkContentServerUrl = `${oServerConfig.sdkContentServerUrl}/`;
     }    
-    console.log(`Using sdkContentServerUrl: ${this.sdkConfig["serverConfig"].sdkContentServerUrl}`);
+    console.log(`Using sdkContentServerUrl: ${this.sdkConfig.serverConfig.sdkContentServerUrl}`);
 
     // Don't want a trailing slash for infinityRestServerUrl
     if( oServerConfig.infinityRestServerUrl.endsWith('/') ) {
@@ -92,7 +94,7 @@ class ConfigAccess {
     if( Object.keys(this.sdkConfig).length === 0 ) {
       const config = this.getSdkConfig();
     }
-    return this.sdkConfig["authConfig"];
+    return this.sdkConfig.authConfig;
   }
 
   /**
@@ -103,7 +105,7 @@ class ConfigAccess {
     if( Object.keys(this.sdkConfig).length === 0 ) {
       const config = this.getSdkConfig();
     }
-    return this.sdkConfig["serverConfig"];
+    return this.sdkConfig.serverConfig;
   }
 
 
@@ -141,7 +143,7 @@ class ConfigAccess {
     const serverUrl = serverConfig.infinityRestServerUrl;
     const appAlias = serverConfig.appAlias;
     const appAliasPath = appAlias ? `/app/${appAlias}` : '';
-    const arExcludedPortals = serverConfig["excludePortals"];
+    const arExcludedPortals = serverConfig.excludePortals;
 
     // Using v1 API here as v2 data_views is not able to access same data page currently.  Should move to avoid having this logic to find
     //  a default portal or constellation portal and rather have Constellation JS Engine API just load the default portal
@@ -260,7 +262,6 @@ export async function getSdkConfig() {
   });
 }
 
-if( true ) {
-  let ignore = getSdkConfig();
-}
+
+let ignore = getSdkConfig();
 

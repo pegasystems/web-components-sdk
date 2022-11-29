@@ -20,4 +20,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies and run lint
         run: npm ci
-      - run: echo "Run lint when linting is added to this project!"
+      - run: npm run lint

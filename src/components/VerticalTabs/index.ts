@@ -69,7 +69,7 @@ class VerticalTabs extends LitElement {
     //   html` class="psdk-tab-unselected" aria-selected="false" `
     // }
 
-    const arTabsHtml: any[] = [];
+    const arTabsHtml: Array<any> = [];
 
     let tabCount = 0;
     for (let tab of arTabs) {
@@ -100,7 +100,7 @@ class VerticalTabs extends LitElement {
     const sContent = html`${this.getVerticalTabsHtml(this.tabConfig)}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // VerticalTabs not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

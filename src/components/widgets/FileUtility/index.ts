@@ -225,7 +225,7 @@ class FileUtility extends BridgeBase {
   }
 
   getFilesHtml() : any {
-    const arFilesHtml: any[] = [];
+    const arFilesHtml: Array<any> = [];
 
     for (let myFile of this.arFiles) {
       arFilesHtml.push(html`

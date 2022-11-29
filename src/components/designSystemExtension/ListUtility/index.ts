@@ -70,7 +70,7 @@ class ListUtility extends LitElement {
 
 
   getActionButtonMenuHtml(menuActions: Array<any>) {
-    const arButtonMenuHtml: any[] = [];
+    const arButtonMenuHtml: Array<any> = [];
 
     for (let actionMenu of menuActions) {
       arButtonMenuHtml.push(html`
@@ -232,7 +232,7 @@ class ListUtility extends LitElement {
     const sContent = html`${this.getListUtilityHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // ListUtility not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

@@ -1,4 +1,4 @@
-/* eslint-disable no-dupe-class-members */
+ 
 class PegaAuth {
 
   constructor(ssKeyConfig) {
@@ -79,7 +79,7 @@ class PegaAuth {
       };
 
       const redirectOrigin = fnGetRedirectUriOrigin();
-      // eslint-disable-next-line no-restricted-globals
+       
       const state = window.btoa(location.origin);
 
       return new Promise( (resolve, reject) => {
@@ -96,13 +96,13 @@ class PegaAuth {
                   try{
                       if( bWinIframe ) {
                           elIframe.contentWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
-                          // eslint-disable-next-line no-console
+                           
                           console.log("authjs(login): loaded a page in iFrame");
                       } else {
                           myWindow.postMessage({type:"PegaAuth"}, redirectOrigin);
                       }
                   } catch(e) {
-                      // eslint-disable-next-line no-console
+                       
                       console.log("authjs(login): Exception trying to postMessage on load");
                   }
               };
@@ -123,7 +123,7 @@ class PegaAuth {
                   try {
                       myWindow.addEventListener("load", myWinOnLoad, true);
                   } catch(e) {
-                      // eslint-disable-next-line no-console
+                       
                       console.log("authjs(login): Exception trying to add onload handler to opened window;")
                   }
               };
@@ -179,7 +179,7 @@ class PegaAuth {
                   const bCloseWithinFrame = false;
                   elCloseBtn = document.createElement('img');
                   elCloseBtn.onclick = fnCloseAndReject;
-                  // eslint-disable-next-line prefer-template
+                   
                   elCloseBtn.src = 'data:image/svg+xml;base64,' + window.btoa(svgCloseBtn);
                   const oBtnStyle = elCloseBtn.style;
                   oBtnStyle.cursor = 'pointer';
@@ -241,14 +241,14 @@ class PegaAuth {
                       return;
                   if( !event.data || !event.data.type || event.data.type !== "PegaAuth" )
                       return;
-                  // eslint-disable-next-line no-console
+                   
                   console.log("authjs(login): postMessage received with code");
                   const code = event.data.code.toString();
                   fnGetTokenAndFinish(code);
               };
               window.addEventListener("message", authMessageReceiver, false);
               window.authCodeCallback = (code) => {
-                  // eslint-disable-next-line no-console
+                   
                   console.log("authjs(login): authCodeCallback used with code");
                   fnGetTokenAndFinish(code);
               };
@@ -258,10 +258,10 @@ class PegaAuth {
 
   // Login redirect
   loginRedirect() {
-      // eslint-disable-next-line no-restricted-globals
+       
       const state = btoa(location.origin);
       this.#buildAuthorizeUrl(state).then((url) => {
-          // eslint-disable-next-line no-restricted-globals
+           
           location.href = url;
       });
   }
@@ -274,7 +274,7 @@ class PegaAuth {
 
       const {clientId, clientSecret, redirectUri, tokenUri, codeVerifier} = this.config;
 
-      // eslint-disable-next-line no-restricted-globals
+       
       const queryString = location.search;
       const urlParams = new URLSearchParams(queryString);
       const code = authCode || urlParams.get("code");
@@ -317,7 +317,7 @@ class PegaAuth {
           return token;
       })
       .catch(e => {
-        // eslint-disable-next-line no-console
+         
         console.log(e)
       });
   }
@@ -357,7 +357,7 @@ class PegaAuth {
           return token;
       })
       .catch(e => {
-        // eslint-disable-next-line no-console
+         
         console.log(e)
       });
   }
@@ -392,12 +392,12 @@ class PegaAuth {
           })
           .then((response) => {
               if( !response.ok ) {
-                  // eslint-disable-next-line no-console
+                   
                   console.log( `Error revoking ${prop}:${response.status}` );
               }
           })
           .catch(e => {
-              // eslint-disable-next-line no-console
+               
               console.log(e);
           });
       } );
@@ -423,7 +423,7 @@ class PegaAuth {
         if( response.ok) {
             return response.json();
         } else {
-            // eslint-disable-next-line no-console
+             
             console.log( `Error invoking userinfo: ${response.status}` );
         }
     })
@@ -431,20 +431,20 @@ class PegaAuth {
         return data;
     })
     .catch(e => {
-        // eslint-disable-next-line no-console
+         
         console.log(e);
     });
   }
 
   /* eslint-enable camelcase */
 
-  // eslint-disable-next-line class-methods-use-this
+   
   #sha256Hash(str) {
       return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
   }
 
   // Base64 encode
-  // eslint-disable-next-line class-methods-use-this
+   
   #encode64(buff) {
       return window.btoa(new Uint8Array(buff).reduce((s, b) => s + String.fromCharCode(b), ''));
   }
@@ -467,7 +467,7 @@ class PegaAuth {
           }
       ).catch(
           (error) => {
-            // eslint-disable-next-line no-console
+             
             console.log(error)
           }
       ).finally(

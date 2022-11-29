@@ -117,7 +117,7 @@ class ListView extends BridgeBase {
         // updatedRefList is an array with an entry for each row of data to be shown in the ListView.
         //  (Partial) Example entry in array:
         //  {pxUrgencyAssign: 10, pxRefObjectInsName: "S-58001", pxFlowName: "NewService_Flow", pxAssignedOperatorID: "Rep.CableCo", pxUpdateDateTime: null, ...}
-        // eslint-disable-next-line no-unused-vars
+         
         let updatedRefList = this.updateData(tableDataResults, this.fields);
 
         // vaadin-list experiment
@@ -417,7 +417,7 @@ class ListView extends BridgeBase {
           // And set the proper vaadin-grid table height
           this._handleResize();
 
-        }).bind(this), 50);
+        }), 50);
 
         break;
     }

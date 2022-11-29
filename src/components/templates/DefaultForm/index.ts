@@ -144,7 +144,7 @@ class DefaultForm extends BridgeBase {
     const sContent = html`${this.getDefaultFormHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
     
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // DefaultForm not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);

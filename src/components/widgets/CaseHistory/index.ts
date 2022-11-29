@@ -162,7 +162,7 @@ class CaseHistory extends BridgeBase {
       </thead>
     `;
 
-    // eslint-disable-next-line no-case-declarations
+     
     const theDataRows = html`
       <tbody>
         ${this.rowData.map((row) => html`<tr scope="row">

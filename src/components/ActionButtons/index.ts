@@ -28,7 +28,7 @@ class ActionButtons extends LitElement {
 
 
   mainButtons(): any {
-    const arButtonHtml: any[] = [];
+    const arButtonHtml: Array<any> = [];
     // arStagesHtml.push(html`<div class="psdk-stages">`);
     // arStagesHtml.push(html`<div class="psdk-stages-div">`);
 
@@ -53,7 +53,7 @@ class ActionButtons extends LitElement {
   }
 
   secondaryButtons(): any {
-    const arButtonHtml: any[] = [];
+    const arButtonHtml: Array<any> = [];
     // arStagesHtml.push(html`<div class="psdk-stages">`);
     // arStagesHtml.push(html`<div class="psdk-stages-div">`);
 
@@ -95,7 +95,7 @@ class ActionButtons extends LitElement {
 
     const sContent = html`${this.aButtonsHtml()}`;
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     arHtml.push(actionButtonsStyles);
     arHtml.push(sContent);

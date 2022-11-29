@@ -153,6 +153,7 @@ class Text extends BridgeBase {
     let theContent: any = nothing;
 
     if (this.bVisible) {
+      /* eslint-disable-next-line no-nested-ternary */
       theContent = (label !== undefined && !noLabel && text !== undefined) ?
       html`<div class="form-group"><lion-input .modelValue=${text} label=${label} readonly></lion-input></div>` :
         (label !== undefined && text === undefined ?

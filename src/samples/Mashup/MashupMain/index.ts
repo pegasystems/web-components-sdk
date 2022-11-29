@@ -7,17 +7,11 @@ import '@lion/textarea/define';
 import '../MashupMainScreen';
 import { compareSdkPCoreVersions } from '../../../helpers/versionHelpers';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { mashupMainStyles } from './mashup-main-styles';
-
-
-
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -78,7 +72,7 @@ class MashupMain extends LitElement {
 
   getMashupMainHtml() : any {
 
-    const mMHtml: any[] = [];
+    const mMHtml: Array<any> = [];
 
     mMHtml.push(html `${this.getToolbarHtml()}`);
 
@@ -100,7 +94,7 @@ class MashupMain extends LitElement {
     const sContent = this.getMashupMainHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // MashupMain not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
@@ -153,7 +147,7 @@ class MashupMain extends LitElement {
     // load the Mashup and handle the onPCoreEntry response that establishes the
     //  top level Pega root element (likely a RootContainer)
 
-    // eslint-disable-next-line no-undef
+     
     myLoadMashup("pega-root", false);   // this is defined in bootstrap shell that's been loaded already
 
   }

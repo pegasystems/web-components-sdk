@@ -210,7 +210,7 @@ export class FormComponentBase extends BridgeBase {
     }
   }
 
-  // eslint-disable-next-line no-unused-vars
+   
   fieldOnClick(event: any) {
     if (this.bDebug){ debugger; }
     // currently a no-op

@@ -195,7 +195,7 @@ class CaseView extends BridgeBase {
 
 
   getActionButtonMenuHtml(availableActions: Array<any>, availableProcesses: Array<any>) {
-    const arButtonMenuHtml: any[] = [];
+    const arButtonMenuHtml: Array<any> = [];
 
     for (let actionMenu of availableActions) {
       arButtonMenuHtml.push(html`

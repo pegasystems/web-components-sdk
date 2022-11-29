@@ -89,7 +89,7 @@ class DetailsFields extends LitElement {
   }
 
   getFieldsHtml(arFields) : any {
-    let arFHtml: any[] = [];
+    let arFHtml: Array<any> = [];
 
     for (let field of arFields) {
       arFHtml.push( html`
@@ -148,7 +148,7 @@ class DetailsFields extends LitElement {
     const sContent = html`${this.getDetailsFieldsHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: any[] = [];
+    let arHtml: Array<any> = [];
 
     // DetailsFields not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
