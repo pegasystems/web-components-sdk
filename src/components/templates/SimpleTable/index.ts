@@ -23,7 +23,6 @@ class SimpleTable extends BridgeBase {
       console.log(`${this.theComponentName}: constructor`);
     }
     if (this.bDebug) {
-      // eslint-disable-next-line no-debugger
       debugger;
     }
   }

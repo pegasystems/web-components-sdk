@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/max-switch-cases */
 // Lion doc - https://lion-web.netlify.app/docs/systems/core/overview/ - says
 //  best practice to ensure compatible versions is to import LitElement from @lion/core
 import { LitElement, property, html, nothing } from "@lion/core";
@@ -325,7 +326,6 @@ export class BridgeBase extends LitElement {
     }
 
     // and update the component's validation message (if undefined, it should be set to "")
-    // eslint-disable-next-line no-undef
     this.validateMessage = currentComponentProps.validatemessage === undefined ? "" : currentComponentProps.validatemessage;
 
     // if have an error message, force update of component
@@ -368,7 +368,7 @@ export class BridgeBase extends LitElement {
       }
     }
 
-    if (undefined === this.thePConn || null === this.thePConn) {
+    if (undefined === this.thePConn || this.thePConn === null) {
       console.error(
         `${this.baseComponentName}: bad call to getComponentProps: thePConn: ${this.thePConn} from component: ${this.theComponentName}. Expected for Boilerplate example`
       );
@@ -476,7 +476,7 @@ export class BridgeBase extends LitElement {
     if (this.bDebug) {
       debugger;
     }
-    if (undefined === this.thePConn || null === this.thePConn) {
+    if (undefined === this.thePConn || this.thePConn === null) {
       console.error(
         `${this.baseComponentName}: bad call to processActions: thePConn: ${this.thePConn} from component: ${this.theComponentName}. Expected for Boilerplate example`
       );

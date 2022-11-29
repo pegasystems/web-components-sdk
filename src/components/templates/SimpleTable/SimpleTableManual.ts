@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { html, customElement, property } from "@lion/core";
 import { BridgeBase } from "../../../bridge/BridgeBase";
 // NOTE: you need to import ANY component you may render.
