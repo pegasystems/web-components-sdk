@@ -67,13 +67,34 @@ class Details extends BridgeBase {
       }
     }
 
-
-  
     // get primary and secodary fields
     for (let kid of this.children) {
+      this.arFields = [];
       let pKid = kid.getPConnect();
-      let pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
-      this.arFields = pKidData.children;
+      const fields = pKid.getChildren();
+      fields?.forEach((field) => {
+        const thePConn = field.getPConnect();
+        const theCompType = thePConn.getComponentName().toLowerCase();
+        if (theCompType === 'reference') {
+          const configObj = thePConn.getReferencedView();
+          configObj.config.readOnly = true;
+          configObj.config.displayMode = 'LABELS_LEFT';
+          const propToUse = { ...thePConn.getInheritedProps() };
+          configObj.config.label = propToUse?.label;
+          const loadedPConn = thePConn.getReferencedViewPConnect(true).getPConnect();
+          const data = {
+            type: theCompType,
+            pConn: loadedPConn
+          };
+          this.arFields.push(data);
+        } else {
+          const data = {
+            type: theCompType,
+            config: thePConn.getConfigProps()
+          }
+          this.arFields.push(data);
+        }
+      });
     }
   
   }
