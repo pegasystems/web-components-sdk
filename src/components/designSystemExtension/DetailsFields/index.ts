@@ -1,7 +1,7 @@
 import { html, customElement, property, LitElement } from '@lion/core';
 import { SdkConfigAccess } from '../../../helpers/config_access';
 import { format } from '../../../helpers/formatters/';
-
+import '../../../components/View';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
@@ -92,7 +92,14 @@ class DetailsFields extends LitElement {
     let arFHtml: Array<any> = [];
 
     for (let field of arFields) {
-      arFHtml.push( html`
+      if (field?.type === "reference") {
+        arFHtml.push( html`
+        <div>
+          <view-component .pConn=${field.pConn}></view-component>
+        </div>
+      `);
+      } else {
+        arFHtml.push( html`
         <div class="psdk-details-fields-single">
           <dt class="psdk-details-fields-label">
           ${this.getFieldLabel(field)}
@@ -102,6 +109,8 @@ class DetailsFields extends LitElement {
           </dd>
         </div>
       `);
+      }
+      
 
     }
 
