@@ -324,12 +324,16 @@ class SimpleTableManual extends BridgeBase {
       </thead>
     `;
 
+    /**
+     * TODO: Display icon instead of delete text once icons issue got fixed
+     * <img @click=${() => this.deleteRecord(index)} class="psdk-utility-card-action-svg-icon" src=${this.menuIconOverride} />
+     */
     const theDataRows = html`<tbody>
       ${this.elementsData.map(
         (row: any, index: number) => html`<tr scope="row">
           ${row.map((config) => html` <td>${BridgeBase.getComponentFromConfigObj(config)}</td> `)}
           <td>
-            <img @click=${() => this.deleteRecord(index)} class="psdk-utility-card-action-svg-icon" src=${this.menuIconOverride} />
+            <button @click=${() => this.deleteRecord(index)}>delete</button>
           </td>
         </tr>`
       )}
