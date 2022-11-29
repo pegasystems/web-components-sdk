@@ -3,7 +3,8 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../SimpleTableSelect';
 import '../../forms/Dropdown';
-
+import '../MultiReferenceReadonly';
+import '../SingleReferenceReadonly';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
@@ -32,9 +33,10 @@ class DataReference extends BridgeBase {
   firstChildMeta: any = {};
   refList: any;
   canBeChangedInReviewMode: Boolean = false;
-  propName: String = ""
-
-
+  propName: String = "";
+  displaySingleRef = false;
+  displayMultiref = false;
+  firstChildPConnect: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -127,7 +129,7 @@ class DataReference extends BridgeBase {
 
   setupDataRefUI(): any {
     if (this.firstChildMeta.type !== "Region") {
-      const firstChildPConnect = this.thePConn.getChildren()[0].getPConnect;
+      this.firstChildPConnect = this.thePConn.getChildren()[0].getPConnect;
       /* remove refresh When condition from those old view so that it will not be used for runtime */
       if (this.firstChildMeta?.config?.readOnly) {
         delete this.firstChildMeta.config.readOnly;
@@ -157,7 +159,7 @@ class DataReference extends BridgeBase {
 
       // In Cosmos React DX Component, the implementation of handleSelection was here!
 
-      const theRecreatedFirstChild = this.recreatedFirstChild(firstChildPConnect);
+      const theRecreatedFirstChild = this.recreatedFirstChild(this.firstChildPConnect);
 
       // Only include the views region for rendering when it has content
       const viewsRegion = this.rawViewMetadata.children[1];
@@ -245,11 +247,11 @@ class DataReference extends BridgeBase {
   recreatedFirstChild(inChildPConn): any /* = useMemo(() => */ {
     const { type, config } = this.firstChildMeta;
     if (!this.canBeChangedInReviewMode && this.isDisplayModeEnabled && this.selectionMode === SELECTION_MODE.SINGLE) {
-      return null;
+      this.displaySingleRef = true;
     }
 
     if (this.isDisplayModeEnabled && this.selectionMode === SELECTION_MODE.MULTI) {
-      return null;
+      this.displayMultiref = true;
     }
 
     // In the case of a datasource with parameters you cannot load the dropdown before the parameters
@@ -294,11 +296,21 @@ class DataReference extends BridgeBase {
   processChildrenToRender(): any {
     let childrenToRenderAsComponents: Array<any> = [];
 
-    this.childrenToRender.map((child, i) => {
-      childrenToRenderAsComponents.push(this.convertChildToComponent(child));
-    });
+    if (this.displayMultiref) {
+      return html `<multi-reference-readonly .pConn=${this.firstChildPConnect()} .hideLabel=${this.hideLabel} .label=${this.propsToUse.label}>
+      </multi-reference-readonly>`;
+    } else if (this.displaySingleRef) {
+      return html `<single-reference-readonly .pConn=${this.firstChildPConnect()}>
+      </single-reference-readonly>`;
+    } else {
+      this.childrenToRender.map((child) => {
+        childrenToRenderAsComponents.push(this.convertChildToComponent(child));
+      });
+  
+      return childrenToRenderAsComponents;
+    }
 
-    return childrenToRenderAsComponents;
+    
 
   }
 

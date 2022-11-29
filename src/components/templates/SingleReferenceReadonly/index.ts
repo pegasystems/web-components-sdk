@@ -1,25 +1,17 @@
 import { html, customElement, property } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
-import '../../Region';
 
 // import the component's styles as HTML with <style>
-import { detailsTwoColumnStyles } from './details-two-column-styles';
+import '../../../components/forms/SemanticLink';
 
-import '../../designSystemExtension/DetailsFields';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 
-@customElement('details-two-column-component')
-class DetailsTwoColumn extends BridgeBase {
-  @property( {attribute: false} ) viewName = null;
-
-  arFields: Array<any> = [];
-  arFields2: Array<any> = [];
-  arFields3: Array<any> = [];
-
+@customElement('single-reference-readonly')
+class SingleReferenceReadonly extends BridgeBase {
+  @property( {attribute: false, type: Object } ) pConn; 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -29,16 +21,12 @@ class DetailsTwoColumn extends BridgeBase {
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
     if (this.bDebug){ debugger; }
 
-    this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
     if (this.bDebug){ debugger; }
-
-    // setup this component's styling...
-    this.theComponentStyleTemplate = detailsTwoColumnStyles;
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
@@ -60,33 +48,7 @@ class DetailsTwoColumn extends BridgeBase {
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
     if (this.bDebug){ debugger; }
-    const theConfigProps = this.thePConn.getConfigProps();
 
-  
- 
-    for( let prop in ['viewName']) {
-      if( this[prop] != undefined ) {
-        this[prop] = theConfigProps[prop];
-      }
-    }
-
-
-
-    for (let kid of this.children) {
-      let pKid = kid.getPConnect();
-      let pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
-      if (this.children.indexOf(kid) == 0) {
-        this.arFields = pKidData.children;
-      }
-      else {
-        this.arFields2 = pKidData.children;
-      }
-      
-    }
-
-
-
-  
   }
 
   /**
@@ -106,45 +68,28 @@ class DetailsTwoColumn extends BridgeBase {
     }
   }
 
+  getSingleReferenceHtml(): any {
+    const singleRefHtml = html`<semantic-link .pConn=${this.pConn}></semantic-link>`;
+
+    return singleRefHtml;
+  }
+
   render(){
+    console.log('pConnn singleref', this.pConn);
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
     if (this.bDebug){ debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
+    const sContent = html`${this.getSingleReferenceHtml()}`;
 
-    const {viewName} = this;
-
-    // Title
-    if( viewName !== null && viewName !== "" ) {
-      const title = html`<text-form value=${viewName}></text-form>`;
-      this.renderTemplates.push( title );
-    }
-
-    // React version uses <Grid container={cols, gap:2, aslignItems:'start'} with Flex child element
-    //  <Flex conainer={direction:"column", itemGap: 1}>{buildReadonlyRegion}</Flex>
-
-    // Opted not to use formatted-text-form as would have to emit each web component separately.  Better to have a
-    //  a single component with a single set of styles defined for the entire list
-
-    const theContent = html`
-      <div class="psdk-grid-filter">
-        <div>
-            <details-fields-extension .arFields="${this.arFields}"></details-fields-extension>
-        </div>
-        <div>
-            <details-fields-extension .arFields="${this.arFields2}"></details-fields-extension>
-        </div>
-      </div>
-    `;
-    this.renderTemplates.push(theContent);
-
+    this.renderTemplates.push(sContent);
+    
     return this.renderTemplates;
 
   }
 
-
 }
 
-export default DetailsTwoColumn;
+export default SingleReferenceReadonly;

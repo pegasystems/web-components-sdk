@@ -2,10 +2,22 @@ import { html } from '@lion/core';
 
 export const detailsFieldsStyles = html`
   <style>
+    .psdk-grid-filter {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        column-gap: calc(2 * 0.5rem);
+        row-gap: calc(2 * 0.5rem);
+        align-items: center;
+        font-size: 0.875rem;
+    }
 
+    .psdk-field-label {
+        color: rgba(0, 0, 0, 0.54);
+        display: block;
+        font-weight: 400;
+    }
 
     .psdk-details-group {
-        display: flex;
         flex-direction: row;
         justify-content: space-between;
     }
@@ -46,9 +58,7 @@ export const detailsFieldsStyles = html`
     }
 
     span.psdk-details-text-style {
-        font-size: 0.8125rem;
         font-weight: 400;
-        font-family: "Open Sans";
     }
 
     span.psdk-details-status-style {
