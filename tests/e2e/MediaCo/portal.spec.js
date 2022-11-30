@@ -44,7 +44,7 @@ test.describe('E2E test', () => {
     await page.locator('body').click(); //clicking outside to dismiss combobox
 
     await page.fill('lion-input-email[datatestid="CE8AE9DA5B7CD6C3DF2929543A9AF92D"] input', 'john@doe.com');
-    const futureDate = common.getFutureDate();
+    const futureDate = common.getNextDay();
     await page.type('lion-input-dateonly[datatestid="E0BA356AE552ACD4326D51E61F4279AC"] input', futureDate);
     await page.locator('button:has-text("Submit")').click();
 
