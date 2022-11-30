@@ -111,13 +111,13 @@ module.exports = (env, argv) => {
 
   // need to set mode to 'development' to get LiveReload to work
   //  and for debugger statements to not be stripped out of the bundle
-  initConfig = {
+  const initConfig = {
     mode: 'development',
     entry: {
         app: './src/index.ts'
     },
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        static: path.join(__dirname, 'dist'),
         historyApiFallback: true,
         host: "localhost",
         port: 3501,
