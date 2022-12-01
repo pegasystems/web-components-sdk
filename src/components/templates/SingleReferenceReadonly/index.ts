@@ -75,7 +75,6 @@ class SingleReferenceReadonly extends BridgeBase {
   }
 
   render(){
-    console.log('pConnn singleref', this.pConn);
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
     if (this.bDebug){ debugger; }
 

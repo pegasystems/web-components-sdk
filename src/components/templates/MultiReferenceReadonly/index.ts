@@ -12,6 +12,7 @@ declare var PCore: any;
 @customElement('multi-reference-readonly')
 class MultiReferenceReadonly extends BridgeBase {
   @property( {attribute: false, type: Object } ) pConn; 
+  @property( {attribute: false, type: String } ) label;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -70,6 +71,9 @@ class MultiReferenceReadonly extends BridgeBase {
   }
 
   getMultiReferenceHtml(): any {
+    const configObj = this.pConn.getReferencedView();
+    configObj.config.label = this.label;
+    this.pConn = this.pConn.getReferencedViewPConnect(true).getPConnect();
     const multiRefHtml = html`<simple-table-manual .pConn=${this.pConn}></simple-table-manual>`;
 
     return multiRefHtml;

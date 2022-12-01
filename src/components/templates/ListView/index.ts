@@ -39,6 +39,7 @@ class ListView extends BridgeBase {
   waitingForData: Boolean = true;
   selectionMode: string = '';
   selectedValue: any;
+  rowClickAction: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -75,6 +76,7 @@ class ListView extends BridgeBase {
     if (this.bDebug){ debugger; }
 
     const theConfigProps = this.thePConn.getConfigProps();
+    this.rowClickAction = theConfigProps.rowClickAction;
     const componentConfig = this.thePConn.getRawMetadata().config;
     const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
@@ -330,14 +332,15 @@ class ListView extends BridgeBase {
   };
 
   clickRowInGrid(inDetail: any) {
-    const { pxRefObjectClass, pzInsKey } = inDetail.value;
-    const theTarget = this.thePConn.getContainerName();
-    const options = { "containerName": theTarget };
+    if (this.rowClickAction === 'openAssignment') {
+      const { pxRefObjectClass, pzInsKey } = inDetail.value;
+      const theTarget = this.thePConn.getContainerName();
+      const options = { "containerName": theTarget };
 
-    // const theInsKey = inDetail.value["pzInsKey"];
-    // window.alert(`clicked on <vaadin-grid>: inDetail.value: ${JSON.stringify(inDetail.value)}`);
-    this.thePConn.getActionsApi().openAssignment(pzInsKey, pxRefObjectClass, options);
-
+      // const theInsKey = inDetail.value["pzInsKey"];
+      // window.alert(`clicked on <vaadin-grid>: inDetail.value: ${JSON.stringify(inDetail.value)}`);
+      this.thePConn.getActionsApi().openAssignment(pzInsKey, pxRefObjectClass, options);
+    }
   }
 
   // Resize handler to force adjustment of height
