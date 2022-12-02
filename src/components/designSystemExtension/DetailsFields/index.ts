@@ -100,8 +100,8 @@ class DetailsFields extends LitElement {
       `);
       } else {
         arFHtml.push( html`
-        <div class="psdk-details-fields-single">
-          <dt class="psdk-details-fields-label">
+        <div class="psdk-grid-filter">
+          <dt class="psdk-field-label">
           ${this.getFieldLabel(field)}
           </dt>
           <dd class="psdk-csf-primary-field-value">
@@ -126,16 +126,6 @@ class DetailsFields extends LitElement {
         <div class="psdk-details-fields">
           <dl class="psdk-details-fields-primary">
           ${this.getFieldsHtml(this.arFields)}
-          </dl>
-        </div>
-        <div class="psdk-details-fields">
-          <dl class="psdk-details-fields-primary">
-          ${this.getFieldsHtml(this.arFields2)}
-          </dl>
-        </div>
-        <div class="psdk-details-fields">
-          <dl class="psdk-details-fields-primary">
-          ${this.getFieldsHtml(this.arFields3)}
           </dl>
         </div>
      </div>

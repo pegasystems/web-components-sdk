@@ -1,25 +1,17 @@
 import { html, customElement, property } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
-import '../../Region';
 
 // import the component's styles as HTML with <style>
-import { detailsTwoColumnStyles } from './details-two-column-styles';
+import { semanticLinkStyles } from './semantic-link-styles'
 
-import '../../designSystemExtension/DetailsFields';
+@customElement('semantic-link')
+class SemanticLink extends BridgeBase {
+  @property( {attribute: false, type: Object } ) pConn; 
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
-
-@customElement('details-two-column-component')
-class DetailsTwoColumn extends BridgeBase {
-  @property( {attribute: false} ) viewName = null;
-
-  arFields: Array<any> = [];
-  arFields2: Array<any> = [];
-  arFields3: Array<any> = [];
-
+  value: string = '';
+  displayMode;
+  label;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -36,12 +28,13 @@ class DetailsTwoColumn extends BridgeBase {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
     if (this.bDebug){ debugger; }
-
-    // setup this component's styling...
-    this.theComponentStyleTemplate = detailsTwoColumnStyles;
-
+    this.theComponentStyleTemplate = semanticLinkStyles;
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
+    const theConfigProps = this.pConn.getConfigProps();
+    this.value = theConfigProps.text ||  "---";
+    this.displayMode = theConfigProps.displayMode;
+    this.label = theConfigProps.label;
     
   }
 
@@ -60,33 +53,7 @@ class DetailsTwoColumn extends BridgeBase {
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
     if (this.bDebug){ debugger; }
-    const theConfigProps = this.thePConn.getConfigProps();
 
-  
- 
-    for( let prop in ['viewName']) {
-      if( this[prop] != undefined ) {
-        this[prop] = theConfigProps[prop];
-      }
-    }
-
-
-
-    for (let kid of this.children) {
-      let pKid = kid.getPConnect();
-      let pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
-      if (this.children.indexOf(kid) == 0) {
-        this.arFields = pKidData.children;
-      }
-      else {
-        this.arFields2 = pKidData.children;
-      }
-      
-    }
-
-
-
-  
   }
 
   /**
@@ -106,6 +73,18 @@ class DetailsTwoColumn extends BridgeBase {
     }
   }
 
+  getSingleReferenceHtml(): any {
+    if (this.displayMode === 'LABELS_LEFT' || (!this.displayMode && this.label !== undefined)) {
+        const semanticHtml = html`<div>
+            <div class="psdk-grid-filter">
+                <div class="psdk-field-label">${this.label}</div>
+                <div class="psdk-value">${this.value}</div>
+            </div>
+        </div>`
+        return semanticHtml;
+    }
+  }
+
   render(){
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
     if (this.bDebug){ debugger; }
@@ -113,38 +92,14 @@ class DetailsTwoColumn extends BridgeBase {
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
+    const sContent = html`${this.getSingleReferenceHtml()}`;
 
-    const {viewName} = this;
-
-    // Title
-    if( viewName !== null && viewName !== "" ) {
-      const title = html`<text-form value=${viewName}></text-form>`;
-      this.renderTemplates.push( title );
-    }
-
-    // React version uses <Grid container={cols, gap:2, aslignItems:'start'} with Flex child element
-    //  <Flex conainer={direction:"column", itemGap: 1}>{buildReadonlyRegion}</Flex>
-
-    // Opted not to use formatted-text-form as would have to emit each web component separately.  Better to have a
-    //  a single component with a single set of styles defined for the entire list
-
-    const theContent = html`
-      <div class="psdk-grid-filter">
-        <div>
-            <details-fields-extension .arFields="${this.arFields}"></details-fields-extension>
-        </div>
-        <div>
-            <details-fields-extension .arFields="${this.arFields2}"></details-fields-extension>
-        </div>
-      </div>
-    `;
-    this.renderTemplates.push(theContent);
-
+    this.renderTemplates.push(sContent);
+    
     return this.renderTemplates;
 
   }
 
-
 }
 
-export default DetailsTwoColumn;
+export default SemanticLink;

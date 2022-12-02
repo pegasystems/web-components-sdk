@@ -104,7 +104,7 @@ class SimpleTableManual extends BridgeBase {
       children, // destructure children into an array var: "resolvedFields"
       presets,
       allowTableEdit,
-      labelProp,
+      label: labelProp,
       propertyLabel,
     } = this.configProps;
 
@@ -354,7 +354,7 @@ class SimpleTableManual extends BridgeBase {
   }
 
   results() {
-    const len = this.editableMode ? this.elementsData.length : this.rowData.length;
+    const len = this.editableMode ? this.elementsData?.length : this.rowData?.length;
 
     return len ? html` <span class="results-count"> ${len} result${len > 1 ? "s" : ""} </span>` : null;
   }
