@@ -157,6 +157,8 @@ class Reference extends BridgeBase {
   }
 
   render(){
+    if (this.resolvedConfigProps['visibility'] === false) return null;
+
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
     if (this.bDebug){ debugger; }
 
