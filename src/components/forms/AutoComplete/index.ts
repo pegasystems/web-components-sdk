@@ -18,6 +18,7 @@ declare var PCore: any;
 @customElement('autocomplete-form')
 class AutoComplete extends FormComponentBase {
   @property( {attribute: false, type: Array} ) options;
+  columns: any;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -64,10 +65,54 @@ class AutoComplete extends FormComponentBase {
 
     // AutoComplete does some additional work
     const theConfigProps = this.thePConn.getConfigProps();
+    let { listType, datasource = [], columns = [], displayMode } = theConfigProps;
+    this.columns = this.preProcessColumns(columns);
+    if (listType === 'associated') {
+      this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
+    }
+    if (!displayMode && listType !== 'associated') {
+      const workListData = PCore.getDataApiUtils().getData(datasource, {});
 
-    this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
+      workListData.then((workListJSON: Object) => {
+        const optionsData: Array<any> = [];
+        const results = workListJSON['data'].data;
+        const displayColumn = this.getDisplayFieldsMetaData(this.columns);
+        results?.forEach(element => {
+          const val = element[displayColumn.primary]?.toString();
+          const obj = {
+            key: element.pyGUID || val,
+            value: val
+          };
+          optionsData.push(obj);
+        });
+        this.options = optionsData;
+      });
+    }
 
   }
+
+  getDisplayFieldsMetaData(columnList) {
+    const displayColumns = columnList.filter(col => col.display === 'true');
+    const metaDataObj: any = { key: '', primary: '', secondary: [] };
+    const keyCol = columnList.filter(col => col.key === 'true');
+    metaDataObj.key = keyCol.length > 0 ? keyCol[0].value : 'auto';
+    for (let index = 0; index < displayColumns.length; index += 1) {
+      if (displayColumns[index].primary === 'true') {
+        metaDataObj.primary = displayColumns[index].value;
+      } else {
+        metaDataObj.secondary.push(displayColumns[index].value);
+      }
+    }
+    return metaDataObj;
+  };
+
+  preProcessColumns(columnList) {
+    return columnList.map(col => {
+      const tempColObj = { ...col };
+      tempColObj.value = col.value && col.value.startsWith('.') ? col.value.substring(1) : col.value;
+      return tempColObj;
+    });
+  };
 
 
   isSelected(buttonValue:string): boolean {
@@ -117,6 +162,20 @@ class AutoComplete extends FormComponentBase {
     return errMessage;
   }
 
+  fieldOnChange(event: any) {
+    if ((event?.type === 'model-value-changed') && (event?.target?.value === 'Select')) {
+      let value = '';
+      this.actions.onChange(this.thePConn, { value });
+    } else {
+      let key = '';
+      if (event?.target?.value) {
+        const index = this.options?.findIndex(element => element.value === event.target.value);
+        key = index > -1 ? key = this.options[index].key : event.target.value;
+      }
+      event.target.value = key;
+      this.actions.onChange(this.thePConn, event);
+    }
+  }
 
   render(){
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
@@ -162,9 +221,9 @@ class AutoComplete extends FormComponentBase {
                   >
                   <span slot="label">${this.annotatedLabel}</span>
                   ${ this.options.map((option) => { 
-                    const theOptDisplay = `${option.key} -- (${option.value})`;
+                    const theOptDisplay = `${option.value}`;
                     return html`
-                      <lion-option value=${option.key} .choiceValue=${option.key}>
+                      <lion-option value=${option.key} .choiceValue=${option.value}>
                         ${theOptDisplay}
                       </lion-option>` })}
                 </lion-combobox>
