@@ -188,7 +188,7 @@ class AutoComplete extends FormComponentBase {
     // Handle and return if read only rendering
     if (this.bReadonly) {
       return html`
-        <text-form .pConn=${this.thePConn} ?disabled=${this.bDisabled} ?visible=${this.bVisible} label=${this.label} value=${this.value}>
+        <text-form .pConn=${this.thePConn} ?disabled=${this.bDisabled} ?visible=${this.bVisible} label=${this.label} value=${this.value} testId=${this.testId}>
         </text-form>
       `;
     }

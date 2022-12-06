@@ -897,7 +897,7 @@ export class BridgeBase extends LitElement {
 
           case "Reference":
           case "reference":
-            theChildTemplates.push(html`<reference-component .pConn=${child}></reference-component>`);
+            theChildTemplates.push(html`<reference-component .pConn=${child} class="grid-column"></reference-component>`);
             break;
 
           case "Region":
