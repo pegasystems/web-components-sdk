@@ -124,7 +124,7 @@ class DetailsFields extends LitElement {
     let arDetailsHtml = html`
       <div class="psdk-details-group">
         <div class="psdk-details-fields">
-          <dl class="psdk-details-fields-primary">
+          <dl class="psdk-details-fields-primary" id="details-fields-list">
           ${this.getFieldsHtml(this.arFields)}
           </dl>
         </div>
