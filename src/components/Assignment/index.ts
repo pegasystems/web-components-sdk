@@ -1,4 +1,4 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement, property, state } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
@@ -7,7 +7,10 @@ import { assignmentStyles } from './assignment-styles';
 
 import '../MultiStep';
 import '../AssignmentCard';
-// import 'lit-toast/lit-toast' -- Not compatible with Lit2. Need to find a substitute
+import '@vaadin/notification';
+import { notificationRenderer } from '@vaadin/notification/lit.js';
+import type { NotificationLitRenderer } from '@vaadin/notification/lit.js';
+import type { NotificationOpenedChangedEvent } from '@vaadin/notification';
 
 
 
@@ -23,6 +26,11 @@ class Assignment extends BridgeBase {
   @property( {attribute: false, type: Boolean}) bHasNavigation = false;
   @property( {attribute: false, type: Boolean}) bIsVertical = false;
   // navigation
+  @state()
+  private notificationOpened = false;
+
+  @state()
+  private toastMessage: String = '';
   
   arCurrentStepIndicies: Array<number> = new Array();
   arNavigationSteps: Array<any> = new Array();
@@ -132,9 +140,8 @@ class Assignment extends BridgeBase {
                 .arNavigationSteps=${this.arNavigationSteps}
                 @MultiStepActionButtonClick="${this._onActionButtonClick}">
             </multi-step-component>
-            <!-- <lit-toast></lit-toast> -->
-            </div>` 
-            // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
+            ${this.notificationHtml()}
+            </div>`
             :
           html`
             <div>
@@ -142,9 +149,8 @@ class Assignment extends BridgeBase {
                   .arMainButtons=${this.arMainButtons} .arSecondaryButtons=${this.arSecondaryButtons}
                   @AssignmentActionButtonClick="${this._onActionButtonClick}">
                 </assignment-card-component>
-                <!-- <lit-toast></lit-toast> -->
+                ${this.notificationHtml()}
             </div>`
-            // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
           }
     `;
 
@@ -152,6 +158,27 @@ class Assignment extends BridgeBase {
 
   }
 
+  notificationHtml() {
+    return html`
+      <vaadin-notification duration="3000" position="bottom-center" .opened="${this.notificationOpened}" @opened-changed="${(e: NotificationOpenedChangedEvent) => {
+        this.notificationOpened = e.detail.value;}}"
+        ${notificationRenderer(this.renderer, [])}
+      ></vaadin-notification>
+    `;
+  }
+
+  renderer: NotificationLitRenderer = () => {
+    return html`
+      <div style="align-items: center; display: flex">
+        <div>${this.toastMessage}</div>
+        <button style="background: none; border: none; margin: 2px 0px 0px 8px; cursor: pointer;" @click=${this.close}>X</button>
+      </div>
+    `;
+  };
+
+  private close() {
+    this.notificationOpened = false;
+  }
 
 
   render(){
@@ -396,7 +423,7 @@ class Assignment extends BridgeBase {
                 //this.psService.sendMessage(false);
               })
               .catch(() => {
-                this.showToast( `Navigation failed!`, 3000);
+                this.showToast(`Navigation failed!`);
                 //this.psService.sendMessage(false);
               });
 
@@ -419,7 +446,7 @@ class Assignment extends BridgeBase {
                 PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
               })
             .catch(() => {
-              this.showToast( `Cancel failed!`, 3000);
+              this.showToast(`Cancel failed!`);
               //this.psService.sendMessage(false);
              });
 
@@ -447,8 +474,7 @@ class Assignment extends BridgeBase {
                 //this.psService.sendMessage(false);
               })
               .catch(() => {
-                this.showToast( `Submit failed!`, 3000);
-                //this.psService.sendMessage(false);
+                this.showToast(`Submit failed!`);
               });
           }
           else {
@@ -472,13 +498,9 @@ class Assignment extends BridgeBase {
     return true;
   }
 
-  showToast(message: String, duration: Number) {
-    console.error(`${this.theComponentName}: ${message}`);
-    // Need to add toast message, removing since the lit-toast component was not working with Lit 2.0 version
-    // const theToast : any = this.shadowRoot?.querySelector('lit-toast');
-    // if (theToast) {
-    //   theToast.show(message, duration);
-    // }
+  showToast(message: String) {
+    this.notificationOpened = true;
+    this.toastMessage = message;
   }
 
 }
