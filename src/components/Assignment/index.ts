@@ -10,7 +10,7 @@ import '../AssignmentCard';
 import '@vaadin/notification';
 import { notificationRenderer } from '@vaadin/notification/lit.js';
 import type { NotificationLitRenderer } from '@vaadin/notification/lit.js';
-
+import type { NotificationOpenedChangedEvent } from '@vaadin/notification';
 
 
 
@@ -160,7 +160,8 @@ class Assignment extends BridgeBase {
 
   notificationHtml() {
     return html`
-      <vaadin-notification duration="3000" position="bottom-center" .opened="${this.notificationOpened}"
+      <vaadin-notification duration="3000" position="bottom-center" .opened="${this.notificationOpened}" @opened-changed="${(e: NotificationOpenedChangedEvent) => {
+        this.notificationOpened = e.detail.value;}}"
         ${notificationRenderer(this.renderer, [])}
       ></vaadin-notification>
     `;
