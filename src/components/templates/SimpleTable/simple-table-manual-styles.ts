@@ -18,6 +18,7 @@ export const simpleTableManualStyles = html`
 
     .psdk-utility-card-action-svg-icon {
       width: 1.4rem;
+      margin-top: 7px;
     }
   </style>
 `;
