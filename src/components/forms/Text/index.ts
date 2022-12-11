@@ -26,6 +26,7 @@ class Text extends BridgeBase {
   @property( {attribute: true} ) decorator = "";
   @property( {attribute: true} ) displayAs = "";
   @property( {attribute: false, type: Boolean} ) bVisible = true;
+  @property( {attribute: true, type: String}) testId;
 
 
   // Properties specific to one or more formatTypes
@@ -155,12 +156,14 @@ class Text extends BridgeBase {
     if (this.bVisible) {
       /* eslint-disable-next-line no-nested-ternary */
       theContent = (label !== undefined && !noLabel && text !== undefined) ?
-      html`<div class="form-group"><lion-input .modelValue=${text} label=${label} readonly></lion-input></div>` :
+      html`<div class="form-group">
+              <lion-input dataTestId=${this.testId} .modelValue=${text} label=${label} readonly></lion-input>
+          </div>` :
         (label !== undefined && text === undefined ?
           html`<label class="form-control-plaintext">${label}</label>` :
           html`<div class="form-control-plaintext ml-3">
-              <label>${text}</label>
-            </div>`);
+                <label>${text}</label>
+              </div>`);
     }
 
 
