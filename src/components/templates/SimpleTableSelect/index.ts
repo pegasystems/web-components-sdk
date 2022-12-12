@@ -2,7 +2,7 @@ import { html, customElement, property, nothing } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../PromotedFilters';
-
+import '../SimpleTable';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
@@ -89,9 +89,7 @@ class SimpleTableSelect extends BridgeBase {
     const isMultiSelectMode = selectionMode === MULTI;
 
     if (isMultiSelectMode && this.renderMode === "ReadOnly") {
-      console.warn(`${this.theComponentName} wants to return <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />`);
-      this.theComponentToRender = html`<div>${this.theComponentName} wants to return <SimpleTableManual {...props} showLabel={propsToUse.showLabel} /></div>`;
-      // <SimpleTableManual {...props} showLabel={propsToUse.showLabel} />;
+      this.theComponentToRender = html`<div><simple-table-component .pConn=${this.thePConn}></simple-table-component></div>`;
       return;
     }
 

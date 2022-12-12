@@ -5,6 +5,7 @@ import '../SimpleTableSelect';
 import '../../forms/Dropdown';
 import '../MultiReferenceReadonly';
 import '../SingleReferenceReadonly';
+import '../../forms/SemanticLink';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
@@ -331,6 +332,10 @@ class DataReference extends BridgeBase {
 
       case "AutoComplete":
         convertedComponent = html`<autocomplete-form .pConn=${childPConn}></autocomplete-form>`;
+        break;
+
+      case "SemanticLink":
+        convertedComponent = html`<semantic-link .pConn=${childPConn}></semantic-link>`;
         break;
 
       default:

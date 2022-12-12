@@ -65,7 +65,7 @@ class ListView extends BridgeBase {
     if (this.bDebug){ debugger; }
 
     // Add event listener for resize
-    window.addEventListener('resize', this._handleResize);
+    // window.addEventListener('resize', this._handleResize);
 
     // setup this component's styling...
     this.theComponentStyleTemplate = listViewStyles;
@@ -157,7 +157,7 @@ class ListView extends BridgeBase {
     if (this.bDebug){ debugger; }
 
     // Remove event listener for resize
-    window.removeEventListener('resize', this._handleResize);
+    // window.removeEventListener('resize', this._handleResize);
 
 
   }
@@ -344,17 +344,17 @@ class ListView extends BridgeBase {
   }
 
   // Resize handler to force adjustment of height
-  private _handleResize = () => { 
-    // Update the proper vaadin-grid table height
-    const theVaadinGrid: any = this.shadowRoot?.getElementById(this.theComponentId.toString());
-    if (theVaadinGrid) {
-      const theVaadinShadowTable: any = theVaadinGrid.shadowRoot.getElementById("table");
-      if (theVaadinShadowTable) {
-        // Fill the available height. Need to subtract the space that's taken for the header (which is offsetTop)
-        theVaadinShadowTable.style['height'] = (window.innerHeight - this.offsetTop) + "px";
-      }
-    }
-  }
+  // private _handleResize = () => { 
+  //   // Update the proper vaadin-grid table height
+  //   const theVaadinGrid: any = this.shadowRoot?.getElementById(this.theComponentId.toString());
+  //   if (theVaadinGrid) {
+  //     const theVaadinShadowTable: any = theVaadinGrid.shadowRoot.getElementById("table");
+  //     if (theVaadinShadowTable) {
+  //       // Fill the available height. Need to subtract the space that's taken for the header (which is offsetTop)
+  //       theVaadinShadowTable.style['height'] = (window.innerHeight - this.offsetTop) + "px";
+  //     }
+  //   }
+  // }
 
 
   render(){
@@ -418,7 +418,7 @@ class ListView extends BridgeBase {
           }
 
           // And set the proper vaadin-grid table height
-          this._handleResize();
+          // this._handleResize();
 
         }), 50);
 
