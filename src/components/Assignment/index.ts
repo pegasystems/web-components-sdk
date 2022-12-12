@@ -133,7 +133,7 @@ class Assignment extends BridgeBase {
     const aHtml = html`
         ${this.bHasNavigation?
           html`
-            <div class="psdk-stepper">
+            <div id="Assignment" class="psdk-stepper">
             <multi-step-component .pConn=${this.pConn} .arChildren=${this.arChildren} itemKey=${this.itemKey}
                 .arMainButtons=${this.arMainButtons} .arSecondaryButtons=${this.arSecondaryButtons}
                 .bIsVertical=${this.bIsVertical} .arCurrentStepIndicies=${this.arCurrentStepIndicies}
@@ -144,7 +144,7 @@ class Assignment extends BridgeBase {
             </div>`
             :
           html`
-            <div>
+            <div id="Assignment">
                 <assignment-card-component .pConn=${this.pConn} .arChildren=${this.arChildren} itemKey=${this.itemKey}
                   .arMainButtons=${this.arMainButtons} .arSecondaryButtons=${this.arSecondaryButtons}
                   @AssignmentActionButtonClick="${this._onActionButtonClick}">
