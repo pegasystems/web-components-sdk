@@ -80,16 +80,7 @@ test.describe('E2E test', () => {
         'lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select',
         "Dropdown"
     );
-
-    // await page.selectOption(
-    //     'lion-select >> nth=2 select',
-    //     "Luxury Product"
-    // );
-
-    // selectedProduct = page.locator('lion-combobox:has-text("Basic Product")');
-    // await selectedProduct.click();
-    // await page.locator('li:has-text("Basic Product")').click();
-
+    
     await page.locator('button:has-text("Next")').click();
 
     assignment = page.locator('div[id="Assignment"]');
