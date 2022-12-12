@@ -334,7 +334,7 @@ class SimpleTableManual extends BridgeBase {
         (row: any, index: number) => html`<tr scope="row">
           ${row.map((config) => html` <td>${BridgeBase.getComponentFromConfigObj(config)}</td> `)}
           <td>
-            <button @click=${() => this.deleteRecord(index)}>delete</button>
+            <img @click=${() => this.deleteRecord(index)} class="psdk-utility-card-action-svg-icon" src=${this.menuIconOverride} />
           </td>
         </tr>`
       )}
