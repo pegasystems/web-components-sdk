@@ -3,6 +3,7 @@
 //  best practice to ensure compatible versions is to import LitElement from @lion/core
 import { LitElement, property, html, nothing } from "@lion/core";
 import * as isEqual from "fast-deep-equal";
+import Utils from "../../helpers/utils";
 import { bootstrapStyles } from "./bootstrap-styles";
 
 // Declare that PCore will be defined when this code is run
@@ -237,11 +238,11 @@ export class BridgeBase extends LitElement {
   /**
    * Registers the component with the bridge. Registration performs the following:
    *  1. Initialize this component's theComponentProps to {}
-   * 
+   *
    *  2. assign's component's actions (via processActions)
-   * 
+   *
    *  3. subscribes the component to the Store and assigns the unsubscribe function
-   *      
+   *
    * @param inCallback The component's callback function (typically called onStateChange) that will
    * be called when the store changes.
 
@@ -277,7 +278,7 @@ export class BridgeBase extends LitElement {
    * @param inCallback The component's callback function (typically called onStateChange) that will
    * be called when the store changes.
 
-   * @returns The **unsubscribe** function that should be called when the component needs 
+   * @returns The **unsubscribe** function that should be called when the component needs
    * to unsubscribe from the store. (Typically during ngOnDestroy)
    */
   subscribeToStore(inCallback: Function) {
@@ -457,6 +458,10 @@ export class BridgeBase extends LitElement {
     if (this.bLogging) {
       console.log(`${this.baseComponentName}.eventHandler`);
     }
+
+    // converting lion form elements tagName value to native html elements tagNames. example: LION-INPUT to INPUT
+    // because constellation-core js is expecting target tagNames as native html form elements
+    Object.defineProperty(event.target, "tagName", { value: Utils.getTagName(event.target.tagName) });
 
     const pConnect = inComp;
     if (undefined === pConnect) {

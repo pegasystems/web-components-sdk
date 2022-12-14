@@ -16,6 +16,12 @@ export const simpleTableManualStyles = html`
       margin-inline-start: 0.625rem;
     }
 
+    .psdk-utility-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
     .psdk-utility-card-action-svg-icon {
       width: 1.4rem;
       margin-top: 7px;

@@ -24,7 +24,7 @@ export class FormComponentBase extends BridgeBase {
   ];
 
   @property( {attribute: false, type: String} ) componentBaseComponentName = "FormComponentBase"; // Name of this particular component
-  
+
   @property( {attribute: false, type: Boolean} ) bDisabled = false;
   @property( {attribute: false, type: Boolean} ) bReadonly= false;
   @property( {attribute: false, type: Boolean} ) bRequired = false;
@@ -36,12 +36,12 @@ export class FormComponentBase extends BridgeBase {
   //  Since components derived from FormComponentBase can put a modified label in annotatedLabel (see below)
   //  which we put into the "label" slot for proper display in the Lion component "label", we then set
   //  a Lion component's .fieldName=${this.label} to get the plain, unannotated label in validation messages
-  @property( {attribute: false, type: String} ) label = "default label";
-  @property( {attribute: false} ) value = "default value";
+  @property( {attribute: false, type: String} ) label = "";
+  @property( {attribute: false} ) value = "";
   @property( {attribute: false} ) controlName = false;
   @property( {attribute: false, type: Object} ) annotatedLabel; // is likely a lit-html CSS object
   @property( {attribute: false, type: String}) testId = "";
-  
+
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -72,7 +72,7 @@ export class FormComponentBase extends BridgeBase {
 
     // Do an initial updateSelf - is this always necessary?
     this.updateSelf();
-    
+
   }
 
 
@@ -83,7 +83,7 @@ export class FormComponentBase extends BridgeBase {
     if (this.bDebug){ debugger; }
 
   }
-  
+
   /**
    * updateSelf
    */
@@ -107,7 +107,7 @@ export class FormComponentBase extends BridgeBase {
     if (theConfigProps["value"] != undefined) {
       this.value = theConfigProps["value"];
     }
-  
+
     this.label = theConfigProps["label"];
     this.testId = theConfigProps["testId"];
 
@@ -142,11 +142,11 @@ export class FormComponentBase extends BridgeBase {
 
     // readOnly is now a component property (as in each component's config.json); not using !isEditable() any more
     if (theConfigProps["readOnly"] !== undefined) {
-      this.bReadonly = theConfigProps["readOnly"];  
+      this.bReadonly = theConfigProps["readOnly"];
     }
 
     if (this.bLogging) {
-      console.log(`--> ${this.componentBaseComponentName}:${this.theComponentName} : value: ${this.value} label: ${this.label} bRequired: ${this.bRequired} 
+      console.log(`--> ${this.componentBaseComponentName}:${this.theComponentName} : value: ${this.value} label: ${this.label} bRequired: ${this.bRequired}
         bVisible: ${this.bVisible} bDisabled: ${this.bDisabled} bReadonly: ${this.bReadonly}`);
     }
 
@@ -177,7 +177,7 @@ export class FormComponentBase extends BridgeBase {
 
     // Is this really necessary? We should try to find out why if it is...
     this.requestUpdate();
- 
+
   }
 
   /**
@@ -199,7 +199,7 @@ export class FormComponentBase extends BridgeBase {
 
   fieldOnChange(event: any) {
     if (this.bDebug){ debugger; }
- 
+
     if (this.bLogging) { console.log( `--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`) }
 
     if ((event?.type === 'model-value-changed') && (event?.target?.value === 'Select')) {
@@ -210,7 +210,7 @@ export class FormComponentBase extends BridgeBase {
     }
   }
 
-   
+
   fieldOnClick(event: any) {
     if (this.bDebug){ debugger; }
     // currently a no-op
@@ -233,7 +233,7 @@ export class FormComponentBase extends BridgeBase {
   // Return: true --> validation feedback should be shown
   // Return: false --> validation feedback is not shown
   requiredFeedbackCondition(type, meta, originalCondition) {
-    if (this.bLogging) { console.log( `${this.theComponentName} label: ${this.label} meta.modelValue: ${meta.modelValue} | requiredFeedbackCondition: type: ${type} originalCondition would return: ${originalCondition(type, meta)}`); }    
+    if (this.bLogging) { console.log( `${this.theComponentName} label: ${this.label} meta.modelValue: ${meta.modelValue} | requiredFeedbackCondition: type: ${type} originalCondition would return: ${originalCondition(type, meta)}`); }
     if (this.bDebug) { debugger; }
 
     let bRet = false;
@@ -256,9 +256,9 @@ export class FormComponentBase extends BridgeBase {
     }
 
     // Remove any styling that may have beenput on invalid field.
-    meta.el.classList.remove("field-needs-attention");      
-    
-    // Continue through the rest of the processing...    
+    meta.el.classList.remove("field-needs-attention");
+
+    // Continue through the rest of the processing...
     if (this.bRequired && meta.touched && (meta.modelValue === "")) {
       // Required and touched but still no value... return true (to indicate validation error and show message)
       bRet = true;
