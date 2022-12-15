@@ -298,7 +298,7 @@ class ModalViewContainer extends BridgeBase {
     const mVCHtml = html`
       ${this.bShowModal ?
         html`
-        <div class="psdk-dialog-background ">
+        <div id="dialog" class="psdk-dialog-background ">
           <div class="psdk-modal-view-container-top" id="${this.buildName}">
               ${this.title != "" ?
                 html`<h3>${this.title}</h3>`

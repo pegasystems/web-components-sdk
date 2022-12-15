@@ -40,6 +40,7 @@ class ListView extends BridgeBase {
   selectionMode: string = '';
   selectedValue: any;
   rowClickAction: any;
+  rowID: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -77,6 +78,8 @@ class ListView extends BridgeBase {
 
     const theConfigProps = this.thePConn.getConfigProps();
     this.rowClickAction = theConfigProps.rowClickAction;
+    const referenceType = theConfigProps.referenceType;
+    this.rowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
     const componentConfig = this.thePConn.getRawMetadata().config;
     const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
@@ -311,24 +314,26 @@ class ListView extends BridgeBase {
     return content;
   }
 
-  private radioRender: GridColumnBodyLitRenderer<any> = ({ pyGUID }) => {
-    return html`<input  name='radio-buttons' type="radio" .value="${pyGUID}" @change="${this.onRadioChange}"/>`
+  private radioRender: GridColumnBodyLitRenderer<any> = (row) => {
+    const rowID = row[this.rowID];
+    return html`<input  name='radio-buttons' type="radio" .value="${rowID}" @change="${this.onRadioChange}"/>`
   };
 
-  private checkboxRender: GridColumnBodyLitRenderer<any> = ({ pyGUID }) => {
-    return html`<input  name='checkbox' type="checkbox" .value="${pyGUID}" @change="${this.onCheckboxClick}"/>`
+  private checkboxRender: GridColumnBodyLitRenderer<any> = (row) => {
+    const rowID = row[this.rowID];
+    return html`<input  name='checkbox' type="checkbox" .value="${rowID}" @change="${this.onCheckboxClick}"/>`
   };
 
   onRadioChange(event) {
     const value = event.target.value;
-    this.thePConn?.getListActions?.()?.setSelectedRows([{'pyGUID': value}]);
+    this.thePConn?.getListActions?.()?.setSelectedRows([{[this.rowID]: value}]);
     this.selectedValue = value;
   };
 
   onCheckboxClick(event) {
     const value = event?.target?.value;
     const checked = event?.target?.checked;
-    this.thePConn?.getListActions()?.setSelectedRows([{'pyGUID': value, $selected: checked }]);
+    this.thePConn?.getListActions()?.setSelectedRows([{[this.rowID]: value, $selected: checked }]);
   };
 
   clickRowInGrid(inDetail: any) {
