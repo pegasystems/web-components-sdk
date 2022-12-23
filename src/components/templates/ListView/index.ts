@@ -79,7 +79,11 @@ class ListView extends BridgeBase {
     const theConfigProps = this.thePConn.getConfigProps();
     this.rowClickAction = theConfigProps.rowClickAction;
     const referenceType = theConfigProps.referenceType;
-    this.rowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
+    /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
+    const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
+    /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
+    const compositeKeys = theConfigProps?.compositeKeys;
+    this.rowID = compositeKeys && compositeKeys[0] ? compositeKeys[0] : defRowID;
     const componentConfig = this.thePConn.getRawMetadata().config;
     const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
