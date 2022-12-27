@@ -147,6 +147,72 @@ test.describe("E2E test", () => {
     await page.locator('button:has-text("Previous")').click();
 
     await page.locator('button[id="delete-button"] >> nth=0').click();
+
+    /** FieldGroup subcategory tests */
+    await page.selectOption('lion-select[datatestid="9463d5f18a8924b3200b56efaad63bda"] select', "FieldGroup");
+
+    /** Editable mode type tests */
+    await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', "Editable");
+
+    /** Entering values in the first Row */
+    await page.locator('lion-input[datatestid="202003240938510823869"] input').type("Main St");
+    await page.locator('lion-input[datatestid="202003240938510831291"] input').type("Cambridge");
+    await page.locator('lion-input[datatestid="202003240938510831411"] input').type("MA");
+    await page.locator('lion-input[datatestid="202003240938510832734"] input').type("02142");
+    await page.locator('lion-input[datatestid="1f8261d17452a959e013666c5df45e07"] input').type("6175551212");
+
+    /** Creating another row by clicking on `+Add` button */
+    await page.locator('button:has-text("+ Add")').click();
+
+    /** Entering values into the newly created row */
+    await page.locator('lion-input[datatestid="202003240938510823869"] input >> nth=1').type("Global St");
+    await page.locator('lion-input[datatestid="202003240938510831291"] input >> nth=1').type("California");
+    await page.locator('lion-input[datatestid="202003240938510831411"] input >> nth=1').type("AK");
+    await page.locator('lion-input[datatestid="202003240938510832734"] input >> nth=1').type("03142");
+    await page.locator('lion-input[datatestid="1f8261d17452a959e013666c5df45e07"] input >> nth=1').type("6175451212");
+
+    await page.locator('button:has-text("Next")').click();
+
+    assignment = page.locator('div[id="Assignment"]');
+
+    /** Testing the values present on Confirm screen */
+    await expect(assignment.locator('td:has-text("Global St")')).toBeVisible();
+    await expect(assignment.locator('td:has-text("California")')).toBeVisible();
+    await expect(assignment.locator('td:has-text("AK")')).toBeVisible();
+    await expect(assignment.locator('td:has-text("03142")')).toBeVisible();
+    await expect(assignment.locator('td:has-text("6175451212")')).toBeVisible();
+
+    await page.locator('button:has-text("Previous")').click();
+
+    /** Deleting the newly created row */
+    await page.locator('button[id="delete-button"] >> nth=0').click();
+
+    await page.locator('button:has-text("Next")').click();
+
+    /** Testing the deleted row values which should n't be present */
+    await expect(assignment.locator('td:has-text("Main St") >> nth=1')).toBeHidden();
+    await expect(assignment.locator('td:has-text("Cambridge") >> nth=1')).toBeHidden();
+    await expect(assignment.locator('td:has-text("MA") >> nth=1')).toBeHidden();
+    await expect(assignment.locator('td:has-text("02142") >> nth=1')).toBeHidden();
+    await expect(assignment.locator('td:has-text("6175551212") >> nth=1')).toBeHidden();
+
+    await page.locator('button:has-text("Previous")').click();
+
+    /** Readonly mode type tests */
+    await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', "Readonly");
+
+    /** Testing the values that were entered by Editable test */
+    await expect(page.locator('div >> text="Global St"')).toBeVisible();
+    await expect(page.locator('div >> text="California"')).toBeVisible();
+    await expect(page.locator('div >> text="AK"')).toBeVisible();
+    await expect(page.locator('div >> text="03142"')).toBeVisible();
+    await expect(page.locator('div >> text="6175451212"')).toBeVisible();
+
+    await page.locator('button:has-text("Next")').click();
+
+    /** Submitting the case */
+    await page.locator('button:has-text("submit")').click();
+
   }, 10000);
 });
 
