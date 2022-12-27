@@ -15,10 +15,10 @@ declare var PCore: any;
 @customElement('operator-extension')
 class Operator extends LitElement {
   @property( {attribute: true, type: Object }) caseOpConfig;    // the config object of the CaseOperator to be displayed
-
-  @property( { attribute: false, type: String }) name: String = "default name";
+  @property( { attribute: true, type: String }) label: String = "";
+  @property( { attribute: true, type: String }) name: String = "";
   @property( {attribute: false, type: String }) theDateTime = "";
-  @property( { attribute: false, type: String }) theId: String = "";
+  @property( { attribute: true, type: String }) theId: String = "";
   @property( { attribute: false, type: Array }) fields: any = [];
   @property( { attribute: false, type: Boolean}) bShowPopover: Boolean = false;
 
@@ -43,7 +43,7 @@ class Operator extends LitElement {
     let theRealOperator: any = {};
     let theRealTime: string = "";
 
-    const theLowerCaseLabel = this.caseOpConfig.label.toLowerCase()
+    const theLowerCaseLabel = this.caseOpConfig?.label.toLowerCase()
 
     switch (theLowerCaseLabel) {
       case "create operator":
@@ -60,7 +60,6 @@ class Operator extends LitElement {
     this.name = theRealOperator.userName;
     this.theId = theRealOperator.userId;
     this.theDateTime = theRealTime;
-    
   }
 
 
@@ -70,14 +69,13 @@ class Operator extends LitElement {
     if (this.bDebug){ debugger; }
 
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
     if (this.bDebug){ debugger; }
-
   }
 
 
@@ -179,13 +177,23 @@ class Operator extends LitElement {
     });
   }
 
-
   theRenderedDiv() {
     return html`
         <div>
+        ${this.label ? 
+        html`
+        <div class="psdk-single psdk-top-pad">${this.label}</div>
           <span class="btn-link" type="button" color="primary" @click="${ this.showOperator }">${this.name}</span>
           ${Utils.generateDateTime(this.theDateTime, "DateTime-Since")}
+          </div>
         </div>
+        `
+        :
+        html`
+        <span class="btn-link" type="button" color="primary" @click="${ this.showOperator }">${this.name}</span>
+        ${Utils.generateDateTime(this.theDateTime, "DateTime-Since")}
+        `
+      }
 
       ${ (this.bShowPopover) ?
         html`

@@ -18,6 +18,7 @@ declare var PCore: any;
 class Dropdown extends FormComponentBase {
 
   @property( {attribute: false, type: Array} ) options;
+  @property( {attribute: true, type: Array} ) datasource = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -29,7 +30,7 @@ class Dropdown extends FormComponentBase {
     if (this.bDebug){ debugger; }
 
     this.options = [];
-  }
+ }
 
   connectedCallback() {
     super.connectedCallback();
@@ -49,6 +50,15 @@ class Dropdown extends FormComponentBase {
     if (this.bDebug){ debugger; }
 
   }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'datasource') {
+      if (newValue && oldValue !== newValue) {
+        this.datasource = JSON.parse(newValue);
+        this.updateSelf();
+      }
+    }
+  }
   
   /**
    * updateSelf
@@ -61,8 +71,13 @@ class Dropdown extends FormComponentBase {
 
     // Some additional processing
 
-    const theConfigProps = this.thePConn.getConfigProps();
-
+    const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    
+    if(this.datasource.length > 0){
+      theConfigProps.datasource = this.datasource;
+      theConfigProps.listType = "associated";
+    }
+ 
     const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
     const index = optionsList?.findIndex(ele => ele.key === 'Select');
     if (index < 0) {
@@ -146,7 +161,7 @@ class Dropdown extends FormComponentBase {
                   .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                   ?readonly=${this.bReadonly} 
                   ?disabled=${this.bDisabled} 
-                   /* @model-value-changed=${this.fieldOnChange} */ >
+                  /* @model-value-changed=${this.fieldOnChange} */ >
                   <span slot="label">${this.annotatedLabel}</span>
                   <select slot="input">
                     ${ this.options.map((option) => { 
@@ -168,6 +183,8 @@ class Dropdown extends FormComponentBase {
     // this.addChildTemplates();
 
     return this.renderTemplates;
+    // @model-value-changed=${this.fieldOnChange} >
+                  
 
   }
 
