@@ -18,7 +18,9 @@ declare var PCore: any;
 class Dropdown extends FormComponentBase {
 
   @property( {attribute: false, type: Array} ) options;
-  @property( {attribute: true, type: Array} ) datasource = [];
+  @property( {attribute: true, type: String} ) datasource = "";
+
+  dataList: any = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -54,7 +56,7 @@ class Dropdown extends FormComponentBase {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'datasource') {
       if (newValue && oldValue !== newValue) {
-        this.datasource = JSON.parse(newValue);
+        this.dataList = JSON.parse(newValue);
         this.updateSelf();
       }
     }
@@ -73,8 +75,8 @@ class Dropdown extends FormComponentBase {
 
     const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
     
-    if(this.datasource.length > 0){
-      theConfigProps.datasource = this.datasource;
+    if(this.dataList.length > 0){
+      theConfigProps.datasource = this.dataList;
       theConfigProps.listType = "associated";
     }
  
