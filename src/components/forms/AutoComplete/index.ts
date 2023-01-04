@@ -18,7 +18,10 @@ declare var PCore: any;
 @customElement('autocomplete-form')
 class AutoComplete extends FormComponentBase {
   @property( {attribute: false, type: Array} ) options;
+  @property( {attribute: true, type: String} ) datasource = "";
+  
   columns: any;
+  dataList: any = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -64,15 +67,20 @@ class AutoComplete extends FormComponentBase {
     super.updateSelf();
 
     // AutoComplete does some additional work
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    if(this.dataList.length > 0){
+      theConfigProps.datasource = this.dataList;
+      theConfigProps.listType = "associated";
+    }
+    
     let { listType, datasource = [], columns = [], displayMode } = theConfigProps;
     this.columns = this.preProcessColumns(columns);
     if (listType === 'associated') {
       this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
     }
-    if (!displayMode && listType !== 'associated') {
+    if (!displayMode && listType !== 'associated' && datasource.length > 0) {
       const workListData = PCore.getDataApiUtils().getData(datasource, {});
-
+      
       workListData.then((workListJSON: Object) => {
         const optionsData: Array<any> = [];
         const results = workListJSON['data'].data;
@@ -89,6 +97,16 @@ class AutoComplete extends FormComponentBase {
       });
     }
 
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'datasource') {
+      if (newValue && oldValue !== newValue) {
+        this.dataList = JSON.parse(newValue);
+        this.options = JSON.parse(newValue);
+        this.updateSelf();
+      }
+    }
   }
 
   getDisplayFieldsMetaData(columnList) {
@@ -199,6 +217,7 @@ class AutoComplete extends FormComponentBase {
     //    (Default seems to only show the overlay once the user has started typing.)
     //  @focus is added to mimic the Angular SDK behavior of showing the overlay of when the
     //    control gets focus.
+    //@click=${this.fieldOnChange}
     const theContent = html`
       <div>
         ${ this.bVisible ?
@@ -214,7 +233,8 @@ class AutoComplete extends FormComponentBase {
                   .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                   show-all-on-empty 
                   @focus=${this.fieldOnFocus}
-                  @click=${this.fieldOnChange} @blur=${this.fieldOnBlur} 
+                  @click=${this.fieldOnChange}
+                  @blur=${this.fieldOnBlur} 
                   @change=${this.fieldOnChange}
                   ?readonly=${this.bReadonly} 
                   ?disabled=${this.bDisabled} 
