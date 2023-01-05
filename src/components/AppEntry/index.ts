@@ -101,12 +101,13 @@ class AppEntry extends LitElement {
     })
 
     const thePortal = SdkConfigAccess.getSdkConfigServer().appPortal;
+    const defaultPortal = PCore?.getEnvironmentInfo?.().getDefaultPortal?.();
 
     // Note: myLoadPortal and myLoadDefaultPortal are set when bootstrapWithAuthHeader is invoked
     if(thePortal){
       console.log(`Loading specified appPortal: ${thePortal}`);
       myLoadPortal("app-root", thePortal, []);   // this is defined in bootstrap shell that's been loaded already
-    }else if(myLoadDefaultPortal){
+    }else if(myLoadDefaultPortal && defaultPortal){
       console.log(`Loading default portal`);
       myLoadDefaultPortal("app-root", []);
     }else{
