@@ -4,7 +4,7 @@ import { BridgeBase } from "../../../bridge/BridgeBase";
 import "../PromotedFilters";
 import { Utils } from "../../../helpers/utils";
 import "./SimpleTableManual";
-
+import "../FieldGroupTemplate";
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
@@ -95,7 +95,7 @@ class SimpleTable extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const feildGroupComponent = html`<div>Field Group component</div>`;
+    const feildGroupComponent = html`<field-group-template .pConn=${this.thePConn} .configProps=${this.fieldGroupProps}></field-group-template>`;
     const simpleTableManual = html`<simple-table-manual .pConn=${this.thePConn}></simple-table-manual>`;
 
     if (this.fieldGroupProps) {

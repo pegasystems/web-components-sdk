@@ -323,6 +323,10 @@ export class Utils {
 
     return lionTagName;
   }
+
+  static isObject(objValue) {
+    return objValue && typeof objValue === "object" && objValue.constructor === Object;
+  }
 }
 
 export default Utils;
