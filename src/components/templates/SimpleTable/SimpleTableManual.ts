@@ -344,11 +344,19 @@ class SimpleTableManual extends BridgeBase {
   }
 
   addRecord() {
-    this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
+    if (PCore.getPCoreVersion()?.includes('8.7')) {
+      this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
+    } else {
+      this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);
+    }
   }
 
   deleteRecord(index) {
-    this.thePConn.getListActions().deleteEntry(index, this.pageReference);
+    if (PCore.getPCoreVersion()?.includes('8.7')) {
+      this.thePConn.getListActions().deleteEntry(index, this.pageReference);
+    } else {
+      this.thePConn.getListActions().deleteEntry(index);
+    }
   }
 
   results() {

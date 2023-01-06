@@ -93,7 +93,7 @@ class FieldGroupTemplate extends BridgeBase {
     if (this.prevRefLength != this.referenceList.length) {
       if (!this.readonlyMode) {
         if (this.referenceList?.length === 0) {
-          this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList?.length, this.pageReference);
+          this.addFieldGroupItem();
         }
         this.children = this.referenceList?.map((item, index) => ({
           id: index,
@@ -114,11 +114,19 @@ class FieldGroupTemplate extends BridgeBase {
   }
 
   addFieldGroupItem() {
-    this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
+    if (PCore?.getPCoreVersion()?.includes('8.7')) {
+        this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
+    } else {
+        this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);
+    }
   }
 
   deleteFieldGroupItem(event) {
-    this.thePConn.getListActions().deleteEntry(event.detail, this.pageReference);
+    if (PCore?.getPCoreVersion()?.includes('8.7')) {
+      this.thePConn.getListActions().deleteEntry(event.detail, this.pageReference);
+    } else {
+      this.thePConn.getListActions().deleteEntry(event.detail);
+    }
   }
 
   getEditableFieldGroup() {
