@@ -21,8 +21,8 @@ This version of the Web Components SDK assumes that you have access to a Pega In
 The **MediaCo** sample application is already configured as a Constellation architecture-based application and can be found in the Web Components SDK download associated with this repo which is available at [https://community.pega.com/marketplace/components/web-components-sdk](https://community.pega.com/marketplace/components/web-components-sdk). The OAuth 2.0 Client Registration records associated with the **MediaCo** application are available in the same Web Components SDK download. For more information about the MediaCo sample application, see [MediaCo sample application](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/mediaco-sample-application.html).
 
 The **Web Components SDK** has been tested with:
-- node 14.18.*
-- npm 6.14.*
+- node 18.12.1/18.13.0
+- npm 8.19.2/8.19.3 
 
 Future updates to the SDK will support more recent LTS versions of node as the Constellation architecture supports them.
 
