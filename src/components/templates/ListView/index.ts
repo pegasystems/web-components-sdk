@@ -41,6 +41,8 @@ class ListView extends BridgeBase {
   selectedValue: any;
   rowClickAction: any;
   rowID: any;
+  response: any;
+  compositeKeys: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -82,8 +84,9 @@ class ListView extends BridgeBase {
     /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
     const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
     /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
-    const compositeKeys = theConfigProps?.compositeKeys;
-    this.rowID = compositeKeys && compositeKeys[0] ? compositeKeys[0] : defRowID;
+    this.compositeKeys = theConfigProps?.compositeKeys;
+    this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
+    
     const componentConfig = this.thePConn.getRawMetadata().config;
     const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
@@ -119,7 +122,7 @@ class ListView extends BridgeBase {
         //  Example entry in array: 
         //  {"type":"TextInput", "config": {"label":"Status of the assignment","name":"pyAssignmentStatus"}}
         this.fields = this.updateFields(this.fields, this.displayedColumns);
-
+        this.response = tableDataResults;
         // And, after computing this.fields, update columnHeaders
         this.computeColumnHeaders(this.fields);
 
@@ -330,14 +333,36 @@ class ListView extends BridgeBase {
 
   onRadioChange(event) {
     const value = event.target.value;
-    this.thePConn?.getListActions?.()?.setSelectedRows([{[this.rowID]: value}]);
+    const reqObj = {};
+    if (this.compositeKeys?.length > 1) {
+      const index = this.response.findIndex(element => element[this.rowID] === value);
+      const selectedRow = this.response[index];
+      this.compositeKeys.forEach(element => {
+        reqObj[element] = selectedRow[element]
+      });
+    } else {
+      reqObj[this.rowID] = value;
+    }
+    this.thePConn?.getListActions?.()?.setSelectedRows([reqObj]);
     this.selectedValue = value;
   };
 
   onCheckboxClick(event) {
     const value = event?.target?.value;
     const checked = event?.target?.checked;
-    this.thePConn?.getListActions()?.setSelectedRows([{[this.rowID]: value, $selected: checked }]);
+    const reqObj = {};
+    if (this.compositeKeys?.length > 1) {
+      const index = this.response.findIndex(element => element[this.rowID] === value);
+      const selectedRow = this.response[index];
+      this.compositeKeys.forEach(element => {
+        reqObj[element] = selectedRow[element]
+      });
+      reqObj['$selected'] = checked;
+    } else {
+      reqObj[this.rowID] = value;
+      reqObj['$selected'] = checked;
+    }
+    this.thePConn?.getListActions()?.setSelectedRows([reqObj]);
   };
 
   clickRowInGrid(inDetail: any) {

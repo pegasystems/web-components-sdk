@@ -171,6 +171,7 @@ class SimpleTableSelect extends BridgeBase {
         .filters=${filters}
         .listViewProps=${listViewProps}
         .pageClass=${pageClass}
+        .parameters=${this.parameters}
         ></promoted-filters-component>`;
       return;
 

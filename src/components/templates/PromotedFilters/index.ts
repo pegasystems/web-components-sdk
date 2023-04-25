@@ -72,6 +72,7 @@ class PromotedFilters extends BridgeBase {
   @property({ attribute: true, type: Array }) filters: Array<any> = [];
   @property({ attribute: true, type: Object }) listViewProps: any = {};
   @property({ attribute: true, type: String }) pageClass = "";
+  @property({ attribute: true, type: Object }) parameters: any = {} 
   @property({ attribute: false }) value = "default value";
   // Vars from Cosmos React DX Component implementation
 
@@ -209,7 +210,7 @@ class PromotedFilters extends BridgeBase {
     if (PCore.getFormUtils().isFormValid(theTransientItem) && isValidInput(formValues)) {
       this.initTable = true;
       const Query: any = {
-        dataViewParameters: {}
+        dataViewParameters: this.parameters
       };
       if (Object.keys(promotedFilters).length > 0) {
         Query.query = { filter: { filterConditions: promotedFilters } };
