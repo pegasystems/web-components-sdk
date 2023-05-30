@@ -65,15 +65,15 @@ class NavBar extends BridgeBase {
 
 
     // was "assets" in Angular SDK ; is "static" in React
-    this.navIcon = Utils.getIconPath(PCore.getAssetLoader().getStaticServerUrl()).concat("pzpega-logo-mark.svg");
-    this.navExpandCollapse = Utils.getImageSrc("plus", PCore.getAssetLoader().getStaticServerUrl());
+    this.navIcon = Utils.getIconPath(Utils.getSDKStaticContentUrl()).concat("pzpega-logo-mark.svg");
+    this.navExpandCollapse = Utils.getImageSrc("plus", Utils.getSDKStaticContentUrl());
 
     // making a copy, so can add info
     this.navPages = JSON.parse(JSON.stringify(this.pages));
 
     for (let page in this.navPages) {
       //this.navPages$[page]["iconName"] = this.translateIcon(this.navPages$[page]["pxPageViewIcon"]);
-      this.navPages[page]["iconName"] = Utils.getImageSrc(this.navPages[page]["pxPageViewIcon"], PCore.getAssetLoader().getStaticServerUrl());
+      this.navPages[page]["iconName"] = Utils.getImageSrc(this.navPages[page]["pxPageViewIcon"], Utils.getSDKStaticContentUrl());
     }
 
 
@@ -83,7 +83,7 @@ class NavBar extends BridgeBase {
 //    this.logout = this.actionsAPI.logout.bind(this.actionsAPI);
 
     // was "assets" in Angular SDK ; is "static" in React
-    this.portalLogoImage = Utils.getIconPath(PCore.getAssetLoader().getStaticServerUrl()).concat("pzpega-logo-mark.svg");
+    this.portalLogoImage = Utils.getIconPath(Utils.getSDKStaticContentUrl()).concat("pzpega-logo-mark.svg");
     //this.portalOperator$ = oData["pxRequestor"].pxUserName;
     //this.portalOperator$ = oData["D_pxEnvironmentInfo"].pxOperator.pyUserName;
     this.portalOperator = PCore.getEnvironmentInfo().getOperatorName();
@@ -150,11 +150,11 @@ class NavBar extends BridgeBase {
   navPanelCreateButtonClick() {
 
     if (this.navExpandCollapse.indexOf("plus") > 0) {
-     this.navExpandCollapse = Utils.getImageSrc("times", PCore.getAssetLoader().getStaticServerUrl());
+     this.navExpandCollapse = Utils.getImageSrc("times", Utils.getSDKStaticContentUrl());
      this.bShowCaseTypes = true;
     }
     else {
-      this.navExpandCollapse = Utils.getImageSrc("plus", PCore.getAssetLoader().getStaticServerUrl());
+      this.navExpandCollapse = Utils.getImageSrc("plus", Utils.getSDKStaticContentUrl());
       this.bShowCaseTypes = false;
     }
 

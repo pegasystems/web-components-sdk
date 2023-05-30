@@ -122,7 +122,7 @@ class CaseView extends BridgeBase {
     this.id = configProps["subheader"];
     this.status = this.thePConn.getValue(".pyStatusWork");
    
-    this.svgCase = Utils.getImageSrc(configProps["icon"], PCore.getAssetLoader().getStaticServerUrl());
+    this.svgCase = Utils.getImageSrc(configProps["icon"], Utils.getSDKStaticContentUrl());
 
 
     // if id has changed, mark flow container needs to init container

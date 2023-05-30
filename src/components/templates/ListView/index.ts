@@ -89,7 +89,7 @@ class ListView extends BridgeBase {
     
     const componentConfig = this.thePConn.getRawMetadata().config;
     const refList = theConfigProps.referenceList;
-    this.searchIcon = Utils.getImageSrc("search", PCore.getAssetLoader().getStaticServerUrl());
+    this.searchIcon = Utils.getImageSrc("search", Utils.getSDKStaticContentUrl());
     this.getListData();   
   }
 

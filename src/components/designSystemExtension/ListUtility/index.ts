@@ -53,10 +53,10 @@ class ListUtility extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.imagePath = Utils.getIconPath(PCore.getAssetLoader().getStaticServerUrl());
+    this.imagePath = Utils.getIconPath(Utils.getSDKStaticContentUrl());
 
-    this.headerSvgIcon = Utils.getImageSrc(this.icon, PCore.getAssetLoader().getStaticServerUrl());
-    this.settingsSvgIcon = Utils.getImageSrc("more", PCore.getAssetLoader().getStaticServerUrl());
+    this.headerSvgIcon = Utils.getImageSrc(this.icon, Utils.getSDKStaticContentUrl());
+    this.settingsSvgIcon = Utils.getImageSrc("more", Utils.getSDKStaticContentUrl());
     
   }
 

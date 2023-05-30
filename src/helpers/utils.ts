@@ -2,6 +2,7 @@ import * as dayjs from "dayjs";
 import * as customParseFormat from "dayjs/plugin/customParseFormat";
 import * as localizedFormat from "dayjs/plugin/localizedFormat";
 import * as relativeTime from "dayjs/plugin/relativeTime";
+import { SdkConfigAccess } from './config_access';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
@@ -19,6 +20,19 @@ export class Utils {
 
     return sPrefix + this.lastControlID.toString();
   }
+
+  static getSDKStaticContentUrl() {
+    const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
+
+    debugger;
+
+    // NOTE: Needs a trailing slash! So add one if not provided
+    if (!sdkConfigServer.sdkContentServerUrl.endsWith('/')) {
+      sdkConfigServer.sdkContentServerUrl = `${sdkConfigServer.sdkContentServerUrl}/`;
+    }
+
+    return `${sdkConfigServer.sdkContentServerUrl}constellation/`;
+  }  
 
   static getOptionList(configProps: any, dataObject: any): Array<any> {
     let listType = configProps.listType;

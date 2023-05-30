@@ -44,12 +44,12 @@ class SummaryItem extends LitElement {
     super.connectedCallback();
 
 
-    this.imagePath = Utils.getIconPath(PCore.getAssetLoader().getStaticServerUrl());
+    this.imagePath = Utils.getIconPath(Utils.getSDKStaticContentUrl());
 
 
-    this.settingsSvgIcon = Utils.getImageSrc("more", PCore.getAssetLoader().getStaticServerUrl());
+    this.settingsSvgIcon = Utils.getImageSrc("more", Utils.getSDKStaticContentUrl());
     if (this.menuIconOverride != "") {
-      this.menuIconOverride = Utils.getImageSrc(this.menuIconOverride , PCore.getAssetLoader().getStaticServerUrl());
+      this.menuIconOverride = Utils.getImageSrc(this.menuIconOverride , Utils.getSDKStaticContentUrl());
     }
 
 

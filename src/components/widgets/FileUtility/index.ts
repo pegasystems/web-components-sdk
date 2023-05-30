@@ -104,7 +104,7 @@ class FileUtility extends BridgeBase {
     this.lu_name = configProps.label;
     this.lu_icon = "paper-clip";
 
-    this.closeSvgIcon = Utils.getImageSrc("times", PCore.getAssetLoader().getStaticServerUrl());
+    this.closeSvgIcon = Utils.getImageSrc("times", Utils.getSDKStaticContentUrl());
 
 
 
