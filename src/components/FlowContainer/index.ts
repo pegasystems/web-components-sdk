@@ -292,7 +292,7 @@ class FlowContainer extends BridgeBase {
         "assignmentFinished");
 
       
-      this.checkSvg = Utils.getImageSrc("check", PCore.getAssetLoader().getStaticServerUrl());
+      this.checkSvg = Utils.getImageSrc("check", Utils.getSDKStaticContentUrl());
       return;
     }
     else {

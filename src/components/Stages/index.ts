@@ -40,8 +40,8 @@ class Stages extends BridgeBase {
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    this.imagePath = Utils.getIconPath(PCore.getAssetLoader().getStaticServerUrl());
-    this.checkSvgIcon = Utils.getImageSrc("check", PCore.getAssetLoader().getStaticServerUrl());
+    this.imagePath = Utils.getIconPath(Utils.getSDKStaticContentUrl());
+    this.checkSvgIcon = Utils.getImageSrc("check", Utils.getSDKStaticContentUrl());
     
   }
 

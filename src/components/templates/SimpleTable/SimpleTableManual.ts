@@ -57,7 +57,7 @@ class SimpleTableManual extends BridgeBase {
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    this.menuIconOverride = Utils.getImageSrc("trash", PCore.getAssetLoader().getStaticServerUrl());
+    this.menuIconOverride = Utils.getImageSrc("trash", Utils.getSDKStaticContentUrl());
   }
 
   /**

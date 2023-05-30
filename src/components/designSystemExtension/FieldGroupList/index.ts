@@ -18,7 +18,7 @@ class FieldGroupList extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.menuIconDelete = Utils.getImageSrc("trash", PCore.getAssetLoader().getStaticServerUrl());
+    this.menuIconDelete = Utils.getImageSrc("trash", Utils.getSDKStaticContentUrl());
   }
 
   disconnectedCallback() {
