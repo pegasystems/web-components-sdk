@@ -24,8 +24,6 @@ export class Utils {
   static getSDKStaticContentUrl() {
     const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
 
-    debugger;
-
     // NOTE: Needs a trailing slash! So add one if not provided
     if (!sdkConfigServer.sdkContentServerUrl.endsWith('/')) {
       sdkConfigServer.sdkContentServerUrl = `${sdkConfigServer.sdkContentServerUrl}/`;
