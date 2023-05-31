@@ -14,7 +14,7 @@
     "start-prod": "http-server ./dist --port 3501 --gzip --brotli --cors --proxy http://localhost:3501?",
     "start-prod-https": "http-server ./dist --ssl --cert private.pem --key private.key --port 3501 --gzip --brotli --cors --proxy https://localhost:3501?",
     "_comment": "Commands above are those expected to be run by customers/clients",
-    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html",
+    "copy-index": "shx cp dist/index.html dist/simpleportal.html && shx cp dist/index.html dist/portal.html && shx cp dist/index.html dist/fullportal.html && shx cp dist/index.html dist/embedded.html && shx cp src/auth.html dist/auth.html",
     "test": "node playwright-message.js && playwright test --project=chromium MediaCo/portal MediaCo/embedded",
     "test:headed": "playwright test --headed --project=chromium MediaCo/portal MediaCo/embedded",
     "test-report": "playwright show-report",
