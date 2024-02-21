@@ -82,6 +82,11 @@
     "no-empty": "off",
     "no-new-object": "off",
 
+    // added by NMR for updates to Pega configs
+    "no-unreachable-loop": "off",
+    "no-promise-executor-return": "off",
+    "prefer-regex-literals": "off",
+
     "import/no-mutable-exports": "error",
     "sonarjs/max-switch-cases": "error",
     "sonarjs/no-collapsible-if": "off",
