@@ -1,4 +1,5 @@
-import { customElement } from '@lion/core';
+import { customElement } from 'lit/decorators.js';
+
 import { LionInput } from '@lion/input';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 

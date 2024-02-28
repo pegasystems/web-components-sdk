@@ -1,4 +1,6 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { bootstrapStyles } from '../../bridge/BridgeBase/bootstrap-styles'
 
 // NOTE: you need to import ANY component you may render.
@@ -16,8 +18,8 @@ class ActionButtons extends LitElement {
     return bootstrapStyles;
   }
 
-  @property( {attribute: false, type: Array} ) arMainButtons = [];
-  @property( {attribute: false, type: Array} ) arSecondaryButtons = [];
+  @property({ attribute: false, type: Array }) arMainButtons = [];
+  @property({ attribute: false, type: Array }) arSecondaryButtons = [];
 
   // NOTE: ActionButtons is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -32,19 +34,19 @@ class ActionButtons extends LitElement {
     // arStagesHtml.push(html`<div class="psdk-stages">`);
     // arStagesHtml.push(html`<div class="psdk-stages-div">`);
 
-    
+
     if (this.arMainButtons != null) {
       for (let aButton of this.arMainButtons) {
         let name: string = aButton["name"];
         let jsAction: string = aButton["jsAction"];
-  
+
         arButtonHtml.push(html`<button class="btn btn-primary" jsAction=${jsAction} buttonType="primary" @click="${this._buttonClick}" >${name}</button>`);
-  
+
         // add a space between buttons
-        if (this.arMainButtons.indexOf(aButton) < this.arMainButtons.length -1) {
-          arButtonHtml.push(html `&nbsp;`);
+        if (this.arMainButtons.indexOf(aButton) < this.arMainButtons.length - 1) {
+          arButtonHtml.push(html`&nbsp;`);
         }
-  
+
       }
     }
 
@@ -61,24 +63,24 @@ class ActionButtons extends LitElement {
       for (let aButton of this.arSecondaryButtons) {
         let name: string = aButton["name"];
         let jsAction: string = aButton["jsAction"];
-  
+
         arButtonHtml.push(html`<button class="btn btn-secondary" jsAction=${jsAction} buttonType="secondary" @click="${this._buttonClick}" >${name}</button>`);
-        
+
         // add a space between buttons
-        if (this.arSecondaryButtons.indexOf(aButton) < this.arSecondaryButtons.length -1) {
-          arButtonHtml.push(html `&nbsp;`);
+        if (this.arSecondaryButtons.indexOf(aButton) < this.arSecondaryButtons.length - 1) {
+          arButtonHtml.push(html`&nbsp;`);
         }
-        
+
       }
     }
-    
+
 
 
     return arButtonHtml;
   }
 
   aButtonsHtml(): any {
-    
+
     const aBHtml = html`
       <div class="nq_button_grid">
         <div>${this.secondaryButtons()}</div>
@@ -90,7 +92,7 @@ class ActionButtons extends LitElement {
 
   }
 
-  render(){
+  render() {
 
 
     const sContent = html`${this.aButtonsHtml()}`;

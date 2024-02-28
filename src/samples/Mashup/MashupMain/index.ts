@@ -1,4 +1,6 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { SdkConfigAccess } from '../../../helpers/config_access';
 
 import '@lion/button/define';
@@ -21,8 +23,8 @@ declare var myLoadMashup: any;
 class MashupMain extends LitElement {
 
   bHasPConnect: boolean = false;
-  
-  @property( {attribute: false, type: Object } ) props; 
+
+  @property({ attribute: false, type: Object }) props;
 
 
 
@@ -48,8 +50,8 @@ class MashupMain extends LitElement {
   }
 
 
-  getToolbarHtml() : any {
-    const tBHtml = html `
+  getToolbarHtml(): any {
+    const tBHtml = html`
       <div class="cc-toolbar">
         <h1>${PCore.getEnvironmentInfo().getApplicationLabel()}&nbsp;</h1><img src="./assets/img/antenna.svg" class="cc-icon">
       </div>
@@ -58,38 +60,38 @@ class MashupMain extends LitElement {
     return tBHtml;
   }
 
-  getMainHtml() : any {
-    const mHtml = html `
+  getMainHtml(): any {
+    const mHtml = html`
       <div>
         <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
       </div>
     `;
 
-  
+
     return mHtml;
   }
 
 
-  getMashupMainHtml() : any {
+  getMashupMainHtml(): any {
 
     const mMHtml: Array<any> = [];
 
-    mMHtml.push(html `${this.getToolbarHtml()}`);
+    mMHtml.push(html`${this.getToolbarHtml()}`);
 
     if (this.bHasPConnect) {
-      mMHtml.push(html `${this.getMainHtml()}`);
+      mMHtml.push(html`${this.getMainHtml()}`);
     }
 
 
 
-  
+
 
 
     return mMHtml;
   }
 
 
-  render(){
+  render() {
 
     const sContent = this.getMashupMainHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
@@ -97,7 +99,7 @@ class MashupMain extends LitElement {
     let arHtml: Array<any> = [];
 
     // MashupMain not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    arHtml.push(html`<link rel='stylesheet' href='${locBootstrap}'>`);
 
     arHtml.push(mashupMainStyles);
     arHtml.push(sContent);
@@ -110,8 +112,8 @@ class MashupMain extends LitElement {
   /**
    * kick off the Mashup that we're trying to serve up
    */
-   startMashup() {
-    
+  startMashup() {
+
     // NOTE: When loadMashup is complete, this will be called.
     PCore.onPCoreReady(renderObj => {
       // Check that we're seeing the PCore version we expect
@@ -147,7 +149,7 @@ class MashupMain extends LitElement {
     // load the Mashup and handle the onPCoreEntry response that establishes the
     //  top level Pega root element (likely a RootContainer)
 
-     
+
     myLoadMashup("pega-root", false);   // this is defined in bootstrap shell that's been loaded already
 
   }

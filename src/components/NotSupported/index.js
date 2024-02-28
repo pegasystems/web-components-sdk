@@ -1,4 +1,5 @@
-import { html } from '@lion/core';
+import {  html  } from "lit";
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 import '@vaadin/text-field';
 

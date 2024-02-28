@@ -1,4 +1,6 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import download from "downloadjs";
@@ -29,9 +31,9 @@ class Attachment extends BridgeBase {
   bVisible: boolean = true;
 
 
-  @property( {attribute: false, type: Boolean} ) bLoading = false;
-  @property( {attribute: false, type: Boolean} ) bShowSelector = true;
-  @property( {attribute: false, type: Boolean} ) bShowJustDelete = false;
+  @property({ attribute: false, type: Boolean }) bLoading = false;
+  @property({ attribute: false, type: Boolean }) bShowSelector = true;
+  @property({ attribute: false, type: Boolean }) bShowJustDelete = false;
 
 
   annotatedLabel: Object = {};
@@ -54,7 +56,7 @@ class Attachment extends BridgeBase {
     //  To get started, we set Debug to false and Logging to true here. Set to your preferred value during development.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -62,7 +64,7 @@ class Attachment extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = attachmentStyles;
@@ -75,7 +77,7 @@ class Attachment extends BridgeBase {
 
     //let configProps: any = this.pConn$.resolveConfigProps(this.pConn$.getConfigProps());
     this.updateSelf();
-    
+
   }
 
 
@@ -83,16 +85,16 @@ class Attachment extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     let configProps: any = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
@@ -115,14 +117,14 @@ class Attachment extends BridgeBase {
       this.bVisible = Utils.getBooleanValue(configProps["visibility"]);
     }
 
-     // disabled
-     if (configProps["disabled"] != undefined) {
+    // disabled
+    if (configProps["disabled"] != undefined) {
       this.bDisabled = Utils.getBooleanValue(configProps["disabled"]);
     }
-       
+
     if (configProps["readOnly"] != null) {
       this.bReadonly = Utils.getBooleanValue(configProps["readOnly"]);
-    } 
+    }
 
     this.label = label;
     this.value = value;
@@ -132,18 +134,18 @@ class Attachment extends BridgeBase {
     [required, disabled] = [required, disabled].map(
       (prop) => prop === true || (typeof prop === "string" && prop === "true")
     );
-  
+
 
     this.att_categoryName = "";
     if (value && value.pyCategoryName) {
       this.att_categoryName = value.pyCategoryName;
     }
-  
+
     this.att_valueRef = this.thePConn.getStateProps().value;
     this.att_valueRef = this.att_valueRef.indexOf(".") === 0 ? this.att_valueRef.substring(1) : this.att_valueRef;
 
     let fileTemp: any = {};
-  
+
     if (value && value.pxResults && +value.pyCount > 0) {
       fileTemp = this.buildFilePropsFromResponse(value.pxResults[0]);
 
@@ -155,7 +157,7 @@ class Attachment extends BridgeBase {
             category: this.att_categoryName
           };
         }
-  
+
         if (
           fileTemp.responseProps.pzInsKey &&
           !fileTemp.responseProps.pzInsKey.includes("temp")
@@ -171,15 +173,15 @@ class Attachment extends BridgeBase {
 
           oMenu.icon = "download";
           oMenu.text = "Download";
-          oMenu.onClick = () => { this._downloadFileFromList(this.value.pxResults[0])}
+          oMenu.onClick = () => { this._downloadFileFromList(this.value.pxResults[0]) }
           arMenuList.push(oMenu);
           oMenu = {};
           oMenu.icon = "trash";
           oMenu.text = "Delete";
-          oMenu.onClick = () => { this._removeFileFromList(this.arFileList[0])}
+          oMenu.onClick = () => { this._removeFileFromList(this.arFileList[0]) }
           arMenuList.push(oMenu);
-       
-          
+
+
           this.arFileList = new Array();
           this.arFileList.push(this.getNewListUtilityItemProps({
             att: fileTemp.props,
@@ -207,7 +209,7 @@ class Attachment extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -220,63 +222,63 @@ class Attachment extends BridgeBase {
     const aHtml = html`
       <span slot="label">${this.annotatedLabel}</span>
       
-      ${this.bShowSelector?
-      html`
+      ${this.bShowSelector ?
+        html`
           <div class="psdk-modal-file-selector">
           <input hidden type="file" #uploader id="upload-input" @change="${this.uploadMyFiles}"/>
 
-          ${this.bLoading?
+          ${this.bLoading ?
             html`
             <progress-extension ></progress-extension>
             `
             :
             html``
-            }
+          }
             
-          ${this.bDisabled?
-          html`
+          ${this.bDisabled ?
+            html`
           <lion-button class="btn btn-link" disabled @click="${this._onFileLoad}">
               Upload file
           </lion-button>`
-          :
-          html`
+            :
+            html`
           <lion-button class="btn btn-link"  @click="${this._onFileLoad}">
               Upload file
           </lion-button>`}
  
         </div>
       `
-      :
-      html``}
+        :
+        html``}
 
-      ${this.arFileList != null && this.arFileList.length > 0?
-      html `
-        ${this.bShowJustDelete?
+      ${this.arFileList != null && this.arFileList.length > 0 ?
         html`
+        ${this.bShowJustDelete ?
+            html`
           <div class="psdk-attachment-list">
             <summary-list-extension .arItems="${this.arFileList}" menuIconOverride="trash" .menuIconOverrideAction="${this.removeFileFromList}"></summary-list-extension>
           </div>
         `
-        :
-        html`
+            :
+            html`
           <div class="psdk-attachment-list">
             <summary-list-extension .arItems="${this.arFileList}" .menuIconOverrideAction="${this.removeFileFromList}"></summary-list-extension>
           </div>
         `}
       `
-      :
-      html``}
+        :
+        html``}
 
     `;
 
 
     return aHtml;
-    
+
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const sContent = html`${this.getAttachmentHtml()}`;
 
@@ -323,7 +325,7 @@ class Attachment extends BridgeBase {
         };
       }
       if (fileIndex > -1) { this.arFileList.splice(fileIndex, 1) };
-      
+
     } else {
       const attachmentsList = [];
       const currentAttachmentList = this.getCurrentAttachmentsList(this.thePConn.getContextName()).filter(
@@ -388,7 +390,7 @@ class Attachment extends BridgeBase {
           this.thePConn.getContextName()
         )
         .then((fileRes) => {
-          
+
           let reqObj;
           if (PCore.getPCoreVersion()?.includes('8.7')) {
             reqObj = {
@@ -416,7 +418,7 @@ class Attachment extends BridgeBase {
               }
             );
           }
-  
+
           const fieldName = this.thePConn.getStateProps().value;
           const context = this.thePConn.getContextName();
 
@@ -448,19 +450,19 @@ class Attachment extends BridgeBase {
 
 
         })
-         
+
         .catch((error) => {
           // just catching the rethrown error at uploadAttachment
           // to handle Unhandled rejections
         });
     }
 
- 
-  
-  
 
-    
-    
+
+
+
+
+
   }
 
 
@@ -473,7 +475,7 @@ class Attachment extends BridgeBase {
   }) => {
     let actions;
     let isDownloadable = false;
-  
+
     if (att.progress && att.progress !== 100) {
       actions = [
         {
@@ -523,12 +525,12 @@ class Attachment extends BridgeBase {
         }
       ];
     }
-  
+
     return {
       id: att.ID,
       visual: {
         icon: Utils.getIconForAttachment(att),
-        progress: att.progress == 100 ? undefined: att.progress,
+        progress: att.progress == 100 ? undefined : att.progress,
       },
       primary: {
         type: att.type,
@@ -543,7 +545,7 @@ class Attachment extends BridgeBase {
     };
   }
 
-  _onFileLoad(event:any) {
+  _onFileLoad(event: any) {
     event.target.parentElement.getElementsByTagName("input")[0].click();
   }
 
@@ -579,13 +581,13 @@ class Attachment extends BridgeBase {
     return arFiles;
   }
 
-  validateMaxSize(fileObj, maxSizeInMB) : boolean {
+  validateMaxSize(fileObj, maxSizeInMB): boolean {
     const fileSize = (fileObj.size / 1048576).toFixed(2);
     return fileSize < maxSizeInMB;
   }
 
 
- buildFilePropsFromResponse(respObj) {
+  buildFilePropsFromResponse(respObj) {
     return {
       props: {
         meta: `${respObj.pyCategoryName}, ${respObj.pxCreateOperator}`,

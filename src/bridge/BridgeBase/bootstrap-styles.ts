@@ -1,4 +1,4 @@
-import { css } from '@lion/core';
+import { css } from 'lit';
 
 // NOTE: This brings in the entire bootstrap.min.css file!
 //  By not using a <link> tag, we avoid the FOUC (Flash of Unstyled Content)

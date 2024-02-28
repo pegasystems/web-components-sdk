@@ -1,4 +1,6 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 
 
@@ -26,17 +28,17 @@ declare var PCore: any;
 
 @customElement('view-container')
 class ViewContainer extends BridgeBase {
-  @property( {attribute: true, type: Boolean} ) displayOnlyFA = false; 
+  @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
 
-  @property( {attribute: false, type: String} ) templateName;
-  @property({attribute: false, type: String}) title:string = `${this.theComponentName}: placeholder`;
-  @property( {attribute: false, type: String} ) theBuildName;
-  @property( {attribute: false, type: String} ) context;
+  @property({ attribute: false, type: String }) templateName;
+  @property({ attribute: false, type: String }) title: string = `${this.theComponentName}: placeholder`;
+  @property({ attribute: false, type: String }) theBuildName;
+  @property({ attribute: false, type: String }) context;
   // JA - created object is now a View with a Template
   //  Use its PConnect to render the CaseView; DON'T replace this.pConn$
-  @property( {attribute: false, type: Object} ) createdViewPConn;
+  @property({ attribute: false, type: Object }) createdViewPConn;
 
-  @property({attribute: false, type: String}) routingInfo = "default value";
+  @property({ attribute: false, type: String }) routingInfo = "default value";
 
   state: any;
 
@@ -47,7 +49,7 @@ class ViewContainer extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -58,7 +60,7 @@ class ViewContainer extends BridgeBase {
 
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // Add this component's styles to the array of templates to render
     this.theComponentStyleTemplate = viewContainerStyles;
@@ -77,7 +79,7 @@ class ViewContainer extends BridgeBase {
 
     this.thePConn.isBoundToState();
 
-   
+
     const containerMgr = this.thePConn.getContainerManager();
 
     this.prepareDispatchObject = this.prepareDispatchObject.bind(this);
@@ -108,7 +110,7 @@ class ViewContainer extends BridgeBase {
       PCore.getContainerUtils().setContainerLimit(`${APP.APP}/${name}`, limit);
     }
 
-    
+
 
 
     if (this.thePConn.getMetadata()["children"]) {
@@ -132,14 +134,14 @@ class ViewContainer extends BridgeBase {
   onStateChange() {
     super.onStateChange();
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
-    if (bShouldUpdate) {  
+    if (bShouldUpdate) {
       this.updateSelf();
     }
-  } 
+  }
 
 
   /**
@@ -147,7 +149,7 @@ class ViewContainer extends BridgeBase {
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     //  ORIGINAL CODE from Chandra code, etc.
     // const activeContainer = PCore.getContainerUtils().getActiveContainerItemContext("app/primary");
@@ -155,7 +157,7 @@ class ViewContainer extends BridgeBase {
 
     // const thePropValRoutingInfo = this.getComponentProp("routingInfo");
     // if (this.bLogging) { console.log(`thePropValRoutingInfo: ${JSON.stringify(thePropValRoutingInfo)}`); }
-    
+
     // if (routingInfo !== null) {
     //   if (this.bLogging) { console.log(`routingInfo: ${JSON.stringify(routingInfo)}`); }
     //   this.routingInfo = JSON.stringify(routingInfo);
@@ -164,7 +166,7 @@ class ViewContainer extends BridgeBase {
     if (this.children == null) {
       this.children = this.thePConn.getChildren();
     }
- 
+
     const routingInfo = this.getComponentProp("routingInfo");
     const loadingInfo = this.getComponentProp("loadingInfo");
     if (this.bLogging) { console.log(`${this.theComponentName}: routingInfo prop: ${JSON.stringify(routingInfo)} | loadingInfo: ${loadingInfo}`); }
@@ -214,7 +216,7 @@ class ViewContainer extends BridgeBase {
           //  Note that we're now using the newly created View's PConnect in the
           //  ViewContainer HTML template to guide what's rendered similar to what
           //  the React return of React.Fragment does
-          
+
           this.createdViewPConn = newComp;
           const newConfigProps = newComp.getConfigProps();
           this.templateName = ('template' in newConfigProps) ? newConfigProps["template"] : "";
@@ -236,12 +238,12 @@ class ViewContainer extends BridgeBase {
     }
 
 
-  }  
+  }
 
 
-/**
- * Adapted from Angular SDK
- */
+  /**
+   * Adapted from Angular SDK
+   */
   prepareDispatchObject(): Object {
     const baseContext = this.thePConn.getContextName();
     const { acName = "primary" } = this.thePConn.getContainerName();
@@ -263,9 +265,9 @@ class ViewContainer extends BridgeBase {
 
 
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -296,13 +298,13 @@ class ViewContainer extends BridgeBase {
 
     const theOuterTemplate = html`
       <div class="psdk-view-container-top" id=${this.theBuildName}>
-        ${ (this.title !== "") ? html`<h4>${this.title}</h4>` : nothing }
+        ${(this.title !== "") ? html`<h4>${this.title}</h4>` : nothing}
         <div>${theInnerTemplate}</div>
       </div>
-      ${ showLoadingIndicator ? html`
+      ${showLoadingIndicator ? html`
         <div class="progress-box">
           <progress-extension id="${this.theComponentId}"></progress-extension>
-        </div>` : nothing }
+        </div>` : nothing}
 
     `;
 
@@ -313,12 +315,12 @@ class ViewContainer extends BridgeBase {
 
     this.renderTemplates.push(theCreatedRefComponent);
     // was: this.renderTemplates.push(theOuterTemplate);
-    
+
 
     // NOTE: lit-html knows how to render array of lit-html templates!
     return this.renderTemplates;
 
-    
+
 
   }
 

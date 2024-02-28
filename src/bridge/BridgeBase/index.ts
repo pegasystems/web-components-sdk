@@ -1,7 +1,8 @@
 /* eslint-disable sonarjs/max-switch-cases */
 // Lion doc - https://lion-web.netlify.app/docs/systems/core/overview/ - says
 //  best practice to ensure compatible versions is to import LitElement from @lion/core
-import { LitElement, property, html, nothing } from "@lion/core";
+import { property } from "lit/decorators.js";
+import { LitElement,  html, nothing } from "lit";
 import * as isEqual from "fast-deep-equal";
 import Utils from "../../helpers/utils";
 import { bootstrapStyles } from "./bootstrap-styles";

@@ -1,4 +1,6 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import {  html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import { logout } from '../../helpers/authManager';

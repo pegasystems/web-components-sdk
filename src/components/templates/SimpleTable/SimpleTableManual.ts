@@ -1,5 +1,7 @@
 /* eslint-disable no-nested-ternary */
-import { html, customElement, property } from "@lion/core";
+import { html } from "lit";
+import { customElement, property } from "lit/decorators.js";
+
 import { BridgeBase } from "../../../bridge/BridgeBase";
 // NOTE: you need to import ANY component you may render.
 import "../PromotedFilters";
@@ -291,22 +293,22 @@ class SimpleTableManual extends BridgeBase {
       <thead class="thead-light">
         <tr>
           ${this.displayedColumns.map((label) => {
-            return html`<th scope="col">${label}</th>`;
-          })}
+      return html`<th scope="col">${label}</th>`;
+    })}
         </tr>
       </thead>
     `;
 
     const theDataRows = html`<tbody>
       ${this.rowData.map(
-        (row) => html`<tr scope="row">
+      (row) => html`<tr scope="row">
           ${this.displayedColumns.map((colKey) => {
-            return html`<td>
+        return html`<td>
               ${typeof row[colKey] === "boolean" && !row[colKey] ? "False" : typeof row[colKey] === "boolean" && row[colKey] ? "True" : row[colKey]}
             </td>`;
-          })}
+      })}
         </tr>`
-      )}
+    )}
     </tbody>`;
 
     return html`<table class="table table-bordered">
@@ -319,15 +321,15 @@ class SimpleTableManual extends BridgeBase {
       <thead class="thead-light">
         <tr>
           ${this.displayedColumns.map((label) => {
-            return html`<th scope="col">${label}</th>`;
-          })}
+      return html`<th scope="col">${label}</th>`;
+    })}
         </tr>
       </thead>
     `;
 
     const theDataRows = html`<tbody>
       ${this.elementsData.map(
-        (row: any, index: number) => html`<tr scope="row">
+      (row: any, index: number) => html`<tr scope="row">
           ${row.map((config) => html` <td>${BridgeBase.getComponentFromConfigObj(config)}</td> `)}
           <td>
             <button type="button" id="delete-button" class="psdk-utility-button" @click=${() => this.deleteRecord(index)}>
@@ -335,7 +337,7 @@ class SimpleTableManual extends BridgeBase {
             </button>
           </td>
         </tr>`
-      )}
+    )}
     </tbody>`;
 
     return html`<table class="table table-bordered">

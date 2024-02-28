@@ -1,4 +1,6 @@
-import { html, customElement, property, LitElement, nothing } from '@lion/core';
+import { LitElement, html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+
 import { SdkConfigAccess } from '../../../helpers/config_access';
 import { Utils } from '../../../helpers/utils';
 

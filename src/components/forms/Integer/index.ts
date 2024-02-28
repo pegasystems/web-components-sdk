@@ -1,4 +1,6 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import {  html, nothing } from "lit";
+import { customElement  } from "lit/decorators.js";
+
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 

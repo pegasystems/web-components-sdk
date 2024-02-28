@@ -24,10 +24,10 @@
     "lint:fix": "eslint --fix --color --cache --cache-location node_modules/.cache/eslint/ src"
   },
   "dependencies": {
+    "lit": "^2.8.0",
     "@lion/button": "^0.18.1",
     "@lion/checkbox-group": "^0.21.1",
     "@lion/combobox": "^0.11.1",
-    "@lion/core": "^0.24.0",
     "@lion/form-core": "^0.18.3",
     "@lion/input-amount": "^0.18.0",
     "@lion/input-datepicker": "^0.26.1",

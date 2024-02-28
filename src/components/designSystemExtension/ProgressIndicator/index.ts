@@ -1,4 +1,6 @@
-import { html, css, customElement, property, LitElement, nothing } from '@lion/core';
+import {  html, css  } from "lit";
+import { customElement  } from "lit/decorators.js";
+
 import { LionProgressIndicator } from '@lion/progress-indicator';
 
 // NOTE: you need to import ANY component you may render.

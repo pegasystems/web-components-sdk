@@ -1,4 +1,6 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 // NOTE: you need to import ANY component you may render.
@@ -15,25 +17,25 @@ declare var PCore: any;
 //  to be used as a starting point for any new components as they're built out
 @customElement('todo-component')
 class ToDo extends BridgeBase {
-  @property( {attribute: true} ) caseInfoID;
-  @property( {attribute: true, type: Object} ) datasource;
-  @property( {attribute: true} ) headerText;
-  @property( {attribute: true} ) itemKey;
-  @property( {attribute: true, type: Boolean} ) showTodoList = true;
-  @property( {attribute: false} ) target;
-  @property( {attribute: false} ) type = "worklist";
-  @property( {attribute: true} ) context;
-  @property( {attribute: true, type: Object} ) myWorkList;
+  @property({ attribute: true }) caseInfoID;
+  @property({ attribute: true, type: Object }) datasource;
+  @property({ attribute: true }) headerText;
+  @property({ attribute: true }) itemKey;
+  @property({ attribute: true, type: Boolean }) showTodoList = true;
+  @property({ attribute: false }) target;
+  @property({ attribute: false }) type = "worklist";
+  @property({ attribute: true }) context;
+  @property({ attribute: true, type: Object }) myWorkList;
 
-  @property( {attribute: false, type: Object} ) configProps;
-  @property( {attribute: false} ) currentUser;
-  @property( {attribute: false} ) currentUserInitials = "--";
+  @property({ attribute: false, type: Object }) configProps;
+  @property({ attribute: false }) currentUser;
+  @property({ attribute: false }) currentUserInitials = "--";
 
-  @property( {attribute: false, type: Number} ) assignmentCount;
+  @property({ attribute: false, type: Number }) assignmentCount;
 
-  @property( {attribute: false, type: Array}) arAssignments;
+  @property({ attribute: false, type: Array }) arAssignments;
 
-  @property( {attribute: true, type: Object} ) assignmentsSource;
+  @property({ attribute: true, type: Object }) assignmentsSource;
 
   bShowMore: boolean = true;
 
@@ -45,7 +47,7 @@ class ToDo extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -53,7 +55,7 @@ class ToDo extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // Add this component's styles to the array of templates to render
     this.theComponentStyleTemplate = todoStyles;
@@ -69,7 +71,7 @@ class ToDo extends BridgeBase {
     );
 
     this.updateToDo();
-    
+
   }
 
 
@@ -77,7 +79,7 @@ class ToDo extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     PCore.getPubSubUtils().unsubscribe(
       PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
@@ -85,13 +87,13 @@ class ToDo extends BridgeBase {
     );
 
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
@@ -103,7 +105,7 @@ class ToDo extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -114,7 +116,7 @@ class ToDo extends BridgeBase {
 
 
   updateToDo() {
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.configProps = this.thePConn.getConfigProps();
 
@@ -150,10 +152,10 @@ class ToDo extends BridgeBase {
       }
 
     }
-    
+
     this.currentUser = PCore.getEnvironmentInfo().getOperatorName();
     this.currentUserInitials = Utils.getInitials(this.currentUser);
-    
+
   }
 
   getID(assignment: any) {
@@ -176,11 +178,11 @@ class ToDo extends BridgeBase {
   topThreeAssignments(arList: Array<any>) {
     let arList3: Array<any> = new Array<any>();
 
-    if (arList && typeof(arList) == "object") {
+    if (arList && typeof (arList) == "object") {
       let len = arList.length;
       if (len > 3) len = 3;
-  
-      for (let i =0; i < len; i++) {
+
+      for (let i = 0; i < len; i++) {
         arList3.push(arList[i]);
       }
     }
@@ -191,7 +193,7 @@ class ToDo extends BridgeBase {
 
   getCaseInfoAssignment(arList: Array<any>, caseInfoID: string) {
     let arList1: Array<any> = new Array<any>();
-    for ( var aIndex in arList) {
+    for (var aIndex in arList) {
       if (arList[aIndex].ID.indexOf(caseInfoID) >= 0) {
 
         let listRow = JSON.parse(JSON.stringify(arList[aIndex]));
@@ -205,7 +207,7 @@ class ToDo extends BridgeBase {
           // mimic regular list
           listRow["id"] = listRow["ID"];
         }
-        
+
         arList1.push(listRow);
         break;
       }
@@ -217,14 +219,14 @@ class ToDo extends BridgeBase {
 
 
   clickGo(inAssignmentArray: any) {
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
-    let { id, classname='' } = inAssignmentArray[0];
-    
+    let { id, classname = '' } = inAssignmentArray[0];
+
     let sTarget = this.thePConn.getContainerName();
     let sTargetContainerName = sTarget;
 
-    let options = { "containerName": sTargetContainerName};
+    let options = { "containerName": sTargetContainerName };
 
     if (classname == null || classname == "") {
       classname = this.thePConn.getCaseInfo().getClassName();
@@ -263,9 +265,9 @@ class ToDo extends BridgeBase {
   }
 
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -277,23 +279,23 @@ class ToDo extends BridgeBase {
     const theTemplate = html`
         <div class="psdk-todo">
           <div class="psdk-todo-header">
-              ${ this.showTodoList? html`<div class='psdk-avatar'>${this.currentUserInitials}</div>` : nothing }
+              ${this.showTodoList ? html`<div class='psdk-avatar'>${this.currentUserInitials}</div>` : nothing}
               <div class="psdk-todo-text " id="header-text">${this.headerText}</div>
-              ${ this.showTodoList? html`<div class='psdk-assignment-count'>${this.assignmentCount}</div>` : nothing }
+              ${this.showTodoList ? html`<div class='psdk-assignment-count'>${this.assignmentCount}</div>` : nothing}
           </div>
           <br><br>
-          ${ this.showTodoList? html`<div class='psdk-display-divider'></div>` : nothing }
+          ${this.showTodoList ? html`<div class='psdk-display-divider'></div>` : nothing}
           
           <div class="psdk-todo-assignments">
-            ${this.arAssignments.map((assignment) => 
-                html`
+            ${this.arAssignments.map((assignment) =>
+      html`
                   <div class="psdk-todo-assignment">
                       <div class="psdk-avatar">${this.currentUserInitials}</div>
                       <div class="psdk-todo-card">
-                          <div class="psdk-todo-assignment-title">${ assignment.stepName }</div>
+                          <div class="psdk-todo-assignment-title">${assignment.stepName}</div>
                           <div class="psdk-todo-assignment-data">
                               <div class="psdk-todo-assignment-task">Task 
-                                in <span class="psdk-todo-id" @click=${() => { this.clickGo([assignment]) }}>${ assignment.name } ${this.getID(assignment)}</span>
+                                in <span class="psdk-todo-id" @click=${() => { this.clickGo([assignment]) }}>${assignment.name} ${this.getID(assignment)}</span>
                                   <span *ngIf="assignment.status != undefined">
                                       &bull; <span class="psdk-todo-assignment-status">${assignment?.status}</span> 
                                   </span>
@@ -309,9 +311,9 @@ class ToDo extends BridgeBase {
                 `)}
           </div>
 
-          ${ this.showTodoList?
-          html`
-            ${this.bShowMore ? 
+          ${this.showTodoList ?
+        html`
+            ${this.bShowMore ?
             html`
               <div class="psdk-todo-show-more">
                 <lion-button btn btn-link @click="${this._showMore}">Show more</lion-button>
@@ -323,17 +325,17 @@ class ToDo extends BridgeBase {
                 <lion-button btn btn-link @click="${this._showLess}">Show less</lion-button>
               </div>
             `
-            }
-          `
-          :
-          html``
           }
+          `
+        :
+        html``
+      }
           
           
 
     `;
 
-    this.renderTemplates.push( theTemplate );
+    this.renderTemplates.push(theTemplate);
 
     return this.renderTemplates;
 

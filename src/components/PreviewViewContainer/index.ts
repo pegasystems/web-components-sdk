@@ -1,4 +1,6 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../designSystemExtension/ProgressIndicator';
@@ -26,7 +28,7 @@ class PreviewViewContainer extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -34,7 +36,7 @@ class PreviewViewContainer extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     // this.theComponentStyleTemplate = previewViewContainerStyles;
@@ -47,7 +49,7 @@ class PreviewViewContainer extends BridgeBase {
     containerMgr.initializeContainers({
       type: "multiple"
     });
-    
+
   }
 
 
@@ -55,16 +57,16 @@ class PreviewViewContainer extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
@@ -76,7 +78,7 @@ class PreviewViewContainer extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -85,9 +87,9 @@ class PreviewViewContainer extends BridgeBase {
     }
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -102,7 +104,7 @@ class PreviewViewContainer extends BridgeBase {
     // No point in showing loading indicator if there are no children since nothing is really loading
     //  and there's no "container" div to center the indicator.
     if ((this.children !== null) && showLoadingIndicator) {
-      this.renderTemplates.push( html`<progress-extension id="${this.theComponentId}"></progress-extension>`)
+      this.renderTemplates.push(html`<progress-extension id="${this.theComponentId}"></progress-extension>`)
     }
 
     return this.renderTemplates;
