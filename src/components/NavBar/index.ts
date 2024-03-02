@@ -1,7 +1,7 @@
 import { html, customElement, property, nothing } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
-import { logout } from '../../helpers/authManager';
+import { logout } from '@pega/auth/lib/sdk-auth-manager';
 
 // NOTE: you need to import ANY component you may render.
 

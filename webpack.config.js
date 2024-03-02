@@ -12,10 +12,6 @@ module.exports = (env, argv) => {
 
   pluginsToAdd.push(new CleanWebpackPlugin());
   pluginsToAdd.push(new HtmlWebpackPlugin({
-    template: './src/auth.html',
-    filename: 'auth.html'
-  }));
-  pluginsToAdd.push(new HtmlWebpackPlugin({
     template: './src/index.html',
     filename: 'index.html'
   }));
@@ -33,6 +29,14 @@ module.exports = (env, argv) => {
         {
           from: './assets/css/*',
           to: './',
+        },
+        {
+          from: './node_modules/@pega/auth/lib/oauth-client/authDone.html',
+          to: './auth.html'
+        },
+        {
+          from: './node_modules/@pega/auth/lib/oauth-client/authDone.js',
+          to: './'
         },
         {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',

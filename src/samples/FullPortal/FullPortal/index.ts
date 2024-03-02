@@ -1,5 +1,5 @@
 import { html, customElement, LitElement } from '@lion/core';
-import { getSdkConfig, SdkConfigAccess } from '../../../helpers/config_access';
+import { SdkConfigAccess, loginIfNecessary } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 
 import '@lion/button/define';
@@ -9,7 +9,6 @@ import '@lion/textarea/define';
 
 // import the component's styles as HTML with <style>
 import { fullPortalStyles } from './full-portal-styles';
-import { loginIfNecessary } from "../../../helpers/authManager";
 
 
 // Declare that PCore will be defined when this code is run
@@ -30,11 +29,8 @@ class FullPortal extends LitElement {
 
     sampleMainInit( this, 'full-portal-component', 'app-entry' );
     
-    // Make sure sdkConfig is loaded prior to attempting to login
-    getSdkConfig().then( sdkConfig => {
-      // To eliminate the login button/component, login directly
-      loginIfNecessary("portal", false);
-    })
+    // Present challenge screen if necessary and bootstrap Constellation 
+    loginIfNecessary({appName:'portal', mainRedirect: true});
 
   }
 

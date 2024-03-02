@@ -1,7 +1,7 @@
 import { html, customElement, property, LitElement, nothing } from '@lion/core';
 import '../RootContainer';
 import '../NotSupported';
-import { SdkConfigAccess } from '../../helpers/config_access';
+import { SdkConfigAccess, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
 import { compareSdkPCoreVersions } from '../../helpers/versionHelpers';
 
 // Declare that PCore will be defined when this code is run
@@ -94,32 +94,32 @@ class AppEntry extends LitElement {
     // load the Portal and handle the onPCoreEntry response that establishes the
     //  top level Pega root element (likely a RootContainer)
 
-    SdkConfigAccess.selectPortal()
-    .then( () => {
-      const thePortal = SdkConfigAccess.getSdkConfigServer().appPortal;
-      myLoadPortal("pega-root", thePortal, []);   // this is defined in bootstrap shell that's been loaded already  
-    })
-
-    const thePortal = SdkConfigAccess.getSdkConfigServer().appPortal;
+    const { appPortal: thePortal, excludePortals } = SdkConfigAccess.getSdkConfigServer();
     const defaultPortal = PCore?.getEnvironmentInfo?.().getDefaultPortal?.();
+    const queryPortal = sessionStorage.getItem('wcsdk_portalName');
 
     // Note: myLoadPortal and myLoadDefaultPortal are set when bootstrapWithAuthHeader is invoked
-    if(thePortal){
+    if (queryPortal) {
+      myLoadPortal('pega-root', queryPortal, []);
+    } else if (thePortal) {
+      // eslint-disable-next-line no-console
       console.log(`Loading specified appPortal: ${thePortal}`);
-      myLoadPortal("app-root", thePortal, []);   // this is defined in bootstrap shell that's been loaded already
-    }else if(myLoadDefaultPortal && defaultPortal){
+      myLoadPortal('pega-root', thePortal, []);
+    } else if (myLoadDefaultPortal && defaultPortal && !excludePortals.includes(defaultPortal)) {
+      // eslint-disable-next-line no-console
       console.log(`Loading default portal`);
-      myLoadDefaultPortal("app-root", []);
-    }else{
-      // This path of selecting a portal by enumerating entries within current user's access group's portals list
-      //  relies on Traditional DX APIs and should be avoided when the Constellation bootstrap supports
-      //  the loadDefaultPortal API
-      SdkConfigAccess.selectPortal()
-      .then( () => {
-        const selPortal = SdkConfigAccess.getSdkConfigServer().appPortal;
-        myLoadPortal("app-root", selPortal, []);   // this is defined in bootstrap shell that's been loaded already
-      })
+      myLoadDefaultPortal('pega-root', []);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('Loading portal selection screen');
+      // Add logic to display a portal selection screen
+      // Getting current user's access group's available portals list other than excluded portals (relies on Traditional DX APIs)
+      getAvailablePortals().then((portals) => {
+        // Add logic to display a portal selection screen...for now use first one
+         portals.length && myLoadPortal('pega-root', portals[0], []);
+      });
     }
+
 
   }
 

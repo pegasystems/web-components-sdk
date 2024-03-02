@@ -1,6 +1,6 @@
 import { html, customElement, property } from '@lion/core';
+import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 import { BridgeBase } from '../../../bridge/BridgeBase';
-import { SdkConfigAccess } from '../../../helpers/config_access';
 // NOTE: you need to import ANY component you may render.
 
 import '../../forms/AutoComplete';
