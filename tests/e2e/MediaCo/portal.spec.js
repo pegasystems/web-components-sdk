@@ -7,7 +7,7 @@ const endpoints = require("../../../sdk-config.json");
 let caseID;
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:3501/portal');
+  await page.goto(config.config.portalUrl);
 });
 
 test.describe('E2E test', () => {
@@ -31,6 +31,7 @@ test.describe('E2E test', () => {
     await newServiceCase.click();
 
     caseID = await page.locator('#caseId').textContent();
+    console.log(`caseID: ${caseID}`);
 
     // New Customer Page
     await page.fill('lion-input[datatestid="BC910F8BDF70F29374F496F05BE0330C"] input', 'John');
@@ -71,24 +72,38 @@ test.describe('E2E test', () => {
 
     const currentCaseID = await page.locator('div[id="current-caseID"]').textContent();
     const filePath = path.join(__dirname, '../../../assets/img/cableinfo.png');
-    await page.setInputFiles('#upload-input', filePath);
+    const pCoreVersion = await page.evaluate(() => window.PCore.getPCoreVersion());
+    const isInfinity23OrHigher = ['8.23.0', '23.1.1'].includes(pCoreVersion);
 
+    // Insert from inline attachment field (could also do the insert from the right panel)
     await Promise.all([
-      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}/api/application/v2/attachments/upload`)
+      page.waitForResponse(
+        `${endpoints.serverConfig.infinityRestServerUrl}${
+          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
+        }/api/application/v2/attachments/upload`
+      ),
+      page.setInputFiles('#upload-input', filePath)
     ]);
-
+ 
     await page.locator('button:has-text("submit")').click();
 
+    await page.locator('list-utility-extension').getByRole('button').click();
+    await page.getByText('Add files').click();
+  
+    // This is inserting from right panel (attach count doesn't increase with attachment added to attach control)
+    await page.setInputFiles('#utility-upload-input', filePath);
     await Promise.all([
-      page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}/api/application/v2/cases/${currentCaseID}/attachments`),
+      page.waitForResponse(
+        `${endpoints.serverConfig.infinityRestServerUrl}${
+          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
+        }/api/application/v2/cases/${currentCaseID}/attachments${isInfinity23OrHigher ? '?includeThumbnail=false' : ''}`
+      ),
+      page.getByText('Attach files').click()
     ]);
 
     const attachmentCount = await page.locator('div[id="attachments-count"]').textContent();
     await expect(Number(attachmentCount)).toBeGreaterThan(0);
 
-    await page
-      .locator('text=Thank you! The next step in this case has been routed appropriately.')
-      .click();
   }, 10000);
 
   test('should enter a discount value($) and send to tech', async ({ page }) => {

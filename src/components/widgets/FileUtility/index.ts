@@ -254,7 +254,7 @@ class FileUtility extends BridgeBase {
       <div class="psdk-modal-file-top">
           <h3>Add local files</h3>
           <div class="psdk-modal-body">
-            <input hidden type="file" multiple #uploader @change="${this.uploadMyFiles}"/>
+            <input hidden type="file" multiple #uploader @change="${this.uploadMyFiles}" id="utility-upload-input"/>
             
             <lion-button class="btn btn-link" @click="${this._onFileLoad}">
                 Upload file(s)
