@@ -1,5 +1,5 @@
 import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess } from '../../../helpers/config_access';
+import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 // NOTE: you need to import ANY component you may render.
 

@@ -1,5 +1,5 @@
 import { html, customElement, property, LitElement } from '@lion/core';
-import { getSdkConfig, SdkConfigAccess } from '../../../helpers/config_access';
+import { getSdkConfig, SdkConfigAccess, loginIfNecessary, sdkSetAuthHeader } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 
 import '@lion/button/define';
@@ -11,7 +11,6 @@ import '../MashupMain';
 
 // import the component's styles as HTML with <style>
 import { mashupPortalStyles } from './mashup-portal-styles';
-import { loginIfNecessary, sdkSetAuthHeader } from "../../../helpers/authManager";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -52,7 +51,7 @@ class MashupPortal extends LitElement {
       }
   
   
-      loginIfNecessary("embedded", true);
+      loginIfNecessary({appName: 'embedded', mainRedirect: false});
   
     });
 

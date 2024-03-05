@@ -1,5 +1,5 @@
 import { html, customElement, LitElement } from '@lion/core';
-import { getSdkConfig, SdkConfigAccess } from '../../../helpers/config_access';
+import { getSdkConfig, SdkConfigAccess, loginIfNecessary } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 
 import '@lion/button/define';
@@ -11,7 +11,6 @@ import '../SimpleMain';
 
 // import the component's styles as HTML with <style>
 import { simplePortalStyles } from './simple-portal-styles';
-import { loginIfNecessary } from "../../../helpers/authManager";
 
 
 
@@ -36,7 +35,7 @@ class SimplePortal extends LitElement {
     // Make sure sdkConfig is loaded prior to attempting to login
     getSdkConfig().then( sdkConfig => {
         // To eliminate the login button/component, login directly
-      loginIfNecessary("simpleportal", false);
+      loginIfNecessary({appName: 'simpleportal', mainRedirect: true});
     });
     
   }

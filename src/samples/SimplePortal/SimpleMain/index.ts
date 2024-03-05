@@ -1,5 +1,5 @@
 import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess } from '../../../helpers/config_access';
+import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
@@ -11,7 +11,6 @@ import '../SimpleSideBar';
 
 // import the component's styles as HTML with <style>
 import { simpleMainStyles } from './simple-main-styles';
-import { sdkGetAuthHeader } from '../../../helpers/authManager';
 
 
 
@@ -130,6 +129,7 @@ class SimpleMain extends LitElement {
 
   }
 
+/*
   async firstUpdated() {
     const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
     const serverUrl = sdkConfigServer.infinityRestServerUrl;
@@ -171,7 +171,7 @@ class SimpleMain extends LitElement {
 
       })
   }
-
+*/
 
   getCaseTypeButtons(arCaseTypes: Array<any>) {
 

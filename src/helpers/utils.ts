@@ -2,7 +2,7 @@ import * as dayjs from "dayjs";
 import * as customParseFormat from "dayjs/plugin/customParseFormat";
 import * as localizedFormat from "dayjs/plugin/localizedFormat";
 import * as relativeTime from "dayjs/plugin/relativeTime";
-import { SdkConfigAccess } from './config_access';
+import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
