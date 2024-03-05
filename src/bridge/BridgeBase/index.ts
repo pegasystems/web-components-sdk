@@ -180,9 +180,9 @@ export class BridgeBase extends LitElement {
     //  If the incoming pConn doesn't meet the criteria, we set this.thePConn to null
     //    and later on in this function, we don't try to get its children (since there aren't any)
     //  in every component derived from BridgeBase
-    if (this.pConn.getPConnect !== undefined && typeof this.pConn.getPConnect === "function") {
+    if (this.pConn?.getPConnect !== undefined && typeof this.pConn.getPConnect === "function") {
       this.thePConn = this.pConn.getPConnect();
-    } else if (this.pConn.getChildren && typeof this.pConn.getChildren === "function") {
+    } else if (this.pConn?.getChildren && typeof this.pConn.getChildren === "function") {
       this.thePConn = this.pConn;
     } else {
       // NOT a PConn -
