@@ -1,11 +1,12 @@
 /* eslint-disable no-undef */
 
 const { test } = require('@playwright/test');
+const config = require('../../config');
 const common = require('../../common');
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await page.goto('http://localhost:3501/embedded');
+  await page.goto(config.config.embeddedUrl);
 });
 
 test.describe('E2E test', () => {
