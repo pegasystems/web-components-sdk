@@ -1,4 +1,6 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import {  html  } from "lit";
+import { customElement, property } from "lit/decorators.js";
+
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import * as isEqual from 'fast-deep-equal';
 // NOTE: you need to import ANY component you may render.

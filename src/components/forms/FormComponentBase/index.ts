@@ -1,4 +1,6 @@
-import { html, property, nothing, css } from '@lion/core';
+import {  html  } from "lit";
+import {  property } from "lit/decorators.js";
+
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
 // FormComponentBase needs to add some styling to the BridgeBase default styles

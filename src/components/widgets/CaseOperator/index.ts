@@ -1,4 +1,6 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
@@ -13,12 +15,12 @@ declare var PCore: any;
 
 @customElement('case-operator-widget')
 class CaseOperator extends BridgeBase {
-  @property( { attribute: true, type: String }) label: String = "default label";
-  @property( { attribute: true, type: String }) name: String = "default name";
-  @property( { attribute: true, type: String }) helperText: String = "";
-  @property( { attribute: true, type: String }) theId: String = "";
-  @property( { attribute: false, type: Array }) fields: any = [];
-  @property( { attribute: false, type: Boolean}) bShowPopover: Boolean = false;
+  @property({ attribute: true, type: String }) label: String = "default label";
+  @property({ attribute: true, type: String }) name: String = "default name";
+  @property({ attribute: true, type: String }) helperText: String = "";
+  @property({ attribute: true, type: String }) theId: String = "";
+  @property({ attribute: false, type: Array }) fields: any = [];
+  @property({ attribute: false, type: Boolean }) bShowPopover: Boolean = false;
 
 
   constructor() {
@@ -28,7 +30,7 @@ class CaseOperator extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -36,14 +38,14 @@ class CaseOperator extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = caseOperatorStyles;
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-    
+
   }
 
 
@@ -51,16 +53,16 @@ class CaseOperator extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
@@ -72,7 +74,7 @@ class CaseOperator extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -183,11 +185,11 @@ class CaseOperator extends BridgeBase {
       <div class="form-group psdk-operator psdk-double">
         <div class="psdk-single psdk-top-pad">${this.label}</div>
         <div class="psdk-double">
-          <button class="btn btn-light" color="primary" style="text-decoration: underline;" @click="${ this.showOperator }">${this.name}</button>
+          <button class="btn btn-light" color="primary" style="text-decoration: underline;" @click="${this.showOperator}">${this.name}</button>
         </div>
       </div>
 
-      ${ (this.bShowPopover) ?
+      ${(this.bShowPopover) ?
         html`
           <div class="psdk-operator-popover">
             <dl>
@@ -201,14 +203,14 @@ class CaseOperator extends BridgeBase {
             </dl>
         </div>
         `
-         :
-         nothing }
-    `;  
+        :
+        nothing}
+    `;
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -216,7 +218,7 @@ class CaseOperator extends BridgeBase {
 
     // this.addChildTemplates();
 
-    this.renderTemplates.push( this.theRenderedDiv() );
+    this.renderTemplates.push(this.theRenderedDiv());
 
     return this.renderTemplates;
 

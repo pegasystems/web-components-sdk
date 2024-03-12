@@ -1,4 +1,6 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
@@ -13,9 +15,9 @@ declare var PCore: any;
 //  to be used as a starting point for any new components as they're built out
 @customElement('cancel-alert-component')
 class CancelAlert extends BridgeBase {
-  @property( {attribute: true, type: String} ) value = "";
+  @property({ attribute: true, type: String }) value = "";
 
-  @property({ attribute: false, type: Boolean}) bShowAlert = false;
+  @property({ attribute: false, type: Boolean }) bShowAlert = false;
 
   heading: string = "";
   body1: string = "";
@@ -29,7 +31,7 @@ class CancelAlert extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -37,14 +39,14 @@ class CancelAlert extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = cancelAlertStyles;
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-    
+
   }
 
 
@@ -52,7 +54,7 @@ class CancelAlert extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
@@ -64,7 +66,7 @@ class CancelAlert extends BridgeBase {
       const caseInfo = this.thePConn.getCaseInfo();
       const caseName = caseInfo.getName();
       const ID = caseInfo.getID();
-  
+
       this.itemKey = contextName;
       this.heading = "Delete " + caseName + " (" + ID + ")";
       this.body1 = "Are you sure you want to delete " + caseName + " (" + ID + ")?";
@@ -74,18 +76,18 @@ class CancelAlert extends BridgeBase {
       let event = new CustomEvent('AlertState', {
         detail: { data: true }
       });
-  
+
       this.dispatchEvent(event);
-  
+
     }
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
@@ -97,7 +99,7 @@ class CancelAlert extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -106,10 +108,10 @@ class CancelAlert extends BridgeBase {
     }
   }
 
-  getCancelAlertHtml() : any {
+  getCancelAlertHtml(): any {
 
     const cAHtml = html`
-      ${this.bShowAlert ? 
+      ${this.bShowAlert ?
         html`
         <div class="psdk-cancel-alert-background ">
         <div class="psdk-cancel-alert-top">
@@ -140,9 +142,9 @@ class CancelAlert extends BridgeBase {
 
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -152,7 +154,7 @@ class CancelAlert extends BridgeBase {
     //  This isn't the best way to add inner content. Just here to see that the style's
     //  be loaded and can be applied to some inner content.
     const sampleContent = html`<div class='boilerplate-class'>boilerplate-component: ${this.value}</div>`;
-    this.renderTemplates.push( sampleContent );
+    this.renderTemplates.push(sampleContent);
 
     this.addChildTemplates();
 
@@ -186,12 +188,12 @@ class CancelAlert extends BridgeBase {
     this.buttonClick(target.getAttribute("jsAction"))
 
   }
-  
+
   buttonClick(sAction: string) {
 
     const actionsAPI = this.thePConn.getActionsApi();
 
-    switch(sAction) {
+    switch (sAction) {
       case "save":
         // eslint-disable-next-line no-case-declarations
         const savePromise = actionsAPI.saveAndClose(this.itemKey);
@@ -202,7 +204,7 @@ class CancelAlert extends BridgeBase {
             // });
             // dismiss();
             this.dismissAlert();
-          
+
             this.sendMessage("Sucessfully saved!");
             //this.erservice.sendMessage("show", "Successfully saved!");
             // let timer = interval(1500).subscribe(() => {
@@ -227,27 +229,27 @@ class CancelAlert extends BridgeBase {
 
           });
         break;
-      case "continue" :
+      case "continue":
         this.dismissAlert();
         break;
-      case "delete" :
+      case "delete":
         // eslint-disable-next-line no-case-declarations
         const deletePromise = actionsAPI.deleteCaseInCreateStage(this.itemKey);
 
         deletePromise
-        .then(() => {
-          this.dismissAlert();
-          PCore.getPubSubUtils().publish(
-            PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL
-          );
-        })
-        .catch(() => {
-          // let timer = interval(1500).subscribe(() => {
-          //   timer.unsubscribe();
-          //   this.erservice.sendMessage("show", "Delete failed.");
-          //   });
-          this.sendMessage("Delete failed.");
-        });
+          .then(() => {
+            this.dismissAlert();
+            PCore.getPubSubUtils().publish(
+              PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL
+            );
+          })
+          .catch(() => {
+            // let timer = interval(1500).subscribe(() => {
+            //   timer.unsubscribe();
+            //   this.erservice.sendMessage("show", "Delete failed.");
+            //   });
+            this.sendMessage("Delete failed.");
+          });
         break;
     }
   }

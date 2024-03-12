@@ -1,4 +1,6 @@
-import { html, customElement, LitElement } from '@lion/core';
+import { LitElement, html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { getSdkConfig, SdkConfigAccess, loginIfNecessary } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 

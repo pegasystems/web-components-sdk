@@ -1,4 +1,6 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
 import download from "downloadjs";
@@ -35,9 +37,9 @@ class FileUtility extends BridgeBase {
 
   lu_onViewAllFunction: any;
 
-  @property( {attribute: false, type: Boolean}) bShowFileModal = false;
-  @property( {attribute: false, type: Boolean}) bShowLinkModal = false;
-  @property( {attribute: false, type: Boolean}) bShowViewAllModal = false;
+  @property({ attribute: false, type: Boolean }) bShowFileModal = false;
+  @property({ attribute: false, type: Boolean }) bShowLinkModal = false;
+  @property({ attribute: false, type: Boolean }) bShowViewAllModal = false;
 
   arFileMainButtons: Array<any> = [];
   arFileSecondaryButtons: Array<any> = [];
@@ -53,8 +55,8 @@ class FileUtility extends BridgeBase {
   arLinksList: Array<any> = [];
   removeLinksFromList: any;
 
-  @property( {attribute: false} ) link_title: string = "";
-  @property( {attribute: false} ) link_url: string = "";
+  @property({ attribute: false }) link_title: string = "";
+  @property({ attribute: false }) link_url: string = "";
 
   currentLink: string = "";
   currentUrl: string = "";
@@ -83,7 +85,7 @@ class FileUtility extends BridgeBase {
     //  To get started, we set Debug to false and Logging to true here. Set to your preferred value during development.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -91,7 +93,7 @@ class FileUtility extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = fileUtilityStyles;
@@ -113,14 +115,14 @@ class FileUtility extends BridgeBase {
     this.removeFileFromList = { onClick: this._removeFileFromList.bind(this) }
     this.removeLinksFromList = { onClick: this._removeLinksFromList.bind(this) }
 
-    
+
     let onViewAllCallback = () => this.onViewAll(this.arFullListAttachments);
 
     this.lu_onViewAllFunction = { onClick: () => this.onViewAll }
-  
+
 
     this.createModalButtons();
-    
+
   }
 
 
@@ -128,7 +130,7 @@ class FileUtility extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
@@ -136,30 +138,30 @@ class FileUtility extends BridgeBase {
 
 
 
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
 
     const attachmentUtils = PCore.getAttachmentUtils();
     const caseID = this.thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
 
-    if (caseID && caseID != "" ) {
+    if (caseID && caseID != "") {
       let attPromise = attachmentUtils.getCaseAttachments(caseID, this.thePConn.getContextName());
 
       this.lu_bLoading = true;
-  
+
       attPromise
-        .then( (resp) => {
+        .then((resp) => {
           this.arFullListAttachments = this.addAttachments(resp);
           this.lu_count = this.arFullListAttachments.length;
           this.lu_arActions = this.addAttachmentsActions;
-  
-          this.lu_arItems= this.arFullListAttachments.slice(0, 3).map((att) => {
+
+          this.lu_arItems = this.arFullListAttachments.slice(0, 3).map((att) => {
             return this.getListUtilityItemProps({
               att,
               downloadFile: !att.progress ? () => this.downloadFile(att) : null,
@@ -168,8 +170,8 @@ class FileUtility extends BridgeBase {
               removeFile: att.error ? () => this.removeFile(att.ID) : null
             });
           });
-  
-          this.va_arItems= this.arFullListAttachments.map((att) => {
+
+          this.va_arItems = this.arFullListAttachments.map((att) => {
             return this.getListUtilityItemProps({
               att,
               downloadFile: !att.progress ? () => this.downloadFile(att) : null,
@@ -178,17 +180,17 @@ class FileUtility extends BridgeBase {
               removeFile: att.error ? () => this.removeFile(att.ID) : null
             });
           });
-  
+
           this.requestUpdate();
-  
-  
+
+
         });
     }
-    
+
 
   }
-  
-  caseHasChanged() : boolean {
+
+  caseHasChanged(): boolean {
     const caseID = this.thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
     if (this.currentCaseID !== caseID) {
       this.currentCaseID = caseID;
@@ -206,14 +208,13 @@ class FileUtility extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // adding a property to track in configProps, when ever the attachment file changes
     // need to trigger a redraw
     this.thePConn.registerAdditionalProps({
-      lastRefreshTime: `@P ${
-        PCore.getConstants().SUMMARY_OF_ATTACHMENTS_LAST_REFRESH_TIME
-      }`
+      lastRefreshTime: `@P ${PCore.getConstants().SUMMARY_OF_ATTACHMENTS_LAST_REFRESH_TIME
+        }`
     });
 
     const bShouldUpdate = super.shouldComponentUpdate();
@@ -224,7 +225,7 @@ class FileUtility extends BridgeBase {
     }
   }
 
-  getFilesHtml() : any {
+  getFilesHtml(): any {
     const arFilesHtml: Array<any> = [];
 
     for (let myFile of this.arFiles) {
@@ -237,10 +238,10 @@ class FileUtility extends BridgeBase {
 
   }
 
-  getFileUtilityHtml() : any {
+  getFileUtilityHtml(): any {
 
 
-    const fUHtml = html `
+    const fUHtml = html`
       <div>
         <list-utility-extension name="${this.lu_name}" icon="${this.lu_icon}"
             .bLoading="${this.lu_bLoading}" .count="${this.lu_count}"
@@ -248,8 +249,8 @@ class FileUtility extends BridgeBase {
             @ViewAll="${this._onViewAll}"></list-utility-extension>
       </div>
 
-    ${this.bShowFileModal?
-    html`
+    ${this.bShowFileModal ?
+        html`
     <div class="psdk-dialog-background">
       <div class="psdk-modal-file-top">
           <h3>Add local files</h3>
@@ -269,11 +270,11 @@ class FileUtility extends BridgeBase {
           </action-buttons-component>
       </div>
     </div>`
-    :
-    html``}
+        :
+        html``}
 
-    ${this.bShowLinkModal?
-    html`
+    ${this.bShowLinkModal ?
+        html`
     <div class="psdk-dialog-background">
         <div class="psdk-modal-link-top">
             <h3>Add local link</h3>
@@ -305,12 +306,12 @@ class FileUtility extends BridgeBase {
 
         </div>
     </div>`
-    :
-    html``}
+        :
+        html``}
 
 
-    ${this.bShowViewAllModal?
-    html`
+    ${this.bShowViewAllModal ?
+        html`
     <div class="psdk-dialog-background">
       <div class="psdk-modal-file-top">
           <div class="psdk-view-all-header">
@@ -324,8 +325,8 @@ class FileUtility extends BridgeBase {
       </div>
     </div>
     `
-    :
-    html``}
+        :
+        html``}
 
 
 
@@ -335,9 +336,9 @@ class FileUtility extends BridgeBase {
 
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -348,10 +349,10 @@ class FileUtility extends BridgeBase {
     //  be loaded and can be applied to some inner content.
     this.prepareForRender();
 
-  
+
     const sContent = html`${this.getFileUtilityHtml()}`;
 
-    this.renderTemplates.push( sContent );
+    this.renderTemplates.push(sContent);
 
     return this.renderTemplates;
 
@@ -363,9 +364,9 @@ class FileUtility extends BridgeBase {
     let localList = this.arLinksList.slice();
 
     let url = this.link_url;
-    
-    if (!/^(http|https):\/\//.test(this.link_url )) {
-      this.link_url  = `http://${this.link_url }`;
+
+    if (!/^(http|https):\/\//.test(this.link_url)) {
+      this.link_url = `http://${this.link_url}`;
     }
 
     // list for display
@@ -408,7 +409,7 @@ class FileUtility extends BridgeBase {
 
     this.requestUpdate();
 
- 
+
 
   }
 
@@ -419,33 +420,33 @@ class FileUtility extends BridgeBase {
 
   _changeUrl(event: any) {
     this.link_url = event.srcElement.value;
-    
+
   }
 
-  _onFileLoad(event:any) {
+  _onFileLoad(event: any) {
     event.target.parentElement.getElementsByTagName("input")[0].click();
   }
 
   downloadFile(att: any) {
 
     let attachUtils = PCore.getAttachmentUtils();
-    const {ID, name, extension, type} = att;
+    const { ID, name, extension, type } = att;
     let context = this.thePConn.getContextName();
 
     attachUtils
-    .downloadAttachment(ID, context)
-    .then((content) => {
-      if (type === "FILE") {
-        this.fileDownload(content.data, name, extension);
-      } else if (type === "URL") {
-        let { data } = content;
-        if (!/^(http|https):\/\//.test(data)) {
-          data = `//${data}`;
+      .downloadAttachment(ID, context)
+      .then((content) => {
+        if (type === "FILE") {
+          this.fileDownload(content.data, name, extension);
+        } else if (type === "URL") {
+          let { data } = content;
+          if (!/^(http|https):\/\//.test(data)) {
+            data = `//${data}`;
+          }
+          window.open(content.data, "_blank");
         }
-        window.open(content.data, "_blank");
-      }
-    })
-    .catch(console.error);
+      })
+      .catch(console.error);
   }
 
   fileDownload = (data, fileName, ext) => {
@@ -461,23 +462,23 @@ class FileUtility extends BridgeBase {
 
     setTimeout(() => {
       let attachUtils = PCore.getAttachmentUtils();
-      const {ID} = att;
+      const { ID } = att;
       let context = this.thePConn.getContextName();
-  
+
       attachUtils
-      .deleteAttachment(ID, context)
-      .then(() => {
-        this.updateSelf();
-        // let newAttachments;
-        // setAttachments((current) => {
-        //   newAttachments = current.filter((file) => file.ID !== ID);
-        //   return newAttachments;
-        // });
-        // if (callbackFn) {
-        //   callbackFn(newAttachments);
-        // }
-      })
-      .catch(console.error);
+        .deleteAttachment(ID, context)
+        .then(() => {
+          this.updateSelf();
+          // let newAttachments;
+          // setAttachments((current) => {
+          //   newAttachments = current.filter((file) => file.ID !== ID);
+          //   return newAttachments;
+          // });
+          // if (callbackFn) {
+          //   callbackFn(newAttachments);
+          // }
+        })
+        .catch(console.error);
     });
 
 
@@ -492,7 +493,7 @@ class FileUtility extends BridgeBase {
   }
 
 
-  onViewAll(arAttachments: Array<any> = []) : void {
+  onViewAll(arAttachments: Array<any> = []): void {
     alert("onView:" + arAttachments);
   }
 
@@ -507,28 +508,28 @@ class FileUtility extends BridgeBase {
 
     for (let file of files) {
       attachmentUtils
-      .uploadAttachment(
-        file,
-        this.onUploadProgress,
-        this.errorHandler,
-        this.thePConn.getContextName()
-      )
-      .then((fileResponse) => {
+        .uploadAttachment(
+          file,
+          this.onUploadProgress,
+          this.errorHandler,
+          this.thePConn.getContextName()
+        )
+        .then((fileResponse) => {
 
-        if (fileResponse.type === "File") {
-          attachmentUtils.linkAttachmentsToCase(
-            caseID,
-            [ fileResponse ],
-            "File",
-            this.thePConn.getContextName()
-          )
-          .then((attachments) => {
-            this.refreshAttachments(file.ID);
-          })
-          .catch(console.error);
-        }
-      })
-      .catch(console.error);
+          if (fileResponse.type === "File") {
+            attachmentUtils.linkAttachmentsToCase(
+              caseID,
+              [fileResponse],
+              "File",
+              this.thePConn.getContextName()
+            )
+              .then((attachments) => {
+                this.refreshAttachments(file.ID);
+              })
+              .catch(console.error);
+          }
+        })
+        .catch(console.error);
 
 
     }
@@ -574,7 +575,7 @@ class FileUtility extends BridgeBase {
 
     attachmentUtils
       .linkAttachmentsToCase(caseID, linksToAttach, "URL", this.thePConn.getContextName())
-      .then( (data) => {
+      .then((data) => {
         this.refreshAttachments(data);
       })
       .catch(console.log);
@@ -586,9 +587,8 @@ class FileUtility extends BridgeBase {
     attsFromResp = attsFromResp.map((respAtt) => {
       const updatedAtt = {
         ...respAtt,
-        meta: `${respAtt.category} . ${Utils.generateDateTime(respAtt.createTime, "DateTime-Since")}, ${
-          respAtt.createdBy
-        }`
+        meta: `${respAtt.category} . ${Utils.generateDateTime(respAtt.createTime, "DateTime-Since")}, ${respAtt.createdBy
+          }`
       };
       if (updatedAtt.type === "FILE") {
         updatedAtt.nameWithExt = updatedAtt.fileName;
@@ -645,7 +645,7 @@ class FileUtility extends BridgeBase {
   }) => {
     let actions;
     let isDownloadable = false;
-  
+
     if (att.progress && att.progress !== 100) {
       actions = [
         {
@@ -695,12 +695,12 @@ class FileUtility extends BridgeBase {
         }
       ];
     }
-  
+
     return {
       id: att.ID,
       visual: {
         icon: Utils.getIconForAttachment(att),
-        progress: att.progress == 100 ? undefined: att.progress,
+        progress: att.progress == 100 ? undefined : att.progress,
       },
       primary: {
         type: att.type,
@@ -724,7 +724,7 @@ class FileUtility extends BridgeBase {
   }) => {
     let actions;
     let isDownloadable = false;
-  
+
     if (att.progress && att.progress !== 100) {
       actions = [
         {
@@ -774,12 +774,12 @@ class FileUtility extends BridgeBase {
         }
       ];
     }
-  
+
     return {
       id: att.ID,
       visual: {
         icon: Utils.getIconForAttachment(att),
-        progress: att.progress == 100 ? undefined: att.progress,
+        progress: att.progress == 100 ? undefined : att.progress,
       },
       primary: {
         type: att.type,
@@ -819,9 +819,9 @@ class FileUtility extends BridgeBase {
     }
     if (!bInPopUp) {
 
-        this.bShowViewAllModal = false;
+      this.bShowViewAllModal = false;
 
-        window.removeEventListener('mouseup', this._clickAway.bind(this));
+      window.removeEventListener('mouseup', this._clickAway.bind(this));
     }
 
 
@@ -839,11 +839,11 @@ class FileUtility extends BridgeBase {
 
   createModal(modalType: string) {
     switch (modalType) {
-      case "addLocalFile" :
+      case "addLocalFile":
 
         this.bShowFileModal = true;
         break;
-      case "addLocalLink" :
+      case "addLocalLink":
 
         this.bShowLinkModal = true;
         break;
@@ -852,11 +852,11 @@ class FileUtility extends BridgeBase {
 
   createModalButtons() {
 
-    this.arFileMainButtons.push({ actionID: "attach", jsAction: "attachFiles", name: "Attach files"});
-    this.arFileSecondaryButtons.push({ actionID: "cancel", jsAction: "cancel", name: "Cancel"});
+    this.arFileMainButtons.push({ actionID: "attach", jsAction: "attachFiles", name: "Attach files" });
+    this.arFileSecondaryButtons.push({ actionID: "cancel", jsAction: "cancel", name: "Cancel" });
 
-    this.arLinkMainButtons.push({ actionID: "attach", jsAction: "attachLinks", name: "Attach links"});
-    this.arLinkSecondaryButtons.push({ actionID: "cancel", jsAction: "cancel", name: "Cancel"});
+    this.arLinkMainButtons.push({ actionID: "attach", jsAction: "attachLinks", name: "Attach links" });
+    this.arLinkSecondaryButtons.push({ actionID: "cancel", jsAction: "cancel", name: "Cancel" });
 
   }
 
@@ -903,7 +903,7 @@ class FileUtility extends BridgeBase {
     return arFiles;
   }
 
-  validateMaxSize(fileObj, maxSizeInMB) : boolean {
+  validateMaxSize(fileObj, maxSizeInMB): boolean {
     const fileSize = (fileObj.size / 1048576).toFixed(2);
     return fileSize < maxSizeInMB;
   }
@@ -924,27 +924,27 @@ class FileUtility extends BridgeBase {
       const foundMatch = (sources) => {
         return sources.some((key) => subtype.includes(key));
       };
-  
+
       if (foundMatch(["excel", "spreadsheet"])) {
         icon = "document-xls";
       } else if (foundMatch(["zip", "compressed", "gzip", "rar", "tar"])) {
         icon = "document-compress";
       }
     }
-  
+
     return icon;
   }
 
   _onFileActionButtonClick(event: any) {
     // modal buttons
     switch (event.detail.data.action) {
-      case "cancel" :
-        this.bShowFileModal= false;
+      case "cancel":
+        this.bShowFileModal = false;
         // clear out arrays
         this.clearOutFiles();
         break;
       case "attachFiles":
-        this.bShowFileModal= false;
+        this.bShowFileModal = false;
         this.onAttachFiles(this.arFiles);
 
         // clear out arrays
@@ -956,13 +956,13 @@ class FileUtility extends BridgeBase {
 
   _onLinkActionButtonClick(event: any) {
     switch (event.detail.data.action) {
-      case "cancel" :
-        this.bShowLinkModal= false;
+      case "cancel":
+        this.bShowLinkModal = false;
         // clear out arrays
         this.clearOutLinks();
         break;
       case "attachLinks":
-        this.bShowLinkModal= false;
+        this.bShowLinkModal = false;
         this.onAttachLinks(this.arLinks);
 
         // clear out arrays

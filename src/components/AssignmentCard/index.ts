@@ -1,4 +1,6 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 
 import '../ActionButtons';
@@ -18,9 +20,9 @@ declare var PCore: any;
 @customElement('assignment-card-component')
 class AssignmentCard extends BridgeBase {
 
-  @property( {attribute: false, type: Array} ) arMainButtons = [];
-  @property( {attribute: false, type: Array} ) arSecondaryButtons = [];
-  @property( {attribute: false, type: Array} ) arChildren : Array<any> = [];
+  @property({ attribute: false, type: Array }) arMainButtons = [];
+  @property({ attribute: false, type: Array }) arSecondaryButtons = [];
+  @property({ attribute: false, type: Array }) arChildren: Array<any> = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -29,7 +31,7 @@ class AssignmentCard extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -37,14 +39,14 @@ class AssignmentCard extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = assignmentCardStyles;
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-    
+
   }
 
 
@@ -52,16 +54,16 @@ class AssignmentCard extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
@@ -73,7 +75,7 @@ class AssignmentCard extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -82,7 +84,7 @@ class AssignmentCard extends BridgeBase {
     }
   }
 
-  assignmentKids() : any {
+  assignmentKids(): any {
     let arKidHtml: Array<Object> = [];
 
 
@@ -99,18 +101,18 @@ class AssignmentCard extends BridgeBase {
 
         case "Reference":
         case "reference":
-            arKidHtml.push(html`<reference-component .pConn=${kidPConn}></reference-component>`);
+          arKidHtml.push(html`<reference-component .pConn=${kidPConn}></reference-component>`);
           break;
 
-        case "CaseCreateStage" :
+        case "CaseCreateStage":
           arKidHtml.push(html`<case-create-stage-component .pConn=${kidPConn}></case-create-stage-component>`);
           break;
 
-        case "Region" :
+        case "Region":
           arKidHtml.push(html`<region-component .pConn=${kidPConn}></region-component>`);
           break;
-  
-        default :
+
+        default:
           console.error(`${this.theComponentName} trying to render unknown child type: ${kid.getPConnect().getComponentName()}`);
           break;
       }
@@ -120,7 +122,7 @@ class AssignmentCard extends BridgeBase {
 
   }
 
-  getAssignmentCardHtml() : any {
+  getAssignmentCardHtml(): any {
 
 
     const kidHtml = html`${this.assignmentKids()}`;
@@ -146,9 +148,9 @@ class AssignmentCard extends BridgeBase {
 
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -164,7 +166,7 @@ class AssignmentCard extends BridgeBase {
 
     const sContent = html`${this.getAssignmentCardHtml()}`;
 
-    this.renderTemplates.push( sContent );
+    this.renderTemplates.push(sContent);
 
     return this.renderTemplates;
 
@@ -178,7 +180,7 @@ class AssignmentCard extends BridgeBase {
 
     this.dispatchEvent(event);
   }
-  
+
 
 }
 

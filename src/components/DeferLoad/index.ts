@@ -1,4 +1,5 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../designSystemExtension/ProgressIndicator';
@@ -18,9 +19,9 @@ declare var PCore: any;
 
 @customElement('defer-load-component')
 class DeferLoad extends BridgeBase {
-  @property( {attribute: true, type: Object} ) loadData = {};
+  @property({ attribute: true, type: Object }) loadData = {};
   // Making bShowDefer a property lets LitElement track it and trigger an update if it changes
-  @property( {attribute: false, type: Boolean} ) bShowDefer = false;
+  @property({ attribute: false, type: Boolean }) bShowDefer = false;
 
   componentName: string = "";
 
@@ -33,7 +34,7 @@ class DeferLoad extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -41,7 +42,7 @@ class DeferLoad extends BridgeBase {
   connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = deferLoadStyles;
@@ -62,7 +63,7 @@ class DeferLoad extends BridgeBase {
       (data) => { this.loadActiveTab(data) },
       "loadActiveTab"
     );
-    
+
   }
 
 
@@ -70,7 +71,7 @@ class DeferLoad extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
 
     PCore.getPubSubUtils().unsubscribe(
@@ -84,13 +85,13 @@ class DeferLoad extends BridgeBase {
     );
 
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     //  JA - Already handled by the check in "updated" callback. Calling again seems to cause race condition
     // this.loadActiveTab();
@@ -108,18 +109,18 @@ class DeferLoad extends BridgeBase {
       let baseContext = this.thePConn.getContextName();
       let basePageReference = this.thePConn.getPageReference();
       let loadView = actionsAPI.loadView.bind(actionsAPI);
-  
+
       this.bShowDefer = false;
 
 
       //this.psService.sendMessage(true);
-  
+
       // Latest version in React uses value for CASE_INFO.CASE_INFO_ID is it exists
       //  and prefers that over PZINSKEY
       loadView(encodeURI(
-        this.thePConn.getValue( PCore.getConstants().CASE_INFO.CASE_INFO_ID ) ||
-        this.thePConn.getValue( PCore.getConstants().PZINSKEY)
-        ), name)
+        this.thePConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID) ||
+        this.thePConn.getValue(PCore.getConstants().PZINSKEY)
+      ), name)
         .then((data) => {
           const config = {
             meta: data,
@@ -128,20 +129,20 @@ class DeferLoad extends BridgeBase {
               pageReference: basePageReference
             }
           };
-        
+
           let configObject = PCore.createPConnect(config);
-  
+
           if (this.loadData["config"].label == "Details") {
             // for now, prevent details from being drawn
             this.componentName = "Details";
-  
+
             this.loadedPConn = configObject.getPConnect();
-            this.componentName = this.loadedPConn.getComponentName();  
-    
+            this.componentName = this.loadedPConn.getComponentName();
+
           }
           else {
             this.loadedPConn = configObject.getPConnect();
-            this.componentName = this.loadedPConn.getComponentName();         
+            this.componentName = this.loadedPConn.getComponentName();
           }
 
           // As of 8.7, the loadedPConn may be a Reference component. When we
@@ -167,7 +168,7 @@ class DeferLoad extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -178,32 +179,32 @@ class DeferLoad extends BridgeBase {
 
 
 
-  getDeferLoadHtml() : any {
+  getDeferLoadHtml(): any {
 
     const arComponent: Array<any> = [];
 
     switch (this.componentName) {
       case "View":
-        arComponent.push( html `<view-component .pConn=${this.loadedPConn}></view-component>`);
+        arComponent.push(html`<view-component .pConn=${this.loadedPConn}></view-component>`);
         break;
 
       case "Reference":
       case "reference":
-        arComponent.push( html `<reference-component .pConn=${this.loadedPConn}></reference-component>`);
+        arComponent.push(html`<reference-component .pConn=${this.loadedPConn}></reference-component>`);
         break;
 
-      default: 
-        arComponent.push( html `<div>Defer load missing: ${this.componentName}</div>`);
+      default:
+        arComponent.push(html`<div>Defer load missing: ${this.componentName}</div>`);
         break;
     }
 
-    const dLHtml = html `
+    const dLHtml = html`
         <div class="container-for-progress">
         ${this.bShowDefer ?
-          html`
+        html`
             <div>${arComponent}</div>`
         :
-          html`<div>&nbsp;<br>&nbsp;<br></div>
+        html`<div>&nbsp;<br>&nbsp;<br></div>
             <progress-extension id="${this.theComponentId}"></progress-extension>`}
         </div>
     `;
@@ -212,9 +213,9 @@ class DeferLoad extends BridgeBase {
 
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -222,7 +223,7 @@ class DeferLoad extends BridgeBase {
 
     const sContent = html`${this.getDeferLoadHtml()}`;
 
-    this.renderTemplates.push( sContent );
+    this.renderTemplates.push(sContent);
 
     return this.renderTemplates;
 
@@ -230,12 +231,12 @@ class DeferLoad extends BridgeBase {
 
   willUpdate(changedProperties) {
     for (let key of changedProperties.keys()) {
-  
+
       // check for property changes, if so, normalize and render
       if (key == "loadData") {
 
         this.loadActiveTab();
- 
+
       }
     }
   }

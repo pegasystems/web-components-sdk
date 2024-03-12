@@ -1,4 +1,6 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import { addContainerItem, getToDoAssignments } from './helpers';
@@ -24,23 +26,23 @@ declare var PCore: any;
 class FlowContainer extends BridgeBase {
 
 
-  buildName: string= "";
+  buildName: string = "";
   containerName: string = "";
   instructionText: string = "";
   itemKey: string = "";
-  configProps : Object = {};
+  configProps: Object = {};
 
   arNewChildren: Array<any> = [];
 
   //todo
 
-  @property( {attribute: false, type: Boolean} ) todo_showTodo = false;
-  @property( {attribute: false} ) todo_caseInfoID = "";
-  @property( {attribute: false, type: Boolean} ) todo_showTodoList = false;
-  @property( {attribute: false, type: Object} ) todo_datasource;
-  @property( {attribute: false} ) todo_headerText = "To do";
-  @property( {attribute: false} ) todo_type = "";
-  @property( {attribute: false} ) todo_context = "";
+  @property({ attribute: false, type: Boolean }) todo_showTodo = false;
+  @property({ attribute: false }) todo_caseInfoID = "";
+  @property({ attribute: false, type: Boolean }) todo_showTodoList = false;
+  @property({ attribute: false, type: Object }) todo_datasource;
+  @property({ attribute: false }) todo_headerText = "To do";
+  @property({ attribute: false }) todo_type = "";
+  @property({ attribute: false }) todo_context = "";
 
   // messages
   caseMessages: string = "";
@@ -60,7 +62,7 @@ class FlowContainer extends BridgeBase {
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
     if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     this.pConn = {};
   }
@@ -68,7 +70,7 @@ class FlowContainer extends BridgeBase {
   connectedCallback() {
     super.connectedCallback()
     if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = flowContainerStyles;
@@ -81,7 +83,7 @@ class FlowContainer extends BridgeBase {
 
     // do init/add containers
     this.initContainer();
-    
+
   }
 
 
@@ -89,13 +91,13 @@ class FlowContainer extends BridgeBase {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
     if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
   }
 
 
   getBuildName(): string {
-  
+
     // let { getPConnect, name } = this.pConn$.pConn;
     let context = this.thePConn.getContextName();
     let viewContainerName = this.thePConn.getContainerName();
@@ -188,7 +190,7 @@ class FlowContainer extends BridgeBase {
     return false;
   }
 
- 
+
 
   getActiveViewLabel() {
     let activeActionLabel = "";
@@ -206,13 +208,13 @@ class FlowContainer extends BridgeBase {
     }
     return activeActionLabel;
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
     if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     let { getPConnect } = this.arNewChildren[0].getPConnect();
     let localPConn = this.arNewChildren[0].getPConnect();
@@ -225,7 +227,7 @@ class FlowContainer extends BridgeBase {
     let loadingInfo: any;
     try {
       loadingInfo = this.thePConn.getLoadingStatus();
-    } 
+    }
     catch (ex) {
       console.error(`${this.theComponentName}: loadingInfo catch block`);
     }
@@ -243,19 +245,19 @@ class FlowContainer extends BridgeBase {
 
     const { CASE_INFO: CASE_CONSTS, CONTAINER_TYPE } = PCore.getConstants();
 
-    
+
     if (caseViewMode && caseViewMode == "review") {
 
-        // updated for 8.7 - 30-Mar-2022
-        const todoAssignments = getToDoAssignments(this.thePConn);
+      // updated for 8.7 - 30-Mar-2022
+      const todoAssignments = getToDoAssignments(this.thePConn);
 
-        if (todoAssignments && todoAssignments.length > 0) {
-          this.todo_caseInfoID = this.thePConn.getValue(CASE_CONSTS.CASE_INFO_ID);
-          this.todo_datasource = { source: todoAssignments };
-        }
+      if (todoAssignments && todoAssignments.length > 0) {
+        this.todo_caseInfoID = this.thePConn.getValue(CASE_CONSTS.CASE_INFO_ID);
+        this.todo_datasource = { source: todoAssignments };
+      }
 
-        this.todo_showTodo = true;
-        this.todo_showTodoList = false;
+      this.todo_showTodo = true;
+      this.todo_showTodoList = false;
 
 
 
@@ -263,14 +265,14 @@ class FlowContainer extends BridgeBase {
       // does init/add of containers.  This mimics that
       this.initContainer();
 
-     }
-     else if (caseViewMode && caseViewMode == "perform") {
+    }
+    else if (caseViewMode && caseViewMode == "perform") {
       // perform
-      this.todo_showTodo = false; 
+      this.todo_showTodo = false;
 
       // this is different than Angular SDK, as we need to initContainer if root container reloaded
       if (window.sessionStorage.getItem("okToInitFlowContainer") == "true") {
-          this.initContainer();
+        this.initContainer();
       }
     }
 
@@ -282,7 +284,7 @@ class FlowContainer extends BridgeBase {
 
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
-       if (!this.caseMessages) {
+      if (!this.caseMessages) {
         this.caseMessages = "Thank you! The next step in this case has been routed appropriately.";
       }
 
@@ -291,7 +293,7 @@ class FlowContainer extends BridgeBase {
       PCore.getPubSubUtils().publish(
         "assignmentFinished");
 
-      
+
       this.checkSvg = Utils.getImageSrc("check", Utils.getSDKStaticContentUrl());
       return;
     }
@@ -304,7 +306,7 @@ class FlowContainer extends BridgeBase {
     // flowContainer and force updates to pConnect/redux
     if (routingInfo && loadingInfo != undefined) {
 
-      if (this.bLogging) { console.log(`${this.theComponentName}: >>routingInfo: JSON.stringify(routingInfo)` ); }
+      if (this.bLogging) { console.log(`${this.theComponentName}: >>routingInfo: JSON.stringify(routingInfo)`); }
 
       let currentOrder = routingInfo.accessedOrder;
       let currentItems = routingInfo.items;
@@ -313,62 +315,62 @@ class FlowContainer extends BridgeBase {
         let key = currentOrder[currentOrder.length - 1];
 
         // save off itemKey to be used for finishAssignment, etc.
-        this.itemKey = key;     
+        this.itemKey = key;
 
         if (currentOrder.length > 0) {
 
           if (currentItems[key] &&
-              currentItems[key].view &&
-              type === "single" &&
-              Object.keys(currentItems[key].view).length > 0 ) {
-                let currentItem = currentItems[key];
-                let rootView = currentItem.view;
-                let { context } = rootView.config;
-                let config = { meta: rootView };
+            currentItems[key].view &&
+            type === "single" &&
+            Object.keys(currentItems[key].view).length > 0) {
+            let currentItem = currentItems[key];
+            let rootView = currentItem.view;
+            let { context } = rootView.config;
+            let config = { meta: rootView };
 
-                config["options"] = {
-                  context: currentItem.context,
-                  pageReference: context || localPConn.getPageReference(),
-                  hasForm: true,
-                  isFlowContainer: true,
-                  containerName: localPConn.getContainerName(),
-                  containerItemName: key,
-                  parentPageReference: localPConn.getPageReference()
-                };
+            config["options"] = {
+              context: currentItem.context,
+              pageReference: context || localPConn.getPageReference(),
+              hasForm: true,
+              isFlowContainer: true,
+              containerName: localPConn.getContainerName(),
+              containerItemName: key,
+              parentPageReference: localPConn.getPageReference()
+            };
 
-                let configObject = PCore.createPConnect(config);
-              
-                // keep track of these changes
-                this.arNewChildren = new Array();
-                this.arNewChildren.push(configObject);
+            let configObject = PCore.createPConnect(config);
 
-                let oWorkItem = this.arNewChildren[0].getPConnect();
-                let oWorkData = oWorkItem.getDataObject();
-            
-            
-                // check if have oWorkData, there are times due to timing of state change, when this 
-                // may not be available
-                if (oWorkData) { 
-                  this.containerName = this.getActiveViewLabel() || oWorkData.caseInfo.assignments[0].name;
-                  this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
-                }
+            // keep track of these changes
+            this.arNewChildren = new Array();
+            this.arNewChildren.push(configObject);
 
-                //this.render();
+            let oWorkItem = this.arNewChildren[0].getPConnect();
+            let oWorkData = oWorkItem.getDataObject();
+
+
+            // check if have oWorkData, there are times due to timing of state change, when this 
+            // may not be available
+            if (oWorkData) {
+              this.containerName = this.getActiveViewLabel() || oWorkData.caseInfo.assignments[0].name;
+              this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
+            }
+
+            //this.render();
           }
         }
       }
 
     }
 
-     this.requestUpdate();
+    this.requestUpdate();
 
-  
+
 
 
   }
 
 
-  initComponent( bLoadChildren: boolean) {
+  initComponent(bLoadChildren: boolean) {
 
 
     this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
@@ -377,7 +379,7 @@ class FlowContainer extends BridgeBase {
     if (bLoadChildren) {
       this.arNewChildren = this.thePConn.getChildren();
     }
-   
+
 
     if (this.bLogging) { console.log(`${this.theComponentName}: children update for main draw`); }
 
@@ -389,7 +391,7 @@ class FlowContainer extends BridgeBase {
     // this.templateName$ = this.configProps$["template"];
 
     this.todo_showTodo = this.getTodoVisibilty();
-    
+
     // create pointers to functions
     let containerMgr = this.thePConn.getContainerManager();
     let actionsAPI = this.thePConn.getActionsApi();
@@ -398,9 +400,9 @@ class FlowContainer extends BridgeBase {
 
     //for now, in general this should be overridden by updateSelf(), and not be blank
     if (this.itemKey === "") {
-      this.itemKey= baseContext.concat("/").concat(acName);
+      this.itemKey = baseContext.concat("/").concat(acName);
     }
-    
+
 
     this.thePConn.isBoundToState();
 
@@ -411,16 +413,16 @@ class FlowContainer extends BridgeBase {
     let oWorkItem = this.arNewChildren[0].getPConnect();
     let oWorkData = oWorkItem.getDataObject();
 
-    if (bLoadChildren && oWorkData) { 
+    if (bLoadChildren && oWorkData) {
       this.containerName = oWorkData.caseInfo.assignments[0].name;
       this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
     }
-  
+
 
     this.buildName = this.getBuildName();
 
-  
-  }  
+
+  }
 
   getTodoVisibilty() {
     const caseViewMode = this.thePConn.getValue("context_data.caseViewMode");
@@ -445,10 +447,10 @@ class FlowContainer extends BridgeBase {
    */
   onStateChange() {
     if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
     const bShouldUpdate = super.shouldComponentUpdate();
- 
+
     if (bShouldUpdate) {
       this.updateSelf();
     }
@@ -460,30 +462,30 @@ class FlowContainer extends BridgeBase {
     const fCHtml = html`
     <div style="text-align: left;" id="${this.buildName}" class="psdk-flow-container-top">
 
-    ${!this.bHasCaseMessages? 
-      html`
+    ${!this.bHasCaseMessages ?
+        html`
       </div>
-        ${!this.todo_showTodo?
-          html`
+        ${!this.todo_showTodo ?
+            html`
           <h2>${this.containerName}</h2>
-          ${(this.instructionText !== "") ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing }
+          ${(this.instructionText !== "") ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
           <div>
             <assignment-component .pConn=${this.thePConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
           </div>
           `
-          :
-          html`
+            :
+            html`
           <div>
            <todo-component .pConn=${this.thePConn} caseInfoID=${this.todo_caseInfoID} .datasource=${this.todo_datasource}
               .showTodoList=${this.todo_showTodoList} headerText=${this.todo_headerText} type=${this.todo_type} 
               context=${this.todo_context} itemKey=${this.itemKey}></todo-component>
           </div>
           `
-        }
+          }
       <div>
-        ` 
+        `
         :
-      html`
+        html`
         <div class="psdk-message-card">
         <div style="display: flex; flex-direction: row;">
           <div><img  class="psdk-icon" src="${this.checkSvg}" ></div>
@@ -498,19 +500,19 @@ class FlowContainer extends BridgeBase {
 
   }
 
-  render(){
+  render() {
     if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) { debugger; }
 
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-  
+
     const sContent = html`${this.flowContainerHtml()}`;
 
-    this.renderTemplates.push( sContent );
+    this.renderTemplates.push(sContent);
 
 
     return this.renderTemplates;

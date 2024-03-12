@@ -1,4 +1,6 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
+
 import { getSdkConfig, SdkConfigAccess, loginIfNecessary, sdkSetAuthHeader } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 
@@ -27,35 +29,35 @@ class MashupPortal extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    sampleMainInit( this, 'mashup-portal-component', 'mashup-main-component' );
-    
-    getSdkConfig().then( sdkConfig => {
+    sampleMainInit(this, 'mashup-portal-component', 'mashup-main-component');
+
+    getSdkConfig().then(sdkConfig => {
 
       const sdkConfigAuth = sdkConfig.authConfig;
-  
-      if( !sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "Basic" ) {
+
+      if (!sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "Basic") {
         // Service package to use custom auth with Basic
         const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}`);
-        sdkSetAuthHeader( `Basic ${sB64}`);
+        sdkSetAuthHeader(`Basic ${sB64}`);
       }
-  
-      if( !sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "BasicTO" ) {
+
+      if (!sdkConfigAuth.mashupClientId && sdkConfigAuth.customAuthType === "BasicTO") {
         const now = new Date();
-        const expTime = new Date( now.getTime() + 5*60*1000);
+        const expTime = new Date(now.getTime() + 5 * 60 * 1000);
         let sISOTime = `${expTime.toISOString().split(".")[0]}Z`;
         const regex = /[-:]/g;
-        sISOTime = sISOTime.replace(regex,"");
+        sISOTime = sISOTime.replace(regex, "");
         // Service package to use custom auth with Basic
         const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}:${sISOTime}`);
-        sdkSetAuthHeader( `Basic ${sB64}`);
+        sdkSetAuthHeader(`Basic ${sB64}`);
       }
-  
-  
+
+
       loginIfNecessary({appName: 'embedded', mainRedirect: false});
-  
+
     });
 
-    
+
   }
 
 
@@ -67,7 +69,7 @@ class MashupPortal extends LitElement {
   }
 
 
-  getSimplePortalHtml() : any {
+  getSimplePortalHtml(): any {
 
     const sPHtml = html`
     <div class="column main-content">
@@ -81,7 +83,7 @@ class MashupPortal extends LitElement {
   }
 
 
-  render(){
+  render() {
 
     const sContent = this.getSimplePortalHtml();
     const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
@@ -89,8 +91,8 @@ class MashupPortal extends LitElement {
     let arHtml: Array<any> = [];
 
     // MashupPortal not derived from BridgeBase, so we need to load Bootstrap CSS
-    if( locBootstrap ) {
-      arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    if (locBootstrap) {
+      arHtml.push(html`<link rel='stylesheet' href='${locBootstrap}'>`);
     }
 
     arHtml.push(mashupPortalStyles);

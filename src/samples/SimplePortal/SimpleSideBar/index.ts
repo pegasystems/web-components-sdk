@@ -1,4 +1,6 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 import '@lion/button/define';
@@ -20,9 +22,9 @@ declare var myLoadMashup: any;
 class SimpleSideBar extends LitElement {
 
 
-  @property( {attribute: false, type: Object } ) pConn; 
-  @property( {attribute: false, type: Array} ) arButtons: Array<any> = [];
-  @property( {attribute: false, type: Array} ) arWorkItems: Array<any> = [];
+  @property({ attribute: false, type: Object }) pConn;
+  @property({ attribute: false, type: Array }) arButtons: Array<any> = [];
+  @property({ attribute: false, type: Array }) arWorkItems: Array<any> = [];
 
   // NOTE: SimpleSideBar is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -49,9 +51,9 @@ class SimpleSideBar extends LitElement {
 
   updated(changedProperties) {
     for (let key of changedProperties.keys()) {
-  
+
       // check for property changes, if so, normalize and render
-      if (key == "pConn") { 
+      if (key == "pConn") {
         if (this.pConn && this.pConn.getPConnect != null) {
           this.pConn = this.pConn.getPConnect();
         }
@@ -64,7 +66,7 @@ class SimpleSideBar extends LitElement {
     const sCTHtml: Array<any> = [];
 
     for (let caseTypeButton of this.arButtons) {
-      sCTHtml.push(html `
+      sCTHtml.push(html`
         <div class="psdk-create-work-button">
           <button class="btn btn-primary" @click=${() => { this.buttonClick([caseTypeButton]) }}>${caseTypeButton["caption"]}</button>
         </div>
@@ -79,7 +81,7 @@ class SimpleSideBar extends LitElement {
     const sWIHtml: Array<any> = [];
 
     for (let workItem of this.arWorkItems) {
-      sWIHtml.push(html `
+      sWIHtml.push(html`
         <div class="psdk-open-work-button">
           <button class="btn btn-light psdk-btn-text" color="primary" @click=${() => { this.workButtonClick([workItem]) }}>${workItem["caption"]}</button>
         </div>
@@ -90,13 +92,13 @@ class SimpleSideBar extends LitElement {
   }
 
 
-  getSimpleSideBarHtml() : any {
+  getSimpleSideBarHtml(): any {
 
     const sSBHtml: Array<any> = [];
 
-    sSBHtml.push(html `<h2>Create Work</h2>`);
-    sSBHtml.push(html `<div class="psdk-create-work">${this.getCaseTypes()}</div>`);
-    sSBHtml.push(html `<div class="psdk-worklist">${this.getWorkItems()}</div>`);
+    sSBHtml.push(html`<h2>Create Work</h2>`);
+    sSBHtml.push(html`<div class="psdk-create-work">${this.getCaseTypes()}</div>`);
+    sSBHtml.push(html`<div class="psdk-worklist">${this.getWorkItems()}</div>`);
 
     return sSBHtml;
   }
@@ -110,7 +112,7 @@ class SimpleSideBar extends LitElement {
     let arHtml: Array<any> = [];
 
     // SimpleSideBar not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    arHtml.push(html`<link rel='stylesheet' href='${locBootstrap}'>`);
 
     arHtml.push(simpleSideBarStyles);
     arHtml.push(sContent);
@@ -149,7 +151,7 @@ class SimpleSideBar extends LitElement {
     let sTarget = this.pConn.getContainerName();
 
 
-    let options = { "containerName" : sTarget};
+    let options = { "containerName": sTarget };
 
     PCore.getPubSubUtils().publish(
       "showWork");
@@ -159,7 +161,7 @@ class SimpleSideBar extends LitElement {
   }
 
 
- 
+
 
 
 
