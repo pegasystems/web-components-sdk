@@ -11,7 +11,7 @@ import { deferLoadStyles } from './defer-load-styles';
 declare var PCore: any;
 
 //
-// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with 
+// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
 // is totally at your own risk.
 //
@@ -21,10 +21,22 @@ class DeferLoad extends BridgeBase {
   @property( {attribute: true, type: Object} ) loadData = {};
   // Making bShowDefer a property lets LitElement track it and trigger an update if it changes
   @property( {attribute: false, type: Boolean} ) bShowDefer = false;
+  @property( {attribute: false} ) name;
 
   componentName: string = "";
 
   loadedPConn: any;
+  loadViewCaseID: any;
+  containerName: any;
+  constants: any;
+  CASE: any;
+  PAGE: any;
+  DATA: any;
+  resourceType: any;
+  isContainerPreview: boolean;
+  deferLoadId: any;
+  currentLoadedAssignment = '';
+  isLoading = true;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -36,6 +48,8 @@ class DeferLoad extends BridgeBase {
     if (this.bDebug){ debugger; }
 
     this.pConn = {};
+    this.constants = PCore.getConstants();
+    this.isContainerPreview = false;
   }
 
   connectedCallback() {
@@ -50,7 +64,6 @@ class DeferLoad extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
 
-
     PCore.getPubSubUtils().subscribe(
       PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
       (data) => { this.loadActiveTab(data) },
@@ -62,7 +75,7 @@ class DeferLoad extends BridgeBase {
       (data) => { this.loadActiveTab(data) },
       "loadActiveTab"
     );
-    
+
   }
 
 
@@ -84,7 +97,7 @@ class DeferLoad extends BridgeBase {
     );
 
   }
-  
+
   /**
    * updateSelf
    */
@@ -98,66 +111,148 @@ class DeferLoad extends BridgeBase {
   }
 
   loadActiveTab(data: any = {}) {
-    if (this.bLogging) { console.log(`DeferLoad: loadActiveTab data: ${JSON.stringify(data)} | loadData: ${JSON.stringify(this.loadData)}`); }
+    if (this.resourceType === this.DATA) {
+      // Rendering defer loaded tabs in data context
+      if (this.containerName) {
+        const dataContext = PCore.getStoreValue('.dataContext', 'dataInfo', this.containerName);
+        const dataContextParameters = PCore.getStoreValue('.dataContextParameters', 'dataInfo', this.containerName);
 
-    const { isModalAction } = data;
-
-    if (this.loadData && this.loadData["config"] && !isModalAction) {
-      let name = this.loadData["config"].name;
-      let actionsAPI = this.thePConn.getActionsApi();
-      let baseContext = this.thePConn.getContextName();
-      let basePageReference = this.thePConn.getPageReference();
-      let loadView = actionsAPI.loadView.bind(actionsAPI);
-  
-      this.bShowDefer = false;
-
-
-      //this.psService.sendMessage(true);
-  
-      // Latest version in React uses value for CASE_INFO.CASE_INFO_ID is it exists
-      //  and prefers that over PZINSKEY
-      loadView(encodeURI(
-        this.thePConn.getValue( PCore.getConstants().CASE_INFO.CASE_INFO_ID ) ||
-        this.thePConn.getValue( PCore.getConstants().PZINSKEY)
-        ), name)
-        .then((data) => {
-          const config = {
-            meta: data,
-            options: {
-              context: baseContext,
-              pageReference: basePageReference
-            }
-          };
-        
-          let configObject = PCore.createPConnect(config);
-  
-          if (this.loadData["config"].label == "Details") {
-            // for now, prevent details from being drawn
-            this.componentName = "Details";
-  
-            this.loadedPConn = configObject.getPConnect();
-            this.componentName = this.loadedPConn.getComponentName();  
-    
-          }
-          else {
-            this.loadedPConn = configObject.getPConnect();
-            this.componentName = this.loadedPConn.getComponentName();         
-          }
-
-          // As of 8.7, the loadedPConn may be a Reference component. When we
-          //  see one of those, update loadedPConn and componentName to be the
-          //  referenced View, not the Reference component itself
-          if (this.componentName === "reference") {
-            this.loadedPConn = this.loadedPConn.getReferencedViewPConnect(true).getPConnect();
-            this.componentName = "View";
-          }
-        }).then(() => {
-          this.bShowDefer = true;
+        this.thePConn
+          .getActionsApi()
+          .showData(this.name, dataContext, dataContextParameters, {
+            // @ts-ignore - skipSemanticUrl should be boolean type
+            skipSemanticUrl: true,
+            // @ts-ignore
+            isDeferLoaded: true
+          })
+          .then(data => {
+            this.onResponse(data);
+          });
+      } else {
+        console.error('Cannot load the defer loaded view without container information');
+      }
+    } else if (this.resourceType === this.PAGE) {
+      // Rendering defer loaded tabs in case/ page context
+      this.thePConn
+        .getActionsApi()
+        .loadView(encodeURI(this.loadViewCaseID), this.name, this.getViewOptions())
+        .then(data => {
+          this.onResponse(data);
         });
+    } else {
+      this.thePConn
+        .getActionsApi()
+        .refreshCaseView(encodeURI(this.loadViewCaseID), this.name, null)
+        .then(data => {
+          this.onResponse(data.root);
+        }).catch(error => {
+          console.log('error: '+error);
+        });
+    }
+  }
 
+  getViewOptions = () => ({
+    viewContext: this.resourceType,
+    // @ts-ignore - parameter “contextName” for getDataObject method should be optional
+    pageClass: this.loadViewCaseID ? '' : this.pConn$.getDataObject().pyPortal.classID,
+    container: this.isContainerPreview ? 'preview' : null,
+    containerName: this.isContainerPreview ? 'preview' : null,
+    updateData: this.isContainerPreview
+  });
+
+  onResponse(data) {
+    this.isLoading = false;
+    if (this.deferLoadId) {
+      PCore.getDeferLoadManager().start(
+        this.name,
+        this.thePConn.getCaseInfo().getKey(),
+        this.thePConn.getPageReference().replace('caseInfo.content', ''),
+        this.thePConn.getContextName(),
+        this.deferLoadId
+      );
     }
 
+    if (data && !(data.type && data.type === 'error')) {
+      const config = {
+        meta: data,
+        options: {
+          context: this.thePConn.getContextName(),
+          pageReference: this.thePConn.getPageReference()
+        }
+      };
+      const configObject = PCore.createPConnect(config);
+      configObject.getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
+      this.loadedPConn = configObject.getPConnect();
+      this.componentName = this.loadedPConn.getComponentName();
+      // ${BridgeBase.getComponentFromConfigObj(config)}
+      if (this.deferLoadId) {
+        PCore.getDeferLoadManager().stop(this.deferLoadId, this.thePConn.getContextName());
+      }
+    }
+    this.render();
   }
+
+  // loadActiveTab(data: any = {}) {
+  //   if (this.bLogging) { console.log(`DeferLoad: loadActiveTab data: ${JSON.stringify(data)} | loadData: ${JSON.stringify(this.loadData)}`); }
+
+  //   const { isModalAction } = data;
+
+  //   if (this.loadData && this.loadData["config"] && !isModalAction) {
+  //     let name = this.loadData["config"].name;
+  //     let actionsAPI = this.thePConn.getActionsApi();
+  //     let baseContext = this.thePConn.getContextName();
+  //     let basePageReference = this.thePConn.getPageReference();
+  //     let loadView = actionsAPI.loadView.bind(actionsAPI);
+
+  //     this.bShowDefer = false;
+
+
+  //     //this.psService.sendMessage(true);
+
+  //     // Latest version in React uses value for CASE_INFO.CASE_INFO_ID is it exists
+  //     //  and prefers that over PZINSKEY
+  //     loadView(encodeURI(
+  //       this.thePConn.getValue( PCore.getConstants().CASE_INFO.CASE_INFO_ID ) ||
+  //       this.thePConn.getValue( PCore.getConstants().PZINSKEY)
+  //       ), name)
+  //       .then((data) => {
+  //         const config = {
+  //           meta: data,
+  //           options: {
+  //             context: baseContext,
+  //             pageReference: basePageReference
+  //           }
+  //         };
+
+  //         let configObject = PCore.createPConnect(config);
+
+  //         if (this.loadData["config"].label == "Details") {
+  //           // for now, prevent details from being drawn
+  //           this.componentName = "Details";
+
+  //           this.loadedPConn = configObject.getPConnect();
+  //           this.componentName = this.loadedPConn.getComponentName();
+
+  //         }
+  //         else {
+  //           this.loadedPConn = configObject.getPConnect();
+  //           this.componentName = this.loadedPConn.getComponentName();
+  //         }
+
+  //         // As of 8.7, the loadedPConn may be a Reference component. When we
+  //         //  see one of those, update loadedPConn and componentName to be the
+  //         //  referenced View, not the Reference component itself
+  //         if (this.componentName === "reference") {
+  //           this.loadedPConn = this.loadedPConn.getReferencedViewPConnect(true).getPConnect();
+  //           this.componentName = "View";
+  //         }
+  //       }).then(() => {
+  //         this.bShowDefer = true;
+  //       });
+
+  //   }
+
+  // }
 
   /**
    * The `onStateChange()` method will be called when the state is updated.
@@ -174,6 +269,12 @@ class DeferLoad extends BridgeBase {
     if (bShouldUpdate) {
       this.updateSelf();
     }
+
+    // const theRequestedAssignment = this.thePConn.getValue(PCore.getConstants().CASE_INFO.ASSIGNMENT_LABEL);
+    // if (theRequestedAssignment !== this.currentLoadedAssignment) {
+    //   this.currentLoadedAssignment = theRequestedAssignment;
+    //   this.loadActiveTab();
+    // }
   }
 
 
@@ -192,21 +293,31 @@ class DeferLoad extends BridgeBase {
         arComponent.push( html `<reference-component .pConn=${this.loadedPConn}></reference-component>`);
         break;
 
-      default: 
-        arComponent.push( html `<div>Defer load missing: ${this.componentName}</div>`);
+      default:
+        arComponent.push( html `<div style="display: none;">Defer load missing: ${this.componentName}</div>`);
         break;
     }
 
-    const dLHtml = html `
-        <div class="container-for-progress">
-        ${this.bShowDefer ?
-          html`
-            <div>${arComponent}</div>`
-        :
-          html`<div>&nbsp;<br>&nbsp;<br></div>
-            <progress-extension id="${this.theComponentId}"></progress-extension>`}
-        </div>
-    `;
+    // const dLHtml = html `
+    //     <div class="container-for-progress">
+    //     ${this.bShowDefer ?
+    //       html`
+    //         <div>${arComponent}</div>`
+    //     :
+    //       html`<div>&nbsp;<br>&nbsp;<br></div>
+    //         <progress-extension id="${this.theComponentId}"></progress-extension>`}
+    //     </div>
+    // `;
+    const dLHtml = html `<div class="container-for-progress">
+    ${this.isLoading ? html`<div>&nbsp;<br>&nbsp;<br></div>
+    <progress-extension id="${this.theComponentId}"></progress-extension>` : html`
+    <div>${arComponent}</div>`}
+    </div>`;
+
+    // const dLHtml = html `<div class="container-for-progress">
+    // ${html`
+    // <div>${arComponent}</div>`}
+    // </div>`;
 
     return dLHtml;
 
@@ -230,12 +341,33 @@ class DeferLoad extends BridgeBase {
 
   willUpdate(changedProperties) {
     for (let key of changedProperties.keys()) {
-  
+
       // check for property changes, if so, normalize and render
       if (key == "loadData") {
+        // @ts-ignore - second parameter pageReference for getValue method should be optional
+        this.loadViewCaseID = this.thePConn.getValue(this.constants.PZINSKEY) || this.thePConn.getValue(this.constants.CASE_INFO.CASE_INFO_ID);
+        let containerItemData;
+        const targetName = this.thePConn.getTarget();
+        if (targetName) {
+          this.containerName = PCore.getContainerUtils().getActiveContainerItemName(targetName);
+          containerItemData = PCore.getContainerUtils().getContainerItemData(targetName, this.containerName);
+        }
+        const { CASE, PAGE, DATA } = this.constants.RESOURCE_TYPES;
+        this.CASE = CASE;
+        this.PAGE = PAGE;
+        this.DATA = DATA;
+
+        const { resourceType = this.CASE } = containerItemData || { resourceType: this.loadViewCaseID ? this.CASE : this.PAGE };
+        this.resourceType = resourceType;
+        this.isContainerPreview = /preview_[0-9]*/g.test(this.thePConn.getContextName());
+
+        const theConfigProps: any = this.thePConn.getConfigProps();
+        this.deferLoadId = theConfigProps.deferLoadId;
+        this.name = this.name || theConfigProps.name;
 
         this.loadActiveTab();
- 
+        // this.loadActiveTab();
+
       }
     }
   }

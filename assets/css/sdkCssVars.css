@@ -1,7 +1,8 @@
 /* CSS Variables used in SDK components */
 :root {
 
-  --app-primary-color: #007bff; /* was #673ab7; */
+  /* --app-primary-color: #007bff; was #673ab7; */
+  --app-primary-color: #800000;
   --app-primary-dark-color: #0048cc; /* was #4527A0; */
   --app-primary-light-color: #33aeff; /* was #B499FC; */
   --app-secondary-color: #FFC400;

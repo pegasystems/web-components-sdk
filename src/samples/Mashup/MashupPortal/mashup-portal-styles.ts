@@ -7,6 +7,8 @@ export const mashupPortalStyles = html`
     height: 100%;
   }
 
-
+.main-content{
+  background-image: linear-gradient(var(--app-primary-color), var(--app-form-color));
+}
   </style>
 `;

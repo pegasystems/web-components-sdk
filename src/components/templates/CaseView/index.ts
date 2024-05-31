@@ -76,7 +76,7 @@ class CaseView extends BridgeBase {
       this.mainTabs
       .getPConnect()
       .getChildren()
-      .forEach((child, i) => {
+      ?.forEach((child, i) => {
         const config = child.getPConnect().resolveConfigProps(child.getPConnect().getRawMetadata()).config;
         let { label, inheritedProps, visibility }  = config;
         
@@ -308,13 +308,12 @@ class CaseView extends BridgeBase {
           ${this.getChildRegionArray('todo')}
           ${this.getChildRegionArray('main')}
 
-          ${this.displayOnlyFA?
-          nothing
-          :
-          html `
-            <defer-load-component .pConn=${this.thePConn} .loadData=${this.tabData}></defer-load-component>
+          ${this.tabData && !this.displayOnlyFA ?
+            html `
+            <defer-load-component .pConn=${this.thePConn} .loadData=${this.tabData} .name=${this.tabData?.config?.name}></defer-load-component>
             `
-
+          :
+          nothing
           }
           
         </div>

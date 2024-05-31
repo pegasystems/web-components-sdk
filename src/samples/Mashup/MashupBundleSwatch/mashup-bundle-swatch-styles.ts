@@ -125,5 +125,16 @@ export const mashupBundleSwatchStyles = html`
     padding: 10px 30px;
 }
 
+.card{
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    background-color: #fafafa;
+    display: flex;  
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 20px;
+    margin: 5%;
+}
+
   </style>
 `;

@@ -4,10 +4,11 @@ export const mashupMainScreenStyles = html`
   <style>
 
 .cc-banner {
-    font-size: 24px;
-    text-align: center;
+    font-size: 20px;
+    // text-align: center;
     width: 100%;
     padding: 20px;
+    color: var(--app-form-color);
 }
 
 .cc-main-screen {

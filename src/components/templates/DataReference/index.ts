@@ -338,6 +338,10 @@ class DataReference extends BridgeBase {
         convertedComponent = html`<semantic-link .pConn=${childPConn}></semantic-link>`;
         break;
 
+      case "Checkbox":
+        convertedComponent = html`<check-box-form .pConn=${childPConn}></check-box-form>`;
+        break;
+
       default:
         console.error(`----> ${this.theComponentName} convertChildToComponent unknown childType: ${childType}`);
         convertedComponent = html`${this.theComponentName} convertChildToComponent unknown childType: ${childType}`;

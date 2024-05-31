@@ -50,8 +50,21 @@ class MashupMain extends LitElement {
 
   getToolbarHtml() : any {
     const tBHtml = html `
-      <div class="cc-toolbar">
-        <h1>${PCore.getEnvironmentInfo().getApplicationLabel()}&nbsp;</h1><img src="./assets/img/antenna.svg" class="cc-icon">
+      <div class="cc-toolbar margin">
+      <!-- <div class="cc-main-div"> -->
+        <!-- <div class="cc-main-screen"> -->
+          <!-- <h1>${PCore.getEnvironmentInfo().getApplicationLabel()}&nbsp;</h1> -->
+          <!-- <div style="display: flex; justify-content: space-evenly;"> -->
+            <img src="./assets/img/appName.png" class="cc-icon">
+            <ul>
+              <li>Cars</li>
+              <li>Trucks</li>
+              <li>Dealers</li>
+              <li style="text-decoration: underline; text-underline-offset: 5px;">U+ Connect</li>
+            </ul>
+            <img src="./assets/img/Avatars.png" style="margin:10px;">
+          <!-- </div> -->
+        <!-- </div> -->
       </div>
     `;
 
@@ -60,7 +73,7 @@ class MashupMain extends LitElement {
 
   getMainHtml() : any {
     const mHtml = html `
-      <div>
+      <div class="margin">
         <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
       </div>
     `;

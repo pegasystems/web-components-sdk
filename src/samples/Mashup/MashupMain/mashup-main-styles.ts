@@ -49,13 +49,15 @@ export const mashupMainStyles = html`
 
   .cc-toolbar {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    // align-items: center;
     height: 64px;
     padding: 0px 20px;
     width: 100%;
     z-index: 5;
     color: white;
-    background-color: var(--app-primary-color);
+    // background-color: var(--app-primary-color);
   }
 
   .cc-toolbar-row {
@@ -70,11 +72,43 @@ export const mashupMainStyles = html`
   }
 
   .cc-icon {
-    width: 40px;
+    width: 150px;
     margin-bottom: 10px;
-    filter: var(--app-white-color-filter);
+    // filter: var(--app-white-color-filter);
   }
 
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 20px;
+    overflow: hidden;
+  }
+  
+  li {
+    float: left;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: larger;
+  }
+
+  .cc-main-screen {
+    display: flex; 
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+  }
+
+  .cc-main-div {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;  
+  }
+
+  .margin{
+    width: calc(100% - 100px);
+    margin-left: 50px;
+    margin-right: 50px;
+  }
 
   </style>
 `;

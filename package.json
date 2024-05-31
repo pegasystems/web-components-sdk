@@ -37,6 +37,7 @@
     "@lion/radio-group": "^0.21.1",
     "@lion/select": "^0.17.1",
     "@lion/textarea": "^0.16.1",
+    "@lion/ui": "^0.7.3",
     "@pega/auth": "^0.2.4",
     "@vaadin/grid": "^23.2.7",
     "@vaadin/notification": "^23.2.7",
@@ -47,9 +48,9 @@
     "fast-deep-equal": "^3.1.3"
   },
   "devDependencies": {
-    "@pega/constellationjs": "~23.1.1",
     "@kooneko/livereload-webpack-plugin": "^1.2.0",
     "@pega/configs": "^0.7.2",
+    "@pega/constellationjs": "^24.1.0-test-20240516",
     "@pega/eslint-config": "^0.7.2",
     "@playwright/test": "^1.22.1",
     "@types/debug": "^4.1.12",

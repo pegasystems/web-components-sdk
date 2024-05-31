@@ -69,7 +69,59 @@ class MashupBundleSwatch extends LitElement {
 
     const bSHtml = html`
     <div>
-      <div class="cc-swatch-header">
+      <div style="display: flex; flex-direction: column; justify-content: space-evenly; width:30%">
+        <div class="card" @click=${() => { this._shopClick("Gold") }}>
+          <div>
+            <img src="./assets/img/service.png" style="max-width:100%;">
+          </div>
+          <div style="margin-left: 10px;">
+            <div class="cc-swatch-banner">
+              Schedule Service Appointment
+            </div>
+            <div style="font-size: smaller; color: grey; margin-top: 10px;">
+            Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.
+            </div>
+            <div style="font-size: smaller; color: var(--app-primary-dark-color); margin-top: 10px;">
+              Get started
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <img src="./assets/img/download.png" style="max-width:100%;">
+          </div>
+          <div style="margin-left: 10px;">
+            <div class="cc-swatch-banner">
+              Download User's Manual
+            </div>
+            <div style="font-size: smaller; color: grey; margin-top: 10px;">
+            Find your user manual, and other documents, available for download.
+            </div>
+            <div style="font-size: smaller; color: var(--app-primary-dark-color); margin-top: 10px;">
+              Get started
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <img src="./assets/img/troubleshoot.png" style="max-width:100%;">
+          </div>
+          <div style="margin-left: 10px;">
+            <div class="cc-swatch-banner">
+              Troubleshoot Infotainment Issue
+            </div>
+            <div style="font-size: smaller; color: grey; margin-top: 10px;">
+            Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.
+            </div>
+            <div style="font-size: smaller; color: var(--app-primary-dark-color); margin-top: 10px;">
+              Get started
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style ="width:70%;"></div>
+
+      <!-- <div class="cc-swatch-header">
           <div class="cc-swatch-package">
               <div class="cc-swatch-play">
                 ${this.labelPlay}
@@ -86,9 +138,9 @@ class MashupBundleSwatch extends LitElement {
                   Channels
               </div>
           </div>
-      </div>
-      <div class="cc-swatch-body">
-          <div class="cc-swatch-banner">
+      </div> -->
+      <!-- <div class="cc-swatch-body">
+           <div class="cc-swatch-banner">
               ${this.labelBanner}
           </div>
           <ul>
@@ -97,7 +149,7 @@ class MashupBundleSwatch extends LitElement {
               <li>Watch on the ${PCore.getEnvironmentInfo().getApplicationLabel()} App</li>
               <li>Up to ${this.labelInternetSpeed} Internet Speeds</li>
               <li>Unlimited nationwide calling ${this.extraCalling}</li>
-          </ul>
+          </ul> 
 
           <div class="cc-swatch-price">
               <div class="cc-swatch-from-group">
@@ -115,7 +167,7 @@ class MashupBundleSwatch extends LitElement {
           <div>
               <button class="cc-swatch-shop-button" @click=${() => { this._shopClick(this.labelLevel) }}>SHOP NOW</button>
           </div>
-      </div>
+      </div> -->
     </div>  
     `;
 

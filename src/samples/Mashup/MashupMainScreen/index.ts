@@ -120,8 +120,8 @@ class MashupMainScreen extends LitElement {
   }
 
   assignmentFinished() {
-    this.showResolution = true;
-    this.showPega = false;
+    // this.showResolution = true;
+    // this.showPega = false;
   }
 
   
@@ -135,13 +135,14 @@ class MashupMainScreen extends LitElement {
     html`
       <div class="cc-main-screen">
         <div class="cc-banner">
-            Combine TV, Internet, and Voice for the best deal
+            <h1>Hi Ava,</h1>
+            How can we help you today?
         </div>
     
-        <div style="display: flex; justify-content: space-evenly;">
+        <div>
             <mashup-bundle-swatch-component .swatchConfig="${this.firstConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
-            <mashup-bundle-swatch-component .swatchConfig="${this.secondConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
-            <mashup-bundle-swatch-component .swatchConfig="${this.thirdConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
+            <!-- <mashup-bundle-swatch-component .swatchConfig="${this.secondConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
+            <mashup-bundle-swatch-component .swatchConfig="${this.thirdConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component> -->
         </div>
 
 
@@ -156,10 +157,10 @@ class MashupMainScreen extends LitElement {
         <div class="cc-info">
             <div class="cc-info-pega">
                 <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
-                <br>
-                <div style="padding-left: 50px;"> * - required fields</div>
+                <!-- <br>
+                <div style="padding-left: 50px;"> * - required fields</div>-->
             </div>
-            <div class="cc-info-banner">
+            <!-- <div class="cc-info-banner">
                 <div class="cc-info-banner-text">
                     We need to gather a little information about you.
                 </div>
@@ -167,7 +168,7 @@ class MashupMainScreen extends LitElement {
                     <img src="assets/img/cableinfo.png" class="cc-info-image">
                 </div>
                 
-            </div>
+            </div> -->
         </div>
         
       </div>
@@ -233,6 +234,9 @@ class MashupMainScreen extends LitElement {
 
 
     let actionInfo;
+   
+    const caseTypes = PCore.getEnvironmentInfo().environmentInfoObject.pyCaseTypeList;
+    let mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
 
     switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
       case "CableCo" :
@@ -262,6 +266,41 @@ class MashupMainScreen extends LitElement {
 
         createWork("DIXL-MediaCo-Work-NewService", actionInfo);
         break;
+        case "UplusAuto" :
+
+          actionInfo = {
+            pageName: 'pyEmbedAssignment'
+            // flowType: sFlowType ? sFlowType : "pyStartCase",
+            // caseInfo: {
+            //   content : {
+            //     "Package" : ''
+            //   }
+            // }
+          };
+  
+          // createWork("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit", actionInfo);
+          PCore.getMashupApi().createCase("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit",this.pConn.getContextName()).then(
+            ()=>{console.log('case created');}
+          );
+          break;
+          case "U+Auto" :
+
+          actionInfo = {
+            pageName: 'pyEmbedAssignment'
+            //flowType: sFlowType ? sFlowType : "pyStartCase",
+            // caseInfo: {
+            //   content : {
+            //     "Package" : ''
+            //   }
+            // }
+          };
+  
+          PCore.getMashupApi().createCase(mashupCaseType,this.pConn.getContextName()).then(
+            ()=>{console.log('case created');}
+          );
+          // createWork("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit", actionInfo);
+          break;
+        
     }
 
 

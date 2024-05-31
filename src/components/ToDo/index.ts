@@ -243,7 +243,7 @@ class ToDo extends BridgeBase {
 
     this.thePConn.getActionsApi().openAssignment(id, classname, options).then(() => {
       if (this.bLogging) { console.log(`openAssignment completed`); }
-    });
+    }).catch(()=>{return html`<p>Submit failed!</p>`;});
 
   }
 
