@@ -13,7 +13,7 @@
     "mashupClientId": "14404271733133480883",    
     "mashupUserIdentifier": "user@uplusauto",
     "mashupClient_comment3": "Note: mashupPassword requires Base64 encoding",
-    "mashupPassword": "cnVsZXNAMTIz",
+    "mashupPassword": "",
     
     "portalClientId_comment": "Client ID from the OAuth 2.0 Client Registration record used for portal use case",
     "portalClientId": "14404271733133480883"
