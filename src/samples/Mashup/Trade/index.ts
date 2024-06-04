@@ -17,6 +17,7 @@ class Trade extends LitElement {
   
   showTradeIn = true;
   showPega: boolean = false;
+  showResolution = false;
 
   // NOTE: MashupMainScreen is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -33,6 +34,17 @@ class Trade extends LitElement {
 
     // this.cableInfo = "assets/img/cableinfo.png";
 
+    PCore.getPubSubUtils().subscribe(
+      PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
+      () => { this.cancelAssignment() },
+      "cancelAssignment"
+    );
+
+    PCore.getPubSubUtils().subscribe(
+      "assignmentFinished",
+      () => { this.assignmentFinished() },
+      "assignmentFinished"
+    );
 
 
   }
@@ -55,6 +67,19 @@ class Trade extends LitElement {
 
   }
 
+  cancelAssignment() {
+    this.showTradeIn = true;
+    this.showPega = false;
+  }
+
+  assignmentFinished() {
+    //if(PCore.getEnvironmentInfo().getApplicationLabel() !== 'UplusAuto'){
+      this.showResolution = true;
+      this.showPega = false;
+      this.requestUpdate();
+    //}
+  }
+
   getStarted() {
     this.showPega = true;
     this.showTradeIn = false;
@@ -75,48 +100,60 @@ class Trade extends LitElement {
 
   getMashupMainScreenHtml() : any {
 
-    const mMSHtml = html `
-    ${this.showTradeIn ? html `
-    <div class="cc-main-div">
-        <div style="width: 31rem;margin-right: 4rem;">
-          <div>
-            <h3>We’re interested in your car!</h3>
-            <div>With our quick and easy trade in process, you will get an instant offer that is good for 30 days.</div>
-          </div>
-          <div style="display: flex;width: 29rem;" class="card">
-            <div>
-              <img src="assets/img/service.png" class="cc-info-image">
-            </div>
-            <div style="justify-content: center; flex-direction: column; display: flex;">
-              <h5>Get started with your trade in</h5>
-              <div style="color: grey;font-size: 12px;">Ready to get going with your trade in? The process only takes a few minutes.</div>
-              <button  class="get-started-button" mat-raised-button color="primary"  jsAction="delete" @click="${this.getStarted}" >Get started</button>
-            </div>
-          </div>
+    let mMSHtml;
+    if(this.showResolution){
+      mMSHtml = html `
+      <div class="cc-resolution">
+        <div class="cc-body-uplus">
+          Congrats on your trade in offer!
         </div>
-        <div style="flex-direction: column;
-        display: flex; align-items:center; gap: 2rem; width: 16rem">
-          <h3>How it works</h3>
-          <div><img src="assets/img/handshake.png"></div>
-          <h4 class="text-align">Get your instant online guaranteed offer</h4>
-          <div class=vl></div>
-          <div><img src="assets/img/tow-truck.png"></div>
-          <h4 class="text-align">We will pick up your car at your convenience</h4>
-          <div class=vl></div>
-          <div><img src="assets/img/dollar-sign.png"></div>
-          <h4 class="text-align">Get a check or credit toward a new purchase</h4>
-        </div>
-    </div>
-    `: html `
-      <div>
-        <div class="cc-info">
-            <div class="uplus-info-pega">
-                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
-            </div>
-        </div>
-
       </div>
-    `}`;
+    `;
+    }else{
+
+      mMSHtml = html `
+      ${this.showTradeIn ? html `
+      <div class="cc-main-div">
+          <div style="width: 31rem;margin-right: 4rem;">
+            <div>
+              <h3>We’re interested in your car!</h3>
+              <div>With our quick and easy trade in process, you will get an instant offer that is good for 30 days.</div>
+            </div>
+            <div style="display: flex;width: 29rem;" class="card">
+              <div>
+                <img src="assets/img/service.png" class="cc-info-image">
+              </div>
+              <div style="justify-content: center; flex-direction: column; display: flex;">
+                <h5>Get started with your trade in</h5>
+                <div style="color: grey;font-size: 12px;">Ready to get going with your trade in? The process only takes a few minutes.</div>
+                <button  class="get-started-button" mat-raised-button color="primary"  jsAction="delete" @click="${this.getStarted}" >Get started</button>
+              </div>
+            </div>
+          </div>
+          <div style="flex-direction: column;
+          display: flex; align-items:center; gap: 2rem; width: 16rem">
+            <h3>How it works</h3>
+            <div><img src="assets/img/handshake.png"></div>
+            <h4 class="text-align">Get your instant online guaranteed offer</h4>
+            <div class=vl></div>
+            <div><img src="assets/img/tow-truck.png"></div>
+            <h4 class="text-align">We will pick up your car at your convenience</h4>
+            <div class=vl></div>
+            <div><img src="assets/img/dollar-sign.png"></div>
+            <h4 class="text-align">Get a check or credit toward a new purchase</h4>
+          </div>
+      </div>
+      `: html `
+        <div>
+          <div class="cc-info">
+              <div class="uplus-info-pega">
+                  <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
+              </div>
+          </div>
+
+        </div>
+      `}`;
+    }
 
     // const mMSHtml = html `
     

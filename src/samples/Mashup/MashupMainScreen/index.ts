@@ -117,6 +117,7 @@ class MashupMainScreen extends LitElement {
   }
 
   cancelAssignment() {
+    this.showUConnect = true;
     this.showTriplePlayOptions = true;
     this.showPega = false;
   }
