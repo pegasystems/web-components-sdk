@@ -73,7 +73,7 @@ class MashupPortal extends LitElement {
 
     //if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
       sPHtml = html`
-      <div class="column uplus-content">
+      <div class="column">
         <div id="app-nopega">
           <!-- <hello-world title="Pega App Below!" description="This is a &lt;hello-world&gt; web component in components/hello-world.ts"></hello-world> -->
         </div>

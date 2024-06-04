@@ -47,61 +47,45 @@ class MashupUplusUconnect extends LitElement {
   getButtonSwatchHtml() : any {
 
     const bSHtml = html`
-    <div style="display: table; width: 100%">
-      <div style="display: flex; flex-direction: column; justify-content: space-between; width:30%; margin-left: 1%; float:left">
-        <button class="card" @click=${() => { this._schedule() }}>
-          <div style="width:20%; text-align:center">
-            <img src="./assets/img/service.png" style="width:65%">
+    <div style="display: grid;grid-template-columns: 3fr 7fr;column-gap: 2rem;row-gap: 2rem;align-items: start; padding: 20px;">
+      <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;">
+        <div style="display: flex; gap:1rem" class="card">
+          <div>
+            <img src="assets/img/service.png" class="cc-info-image">
           </div>
-          <div style="margin-left: 2%; width:80%; text-align:left">
-            <div class="cc-swatch-banner">
-              Schedule Service Appointment
-            </div>
-            <div style="font-size: smaller; color: grey; margin-top: 10px;">
-            Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.
-            </div>
-            <div style="font-size: smaller; color: var(--app-primary-dark-color); margin-top: 10px;">
-              Get started
-            </div>
+          <div style="justify-content: center; flex-direction: column; display: flex;">
+            <h5>Schedule Service Appointment</h5>
+            <div style="color: grey;font-size: 12px;">Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.</div>
+            <button  class="get-started-button" mat-raised-button color="primary"  jsAction="delete" @click="${this._schedule}" >Get started</button>
           </div>
-        </button>
-        <button class="card">
-          <div style="width:20%; text-align:center">
-            <img src="./assets/img/download.png" style="width:65%">
+        </div>
+
+        <div style="display: flex; gap:1rem" class="card">
+          <div>
+            <img src="assets/img/download.png" class="cc-info-image">
           </div>
-          <div style="margin-left: 2%; width:80%; text-align:left">
-            <div class="cc-swatch-banner">
-              Download User's Manual
-            </div>
-            <div style="font-size: smaller; color: grey; margin-top: 10px;">
-            Find your user manual, and other documents, available for download.
-            </div>
-            <div style="font-size: smaller; color: var(--app-primary-dark-color); margin-top: 10px;">
-              Get started
-            </div>
+          <div style="justify-content: center; flex-direction: column; display: flex;">
+            <h5>Download User's Manual</h5>
+            <div style="color: grey;font-size: 12px;">Find your user manual, and other documents, available for download.</div>
+            <button  class="get-started-button" mat-raised-button color="primary"  jsAction="delete" >Get started</button>
           </div>
-        </button>
-        <button class="card">
-          <div style="width:20%; text-align:center">
-            <img src="./assets/img/troubleshoot.png" style="width:65%">
+        </div>
+
+        <div style="display: flex; gap:1rem" class="card">
+          <div>
+            <img src="assets/img/troubleshoot.png" class="cc-info-image">
           </div>
-          <div style="margin-left: 2%; width:80%; text-align:left">
-            <div class="cc-swatch-banner">
-              Troubleshoot Infotainment Issue
-            </div>
-            <div style="font-size: smaller; color: grey; margin-top: 10px;">
-            Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.
-            </div>
-            <div style="font-size: smaller; color: var(--app-primary-dark-color); margin-top: 10px;">
-              Get started
-            </div>
+          <div style="justify-content: center; flex-direction: column; display: flex;">
+            <h5>Troubleshoot Infotainment Issue</h5>
+            <div style="color: grey;font-size: 12px;">Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.</div>
+            <button  class="get-started-button" mat-raised-button color="primary"  jsAction="delete" >Get started</button>
           </div>
-        </button>
+        </div>
       </div>
-      <div style ="display: flex; flex-direction: column; justify-content: space-between; width:66%; margin-left: 1%; float: left; margin-right: 2%">
-        <div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 2%;">
+      <div style ="display: flex; flex-direction: column;gap: 2rem;">
+        <div style="display: flex; gap:2rem">
           <div class="card-team" style="width:49%">
-            <div class="cc-swatch-banner" style="margin-bottom:1%">
+            <div class="heading">
               Service Team
             </div>
             <table>
@@ -126,7 +110,7 @@ class MashupUplusUconnect extends LitElement {
             </table>
           </div>
           <div class="card-team" style="width:49%">
-            <div class="cc-swatch-banner" style="margin-bottom: 1%">
+            <div class="heading">
               Driver Profiles
             </div>
             <table>
@@ -158,7 +142,7 @@ class MashupUplusUconnect extends LitElement {
           </div>
         </div>
         <div class="card-team">
-          <div class="cc-swatch-banner" style="margin-bottom:1%">
+          <div class="heading">
             Your service history
           </div>
           <table>

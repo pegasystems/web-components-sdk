@@ -5,6 +5,7 @@ import '@lion/button/define';
 import '@lion/textarea/define';
 
 import '../MashupMainScreen';
+import '../Trade';
 import { compareSdkPCoreVersions } from '../../../helpers/versionHelpers';
 
 
@@ -76,7 +77,7 @@ class MashupMain extends LitElement {
 
   openPortal(portal:string) {
     this.portal = portal;
-    this.render();
+    this.requestUpdate();
   }
 
   getMainHtml() : any {
@@ -92,7 +93,7 @@ class MashupMain extends LitElement {
         `:html``}
 
         ${this.portal === 'TradeIn'?
-          html ``:html``}
+          html `<trade-component .pConn=${this.props}></trade-component>`:html``}
 
         ${this.portal === 'Profile'?
           html ``:html``}
@@ -111,16 +112,14 @@ class MashupMain extends LitElement {
 
   getMashupMainHtml() : any {
 
-    const mMHtml: Array<any> = [];
-
-    mMHtml.push(html `${this.getToolbarHtml()}`);
-
-    if (this.bHasPConnect) {
-      mMHtml.push(html `${this.getMainHtml()}`);
-    }
 
 
-
+    const mMHtml = html`
+      <div class=${this.portal === 'TradeIn' ? "trade-div" : "uplus-content"}>
+        ${this.getToolbarHtml()}
+        ${this.bHasPConnect ? html `${this.getMainHtml()}` :html``}
+      </div>
+    `
   
 
 

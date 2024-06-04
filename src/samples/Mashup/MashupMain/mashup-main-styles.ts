@@ -100,7 +100,24 @@ export const mashupMainStyles = html`
     padding: 20px;
     overflow: hidden;
   }
+
+  .uplus-content{
+    // background-image: linear-gradient(var(--app-primary-color), var(--app-form-color));
+    background-image: url("./assets/img/background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .trade-div {
+    width: 100%;
+    height: 100vh;
+    background: url(./assets/img/trade.jpeg);
+ }
   
+
   li {
     float: left;
     padding-left: 20px;

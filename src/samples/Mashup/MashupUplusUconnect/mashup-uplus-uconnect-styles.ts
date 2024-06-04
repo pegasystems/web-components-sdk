@@ -131,10 +131,20 @@ export const mashupUplusUconnectStyles = html`
     background-color: #fafafa;
     display: flex;  
     flex-direction: row;
-    justify-content: space-evenly;
     padding: 20px;
-    margin-bottom: 5%;
     width: 100%;
+    height: 10rem;
+    align-items: center;
+}
+
+.get-started-button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    justify-content: start;
+    display: flex;
+    margin-top: 10px;
+    color: #253278;
 }
 
 .card-team{
@@ -147,6 +157,11 @@ export const mashupUplusUconnectStyles = html`
     padding: 20px;
     //margin: 5%;
     //width: 100%;
+}
+
+.heading {
+    font-size: 20px;
+    margin-bottom: 1rem;
 }
 
 table {

@@ -20,16 +20,10 @@ export const tradeStyles = html`
 }
 
 .cc-main-div {
-    width: 100%;
-    height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;  
-    // background: url(../../../../../assets/todo.png);
-    // background: url(./assets/backgroundImg.png);
-    background: url(./assets/img/trade.jpeg);
     color: white;
     display: flex;
-    // align-items: center;
     justify-content: center;
     padding-top: 4rem;
 }
