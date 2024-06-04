@@ -49,6 +49,17 @@ export const mashupMainStyles = html`
 
   .cc-toolbar {
     display: flex;
+    align-items: center;
+    height: 64px;
+    padding: 0px 20px;
+    width: 100%;
+    z-index: 5;
+    color: white;
+    background-color: var(--app-primary-color);
+  }
+
+  .uplus-toolbar {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     // align-items: center;
@@ -72,6 +83,12 @@ export const mashupMainStyles = html`
   }
 
   .cc-icon {
+    width: 40px;
+    margin-bottom: 10px;
+    filter: var(--app-white-color-filter);
+  }
+
+  .uplus-icon {
     width: 150px;
     margin-bottom: 10px;
     // filter: var(--app-white-color-filter);
@@ -91,18 +108,18 @@ export const mashupMainStyles = html`
     font-size: larger;
   }
 
-  .cc-main-screen {
-    display: flex; 
-    flex-direction: column;
-    position: relative;
-    width: 100%;
-  }
+  // .cc-main-screen {
+  //   display: flex; 
+  //   flex-direction: column;
+  //   position: relative;
+  //   width: 100%;
+  // }
 
-  .cc-main-div {
-    width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;  
-  }
+  // .cc-main-div {
+  //   width: 100%;
+  //   overflow-y: auto;
+  //   overflow-x: hidden;  
+  // }
 
   .margin{
     width: calc(100% - 100px);
@@ -110,5 +127,10 @@ export const mashupMainStyles = html`
     margin-right: 50px;
   }
 
+  button{
+    background-color:inherit;
+    color: #fafafa;
+    border: 0;
+  }
   </style>
 `;
