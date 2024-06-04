@@ -71,10 +71,9 @@ export const tradeStyles = html`
 }
 
 .uplus-info-pega {
-    width: 50%; 
+    min-width: 40rem;
     display: flex; 
-    flex-direction: column; 
-    margin-left: 25%;
+    flex-direction: column;
 }
 
 .cc-info-banner {
@@ -109,6 +108,13 @@ export const tradeStyles = html`
     padding: 20px;
     margin-top: 2rem;
     color: black !important;
+}
+
+.cc-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 5rem;
 }
 
   </style>

@@ -35,12 +35,14 @@ export const checkboxStyles = html`
     lion-checkbox input{
       height: 18px;
       width: 18px;
+      cursor: pointer;
     }
 
     lion-checkbox{
       line-height: 30px;
       align-items: center;
       gap: 0.5rem;
+      cursor: pointer;
     }
   </style>
 `;

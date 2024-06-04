@@ -467,7 +467,7 @@ class FlowContainer extends BridgeBase {
           html`
           <h4>${this.containerName}</h4>
           ${(this.instructionText !== "") ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing }
-          <div style="margin-top: 3rem">
+          <div style="margin-top: 2rem">
             <assignment-component .pConn=${this.thePConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
           </div>
           `

@@ -47,14 +47,19 @@ export const radioButtonStyles = html`
   }
 
 .radio-group-form {
-  margin-left: 25px;
   margin-top: 5px;
   margin-bottom: 15px;
 }
 
 .radio-group-label {
-  color: var(--app-neutral-color);
+  // color: var(--app-neutral-color);
   font-weight: var(--font-weight-normal);
+}
+
+.psdk-radio-button {
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
 }
 
   </style>
