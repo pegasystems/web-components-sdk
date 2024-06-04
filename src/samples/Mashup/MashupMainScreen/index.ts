@@ -6,6 +6,7 @@ import '@lion/textarea/define';
 
 import '../MashupBundleSwatch';
 import '../MashupResolutionScreen';
+import '../MashupUplusUconnect';
 
 // NOTE: you need to import ANY component you may render.
 
@@ -29,6 +30,7 @@ class MashupMainScreen extends LitElement {
   @property( {attribute: false, type: Boolean} ) showTriplePlayOptions = true;
   @property( {attribute: false, type: Boolean} ) showPega = false;
   @property( {attribute: false, type: Boolean} ) showResolution = false;
+  @property( {attribute: false, type: Boolean} ) showUConnect = true;
 
   cableInfo: string = "";
 
@@ -120,8 +122,10 @@ class MashupMainScreen extends LitElement {
   }
 
   assignmentFinished() {
-    // this.showResolution = true;
-    // this.showPega = false;
+    if(PCore.getEnvironmentInfo().getApplicationLabel() !== 'UplusAuto'){
+      this.showResolution = true;
+      this.showPega = false;
+    }
   }
 
   
@@ -135,14 +139,13 @@ class MashupMainScreen extends LitElement {
     html`
       <div class="cc-main-screen">
         <div class="cc-banner">
-            <h1>Hi Ava,</h1>
-            How can we help you today?
+            Combine TV, Internet, and Voice for the best deal
         </div>
     
-        <div>
+        <div style="display: flex; justify-content: space-evenly;">
             <mashup-bundle-swatch-component .swatchConfig="${this.firstConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
-            <!-- <mashup-bundle-swatch-component .swatchConfig="${this.secondConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
-            <mashup-bundle-swatch-component .swatchConfig="${this.thirdConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component> -->
+            <mashup-bundle-swatch-component .swatchConfig="${this.secondConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
+            <mashup-bundle-swatch-component .swatchConfig="${this.thirdConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
         </div>
 
 
@@ -157,10 +160,10 @@ class MashupMainScreen extends LitElement {
         <div class="cc-info">
             <div class="cc-info-pega">
                 <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
-                <!-- <br>
-                <div style="padding-left: 50px;"> * - required fields</div>-->
+                <br>
+                <div style="padding-left: 50px;"> * - required fields</div>
             </div>
-            <!-- <div class="cc-info-banner">
+            <div class="cc-info-banner">
                 <div class="cc-info-banner-text">
                     We need to gather a little information about you.
                 </div>
@@ -168,7 +171,7 @@ class MashupMainScreen extends LitElement {
                     <img src="assets/img/cableinfo.png" class="cc-info-image">
                 </div>
                 
-            </div> -->
+            </div>
         </div>
         
       </div>
@@ -196,10 +199,66 @@ class MashupMainScreen extends LitElement {
     return mMSHtml;
   }
 
+  getUplusMashupMainScreenHtml() : any {
+
+    const mMSHtml = html `
+
+    <div class="cc-main-div">
+    ${this.showUConnect?
+      html`
+      <div class="cc-main-screen">
+        <div class="uplus-banner">
+            <h1>Hi Ava,</h1>
+            How can we help you today?
+        </div>
+
+        <div>
+            <mashup-uplus-uconnect-component  @ScheduleService="${this._scheduleService}"></mashup-uplus-uconnect-component>
+        </div>
+
+      </div>
+      `
+    :
+    html``}
+
+    ${this.showPega?
+    html`
+      <div>
+        <div class="cc-info">
+            <div class="uplus-info-pega">
+                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
+            </div>
+        </div>
+
+      </div>
+    `
+    :
+    html``}
+
+    ${this.showResolution?
+    html`
+      <div>
+        <mashup-resolution-screen-component></mashup-resolution-screen-component>
+      </div>
+      `
+    :
+    html``
+    }
+  </div>
+  `;
+
+    return mMSHtml;
+  }
+
 
   render(){
-
-    const sContent = this.getMashupMainScreenHtml();
+    let sContent;
+    if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+      sContent = this.getUplusMashupMainScreenHtml();
+    }else{
+      sContent = this.getMashupMainScreenHtml();
+    }
+    // const sContent = this.getMashupMainScreenHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
     let arHtml: Array<any> = [];
@@ -234,9 +293,6 @@ class MashupMainScreen extends LitElement {
 
 
     let actionInfo;
-   
-    const caseTypes = PCore.getEnvironmentInfo().environmentInfoObject.pyCaseTypeList;
-    let mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
 
     switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
       case "CableCo" :
@@ -270,43 +326,39 @@ class MashupMainScreen extends LitElement {
 
           actionInfo = {
             pageName: 'pyEmbedAssignment'
-            // flowType: sFlowType ? sFlowType : "pyStartCase",
-            // caseInfo: {
-            //   content : {
-            //     "Package" : ''
-            //   }
-            // }
           };
-  
-          // createWork("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit", actionInfo);
+
           PCore.getMashupApi().createCase("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit",this.pConn.getContextName()).then(
             ()=>{console.log('case created');}
           );
           break;
-          case "U+Auto" :
-
-          actionInfo = {
-            pageName: 'pyEmbedAssignment'
-            //flowType: sFlowType ? sFlowType : "pyStartCase",
-            // caseInfo: {
-            //   content : {
-            //     "Package" : ''
-            //   }
-            // }
-          };
-  
-          PCore.getMashupApi().createCase(mashupCaseType,this.pConn.getContextName()).then(
-            ()=>{console.log('case created');}
-          );
-          // createWork("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit", actionInfo);
-          break;
-        
     }
 
 
   }
 
+  _scheduleService() {
 
+    this.showUConnect = false;
+    this.showPega = true;
+
+    let actionInfo;
+
+    switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
+        case "UplusAuto" :
+
+          actionInfo = {
+            pageName: 'pyEmbedAssignment'
+          };
+
+          PCore.getMashupApi().createCase("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit",this.pConn.getContextName()).then(
+            ()=>{console.log('case created');}
+          );
+          break;
+    }
+
+
+  }
 
 }
 

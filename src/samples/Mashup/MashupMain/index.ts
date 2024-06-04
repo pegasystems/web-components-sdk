@@ -23,6 +23,7 @@ class MashupMain extends LitElement {
   bHasPConnect: boolean = false;
   
   @property( {attribute: false, type: Object } ) props; 
+  @property( {attribute: false, type: Boolean} ) portal = 'UConnect';
 
 
 
@@ -49,35 +50,60 @@ class MashupMain extends LitElement {
 
 
   getToolbarHtml() : any {
-    const tBHtml = html `
-      <div class="cc-toolbar margin">
-      <!-- <div class="cc-main-div"> -->
-        <!-- <div class="cc-main-screen"> -->
-          <!-- <h1>${PCore.getEnvironmentInfo().getApplicationLabel()}&nbsp;</h1> -->
-          <!-- <div style="display: flex; justify-content: space-evenly;"> -->
-            <img src="./assets/img/appName.png" class="cc-icon">
-            <ul>
-              <li>Cars</li>
-              <li>Trucks</li>
-              <li>Dealers</li>
-              <li style="text-decoration: underline; text-underline-offset: 5px;">U+ Connect</li>
-            </ul>
-            <img src="./assets/img/Avatars.png" style="margin:10px;">
-          <!-- </div> -->
-        <!-- </div> -->
-      </div>
-    `;
+    let tBHtml;
+    if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+      tBHtml = html `
+        <div class="uplus-toolbar margin">
+          <button @click=${()=> window.location.reload()}><img src="./assets/img/appName.png" class="uplus-icon"></button>
+          <ul>
+            <li style="text-decoration: underline; text-underline-offset: 5px;"><button @click=${() => { this.openPortal('UConnect') }}>U+ Connect</button></li>
+            <li><button @click=${() => { this.openPortal('TradeIn') }}>Trade in</button></li>
+            <li><button @click=${() => { this.openPortal('Profile') }}>Profile</button></li>
+          </ul>
+          <img src="./assets/img/Avatars.png" style="margin:10px;">
+        </div>
+      `;
+    }else{
+      tBHtml = html `
+        <div class="cc-toolbar">
+          <h1>${PCore.getEnvironmentInfo().getApplicationLabel()}&nbsp;</h1><img src="./assets/img/antenna.svg" class="cc-icon">
+        </div>
+      `;
+    }
 
     return tBHtml;
   }
 
-  getMainHtml() : any {
-    const mHtml = html `
-      <div class="margin">
-        <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
-      </div>
-    `;
+  openPortal(portal:string) {
+    this.portal = portal;
+    this.render();
+  }
 
+  getMainHtml() : any {
+    let mHtml;
+
+    if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+      mHtml = html`
+        ${this.portal === 'UConnect'?
+          html `
+          <div class="margin">
+            <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
+          </div>
+        `:html``}
+
+        ${this.portal === 'TradeIn'?
+          html ``:html``}
+
+        ${this.portal === 'Profile'?
+          html ``:html``}
+      `;
+    }else{
+      mHtml = html `
+        <div>
+          <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
+        </div>
+      `;
+    }
   
     return mHtml;
   }

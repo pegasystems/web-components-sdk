@@ -69,13 +69,25 @@ class MashupPortal extends LitElement {
 
   getSimplePortalHtml() : any {
 
-    const sPHtml = html`
-    <div class="column main-content">
-      <div id="app-nopega">
-        <!-- <hello-world title="Pega App Below!" description="This is a &lt;hello-world&gt; web component in components/hello-world.ts"></hello-world> -->
-      </div>
-      <div id="pega-here"></div>
-    </div>`;
+    let sPHtml;
+
+    //if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+      sPHtml = html`
+      <div class="column uplus-content">
+        <div id="app-nopega">
+          <!-- <hello-world title="Pega App Below!" description="This is a &lt;hello-world&gt; web component in components/hello-world.ts"></hello-world> -->
+        </div>
+        <div id="pega-here"></div>
+      </div>`;
+    // }else{
+    //   sPHtml = html`
+    //   <div class="column main-content">
+    //     <div id="app-nopega">
+    //       <!-- <hello-world title="Pega App Below!" description="This is a &lt;hello-world&gt; web component in components/hello-world.ts"></hello-world> -->
+    //     </div>
+    //     <div id="pega-here"></div>
+    //   </div>`;
+    // }
 
     return sPHtml;
   }

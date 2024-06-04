@@ -4,6 +4,13 @@ export const mashupMainScreenStyles = html`
   <style>
 
 .cc-banner {
+    font-size: 24px;
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.uplus-banner {
     font-size: 20px;
     // text-align: center;
     width: 100%;
@@ -46,7 +53,14 @@ export const mashupMainScreenStyles = html`
 .cc-info-pega {
     width: 50%; 
     display: flex; 
+    flex-direction: column;
+}
+
+.uplus-info-pega {
+    width: 50%; 
+    display: flex; 
     flex-direction: column; 
+    margin-left: 25%;
 }
 
 .cc-info-banner {

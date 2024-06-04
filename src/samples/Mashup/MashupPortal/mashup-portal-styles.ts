@@ -4,11 +4,15 @@ export const mashupPortalStyles = html`
   <style>
 
 .column {
-    height: 100%;
+    min-height: 100vh;
   }
 
-.main-content{
-  background-image: linear-gradient(var(--app-primary-color), var(--app-form-color));
+.uplus-content{
+  // background-image: linear-gradient(var(--app-primary-color), var(--app-form-color));
+  background-image: url("./assets/img/background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
   </style>
 `;
