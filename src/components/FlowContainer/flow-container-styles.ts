@@ -29,12 +29,15 @@ export const flowContainerStyles = html`
     }
 
     .psdk-message-card {
+      display: flex;
+      justify-content:center;
       margin: 10px;
       padding: 16px;
     }
 
     .psdk-message {
       margin-top: .2rem;
+      font-size: 18px;
     }
 
     .psdk-icon {
