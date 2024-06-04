@@ -19,7 +19,8 @@ export const flowContainerStyles = html`
 
     .psdk-flow-container-top {
       background-color: var(--app-form-color);
-      padding: 0rem 0.625rem 0.625rem 0.625rem;
+      //padding: 0rem 0.625rem 0.625rem 0.625rem;
+      padding: 2rem;
       border-radius: 0.3125rem;
 
     }

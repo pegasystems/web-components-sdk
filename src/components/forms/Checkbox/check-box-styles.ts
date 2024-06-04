@@ -27,8 +27,20 @@ export const checkboxStyles = html`
 
     .check-box-form {
       /* margin-left: 20px; */
-      margin-top: 15px;
-      margin-bottom: 5px;
+      //margin-top: 15px;
+      //margin-bottom: 5px;
+      margin-bottom: 0.5rem;
+    }
+
+    lion-checkbox input{
+      height: 18px;
+      width: 18px;
+    }
+
+    lion-checkbox{
+      line-height: 30px;
+      align-items: center;
+      gap: 0.5rem;
     }
   </style>
 `;

@@ -412,8 +412,8 @@ class FlowContainer extends BridgeBase {
     let oWorkData = oWorkItem.getDataObject();
 
     if (bLoadChildren && oWorkData) { 
-      this.containerName = oWorkData.caseInfo.assignments[0].name;
-      this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
+      this.containerName = oWorkData.caseInfo.assignments?.[0].name;
+      this.instructionText = oWorkData.caseInfo.assignments?.[0].instructions;
     }
   
 
@@ -465,9 +465,9 @@ class FlowContainer extends BridgeBase {
       </div>
         ${!this.todo_showTodo?
           html`
-          <h2>${this.containerName}</h2>
+          <h4>${this.containerName}</h4>
           ${(this.instructionText !== "") ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing }
-          <div>
+          <div style="margin-top: 3rem">
             <assignment-component .pConn=${this.thePConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
           </div>
           `

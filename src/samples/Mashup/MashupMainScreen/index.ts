@@ -122,10 +122,10 @@ class MashupMainScreen extends LitElement {
   }
 
   assignmentFinished() {
-    if(PCore.getEnvironmentInfo().getApplicationLabel() !== 'UplusAuto'){
+    //if(PCore.getEnvironmentInfo().getApplicationLabel() !== 'UplusAuto'){
       this.showResolution = true;
       this.showPega = false;
-    }
+    //}
   }
 
   
@@ -224,7 +224,7 @@ class MashupMainScreen extends LitElement {
     ${this.showPega?
     html`
       <div>
-        <div class="cc-info">
+        <div class="uplus-info">
             <div class="uplus-info-pega">
                 <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
             </div>

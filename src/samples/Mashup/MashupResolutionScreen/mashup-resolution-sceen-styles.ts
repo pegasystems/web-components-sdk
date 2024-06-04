@@ -6,6 +6,8 @@ export const mashupResolutionScreenStyles = html`
 .cc-resolution {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    margin-top: 5rem;
 }
 
 .cc-card {
@@ -47,6 +49,14 @@ export const mashupResolutionScreenStyles = html`
     padding: 10px 30px;
 }
 
+.cc-body-uplus {
+    font-size: 18px;
+    padding: 30px;
+    margin: 0% 25% 0% 25%;;
+    min-width: 40rem;
+    background-color: #fafafa;
+    text-align:center;
+}
 
   </style>
 `;

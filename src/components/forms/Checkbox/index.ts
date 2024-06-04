@@ -190,7 +190,7 @@ class CheckBox extends FormComponentBase {
                   id=${index}
                   dataTestId=${this.testId}+':'+${element.value}
                   .model-value=${ {value: element.text ?? element.value, key:  element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key)} }
-                  @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
+                  @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode} style="line-height:30px">
                   <span slot="label">${element.text ?? element.value}</span>
               </lion-checkbox>
             `

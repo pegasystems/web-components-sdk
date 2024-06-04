@@ -57,9 +57,9 @@ class MashupMain extends LitElement {
         <div class="uplus-toolbar margin">
           <button @click=${()=> window.location.reload()}><img src="./assets/img/appName.png" class="uplus-icon"></button>
           <ul>
-            <li style="text-decoration: underline; text-underline-offset: 5px;"><button @click=${() => { this.openPortal('UConnect') }}>U+ Connect</button></li>
-            <li><button @click=${() => { this.openPortal('TradeIn') }}>Trade in</button></li>
-            <li><button @click=${() => { this.openPortal('Profile') }}>Profile</button></li>
+            <li><button style="${this.portal === 'UConnect' ? "border-bottom: 1px solid"  : "border-bottom: 0"}" @click=${() => { this.openPortal('UConnect') }}>U+ Connect</button></li>
+            <li><button style="${this.portal === 'TradeIn' ? "border-bottom: 1px solid"  : "border-bottom: 0"}" @click=${() => { this.openPortal('TradeIn') }}>Trade in</button></li>
+            <li><button style="${this.portal === 'Profile' ? "border-bottom: 1px solid"  : "border-bottom: 0"}" @click=${() => { this.openPortal('Profile') }}>Profile</button></li>
           </ul>
           <img src="./assets/img/Avatars.png" style="margin:10px;">
         </div>
@@ -216,6 +216,22 @@ class MashupMain extends LitElement {
     // console.log(` --> thePConnComponentName: ${this.thePConnComponentName}`);
 
   }
+
+  // _tradeInService() {
+  //   let actionInfo;
+  //   switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
+  //       case "UplusAuto" :
+
+  //         actionInfo = {
+  //           pageName: 'pyEmbedAssignment'
+  //         };
+
+  //         PCore.getMashupApi().createCase("O533RU-UplusAuto-Work-TradeIn",this.pc.getContextName()).then(
+  //           ()=>{console.log('case created');}
+  //         );
+  //         break;
+  //   }
+  // }
 
 
 

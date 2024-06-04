@@ -70,6 +70,13 @@ export const tradeStyles = html`
     flex-direction: column; 
 }
 
+.uplus-info-pega {
+    width: 50%; 
+    display: flex; 
+    flex-direction: column; 
+    margin-left: 25%;
+}
+
 .cc-info-banner {
     width: 50%; 
     display: flex; 

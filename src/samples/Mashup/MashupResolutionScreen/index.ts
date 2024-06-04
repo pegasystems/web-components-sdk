@@ -45,27 +45,40 @@ class MashupResolutionScreen extends LitElement {
 
 
   getResolutionScreenHtml() : any {
+    let rSHtml;
 
-    const rSHtml = html `
-    
-    <div class="cc-resolution">
-      <div class="cc-card">
-          <div class="cc-header">
-              Welcome!
-          </div>
-          <div class="cc-body">
-              Thanks for selecting a package with us. <br><br>
-              A technician will contact you with in the next couple of days to schedule an installation.<br><br>
-              If you have any questions, you can contact us directly at <b>1-800-555-1234</b> or you can chat with us.
-          </div>
+    if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+      rSHtml = html `
+      <div class="cc-resolution">
+        <div class="cc-body-uplus">
+          Congratulations! Your appointment has been scheduled.
+        </div>
       </div>
-      <div>
-          <img src="assets/img/cablechat.png" class="cc-chat-image">
-          <button class="cc-chat-button" >Chat Now</button>
-      </div>
-    </div>
+      `;
+    }else{
+      rSHtml = html `
     
-    `;
+          <div class="cc-resolution">
+            <div class="cc-card">
+                <div class="cc-header">
+                    Welcome!
+                </div>
+                <div class="cc-body">
+                    Thanks for selecting a package with us. <br><br>
+                    A technician will contact you with in the next couple of days to schedule an installation.<br><br>
+                    If you have any questions, you can contact us directly at <b>1-800-555-1234</b> or you can chat with us.
+                </div>
+            </div>
+            <div>
+                <img src="assets/img/cablechat.png" class="cc-chat-image">
+                <button class="cc-chat-button" >Chat Now</button>
+            </div>
+          </div>
+          
+          `;
+    }
+
+    
 
 
     return rSHtml;

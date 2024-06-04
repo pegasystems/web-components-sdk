@@ -1,7 +1,6 @@
 import { html, customElement, property, LitElement } from '@lion/core';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
-
-
+import '../../../components/RootContainer';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
@@ -15,7 +14,8 @@ declare var myLoadMashup: any;
 class Trade extends LitElement {
 
   @property( {attribute: false, type: Object } ) pConn; 
-
+  
+  showTradeIn = true;
   showPega: boolean = false;
 
   // NOTE: MashupMainScreen is NOT derived from BridgeBase; just derived from LitElement
@@ -57,17 +57,26 @@ class Trade extends LitElement {
 
   getStarted() {
     this.showPega = true;
+    this.showTradeIn = false;
+    // let event = new CustomEvent('TradeInService', {
+      
+    // });
+
+    // this.dispatchEvent(event);
     PCore.getMashupApi().createCase("O533RU-UplusAuto-Work-TradeIn",this.pConn.getContextName()).then(
-      ()=>{console.log('case created');}
+      ()=>{
+        console.log('case created');
+        // this.requestUpdate();
+    }
     );
-    this.requestUpdate()
+    this.requestUpdate();
     // <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
   }
 
   getMashupMainScreenHtml() : any {
 
     const mMSHtml = html `
-    
+    ${this.showTradeIn ? html `
     <div class="cc-main-div">
         <div style="width: 31rem;margin-right: 4rem;">
           <div>
@@ -97,7 +106,17 @@ class Trade extends LitElement {
           <div><img src="assets/img/dollar-sign.png"></div>
           <h4 class="text-align">Get a check or credit toward a new purchase</h4>
         </div>
-    </div>`;
+    </div>
+    `: html `
+      <div>
+        <div class="cc-info">
+            <div class="uplus-info-pega">
+                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
+            </div>
+        </div>
+
+      </div>
+    `}`;
 
     // const mMSHtml = html `
     
