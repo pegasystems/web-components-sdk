@@ -51,7 +51,9 @@ class MashupResolutionScreen extends LitElement {
       rSHtml = html `
       <div class="cc-resolution">
         <div class="cc-body-uplus">
-          Congratulations! Your appointment has been scheduled.
+          <div style="font-size: 22px;">Congratulations! Your appointment has been scheduled.</div>
+          <div style="font-size: 18px;
+          margin-top: 16px;">You will receive an email confirmation with instructions should you need to cancel.</div>
         </div>
       </div>
       `;

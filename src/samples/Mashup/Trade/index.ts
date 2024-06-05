@@ -105,8 +105,9 @@ class Trade extends LitElement {
       mMSHtml = html `
       <div class="cc-resolution">
         <div class="cc-body-uplus">
-          <div>Congrats on your trade in offer!</div>
-          <div style="font-size: 16px;margin-top: 4px">We will contact you within 24 hours to schedule pick up of the vehicle. Until then, you’re all set!</div>
+          <div style="font-size: 22px;">Congrats on your trade in offer!</div>
+          <div style="font-size: 18px;
+          margin-top: 16px;">We will contact you within 24 hours to schedule pick up of the vehicle. Until then, you’re all set!</div>
         </div>
         
       </div>

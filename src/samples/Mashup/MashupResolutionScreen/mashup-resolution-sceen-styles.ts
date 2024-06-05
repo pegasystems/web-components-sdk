@@ -56,6 +56,7 @@ export const mashupResolutionScreenStyles = html`
     min-width: 40rem;
     background-color: #fafafa;
     text-align:center;
+    border-radius: 0.3125rem;
 }
 
   </style>
