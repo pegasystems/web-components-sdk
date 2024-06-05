@@ -26,6 +26,7 @@ export const actionButtonsStyles = html`
 
     button:focus {
       outline: none;
+      box-shadow: none !important;
     }
   </style>
 `;

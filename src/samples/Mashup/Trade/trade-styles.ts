@@ -131,6 +131,7 @@ export const tradeStyles = html`
     min-width: 40rem;
     background-color: #fafafa;
     text-align:center;
+    border-radius: 4px
 }
 
   </style>
