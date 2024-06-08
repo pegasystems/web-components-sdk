@@ -1,4 +1,4 @@
-import { LitElement, html  } from "lit";
+import { LitElement, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
@@ -18,14 +18,14 @@ declare var PCore: any;
 @customElement('summary-list-extension')
 class SummaryList extends LitElement {
 
-  @property ( {attribute: false, type: Array} ) arItems: Array<any> = [];
-  @property ( {attribute: true, type: String} ) icon: string = "";
+  @property({ attribute: false, type: Array }) arItems: Array<any> = [];
+  @property({ attribute: true, type: String }) icon: string = "";
 
-  @property ( {attribute: true, type: String} ) menuIconOverride = "";
-  @property ( {attribute: false} ) menuIconOverrideAction: any;
+  @property({ attribute: true, type: String }) menuIconOverride = "";
+  @property({ attribute: false }) menuIconOverrideAction: any;
 
 
- // NOTE: SummaryList is NOT derived from BridgeBase; just derived from LitElement
+  // NOTE: SummaryList is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
     super();
 
@@ -36,7 +36,7 @@ class SummaryList extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    
+
   }
 
 
@@ -51,9 +51,9 @@ class SummaryList extends LitElement {
 
   getItemsHtml(): any {
 
-    
+
     const arItemsHtml: Array<any> = [];
- 
+
     for (let item of this.arItems) {
       arItemsHtml.push(html`
         <summary-item-extension .item="${item}" menuIconOverride="${this.menuIconOverride}" .menuIconOverrideAction="${this.menuIconOverrideAction}"></summary-item-extension>
@@ -66,9 +66,9 @@ class SummaryList extends LitElement {
 
   }
 
-  
 
-  
+
+
 
 
 
@@ -77,11 +77,11 @@ class SummaryList extends LitElement {
 
     const sContent = html`${this.getItemsHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
-    
+
     let arHtml: Array<any> = [];
 
     // SummaryList not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    arHtml.push(html`<link rel='stylesheet' href='${locBootstrap}'>`);
 
     arHtml.push(summaryListStyles);
     arHtml.push(sContent);

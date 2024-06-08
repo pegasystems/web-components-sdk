@@ -9,6 +9,9 @@
     "moduleResolution": "node",
     "jsx": "react",
     "allowJs": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "typeRoots": ["./node_modules/@types", "./node_modules/@pega/pcore-pconnect-typedefs","./node_modules/lit", "./node_modules/lit-html"],
+    "types": ["node", "@pega/pcore-pconnect-typedefs", "lit", "lit-html"],
+    "baseUrl": "./"
   }
 }

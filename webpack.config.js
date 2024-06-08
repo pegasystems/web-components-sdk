@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const LiveReloadPlugin = require("@kooneko/livereload-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
@@ -47,7 +47,7 @@ module.exports = (env, argv) => {
           to() {
             return Promise.resolve("constellation/[name].[ext]");
           }
-        },        
+        },
         {
           from: './node_modules/@pega/constellationjs/dist/lib_asset.json',
           to: './constellation',
@@ -62,7 +62,7 @@ module.exports = (env, argv) => {
           from: './assets/icons/*',
           to() {
             return Promise.resolve("constellation/icons/[name].[ext]");
-          } 
+          }
         },
       ]
     }
@@ -99,7 +99,7 @@ module.exports = (env, argv) => {
 
 
   if (webpackMode === 'development') {
-    
+
     // In development mode, add LiveReload plug
     //  When run in conjunction with build-with-watch,
     //  This will reload the browser when code is changed/re-compiled
@@ -110,7 +110,7 @@ module.exports = (env, argv) => {
       hostname: "localhost"
     };
     pluginsToAdd.push(new LiveReloadPlugin(liveReloadOptions));
-    
+
   }
 
   // need to set mode to 'development' to get LiveReload to work
@@ -118,54 +118,54 @@ module.exports = (env, argv) => {
   const initConfig = {
     mode: 'development',
     entry: {
-        app: './src/index.ts'
+      app: './src/index.ts'
     },
     devServer: {
-        static: path.join(__dirname, 'dist'),
-        historyApiFallback: true,
-        host: "localhost",
-        port: 3501,
-        open: false
+      static: path.join(__dirname, 'dist'),
+      historyApiFallback: true,
+      host: "localhost",
+      port: 3501,
+      open: false
     },
     devtool: argv.mode === 'production' ? false : 'inline-source-map',
     plugins: pluginsToAdd,
     output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+      filename: '[name].bundle.js',
+      path: path.resolve(__dirname, 'dist')
     },
     module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/
-            },
-            {
-                test: /\.css$/,
-                include: path.resolve(__dirname, 'src'),
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
-            },
-            {test: /\.s[a|c]ss$/, use: [{loader: "style-loader"}, {loader: "css-loader"}, {loader: "sass-loader"}]},
-            {test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: {limit: 8192}},
-            {
-                test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
-                loader: 'url-loader',
-                options: {limit: 10000, mimetype: 'application/font-woff2'}
-            },
-            {
-                test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
-                loader: 'url-loader',
-                options: {limit: 10000, mimetype: 'application/font-woff'}
-            },
-            {test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader'}
-        ]
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        },
+        {
+          test: /\.css$/,
+          include: path.resolve(__dirname, 'src'),
+          use: [
+            'style-loader',
+            'css-loader'
+          ]
+        },
+        { test: /\.s[a|c]ss$/, use: [{ loader: "style-loader" }, { loader: "css-loader" }, { loader: "sass-loader" }] },
+        { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
+        {
+          test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
+          loader: 'url-loader',
+          options: { limit: 10000, mimetype: 'application/font-woff2' }
+        },
+        {
+          test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
+          loader: 'url-loader',
+          options: { limit: 10000, mimetype: 'application/font-woff' }
+        },
+        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' }
+      ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
+      extensions: ['.tsx', '.ts', '.js']
     }
-  } ;
-return initConfig;
+  };
+  return initConfig;
 };
