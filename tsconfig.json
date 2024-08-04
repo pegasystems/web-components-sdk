@@ -5,10 +5,13 @@
     "strict": true,
     "sourceMap": true,
     "module": "es6",
-    "target": "es6",
+    "target": "ES2022",
     "moduleResolution": "node",
-    "jsx": "react",
     "allowJs": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+        "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "baseUrl":"./",
+    "typeRoots": ["node_modules/@pega", "node_modules/lit", "node_modules/@lit", "node_modules/lit-html", "node_modules/lit-element","node_modules/@types"]
   }
 }
