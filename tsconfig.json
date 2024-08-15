@@ -53,6 +53,7 @@
 //   "include": ["src"]
 // }
 {
+  "extends": "@pega/tsconfig/index.json",
   "compilerOptions": {
     "target": "es2021",
     "module": "ESNext",

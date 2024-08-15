@@ -10,7 +10,7 @@ import "../../../components/forms/SemanticLink";
 
 @customElement("single-reference-readonly")
 class SingleReferenceReadonly extends BridgeBase {
-  @property({ attribute: false, type: Object }) pConn;
+  // @property({ attribute: false, type: Object }) pConn;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
