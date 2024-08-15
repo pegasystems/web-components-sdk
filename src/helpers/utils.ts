@@ -1,8 +1,8 @@
-import * as dayjs from "dayjs";
-import * as customParseFormat from "dayjs/plugin/customParseFormat";
-import * as localizedFormat from "dayjs/plugin/localizedFormat";
-import * as relativeTime from "dayjs/plugin/relativeTime";
-import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import localizedFormat from "dayjs/plugin/localizedFormat.js";
+import relativeTime from "dayjs/plugin/relativeTime.js";
+import { SdkConfigAccess } from "@pega/auth/lib/sdk-auth-manager";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
@@ -25,12 +25,12 @@ export class Utils {
     const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
 
     // NOTE: Needs a trailing slash! So add one if not provided
-    if (!sdkConfigServer.sdkContentServerUrl.endsWith('/')) {
+    if (!sdkConfigServer.sdkContentServerUrl.endsWith("/")) {
       sdkConfigServer.sdkContentServerUrl = `${sdkConfigServer.sdkContentServerUrl}/`;
     }
 
     return `${sdkConfigServer.sdkContentServerUrl}constellation/`;
-  }  
+  }
 
   static getOptionList(configProps: any, dataObject: any): Array<any> {
     let listType = configProps.listType;
@@ -52,7 +52,10 @@ export class Utils {
             alert("need to handle data page");
           } else {
             let listSourceItems = configProps.listOutput;
-            if (typeof dataPage === "object" && !Array.isArray(listSourceItems)) {
+            if (
+              typeof dataPage === "object" &&
+              !Array.isArray(listSourceItems)
+            ) {
               listSourceItems = dataPage.source ? dataPage.source : [];
             }
             (listSourceItems || []).forEach((item) => {
@@ -107,7 +110,11 @@ export class Utils {
 
     if (typeof inValue == "string") {
       // Experiment with having "" be true, too (and "on")
-      if (inValue.toLowerCase() === "true" || inValue.toLowerCase() === "on" || inValue === "") {
+      if (
+        inValue.toLowerCase() === "true" ||
+        inValue.toLowerCase() === "on" ||
+        inValue === ""
+      ) {
         bReturn = true;
       }
     } else {
@@ -337,7 +344,11 @@ export class Utils {
   }
 
   static isObject(objValue) {
-    return objValue && typeof objValue === "object" && objValue.constructor === Object;
+    return (
+      objValue &&
+      typeof objValue === "object" &&
+      objValue.constructor === Object
+    );
   }
 }
 

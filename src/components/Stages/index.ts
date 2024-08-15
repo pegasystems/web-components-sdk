@@ -1,19 +1,18 @@
-import { html, customElement, property } from '@lion/core';
-import { BridgeBase } from '../../bridge/BridgeBase';
-import { Utils } from '../../helpers/utils';
+import { html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../bridge/BridgeBase/index";
+import { Utils } from "../../helpers/utils";
 
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
-import { stagesStyles } from './stages-styles';
-
+import { stagesStyles } from "./stages-styles";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-@customElement('stages-component')
+@customElement("stages-component")
 class Stages extends BridgeBase {
-
   checkSvgIcon: string = "";
   imagePath: string = "";
 
@@ -23,16 +22,24 @@ class Stages extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = stagesStyles;
@@ -41,26 +48,33 @@ class Stages extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     this.imagePath = Utils.getIconPath(Utils.getSDKStaticContentUrl());
-    this.checkSvgIcon = Utils.getImageSrc("check", Utils.getSDKStaticContentUrl());
-    
+    this.checkSvgIcon = Utils.getImageSrc(
+      "check",
+      Utils.getSDKStaticContentUrl(),
+    );
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
 
   /**
@@ -70,8 +84,12 @@ class Stages extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -80,73 +98,73 @@ class Stages extends BridgeBase {
     }
   }
 
-
   getStageInnerHtml(stage: any) {
-
     let sClass = "";
-    let sIconHtml: any = html ``;
+    let sIconHtml: any = html``;
 
     switch (stage.visited_status) {
       case "completed":
-          sClass = "psdk-stages-inner-past";
-          sIconHtml = html `<img class="psdk-stages-icon" src="${this.checkSvgIcon}">`;
-          break;
+        sClass = "psdk-stages-inner-past";
+        sIconHtml = html`<img
+          class="psdk-stages-icon"
+          src="${this.checkSvgIcon}"
+        />`;
+        break;
       case "active":
-          sClass = "psdk-stages-inner-present";
-          break;
+        sClass = "psdk-stages-inner-present";
+        break;
       case "future":
-          sClass = "psdk-stages-inner-future"
-          break;
+        sClass = "psdk-stages-inner-future";
+        break;
     }
 
-    const sIHtml = html `
+    const sIHtml = html`
       <div class="${sClass}">${sIconHtml}${stage.name}</div>
     `;
 
     return sIHtml;
-
   }
 
   getStageOuterHtml(stage: any) {
-
     const sOHtml = html`
       <div class="psdk-stages-chevron">${this.getStageInnerHtml(stage)}</div>
     `;
 
     return sOHtml;
-
   }
 
   stagesHtml(): any {
-
     let arStages = super.getComponentProp("stages");
     let arStageResults: Array<any> = [];
     let lastStage: any;
 
     if (arStages != null) {
       arStageResults = arStages;
-      lastStage = arStageResults[arStageResults.length -1];
+      lastStage = arStageResults[arStageResults.length - 1];
     }
 
     const arStagesHtml: Array<any> = [];
 
     for (let stage of arStageResults) {
       arStagesHtml.push(html`${this.getStageOuterHtml(stage)}`);
-
     }
 
     const stagesHtml = html`
       <div class="psdk-stages-bar">${arStagesHtml}</div>
     `;
 
-
     return stagesHtml;
-
   }
 
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+  render() {
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`,
+      );
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -154,12 +172,10 @@ class Stages extends BridgeBase {
 
     const sContent = html`${this.stagesHtml()}`;
 
-    this.renderTemplates.push( sContent );
+    this.renderTemplates.push(sContent);
 
     return this.renderTemplates;
-
   }
-
 }
 
 export default Stages;

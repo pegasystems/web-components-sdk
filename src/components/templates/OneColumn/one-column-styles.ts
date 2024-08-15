@@ -1,9 +1,10 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const oneColumnStyles = html`
   <style>
     * {
-        box-sizing: border-box;
-    }  
+      box-sizing: border-box;
+    }
   </style>
 `;
+

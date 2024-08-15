@@ -1,30 +1,30 @@
-import { html, customElement, property } from '@lion/core';
-import { BridgeBase } from '../../bridge/BridgeBase';
-import '../View';
-import '../NotSupported';
-import '../ViewContainer';
-import '../PreviewViewContainer';
-import '../ModalViewContainer';
-import '../ReAuthenticationModal';
-import '../Reference';
+import { html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../bridge/BridgeBase/index";
+import "../View";
+import "../NotSupported";
+import "../ViewContainer";
+import "../PreviewViewContainer";
+import "../ModalViewContainer";
+import "../ReAuthenticationModal";
+import "../Reference";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
 //
-// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with 
+// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
 // is totally at your own risk.
 //
 
-@customElement('root-container')
+@customElement("root-container")
 class RootContainer extends BridgeBase {
-  @property( {attribute: false, type: Object} ) previewViewContainerConn = null;
-  @property( {attribute: false, type: Object} ) modalViewContainerConn = null;
-  @property( {attribute: false, type: Object} ) createdPConnect;
-  @property( {attribute: true, type: Boolean} ) displayOnlyFA = false; 
-  @property( {attribute: true, type: Boolean} ) isMashup = false;
-
+  @property({ attribute: false, type: Object }) previewViewContainerConn = null;
+  @property({ attribute: false, type: Object }) modalViewContainerConn = null;
+  @property({ attribute: false, type: Object }) createdPConnect;
+  @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
+  @property({ attribute: true, type: Boolean }) isMashup = false;
 
   componentName: string = "";
   newPConn: any;
@@ -35,8 +35,12 @@ class RootContainer extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
     this.createdPConnect = null;
@@ -44,8 +48,12 @@ class RootContainer extends BridgeBase {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // Adapted from Angular SDK
     let myContext = "app";
@@ -53,12 +61,11 @@ class RootContainer extends BridgeBase {
       myContext = "root";
     }
 
-    const options = { "context": myContext };
-
+    const options = { context: myContext };
 
     const { containers } = PCore.getStore().getState();
     const items = Object.keys(containers).filter((item) =>
-      item.includes("root")
+      item.includes("root"),
     );
 
     PCore.getContainerUtils().getContainerAPI().addContainerItems(items);
@@ -67,26 +74,25 @@ class RootContainer extends BridgeBase {
       meta: {
         type: "PreviewViewContainer",
         config: {
-          name: "preview"
-        }
+          name: "preview",
+        },
       },
-      options
+      options,
     });
 
     this.previewViewContainerConn = configObjPreview.getPConnect();
 
-
     const configObjModal = PCore.createPConnect({
       meta: {
-        "type": "ModalViewContainer",
-        "config": {
-          "name": "modal"
-        }
+        type: "ModalViewContainer",
+        config: {
+          name: "modal",
+        },
       },
       options: {
-        "pageReference": "pyPortal",
-        "context": myContext
-      }
+        pageReference: "pyPortal",
+        context: myContext,
+      },
     });
 
     // becasue of Web Component frame work not calling constructor when root container updates, need to tell
@@ -97,27 +103,31 @@ class RootContainer extends BridgeBase {
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-    
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
-    super.disconnectedCallback()
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    super.disconnectedCallback();
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
-  
 
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
-    // need to call this.getCurrentCompleteProps (not this.thePConn.getConfigProps) 
+    // need to call this.getCurrentCompleteProps (not this.thePConn.getConfigProps)
     //  to get full set of props that affect this component in Redux
     const myProps: any = this.getCurrentCompleteProps();
 
@@ -129,7 +139,7 @@ class RootContainer extends BridgeBase {
       myContext = "root";
     }
 
-    const options = { "context": myContext };
+    const options = { context: myContext };
 
     //const { renderingMode, viewConfig, children, skeleton } = myProps;
     const {
@@ -138,10 +148,14 @@ class RootContainer extends BridgeBase {
       children,
       skeleton,
       /* httpMessages, */
-      routingInfo
+      routingInfo,
     } = myProps;
 
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf with myProps: ${JSON.stringify(myProps)}`); }
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: updateSelf with myProps: ${JSON.stringify(myProps)}`,
+      );
+    }
 
     if (routingInfo && renderingModes.includes(renderingMode)) {
       const { accessedOrder, items } = routingInfo;
@@ -157,26 +171,25 @@ class RootContainer extends BridgeBase {
           const rootObject: any = PCore.createPConnect({
             meta: itemView,
             options: {
-              context: items[key].context
-            }
+              context: items[key].context,
+            },
           });
-    
+
           //this.createdPConnect = rootObject;
           this.newPConn = rootObject.getPConnect();
           //const thePConnComponentName = this.createdPConnect.getPConnect().getComponentName();
           this.componentName = this.newPConn.getComponentName();
 
           //if (this.bLogging) { console.log(`${this.theComponentName}: created ${thePConnComponentName}`); }
-        }      
+        }
       }
-    } else if (renderingMode == noPortalMode) { 
-
+    } else if (renderingMode == noPortalMode) {
       // becasue of Web Component frame work not calling constructor when root container updates, need to tell
       // flow container when to init
       window.sessionStorage.setItem("okToInitFlowContainer", "true");
-      
+
       const theChildren = this.children;
-      if (theChildren && (theChildren.length == 1)) {
+      if (theChildren && theChildren.length == 1) {
         //this.createdPConnect =  theChildren[0];
         //this.createdPConnect = null;
         let localPConn = theChildren[0].getPConnect();
@@ -186,15 +199,17 @@ class RootContainer extends BridgeBase {
 
         //if (this.bLogging) { console.log(`${this.theComponentName}: has child ${this.createdPConnect.getPConnect().getComponentName()}`); }
       }
-
-    
     } else if (children && children.length > 0) {
       //return <div id="root-container">{children}</div>;
 
       // currently we never get here, but we should get here for mashup
       alert("here with children: " + children);
     } else if (skeleton !== undefined) {
-      if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf: skeleton !== undefined`); }
+      if (this.bLogging) {
+        console.log(
+          `${this.theComponentName}: updateSelf: skeleton !== undefined`,
+        );
+      }
       // TODO: need to update once skeletons are available;
       //const LoadingComponent = LazyComponentMap[skeleton];
       //return <LoadingComponent />;
@@ -205,18 +220,16 @@ class RootContainer extends BridgeBase {
       // check if spinner is already on and if no, turn on.  We should
       // check so we don't keep update the boolean and cause an angular error
       //
-    // } else if (renderingMode === "noPortal") {
-    //   // makes sure Angular tracks these changes
-    //   this.ngZone.run(() => {
-    //     this.pConn$ = this.pConn$.getChildren()[0].getPConnect();
-    //     this.componentName$ = this.pConn$.getComponentName();
-    //   });
-
+      // } else if (renderingMode === "noPortal") {
+      //   // makes sure Angular tracks these changes
+      //   this.ngZone.run(() => {
+      //     this.pConn$ = this.pConn$.getChildren()[0].getPConnect();
+      //     this.componentName$ = this.pConn$.getComponentName();
+      //   });
     } else {
       alert("didn't match any tests");
       //return null;
     }
-
   }
 
   /**
@@ -226,48 +239,73 @@ class RootContainer extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
     if (bShouldUpdate) {
       this.updateSelf();
-
     }
   }
 
-  getRootHtml() :any {
-
+  getRootHtml(): any {
     let arKidHtml: Array<Object> = [];
     // modalviewcontainer and hybridviewcontainer are handled elsewhere
     switch (this.componentName) {
-      case "View" :
-        arKidHtml.push(html`<view-component .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></view-component>`);
+      case "View":
+        arKidHtml.push(
+          html`<view-component
+            .pConn=${this.newPConn}
+            ?displayOnlyFA=${this.displayOnlyFA}
+          ></view-component>`,
+        );
         break;
 
       case "ViewContainer":
-        arKidHtml.push(html`<view-container .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></view-container>`);
+        arKidHtml.push(
+          html`<view-container
+            .pConn=${this.newPConn}
+            ?displayOnlyFA=${this.displayOnlyFA}
+          ></view-container>`,
+        );
         break;
 
       case "Reference":
       case "reference":
-        arKidHtml.push( html`<reference-component .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></reference-component>` );
+        arKidHtml.push(
+          html`<reference-component
+            .pConn=${this.newPConn}
+            ?displayOnlyFA=${this.displayOnlyFA}
+          ></reference-component>`,
+        );
         break;
-      
-      default:
-        arKidHtml.push( html`<p>${this.theComponentName}: wants to render [${this.componentName}]</p>` );
-      break;
 
+      default:
+        arKidHtml.push(
+          html`<p>
+            ${this.theComponentName}: wants to render [${this.componentName}]
+          </p>`,
+        );
+        break;
     }
 
     return arKidHtml;
-
   }
 
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+  render() {
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`,
+      );
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -280,36 +318,44 @@ class RootContainer extends BridgeBase {
       }
 
       // push the created PConnect onto this.children
-      this.children.push( this.createdPConnect );
+      this.children.push(this.createdPConnect);
     } else if (this.children === null) {
-      if (this.bLogging) { console.log(`${this.theComponentName}: nothing to render`); }
+      if (this.bLogging) {
+        console.log(`${this.theComponentName}: nothing to render`);
+      }
     } else {
-
       // Otherwise, we're just going to expect that the RootContainer has children
       //  and we'll let the children be rendered with the call to addChildTemplates below...
-
     }
 
     // Adapted from Angular SDK - add previewViewContainer and modalViewContainer if they exist...
     if (this.previewViewContainerConn) {
-      this.renderTemplates.push( html`<preview-view-container .pConn=${this.previewViewContainerConn}></preview-view-container>`);
+      this.renderTemplates.push(
+        html`<preview-view-container
+          .pConn=${this.previewViewContainerConn}
+        ></preview-view-container>`,
+      );
     }
 
     if (this.modalViewContainerConn) {
-      this.renderTemplates.push( html`<modal-view-container-component .pConn=${this.modalViewContainerConn}></modal-view-container-component>`);
+      this.renderTemplates.push(
+        html`<modal-view-container-component
+          .pConn=${this.modalViewContainerConn}
+        ></modal-view-container-component>`,
+      );
     }
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
     //this.addChildTemplates();
-    this.renderTemplates.push( html`${this.getRootHtml()}`);
+    this.renderTemplates.push(html`${this.getRootHtml()}`);
 
     // always add the ReAuthenticationModal
-    this.renderTemplates.push( html`<reauthentication-modal-component></reauthentication-modal-component>`);
+    this.renderTemplates.push(
+      html`<reauthentication-modal-component></reauthentication-modal-component>`,
+    );
 
     return this.renderTemplates;
-
   }
-
 }
 
 export default RootContainer;

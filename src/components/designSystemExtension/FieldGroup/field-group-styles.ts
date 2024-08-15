@@ -1,4 +1,5 @@
-import { html } from "@lion/core";
+import { LitElement, html, nothing, css } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 export const fieldGroupStyles = html`
   <style>

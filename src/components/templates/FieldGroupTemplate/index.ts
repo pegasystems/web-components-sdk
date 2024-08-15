@@ -1,5 +1,6 @@
-import { html, customElement, property } from "@lion/core";
-import { BridgeBase } from "../../../bridge/BridgeBase";
+import { LitElement, html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../../bridge/BridgeBase/index";
 // NOTE: you need to import ANY component you may render.
 import "../PromotedFilters";
 import { FieldGroupUtils } from "../../../helpers/field-group-utils";
@@ -14,7 +15,10 @@ class FieldGroupTemplate extends BridgeBase {
   @property({ attribute: true, type: Object }) configProps;
   @property({ attribute: false, type: Object }) contextClass;
   @property({ attribute: false, type: Array }) referenceList;
-  @property({ attribute: false, type: Boolean }) readonlyMode: boolean | undefined;
+  @property({ attribute: false, type: Boolean }) readonlyMode:
+    | boolean
+    | undefined;
+
   heading: string = "";
   pageReference: string = "";
   prevRefLength: number | undefined;
@@ -34,7 +38,10 @@ class FieldGroupTemplate extends BridgeBase {
     for (let key of changedProperties.keys()) {
       // check for property changes, if so, normalize and render
       if (key == "configProps") {
-        if (changedProperties[key] && changedProperties[key] != this.configProps) {
+        if (
+          changedProperties[key] &&
+          changedProperties[key] != this.configProps
+        ) {
           this.updateSelf();
         }
       }
@@ -81,7 +88,8 @@ class FieldGroupTemplate extends BridgeBase {
     this.configProps = this.thePConn.getConfigProps();
     const renderMode = this.configProps["renderMode"];
     const displayMode = this.configProps["displayMode"];
-    this.readonlyMode = renderMode === "ReadOnly" || displayMode === "LABELS_LEFT";
+    this.readonlyMode =
+      renderMode === "ReadOnly" || displayMode === "LABELS_LEFT";
     this.contextClass = this.configProps["contextClass"];
     const lookForChildInConfig = this.configProps["lookForChildInConfig"];
     this.heading = this.configProps["heading"] ?? "Row";
@@ -97,7 +105,11 @@ class FieldGroupTemplate extends BridgeBase {
         this.children = this.referenceList?.map((item, index) => ({
           id: index,
           name: `${this.heading} ${index + 1}`,
-          children: FieldGroupUtils.buildView(this.thePConn, index, lookForChildInConfig),
+          children: FieldGroupUtils.buildView(
+            this.thePConn,
+            index,
+            lookForChildInConfig,
+          ),
         }));
       }
     }
@@ -113,16 +125,26 @@ class FieldGroupTemplate extends BridgeBase {
   }
 
   addFieldGroupItem() {
-    if (PCore?.getPCoreVersion()?.includes('8.7')) {
-        this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
+    if (PCore?.getPCoreVersion()?.includes("8.7")) {
+      this.thePConn
+        .getListActions()
+        .insert(
+          { classID: this.contextClass },
+          this.referenceList.length,
+          this.pageReference,
+        );
     } else {
-        this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);
+      this.thePConn
+        .getListActions()
+        .insert({ classID: this.contextClass }, this.referenceList.length);
     }
   }
 
   deleteFieldGroupItem(event) {
-    if (PCore?.getPCoreVersion()?.includes('8.7')) {
-      this.thePConn.getListActions().deleteEntry(event.detail, this.pageReference);
+    if (PCore?.getPCoreVersion()?.includes("8.7")) {
+      this.thePConn
+        .getListActions()
+        .deleteEntry(event.detail, this.pageReference);
     } else {
       this.thePConn.getListActions().deleteEntry(event.detail);
     }
@@ -130,13 +152,20 @@ class FieldGroupTemplate extends BridgeBase {
 
   getEditableFieldGroup() {
     return html`
-      <field-group-list .items=${this.children} @onAdd=${this.addFieldGroupItem} @onDelete=${this.deleteFieldGroupItem}></field-group-list>
+      <field-group-list
+        .items=${this.children}
+        @onAdd=${this.addFieldGroupItem}
+        @onDelete=${this.deleteFieldGroupItem}
+      ></field-group-list>
     `;
   }
 
   getReadOnlyFieldGroup() {
     return html`${this.referenceList.map((item, index) => {
-      return html`<field-group .item=${item} .name=${this.heading + " " + (index + 1)}></field-group>`;
+      return html`<field-group
+        .item=${item}
+        .name=${this.heading + " " + (index + 1)}
+      ></field-group>`;
     })}`;
   }
 

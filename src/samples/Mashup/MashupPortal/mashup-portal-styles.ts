@@ -1,12 +1,10 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const mashupPortalStyles = html`
   <style>
-
-.column {
-    height: 100%;
-  }
-
-
+    .column {
+      height: 100%;
+    }
   </style>
 `;
+

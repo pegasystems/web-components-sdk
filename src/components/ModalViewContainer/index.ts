@@ -1,28 +1,27 @@
-import { html, customElement, property } from '@lion/core';
-import { BridgeBase } from '../../bridge/BridgeBase';
+import { html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../bridge/BridgeBase/index";
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
-import { modalViewContainerStyles } from './modal-view-container-styles';
-import * as isEqual from 'fast-deep-equal';
+import { modalViewContainerStyles } from "./modal-view-container-styles";
+import * as isEqual from "fast-deep-equal";
 
-import '../CancelAlert';
+import "../CancelAlert";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
 //
-// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with 
+// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
 // is totally at your own risk.
 //
 
-
-@customElement('modal-view-container-component')
+@customElement("modal-view-container-component")
 class ModalViewContainer extends BridgeBase {
-
   arNewChildren: Array<any> = [];
-  configProps : Object = {};
+  configProps: Object = {};
   templateName: string = "";
   buildName: string = "";
   context: string = "";
@@ -35,8 +34,7 @@ class ModalViewContainer extends BridgeBase {
 
   // created object is now a View with a Template
   //  Use its PConnect to render the CaseView; DON'T replace this.pConn$
-  createdViewPConn : any;
-
+  createdViewPConn: any;
 
   bSubscribed: boolean = false;
   cancelPConn: any;
@@ -49,16 +47,24 @@ class ModalViewContainer extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = modalViewContainerStyles;
@@ -73,13 +79,12 @@ class ModalViewContainer extends BridgeBase {
     if (this.itemKey === "") {
       this.itemKey = baseContext.concat("/").concat(acName);
     }
-    
+
     const containerMgr = this.thePConn.getContainerManager();
 
     containerMgr.initializeContainers({
-      type: "multiple"
+      type: "multiple",
     });
-
 
     const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
 
@@ -89,186 +94,185 @@ class ModalViewContainer extends BridgeBase {
     //   PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */,
     //   this.routingInfoRef
     // );
-
-    
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
 
     PCore.getPubSubUtils().unsubscribe(
       PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
-      PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT /* Should be same unique string passed during subscription */
+      PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT /* Should be same unique string passed during subscription */,
     );
     this.bSubscribed = false;
-
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
+    // routingInfo was added as component prop in populateAdditionalProps
+    let routingInfo = this.getComponentProp("routingInfo");
 
-      // routingInfo was added as component prop in populateAdditionalProps
-      let routingInfo = this.getComponentProp("routingInfo");
+    let loadingInfo = this.thePConn.getLoadingStatus();
+    let configProps = this.thePConn.resolveConfigProps(
+      this.thePConn.getConfigProps(),
+    );
 
-      let loadingInfo = this.thePConn.getLoadingStatus();
-      let configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
-  
-  
-      if (!loadingInfo) {
-        // turn off spinner
-        //this.psService.sendMessage(false);
+    if (!loadingInfo) {
+      // turn off spinner
+      //this.psService.sendMessage(false);
+    }
+
+    if (routingInfo && !loadingInfo /* && this.bUpdate */) {
+      //console.log(" >> modal view container: has routingInfo");
+
+      let currentOrder = routingInfo.accessedOrder;
+
+      if (undefined == currentOrder) {
+        return;
       }
-    
-      if (routingInfo && !loadingInfo /* && this.bUpdate */) {
-  
-        //console.log(" >> modal view container: has routingInfo");
-  
-        let currentOrder = routingInfo.accessedOrder;
-  
-        if (undefined == currentOrder) {
-          return;
-        }
-  
-        let currentItems = routingInfo.items;
-        //let key = currentOrder[currentOrder.length - 1];
-  
-        const { key, latestItem } = this.getKeyAndLatestItem(routingInfo);
-     
-        if (currentOrder.length > 0) {
-  
-          if (currentItems[key] &&
-              currentItems[key].view &&
-              Object.keys(currentItems[key].view).length > 0 ) {
-  
-            let currentItem = currentItems[key];
-            let rootView = currentItem.view;
-            let { context } = rootView.config;
-            let config = { meta: rootView };
-            config["options"] = {
-              context: currentItem.context,
-              hasForm: true,
-              pageReference: context || this.thePConn.getPageReference()
-            };
-  
-            if (!this.bSubscribed) {
-              this.bSubscribed = true;
-              const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
-              this.routingInfoRef["current"] = routingInfo;
-              PCore.getPubSubUtils().subscribe(
-                PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
-                (payload) => { this.showAlert(payload); },
-                PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
-                this.routingInfoRef
-              );
-            }
-  
-            let configObject = PCore.createPConnect(config);
-  
-            // THIS is where the ViewContainer creates a View
-            //    The config has meta.config.type = "view"
-            const newComp = configObject.getPConnect();
-            const newCompName = newComp.getComponentName();
-            const caseInfo = newComp && newComp.getDataObject() && newComp.getDataObject().caseInfo ? newComp.getDataObject().caseInfo : null;
-            // The metadata for pyDetails changed such that the "template": "CaseView"
-            //  is no longer a child of the created View but is in the created View's
-            //  config. So, we DON'T want to replace this.pConn$ since the created
-            //  component is a View (and not a ViewContainer). We now look for the
-            //  "template" type directly in the created component (newComp) and NOT
-            //  as a child of the newly created component.
-            //console.log(`---> ModalViewContainer created new ${newCompName}`);
-  
-            // Use the newly created component (View) info but DO NOT replace
-            //  this ModalViewContainer's pConn$, etc.
-            //  Note that we're now using the newly created View's PConnect in the
-            //  ViewContainer HTML template to guide what's rendered similar to what
-            //  the React return of React.Fragment does
-  
-  
-            // right now need to check caseInfo for changes, to trigger redraw, not getting 
-            // changes from angularPconnect except for first draw
-            if (newComp && caseInfo && this.compareCaseInfoIsDifferent(caseInfo)) {
-  
-              //this.psService.sendMessage(false);
-  
 
-              this.createdViewPConn = newComp;
-              const newConfigProps = newComp.getConfigProps();
-              this.templateName = ('template' in newConfigProps) ? newConfigProps["template"] : "";
+      let currentItems = routingInfo.items;
+      //let key = currentOrder[currentOrder.length - 1];
 
-              const { actionName, isMinimizable } = latestItem;
-              const caseInfo = newComp.getCaseInfo();
-              const caseName = caseInfo.getName();
-              const ID = caseInfo.getID();
+      const { key, latestItem } = this.getKeyAndLatestItem(routingInfo);
 
-              this.title = actionName || `New ${caseName} (${ID})`;
-              // // update children with new view's children
+      if (currentOrder.length > 0) {
+        if (
+          currentItems[key] &&
+          currentItems[key].view &&
+          Object.keys(currentItems[key].view).length > 0
+        ) {
+          let currentItem = currentItems[key];
+          let rootView = currentItem.view;
+          let { context } = rootView.config;
+          let config = { meta: rootView };
+          config["options"] = {
+            context: currentItem.context,
+            hasForm: true,
+            pageReference: context || this.thePConn.getPageReference(),
+          };
 
-              // With 8.7, the newly created component can be a Reference to a View
-              //  rather than a View itself
-              if (newCompName === "reference") {
-                // Reference component doesn't have children. But we can get the
-                //  View that it references and that View's children.
-                //  So we set the children to the reference's View's children
-                //  Note: the underlying components want the children as an array
-                //  of getPConnect() and not the children components directly.
-                //  So, we need to get referenced View PConnect and get its children
-                //  and CANNOT use the simpler, getReferencedView().children
-
-                const referencedViewPConn = newComp.getReferencedViewPConnect(true);
-                // children needs to be an array!
-                this.arNewChildren = [ referencedViewPConn ];
-
-                // This approach below works, too. But it seems less clean to skip over
-                //  the Reference component like we do here. So, unless problems
-                //  are seen, using the approach above instead of this.
-                // const referencedChildren = newComp.getReferencedViewPConnect(true).getPConnect().getChildren();
-                // this.arNewChildren = referencedChildren;
-
-
-              } else {
-                this.arNewChildren = newComp.getChildren();
-              }
-              this.bShowModal = true;
-  
-              // save off itemKey to be used for finishAssignment, etc.
-              this.itemKey = key;  
-
-              this.requestUpdate();
-
-    
-              //console.log("view container expect redraw");
-            }
-  
-  
-  
-            // this will cause a redraw
-            //this.cdRef.detectChanges();
-  
+          if (!this.bSubscribed) {
+            this.bSubscribed = true;
+            const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
+            this.routingInfoRef["current"] = routingInfo;
+            PCore.getPubSubUtils().subscribe(
+              PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
+              (payload) => {
+                this.showAlert(payload);
+              },
+              PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
+              this.routingInfoRef,
+            );
           }
-  
-        }
-        else {
 
-          this.bShowModal = false;
-          this.oCaseInfo = {};
-  
+          let configObject = PCore.createPConnect(config);
 
-    
+          // THIS is where the ViewContainer creates a View
+          //    The config has meta.config.type = "view"
+          const newComp = configObject.getPConnect();
+          const newCompName = newComp.getComponentName();
+          const caseInfo =
+            newComp &&
+            newComp.getDataObject() &&
+            newComp.getDataObject().caseInfo
+              ? newComp.getDataObject().caseInfo
+              : null;
+          // The metadata for pyDetails changed such that the "template": "CaseView"
+          //  is no longer a child of the created View but is in the created View's
+          //  config. So, we DON'T want to replace this.pConn$ since the created
+          //  component is a View (and not a ViewContainer). We now look for the
+          //  "template" type directly in the created component (newComp) and NOT
+          //  as a child of the newly created component.
+          //console.log(`---> ModalViewContainer created new ${newCompName}`);
+
+          // Use the newly created component (View) info but DO NOT replace
+          //  this ModalViewContainer's pConn$, etc.
+          //  Note that we're now using the newly created View's PConnect in the
+          //  ViewContainer HTML template to guide what's rendered similar to what
+          //  the React return of React.Fragment does
+
+          // right now need to check caseInfo for changes, to trigger redraw, not getting
+          // changes from angularPconnect except for first draw
+          if (
+            newComp &&
+            caseInfo &&
+            this.compareCaseInfoIsDifferent(caseInfo)
+          ) {
+            //this.psService.sendMessage(false);
+
+            this.createdViewPConn = newComp;
+            const newConfigProps = newComp.getConfigProps();
+            this.templateName =
+              "template" in newConfigProps ? newConfigProps["template"] : "";
+
+            const { actionName, isMinimizable } = latestItem;
+            const caseInfo = newComp.getCaseInfo();
+            const caseName = caseInfo.getName();
+            const ID = caseInfo.getID();
+
+            this.title = actionName || `New ${caseName} (${ID})`;
+            // // update children with new view's children
+
+            // With 8.7, the newly created component can be a Reference to a View
+            //  rather than a View itself
+            if (newCompName === "reference") {
+              // Reference component doesn't have children. But we can get the
+              //  View that it references and that View's children.
+              //  So we set the children to the reference's View's children
+              //  Note: the underlying components want the children as an array
+              //  of getPConnect() and not the children components directly.
+              //  So, we need to get referenced View PConnect and get its children
+              //  and CANNOT use the simpler, getReferencedView().children
+
+              const referencedViewPConn =
+                newComp.getReferencedViewPConnect(true);
+              // children needs to be an array!
+              this.arNewChildren = [referencedViewPConn];
+
+              // This approach below works, too. But it seems less clean to skip over
+              //  the Reference component like we do here. So, unless problems
+              //  are seen, using the approach above instead of this.
+              // const referencedChildren = newComp.getReferencedViewPConnect(true).getPConnect().getChildren();
+              // this.arNewChildren = referencedChildren;
+            } else {
+              this.arNewChildren = newComp.getChildren();
+            }
+            this.bShowModal = true;
+
+            // save off itemKey to be used for finishAssignment, etc.
+            this.itemKey = key;
+
+            this.requestUpdate();
+
+            //console.log("view container expect redraw");
+          }
+
+          // this will cause a redraw
+          //this.cdRef.detectChanges();
         }
+      } else {
+        this.bShowModal = false;
+        this.oCaseInfo = {};
       }
-  
-
+    }
   }
 
   /**
@@ -278,56 +282,58 @@ class ModalViewContainer extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
     if (bShouldUpdate) {
       this.updateSelf();
-    }
-    else if (this.bShowModal) {
+    } else if (this.bShowModal) {
       // right now onlu get one updated when initial diaplay.  So, once modal is up
       // let fall through and do a check with "compareCaseInfoIsDifferent" until fixed
       this.updateSelf();
     }
   }
 
-  getModalViewContainerHtml() : any {
-
+  getModalViewContainerHtml(): any {
     const mVCHtml = html`
-      ${this.bShowModal ?
-        html`
-        <div id="dialog" class="psdk-dialog-background ">
-          <div class="psdk-modal-view-container-top" id="${this.buildName}">
-              ${this.title != "" ?
-                html`<h3>${this.title}</h3>`
-                :
-                html``
-              }
-              <assignment-component .pConn=${this.createdViewPConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
-          </div>
-        </div>
+      ${this.bShowModal
+        ? html`
+            <div id="dialog" class="psdk-dialog-background ">
+              <div class="psdk-modal-view-container-top" id="${this.buildName}">
+                ${this.title != "" ? html`<h3>${this.title}</h3>` : html``}
+                <assignment-component
+                  .pConn=${this.createdViewPConn}
+                  .arChildren=${this.arNewChildren}
+                  itemKey=${this.itemKey}
+                ></assignment-component>
+              </div>
+            </div>
           `
-        :
-        html``
-      }
-      ${this.bShowCancelAlert ? 
-      html`
+        : html``}
+      ${this.bShowCancelAlert
+        ? html`
       <cancel-alert-component .bShowAlert=${this.bShowCancelAlert} @AlertState=${this._onAlertState}" .pConn=${this.cancelPConn}></app-cancel-alert>`
-      :
-      html``}
-      `;
-
+        : html``}
+    `;
 
     return mVCHtml;
-
-
   }
 
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+  render() {
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`,
+      );
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -335,12 +341,10 @@ class ModalViewContainer extends BridgeBase {
 
     const sContent = html`${this.getModalViewContainerHtml()}`;
 
-    this.renderTemplates.push( sContent );
+    this.renderTemplates.push(sContent);
 
     return this.renderTemplates;
-
   }
-
 
   getConfigObject(item, pConnect) {
     if (item) {
@@ -350,14 +354,13 @@ class ModalViewContainer extends BridgeBase {
         options: {
           context,
           pageReference: view.config.context || pConnect.getPageReference(),
-          hasForm: true
-        }
+          hasForm: true,
+        },
       };
       return PCore.createPConnect(config);
     }
     return null;
   }
-
 
   _onAlertState(e: any) {
     this.bAlertState = e.detail.data;
@@ -367,9 +370,9 @@ class ModalViewContainer extends BridgeBase {
   }
 
   showAlert(payload) {
-
-
-    const { latestItem } = this.getKeyAndLatestItem(this.routingInfoRef["current"]);
+    const { latestItem } = this.getKeyAndLatestItem(
+      this.routingInfoRef["current"],
+    );
     const { isModalAction } = payload;
 
     /*
@@ -402,22 +405,21 @@ class ModalViewContainer extends BridgeBase {
     return {};
   }
 
-  compareCaseInfoIsDifferent(oCurrentCaseInfo: Object) : boolean {
-
+  compareCaseInfoIsDifferent(oCurrentCaseInfo: Object): boolean {
     let bRet: boolean = false;
 
     // fast-deep-equal version
     if (isEqual !== undefined) {
       bRet = !isEqual(this.oCaseInfo, oCurrentCaseInfo);
-    } else{
+    } else {
       let sCurrnentCaseInfo = JSON.stringify(oCurrentCaseInfo);
       let sOldCaseInfo = JSON.stringify(this.oCaseInfo);
       // stringify compare version
-      if ( sCurrnentCaseInfo != sOldCaseInfo ) {
+      if (sCurrnentCaseInfo != sOldCaseInfo) {
         bRet = true;
       }
     }
-    
+
     // if different, save off new case info
     if (bRet) {
       this.oCaseInfo = JSON.parse(JSON.stringify(oCurrentCaseInfo));
@@ -425,7 +427,6 @@ class ModalViewContainer extends BridgeBase {
 
     return bRet;
   }
-
 }
 
 export default ModalViewContainer;

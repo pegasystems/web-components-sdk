@@ -1,4 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const deferLoadStyles = html`
   <style>
@@ -14,3 +14,4 @@ export const deferLoadStyles = html`
     }
   </style>
 `;
+

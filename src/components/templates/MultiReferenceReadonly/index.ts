@@ -1,56 +1,68 @@
-import { html, customElement, property } from '@lion/core';
-import { BridgeBase } from '../../../bridge/BridgeBase';
+import { html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../../bridge/BridgeBase/index";
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import "../SimpleTable/SimpleTableManual";
 
-
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-@customElement('multi-reference-readonly')
+@customElement("multi-reference-readonly")
 class MultiReferenceReadonly extends BridgeBase {
-  @property( {attribute: false, type: Object } ) pConn; 
-  @property( {attribute: false, type: String } ) label;
+  @property({ attribute: false, type: Object }) pConn;
+  @property({ attribute: false, type: String }) label;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-    
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
 
   /**
@@ -60,8 +72,12 @@ class MultiReferenceReadonly extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -74,14 +90,22 @@ class MultiReferenceReadonly extends BridgeBase {
     const configObj = this.pConn.getReferencedView();
     configObj.config.label = this.label;
     this.pConn = this.pConn.getReferencedViewPConnect(true).getPConnect();
-    const multiRefHtml = html`<simple-table-manual .pConn=${this.pConn}></simple-table-manual>`;
+    const multiRefHtml = html`<simple-table-manual
+      .pConn=${this.pConn}
+    ></simple-table-manual>`;
 
     return multiRefHtml;
   }
 
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+  render() {
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`,
+      );
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -89,11 +113,9 @@ class MultiReferenceReadonly extends BridgeBase {
     const sContent = html`${this.getMultiReferenceHtml()}`;
 
     this.renderTemplates.push(sContent);
-    
+
     return this.renderTemplates;
-
   }
-
 }
 
 export default MultiReferenceReadonly;

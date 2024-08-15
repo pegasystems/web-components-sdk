@@ -1,13 +1,8 @@
-import { html, css, customElement, property, LitElement, nothing } from '@lion/core';
-import { LionProgressIndicator } from '@lion/progress-indicator';
+import { html, css } from "lit";
+import { customElement } from "lit/decorators.js";
+import { LionProgressIndicator } from "@lion/ui/progress-indicator.js";
 
-// NOTE: you need to import ANY component you may render.
-import '@lion/progress-indicator/define';
-
-
-// Derived from this example: https://lion-web.netlify.app/components/content/progress-indicator/examples/
-
-@customElement('progress-extension')
+@customElement("progress-extension")
 class ProgressExtension extends LionProgressIndicator {
   static get styles() {
     return [
@@ -55,7 +50,6 @@ class ProgressExtension extends LionProgressIndicator {
             stroke-dashoffset: -127;
           }
         }
-
       `,
     ];
   }
@@ -65,7 +59,7 @@ class ProgressExtension extends LionProgressIndicator {
       <svg class="progress--icon" viewBox="20 20 47 47">
         <circle class="progress--icon--circle" cx="44" cy="44" r="20.2" />
       </svg>
-    `;
+    `[1];
   }
 }
 

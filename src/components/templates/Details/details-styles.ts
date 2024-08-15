@@ -1,6 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
-export const detailsStyles = html`
-  <style>
-  </style>
-`
+export const detailsStyles = html` <style></style> `;
+

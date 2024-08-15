@@ -1,8 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
-export const summaryListStyles = html`
-  <style>
+export const summaryListStyles = html` <style></style> `;
 
-
-  </style>
-`;

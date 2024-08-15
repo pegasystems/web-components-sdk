@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
-import { html, customElement, property } from "@lion/core";
-import { BridgeBase } from "../../../bridge/BridgeBase";
+import { LitElement, html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../../bridge/BridgeBase/index";
 // NOTE: you need to import ANY component you may render.
 import "../PromotedFilters";
 import { Utils } from "../../../helpers/utils";
@@ -57,7 +58,10 @@ class SimpleTableManual extends BridgeBase {
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    this.menuIconOverride = Utils.getImageSrc("trash", Utils.getSDKStaticContentUrl());
+    this.menuIconOverride = Utils.getImageSrc(
+      "trash",
+      Utils.getSDKStaticContentUrl(),
+    );
   }
 
   /**
@@ -122,7 +126,8 @@ class SimpleTableManual extends BridgeBase {
     }
     this.contextClass = contextClass;
 
-    const resolvedFields = children?.[0]?.children || presets?.[0].children?.[0].children;
+    const resolvedFields =
+      children?.[0]?.children || presets?.[0].children?.[0].children;
     // get raw config as @P and other annotations are processed and don't appear in the resolved config.
     //  Destructure "raw" children into array var: "rawFields"
     //  NOTE: when config.listType == "associated", the property can be found in either
@@ -130,7 +135,9 @@ class SimpleTableManual extends BridgeBase {
     //    config.datasource (ex: "@ASSOCIATED .DeclarantChoice")
     //  Neither of these appear in the resolved (this.configProps)
     const rawConfig = rawMetadata?.config;
-    const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
+    const rawFields =
+      rawConfig?.children?.[0]?.children ||
+      rawConfig?.presets?.[0].children?.[0]?.children;
     this.rawFields = rawFields;
     // At this point, fields has resolvedFields and rawFields we can use
 
@@ -159,7 +166,11 @@ class SimpleTableManual extends BridgeBase {
     //  Nebula does). It will also have the "label", and "meta" contains the original,
     //  unchanged config info. For now, much of the info here is carried over from
     //  Nebula and we may not end up using it all.
-    this.fieldDefs = buildFieldsForTable(rawFields, resolvedFields, showDeleteButton);
+    this.fieldDefs = buildFieldsForTable(
+      rawFields,
+      resolvedFields,
+      showDeleteButton,
+    );
 
     // end of from Nebula
 
@@ -264,7 +275,9 @@ class SimpleTableManual extends BridgeBase {
       this.rawFields?.forEach((item) => {
         // removing label field from config to hide title in the table cell
         item = { ...item, config: { ...item.config, label: "" } };
-        const referenceListData = FieldGroupUtils.getReferenceList(this.thePConn);
+        const referenceListData = FieldGroupUtils.getReferenceList(
+          this.thePConn,
+        );
         const isDatapage = referenceListData.startsWith("D_");
         const pageReferenceValue = isDatapage
           ? `${referenceListData}[${index}]`
@@ -299,13 +312,18 @@ class SimpleTableManual extends BridgeBase {
 
     const theDataRows = html`<tbody>
       ${this.rowData.map(
-        (row) => html`<tr scope="row">
-          ${this.displayedColumns.map((colKey) => {
-            return html`<td>
-              ${typeof row[colKey] === "boolean" && !row[colKey] ? "False" : typeof row[colKey] === "boolean" && row[colKey] ? "True" : row[colKey]}
-            </td>`;
-          })}
-        </tr>`
+        (row) =>
+          html`<tr scope="row">
+            ${this.displayedColumns.map((colKey) => {
+              return html`<td>
+                ${typeof row[colKey] === "boolean" && !row[colKey]
+                  ? "False"
+                  : typeof row[colKey] === "boolean" && row[colKey]
+                    ? "True"
+                    : row[colKey]}
+              </td>`;
+            })}
+          </tr>`,
       )}
     </tbody>`;
 
@@ -327,14 +345,27 @@ class SimpleTableManual extends BridgeBase {
 
     const theDataRows = html`<tbody>
       ${this.elementsData.map(
-        (row: any, index: number) => html`<tr scope="row">
-          ${row.map((config) => html` <td>${BridgeBase.getComponentFromConfigObj(config)}</td> `)}
-          <td>
-            <button type="button" id="delete-button" class="psdk-utility-button" @click=${() => this.deleteRecord(index)}>
-              <img class="psdk-utility-card-action-svg-icon" src=${this.menuIconOverride} />
-            </button>
-          </td>
-        </tr>`
+        (row: any, index: number) =>
+          html`<tr scope="row">
+            ${row.map(
+              (config) => html`
+                <td>${BridgeBase.getComponentFromConfigObj(config)}</td>
+              `,
+            )}
+            <td>
+              <button
+                type="button"
+                id="delete-button"
+                class="psdk-utility-button"
+                @click=${() => this.deleteRecord(index)}
+              >
+                <img
+                  class="psdk-utility-card-action-svg-icon"
+                  src=${this.menuIconOverride}
+                />
+              </button>
+            </td>
+          </tr>`,
       )}
     </tbody>`;
 
@@ -344,15 +375,23 @@ class SimpleTableManual extends BridgeBase {
   }
 
   addRecord() {
-    if (PCore.getPCoreVersion()?.includes('8.7')) {
-      this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
+    if (PCore.getPCoreVersion()?.includes("8.7")) {
+      this.thePConn
+        .getListActions()
+        .insert(
+          { classID: this.contextClass },
+          this.referenceList.length,
+          this.pageReference,
+        );
     } else {
-      this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);
+      this.thePConn
+        .getListActions()
+        .insert({ classID: this.contextClass }, this.referenceList.length);
     }
   }
 
   deleteRecord(index) {
-    if (PCore.getPCoreVersion()?.includes('8.7')) {
+    if (PCore.getPCoreVersion()?.includes("8.7")) {
       this.thePConn.getListActions().deleteEntry(index, this.pageReference);
     } else {
       this.thePConn.getListActions().deleteEntry(index);
@@ -360,9 +399,15 @@ class SimpleTableManual extends BridgeBase {
   }
 
   results() {
-    const len = this.editableMode ? this.elementsData?.length : this.rowData?.length;
+    const len = this.editableMode
+      ? this.elementsData?.length
+      : this.rowData?.length;
 
-    return len ? html` <span class="results-count"> ${len} result${len > 1 ? "s" : ""} </span>` : null;
+    return len
+      ? html` <span class="results-count">
+          ${len} result${len > 1 ? "s" : ""}
+        </span>`
+      : null;
   }
 
   render() {
@@ -374,12 +419,31 @@ class SimpleTableManual extends BridgeBase {
 
     const theOuterTemplate = html`
       <div class="simple-table-wrapper">
-        ${this.label ? html`<h3 class="label">${this.label} ${this.results()}</h3>` : null} ${this.readOnlyMode ? this.getReadOnlyTable() : null}
+        ${this.label
+          ? html`<h3 class="label">${this.label} ${this.results()}</h3>`
+          : null}
+        ${this.readOnlyMode ? this.getReadOnlyTable() : null}
         ${this.editableMode ? this.getEditableTable() : null}
-        ${this.editableMode && this.referenceList?.length === 0 ? html`<div class="psdk-no-records" id="no-records">No Records Found.</div>` : null}
-        ${this.readOnlyMode && this.rowData?.length === 0 ? html`<div class="psdk-no-records" id="no-records">No Records Found.</div>` : null}
+        ${this.editableMode && this.referenceList?.length === 0
+          ? html`<div class="psdk-no-records" id="no-records">
+              No Records Found.
+            </div>`
+          : null}
+        ${this.readOnlyMode && this.rowData?.length === 0
+          ? html`<div class="psdk-no-records" id="no-records">
+              No Records Found.
+            </div>`
+          : null}
       </div>
-      ${this.showAddRowButton ? html`<button style="font-size: 16px;" class="btn btn-link" @click=${this.addRecord}>+ Add</button>` : null}
+      ${this.showAddRowButton
+        ? html`<button
+            style="font-size: 16px;"
+            class="btn btn-link"
+            @click=${this.addRecord}
+          >
+            + Add
+          </button>`
+        : null}
     `;
 
     this.renderTemplates.push(theOuterTemplate);

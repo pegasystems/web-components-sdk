@@ -1,27 +1,26 @@
-import { html, customElement, property, nothing } from '@lion/core';
-import { BridgeBase } from '../../../bridge/BridgeBase';
-import * as isEqual from 'fast-deep-equal';
+import { html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../../bridge/BridgeBase/index";
+import * as isEqual from "fast-deep-equal";
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
-import { caseSummaryStyles } from './case-summary-styles';
+import { caseSummaryStyles } from "./case-summary-styles";
 
-import '../../designSystemExtension/CaseSummaryFields';
-
+import "../../designSystemExtension/CaseSummaryFields";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
-@customElement('case-summary-template')
+@customElement("case-summary-template")
 class CaseSummary extends BridgeBase {
-  @property( {attribute: false, type: String} ) status = "";
-  @property( {attribute: false, type: Boolean} ) showStatus = false;
+  @property({ attribute: false, type: String }) status = "";
+  @property({ attribute: false, type: Boolean }) showStatus = false;
 
   arPrimaryFields: Array<any> = [];
   arSecondaryFields: Array<any> = [];
-
 
   // copies of previous primary and secondary rawmeta
   sOldPrimaryMeta: string = "";
@@ -33,16 +32,24 @@ class CaseSummary extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = caseSummaryStyles;
@@ -51,28 +58,37 @@ class CaseSummary extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // store off old metadata
-    let primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
-    let secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
+    let primaryMeta = this.children[0]
+      .getPConnect()
+      .resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
+    let secondaryMeta = this.children[1]
+      .getPConnect()
+      .resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
     this.sOldPrimaryMeta = JSON.stringify(primaryMeta);
     this.sOldSecondaryMeta = JSON.stringify(primaryMeta);
-
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const configProps = this.thePConn.getConfigProps();
     this.status = configProps["status"];
@@ -84,23 +100,24 @@ class CaseSummary extends BridgeBase {
       let pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
       if (pKidData.name.toLowerCase() == "primary fields") {
         this.arPrimaryFields = pKidData.children;
-      }
-      else if (pKidData.name.toLowerCase() == "secondary fields") {
+      } else if (pKidData.name.toLowerCase() == "secondary fields") {
         this.arSecondaryFields = pKidData.children;
       }
     }
 
     this.requestUpdate();
-
-
   }
 
   rawMetaChanged(): boolean {
     let bHasChanged: boolean = false;
-    
+
     // going to check
-    let primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
-    let secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
+    let primaryMeta = this.children[0]
+      .getPConnect()
+      .resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
+    let secondaryMeta = this.children[1]
+      .getPConnect()
+      .resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
 
     bHasChanged = !(JSON.stringify(primaryMeta) == this.sOldPrimaryMeta);
     if (!bHasChanged) {
@@ -124,65 +141,91 @@ class CaseSummary extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
     // standard bShouldUpdate, but if no changes, then check the raw meta data of the children (primary and secondary fields)
     if (bShouldUpdate) {
       this.updateSelf();
-    }
-    else if (this.rawMetaChanged()) {
+    } else if (this.rawMetaChanged()) {
       this.updateSelf();
     }
   }
 
   /**
-   * 
+   *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
   getChildRegionArray(inName: String): Array<Object> {
-    if (this.bDebug) { debugger; }
+    if (this.bDebug) {
+      debugger;
+    }
     let theRetArray: Array<Object> = [];
     let iFound = 0;
 
     for (var child of this.children) {
-      const theMetadataType: string = child.getPConnect().getRawMetadata()['type'].toLowerCase();
-      const theMetadataName: string = child.getPConnect().getRawMetadata()['name'].toLowerCase();
+      const theMetadataType: string = child
+        .getPConnect()
+        .getRawMetadata()
+        ["type"].toLowerCase();
+      const theMetadataName: string = child
+        .getPConnect()
+        .getRawMetadata()
+        ["name"].toLowerCase();
 
-      if ((theMetadataType === "region") && (theMetadataName === inName )) {
+      if (theMetadataType === "region" && theMetadataName === inName) {
         iFound++;
-        theRetArray.push( html`<region-component .pConn=${child.getPConnect()}></region-component>`);
+        theRetArray.push(
+          html`<region-component
+            .pConn=${child.getPConnect()}
+          ></region-component>`,
+        );
       }
     }
 
-    if (this.bLogging) { console.log( `${this.theComponentName}: getChildRegionArray - looking for ${inName} found: ${iFound}` ); }
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: getChildRegionArray - looking for ${inName} found: ${iFound}`,
+      );
+    }
     return theRetArray;
   }
 
-
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+  render() {
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`,
+      );
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
     const theContent = html`
-      <case-summary-fields-extension status="${this.status}" ?bShowStatus="${this.showStatus}"
-        .arPrimaryFields="${this.arPrimaryFields}" .arSecondaryFields="${this.arSecondaryFields}"></case-summary-fields-extension>
+      <case-summary-fields-extension
+        status="${this.status}"
+        ?bShowStatus="${this.showStatus}"
+        .arPrimaryFields="${this.arPrimaryFields}"
+        .arSecondaryFields="${this.arSecondaryFields}"
+      ></case-summary-fields-extension>
     `;
 
-    this.renderTemplates.push( theContent );
+    this.renderTemplates.push(theContent);
 
     //this.addChildTemplates();
 
     return this.renderTemplates;
-
   }
-
 }
 
 export default CaseSummary;

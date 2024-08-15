@@ -1,5 +1,6 @@
-import { html, customElement, property } from "@lion/core";
-import { BridgeBase } from "../../../bridge/BridgeBase";
+import { LitElement, html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../../bridge/BridgeBase/index";
 // NOTE: you need to import ANY component you may render.
 import "../PromotedFilters";
 import { Utils } from "../../../helpers/utils";
@@ -95,8 +96,13 @@ class SimpleTable extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const feildGroupComponent = html`<field-group-template .pConn=${this.thePConn} .configProps=${this.fieldGroupProps}></field-group-template>`;
-    const simpleTableManual = html`<simple-table-manual .pConn=${this.thePConn}></simple-table-manual>`;
+    const feildGroupComponent = html`<field-group-template
+      .pConn=${this.thePConn}
+      .configProps=${this.fieldGroupProps}
+    ></field-group-template>`;
+    const simpleTableManual = html`<simple-table-manual
+      .pConn=${this.thePConn}
+    ></simple-table-manual>`;
 
     if (this.fieldGroupProps) {
       this.renderTemplates.push(feildGroupComponent);

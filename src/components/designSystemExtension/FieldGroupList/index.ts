@@ -1,10 +1,10 @@
-import { html, customElement, property, LitElement } from "@lion/core";
+import { LitElement, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 import Utils from "../../../helpers/utils";
+import "../../Region";
 
 // import the component's styles as HTML with <style>
 import { fieldGroupListStyles } from "./field-group-list-styles";
-
-declare const PCore: any;
 
 @customElement("field-group-list")
 class FieldGroupList extends LitElement {
@@ -18,7 +18,10 @@ class FieldGroupList extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.menuIconDelete = Utils.getImageSrc("trash", Utils.getSDKStaticContentUrl());
+    this.menuIconDelete = Utils.getImageSrc(
+      "trash",
+      Utils.getSDKStaticContentUrl(),
+    );
   }
 
   disconnectedCallback() {
@@ -31,11 +34,17 @@ class FieldGroupList extends LitElement {
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
   getChildRegionArray(child: any) {
-    const theMetadataType: string = child.getPConnect().getRawMetadata()["type"].toLowerCase();
+    const theMetadataType: string = child
+      .getPConnect()
+      .getRawMetadata()
+      ["type"].toLowerCase();
 
     if (theMetadataType === "region") {
-      return html`<region-component .pConn=${child.getPConnect()}></region-component>`;
+      return html`<region-component
+        .pConn=${child.getPConnect()}
+      ></region-component>`;
     }
+    return [];
   }
 
   addRecord() {
@@ -56,8 +65,16 @@ class FieldGroupList extends LitElement {
             <div class="field-group-list-item">
               <div class="field-group-list-item-title">
                 ${item.name}
-                <button type="button" id="delete-button" class="psdk-utility-button" @click=${() => this.deleteRecord(index)}>
-                  <img class="psdk-utility-card-action-svg-icon" src=${this.menuIconDelete} />
+                <button
+                  type="button"
+                  id="delete-button"
+                  class="psdk-utility-button"
+                  @click=${() => this.deleteRecord(index)}
+                >
+                  <img
+                    class="psdk-utility-card-action-svg-icon"
+                    src=${this.menuIconDelete}
+                  />
                 </button>
               </div>
               ${this.getChildRegionArray(item.children)}
@@ -67,7 +84,13 @@ class FieldGroupList extends LitElement {
       </div>
     `;
 
-    const addButton = html`<button style="font-size: 16px;" class="btn btn-link" @click=${this.addRecord}>+ Add</button>`;
+    const addButton = html`<button
+      style="font-size: 16px;"
+      class="btn btn-link"
+      @click=${this.addRecord}
+    >
+      + Add
+    </button>`;
 
     let arHtml: Array<any> = [];
     arHtml.push(fieldGroupListStyles);

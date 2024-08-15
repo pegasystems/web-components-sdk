@@ -1,16 +1,16 @@
-import { html, property, nothing, css } from '@lion/core';
-import { BridgeBase } from '../../../bridge/BridgeBase';
-import { Utils } from '../../../helpers/utils';
+import { html } from "lit";
+import { property } from "lit/decorators.js";
+import { BridgeBase } from "../../../bridge/BridgeBase/index";
+import { Utils } from "../../../helpers/utils";
 // FormComponentBase needs to add some styling to the BridgeBase default styles
 //  so we import both and combine them in our override for static styles
-import { bootstrapStyles } from '../../../bridge/BridgeBase/bootstrap-styles';
-import { formComponentStyles } from './form-component-styles';
+import { bootstrapStyles } from "../../../bridge/BridgeBase/bootstrap-styles";
+import { formComponentStyles } from "./form-component-styles";
 
 // NOTE: you need to import ANY component you may render.
-import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import ValidateMessageValidator from './validateMessageValidator.js';
-
+import { Required } from "@lion/ui/form-core.js";
+import { loadDefaultFeedbackMessages } from "@lion/ui/validate-messages.js";
+import ValidateMessageValidator from "./validateMessageValidator.js";
 
 // NOTE: FormComponentBase is an intermediate base class that is intended
 //  to extend BridgeBase (to get the Web Component Bridge functionality)
@@ -18,29 +18,28 @@ import ValidateMessageValidator from './validateMessageValidator.js';
 //  Ex: TextInput extends FormComponentBase extends BridgeBase
 
 export class FormComponentBase extends BridgeBase {
-  static styles = [
-    bootstrapStyles,
-    formComponentStyles
-  ];
+  static styles = [bootstrapStyles, formComponentStyles];
 
-  @property( {attribute: false, type: String} ) componentBaseComponentName = "FormComponentBase"; // Name of this particular component
+  @property({ attribute: false, type: String }) componentBaseComponentName =
+    "FormComponentBase"; // Name of this particular component
 
-  @property( {attribute: false, type: Boolean} ) bDisabled = false;
-  @property( {attribute: false, type: Boolean} ) bReadonly= false;
-  @property( {attribute: false, type: Boolean} ) bRequired = false;
-  @property( {attribute: false, type: Boolean} ) bVisible = true;
+  @property({ attribute: false, type: Boolean }) bDisabled = false;
+  @property({ attribute: false, type: Boolean }) bReadonly = false;
+  @property({ attribute: false, type: Boolean }) bRequired = false;
+  @property({ attribute: false, type: Boolean }) bVisible = true;
 
-  @property( {attribute: false, type: Array} ) lionValidatorsArray:Array<Object> = [];
+  @property({ attribute: false, type: Array })
+  lionValidatorsArray: Array<Object> = [];
 
   // Note: Lion validators use the .fieldName specifier to show the label in any validation messages.
   //  Since components derived from FormComponentBase can put a modified label in annotatedLabel (see below)
   //  which we put into the "label" slot for proper display in the Lion component "label", we then set
   //  a Lion component's .fieldName=${this.label} to get the plain, unannotated label in validation messages
-  @property( {attribute: false, type: String} ) label = "";
-  @property( {attribute: false} ) value = "";
-  @property( {attribute: false} ) controlName = false;
-  @property( {attribute: false, type: Object} ) annotatedLabel; // is likely a lit-html CSS object
-  @property( {attribute: false, type: String}) testId = "";
+  @property({ attribute: false, type: String }) label = "";
+  @property({ attribute: false }) value = "";
+  @property({ attribute: false }) controlName = false;
+  @property({ attribute: false, type: Object }) annotatedLabel; // is likely a lit-html CSS object
+  @property({ attribute: false, type: String }) testId = "";
 
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -48,16 +47,24 @@ export class FormComponentBase extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(inDebug, inLogging);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // bind the change events to this
     this.fieldOnChange = this.fieldOnChange.bind(this);
@@ -72,24 +79,29 @@ export class FormComponentBase extends BridgeBase {
 
     // Do an initial updateSelf - is this always necessary?
     this.updateSelf();
-
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
 
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // Reset to defaults so any (possibly stale) values aren't used
     this.bDisabled = false;
@@ -118,9 +130,15 @@ export class FormComponentBase extends BridgeBase {
     // If field is required...
     if (this.bRequired) {
       // Add asterisk to annotatedLabel
-      this.annotatedLabel = html`<span>${this.label} <super style="color: var(--app-warning-color-dark); font-weight: var(--font-weight-bold)">*</super></span>`;
+      this.annotatedLabel = html`<span
+        >${this.label}
+        <super
+          style="color: var(--app-warning-color-dark); font-weight: var(--font-weight-bold)"
+          >*</super
+        ></span
+      >`;
       // add Lion Required validator
-      this.lionValidatorsArray.push( new Required() );
+      this.lionValidatorsArray.push(new Required());
     } else {
       this.annotatedLabel = this.label;
     }
@@ -128,8 +146,10 @@ export class FormComponentBase extends BridgeBase {
     // Always push a ValidateMessageValidator to the set of validators. This is how
     //  we get messages from "validatemessage" into the Lion validation process.
     const checkValidateMessage = this.getComponentProp.bind(this);
-    this.lionValidatorsArray.push (new ValidateMessageValidator({ getCompPropFn: checkValidateMessage}) );
-
+    this.lionValidatorsArray.push(
+      new ValidateMessageValidator(),
+      // new ValidateMessageValidator({ getCompPropFn: checkValidateMessage }),
+    );
 
     if (theConfigProps["visibility"] != null) {
       this.bVisible = Utils.getBooleanValue(theConfigProps["visibility"]);
@@ -137,7 +157,7 @@ export class FormComponentBase extends BridgeBase {
 
     // disabled
     if (theConfigProps["disabled"] != undefined) {
-      this.bDisabled =  Utils.getBooleanValue(theConfigProps["disabled"]);
+      this.bDisabled = Utils.getBooleanValue(theConfigProps["disabled"]);
     }
 
     // readOnly is now a component property (as in each component's config.json); not using !isEditable() any more
@@ -153,7 +173,9 @@ export class FormComponentBase extends BridgeBase {
     // if there's a validatemessage Component Property, the Constellation JS Engine has signaled a validation
     //  error that we should show or deal with...
     //  We add styling to the Lion-based component in the shadowRoot
-    const theLionComponent: any = this.shadowRoot?.getElementById(this.theComponentId.toString());
+    const theLionComponent: any = this.shadowRoot?.getElementById(
+      this.theComponentId.toString(),
+    );
 
     if (theLionComponent) {
       if (this.getComponentProp("validatemessage") !== undefined) {
@@ -171,13 +193,14 @@ export class FormComponentBase extends BridgeBase {
       if (this.bLogging) {
         // This isn't usually a problem. But can be helpful when debugging if you expect to find a shadowRoot
         //  that styling can/should use.
-        console.log( `    ---> Form component - ${this.theComponentName} - did not find shadowRoot component!`);
+        console.log(
+          `    ---> Form component - ${this.theComponentName} - did not find shadowRoot component!`,
+        );
       }
     }
 
     // Is this really necessary? We should try to find out why if it is...
     this.requestUpdate();
-
   }
 
   /**
@@ -187,8 +210,12 @@ export class FormComponentBase extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -198,31 +225,50 @@ export class FormComponentBase extends BridgeBase {
   }
 
   fieldOnChange(event: any) {
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) {
+      debugger;
+    }
 
-    if (this.bLogging) { console.log( `--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`) }
+    if (this.bLogging) {
+      console.log(
+        `--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`,
+      );
+    }
 
-    if ((event?.type === 'model-value-changed') && (event?.target?.value === 'Select')) {
-      let value = '';
+    if (
+      event?.type === "model-value-changed" &&
+      event?.target?.value === "Select"
+    ) {
+      let value = "";
       this.actions.onChange(this.thePConn, { value });
     } else {
       this.actions.onChange(this.thePConn, event);
     }
   }
 
-
   fieldOnClick(event: any) {
-    if (this.bDebug){ debugger; }
+    if (this.bDebug) {
+      debugger;
+    }
     // currently a no-op
 
-    if (this.bLogging) { console.log( `--> fieldOnClick: ${this.componentBaseComponentName} for ${this.theComponentName}`) }
-
+    if (this.bLogging) {
+      console.log(
+        `--> fieldOnClick: ${this.componentBaseComponentName} for ${this.theComponentName}`,
+      );
+    }
   }
 
   fieldOnBlur(event: any) {
-    if (this.bDebug){ debugger; }  // PConnect wants to use eventHandler for onBlur
+    if (this.bDebug) {
+      debugger;
+    } // PConnect wants to use eventHandler for onBlur
 
-    if (this.bLogging) { console.log( `--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`) }
+    if (this.bLogging) {
+      console.log(
+        `--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`,
+      );
+    }
     this.actions.onBlur(this.thePConn, event);
   }
 
@@ -233,8 +279,14 @@ export class FormComponentBase extends BridgeBase {
   // Return: true --> validation feedback should be shown
   // Return: false --> validation feedback is not shown
   requiredFeedbackCondition(type, meta, originalCondition) {
-    if (this.bLogging) { console.log( `${this.theComponentName} label: ${this.label} meta.modelValue: ${meta.modelValue} | requiredFeedbackCondition: type: ${type} originalCondition would return: ${originalCondition(type, meta)}`); }
-    if (this.bDebug) { debugger; }
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName} label: ${this.label} meta.modelValue: ${meta.modelValue} | requiredFeedbackCondition: type: ${type} originalCondition would return: ${originalCondition(type, meta)}`,
+      );
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     let bRet = false;
 
@@ -259,13 +311,18 @@ export class FormComponentBase extends BridgeBase {
     meta.el.classList.remove("field-needs-attention");
 
     // Continue through the rest of the processing...
-    if (this.bRequired && meta.touched && (meta.modelValue === "")) {
+    if (this.bRequired && meta.touched && meta.modelValue === "") {
       // Required and touched but still no value... return true (to indicate validation error and show message)
       bRet = true;
     } else if (meta.modelValue.type === "unparseable") {
       // Show message is user enters  unparseable data (ex: letters in a number field)
       bRet = true;
-    } else if (meta.el.hasFeedbackFor.includes("error") && !this.bRequired && meta.touched && meta.dirty) {
+    } else if (
+      meta.el.hasFeedbackFor.includes("error") &&
+      !this.bRequired &&
+      meta.touched &&
+      meta.dirty
+    ) {
       // Retain check for an item that (a) has error feedback, (b) '=is not required but has been touched and is dirty
       //  and unfocused (so we only show when the user has tabbed out of the field - don't show while typing)
       bRet = true;
@@ -283,8 +340,11 @@ export class FormComponentBase extends BridgeBase {
       }
     }
 
-    if (this.bLogging) { console.log( `requiredFeedbackCondition: ${this.theComponentName} label: ${this.label} meta.modelValue: ${meta.modelValue} about to return ${bRet}`); }
+    if (this.bLogging) {
+      console.log(
+        `requiredFeedbackCondition: ${this.theComponentName} label: ${this.label} meta.modelValue: ${meta.modelValue} about to return ${bRet}`,
+      );
+    }
     return bRet;
   }
-
 }

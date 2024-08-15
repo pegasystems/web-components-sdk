@@ -1,24 +1,24 @@
-import { html, customElement, property, nothing } from '@lion/core';
-import { BridgeBase } from '../../../bridge/BridgeBase';
+import { html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { BridgeBase } from "../../../bridge/BridgeBase/index";
 // NOTE: you need to import ANY component you may render.
-import '../../NavBar';
+import "../../NavBar";
 
 // import the component's styles as HTML with <style>
-import { appShellStyles } from './appshell-styles';
-
+import { appShellStyles } from "./appshell-styles";
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
-@customElement('app-shell')
+@customElement("app-shell")
 class AppShell extends BridgeBase {
-  @property( {attribute: false, type: Object} ) configProps;
-  @property( {attribute: false, type: Object} ) pages;
-  @property( {attribute: false, type: Object} ) caseTypes;
-  @property( {attribute: false, type: Boolean} ) bShowAppShell = false;
-  @property( {type: String} ) appName;
+  @property({ attribute: false, type: Object }) configProps;
+  @property({ attribute: false, type: Object }) pages;
+  @property({ attribute: false, type: Object }) caseTypes;
+  @property({ attribute: false, type: Boolean }) bShowAppShell = false;
+  @property({ type: String }) appName;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -26,8 +26,12 @@ class AppShell extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
     this.appName = PCore.getEnvironmentInfo().getApplicationName();
@@ -35,8 +39,12 @@ class AppShell extends BridgeBase {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = appShellStyles;
@@ -50,27 +58,35 @@ class AppShell extends BridgeBase {
     if (this.pages) {
       this.bShowAppShell = true;
     }
-    
-    this.caseTypes = this.configProps["caseTypes"];    
-  }
 
+    this.caseTypes = this.configProps["caseTypes"];
+  }
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
-    this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    this.configProps = this.thePConn.resolveConfigProps(
+      this.thePConn.getConfigProps(),
+    );
 
     this.pages = this.configProps["pages"];
 
@@ -80,7 +96,6 @@ class AppShell extends BridgeBase {
 
     this.caseTypes = this.configProps["caseTypes"];
     this.children = this.thePConn.getChildren();
-
   }
 
   /**
@@ -90,8 +105,12 @@ class AppShell extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -100,9 +119,15 @@ class AppShell extends BridgeBase {
     }
   }
 
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+  render() {
+    if (this.bLogging) {
+      console.log(
+        `${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`,
+      );
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -110,23 +135,31 @@ class AppShell extends BridgeBase {
 
     // NOTE: Children are processed inside theTemplate
 
-    const theTemplate = (this.bShowAppShell) ? html`
-      <div class="appshell-top">
-          <nav-bar .pConn=${this.thePConn} appName=${this.appName} .pages=${this.pages} .caseTypes=${this.caseTypes}></nav-bar>
-          <div class="appshell-main">
-            ${this.thePConn.getChildren().map((child) => html`<view-container .pConn=${child} ></view-container>`)}
+    const theTemplate = this.bShowAppShell
+      ? html`
+          <div class="appshell-top">
+            <nav-bar
+              .pConn=${this.thePConn}
+              appName=${this.appName}
+              .pages=${this.pages}
+              .caseTypes=${this.caseTypes}
+            ></nav-bar>
+            <div class="appshell-main">
+              ${this.thePConn
+                .getChildren()
+                .map(
+                  (child) =>
+                    html`<view-container .pConn=${child}></view-container>`,
+                )}
+            </div>
           </div>
-      </div>
-    `
-    : nothing;
+        `
+      : nothing;
 
-    this.renderTemplates.push( theTemplate )
-    
+    this.renderTemplates.push(theTemplate);
+
     return this.renderTemplates;
-
   }
-
-
 }
 
 export default AppShell;

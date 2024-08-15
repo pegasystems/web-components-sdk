@@ -1,7 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
-export const decimalStyles = html`
-  <style>
-        
-  </style>
-`;
+export const decimalStyles = html` <style></style> `;
+

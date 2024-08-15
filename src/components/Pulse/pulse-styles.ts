@@ -1,4 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const pulseStyles = html`
   <style>
@@ -7,6 +7,6 @@ export const pulseStyles = html`
     * {
       background-color: lightskyblue;
     }
-
   </style>
 `;
+

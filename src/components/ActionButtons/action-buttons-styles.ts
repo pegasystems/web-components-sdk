@@ -1,4 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const actionButtonsStyles = html`
   <style>
@@ -9,3 +9,4 @@ export const actionButtonsStyles = html`
     }
   </style>
 `;
+

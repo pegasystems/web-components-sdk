@@ -1,7 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
-export const oneColumnTabStyles = html`
-  <style>
+export const oneColumnTabStyles = html` <style></style> `;
 
-  </style>
-`;

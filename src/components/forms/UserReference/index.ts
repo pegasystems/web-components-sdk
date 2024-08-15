@@ -1,14 +1,12 @@
-import { html, customElement, property, nothing } from "@lion/core";
-import { FormComponentBase } from "../FormComponentBase";
+import { html, nothing } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { FormComponentBase } from "../FormComponentBase/index";
 
 // NOTE: you need to import ANY component you may render.
 import "../../widgets/CaseOperator";
 
 // import the component's styles as HTML with <style>
 import { userReferenceStyles } from "./user-reference-styles";
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 @customElement("user-reference-form")
 class UserReference extends FormComponentBase {
@@ -17,13 +15,18 @@ class UserReference extends FormComponentBase {
   @property({ attribute: false, type: String }) label: string = "";
   @property({ attribute: false, type: Array }) dropDownDataSource: any = [];
   @property({ attribute: false, type: String }) displayAs: string = "";
-  @property({ attribute: false, type: String }) SEARCH_BOX: string = "Search box";
-  @property({ attribute: false, type: String }) DROPDOWN_LIST: string = "Drop-down list";
+  @property({ attribute: false, type: String }) SEARCH_BOX: string =
+    "Search box";
+
+  @property({ attribute: false, type: String }) DROPDOWN_LIST: string =
+    "Drop-down list";
 
   rawViewMetadata: any;
   viewName: any;
   firstChildMeta: any;
-  OPERATORS_DP: string = PCore.getEnvironmentInfo().getDefaultOperatorDP();
+  OPERATORS_DP: string | undefined =
+    PCore.getEnvironmentInfo().getDefaultOperatorDP();
+
   userID: string = "";
   readOnly: boolean = false;
   showAsFormattedText: boolean = false;
@@ -111,7 +114,7 @@ class UserReference extends FormComponentBase {
     let { readOnly, required, disabled } = props;
     this.readOnly = readOnly;
     [readOnly, required, disabled] = [readOnly, required, disabled].map(
-      (prop) => prop === true || (typeof prop === "string" && prop === "true")
+      (prop) => prop === true || (typeof prop === "string" && prop === "true"),
     );
 
     const userId = this.getUserId(value);
@@ -136,12 +139,8 @@ class UserReference extends FormComponentBase {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(this.userID).then((resp) => {
-          if (
-            resp.data &&
-            resp.data.pyOperatorInfo &&
-            resp.data.pyOperatorInfo.pyUserName
-          ) {
+        getOperatorDetails(this.userID).then((resp: any) => {
+          if (resp?.data?.pyOperatorInfo?.pyUserName) {
             this.userName = resp.data.pyOperatorInfo.pyUserName;
           }
         });
@@ -206,8 +205,8 @@ class UserReference extends FormComponentBase {
     if (this.bLogging) {
       console.log(
         `${this.theComponentName}: render with pConn: ${JSON.stringify(
-          this.pConn
-        )}`
+          this.pConn,
+        )}`,
       );
     }
     if (this.bDebug) {
@@ -264,6 +263,7 @@ class UserReference extends FormComponentBase {
       }
     }
 
+    return nothing;
     //this.renderTemplates.push( this.theRenderedDiv() )
 
     //return this.renderTemplates;

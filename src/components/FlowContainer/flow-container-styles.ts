@@ -1,4 +1,4 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const flowContainerStyles = html`
   <style>
@@ -7,21 +7,19 @@ export const flowContainerStyles = html`
     }
 
     .psdk-instruction-text {
-    font-size: 0.90rem;
-    font-weight: 400;
-    margin-bottom: 1.0rem; 
+      font-size: 0.9rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
     }
 
     .psdk-case-view-divider {
       border-bottom: 0.0625rem solid var(--app-neutral-light-color);
     }
 
-
     .psdk-flow-container-top {
       background-color: var(--app-form-color);
       padding: 0rem 0.625rem 0.625rem 0.625rem;
       border-radius: 0.3125rem;
-
     }
     .psdk-flow-container {
       padding-left: 2.1875rem;
@@ -33,7 +31,7 @@ export const flowContainerStyles = html`
     }
 
     .psdk-message {
-      margin-top: .2rem;
+      margin-top: 0.2rem;
     }
 
     .psdk-icon {
@@ -42,6 +40,5 @@ export const flowContainerStyles = html`
       padding: 0rem 0.6rem;
       filter: var(--app-primary-color-filter);
     }
-
   </style>
 `;

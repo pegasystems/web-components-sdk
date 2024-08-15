@@ -1,4 +1,5 @@
-import { html, customElement, property, LitElement } from "@lion/core";
+import { LitElement, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 import Utils from "../../../helpers/utils";
 
 // import the component's styles as HTML with <style>
@@ -51,7 +52,9 @@ class FieldGroup extends LitElement {
       return html`
         <div class="field-group-item">
           <div class="field-group-item-label">${item.label}</div>
-          <div class="field-group-item-value">${this.formatItemValue(item.value)}</div>
+          <div class="field-group-item-value">
+            ${this.formatItemValue(item.value)}
+          </div>
         </div>
       `;
     })}`;

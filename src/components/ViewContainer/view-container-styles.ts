@@ -1,14 +1,14 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const viewContainerStyles = html`
   <style>
     h4 {
-        margin-top: 0.8rem;
-        margin-left: 0.8rem;
+      margin-top: 0.8rem;
+      margin-left: 0.8rem;
     }
 
     .psdk-view-container-top {
-        padding: 0;
+      padding: 0;
     }
 
     .progress-box {
@@ -18,12 +18,17 @@ export const viewContainerStyles = html`
       align-items: center;
       height: 100%;
       width: 100%;
-      background-color: rgba(245, 245, 245, 0.5); /* whitesmoke as rgba to let spinner be fully opaque */
+      background-color: rgba(
+        245,
+        245,
+        245,
+        0.5
+      ); /* whitesmoke as rgba to let spinner be fully opaque */
       position: fixed;
       z-index: 99999;
       top: 0rem;
       left: 0rem;
-    }        
-
+    }
   </style>
 `;
+

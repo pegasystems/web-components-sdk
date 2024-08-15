@@ -1,6 +1,6 @@
-import { html } from '@lion/core';
-import { BridgeBase } from '../../bridge/BridgeBase';
-import '@vaadin/text-field';
+import { html } from "lit";
+import { BridgeBase } from "../../bridge/BridgeBase";
+import "@vaadin/text-field";
 
 // To experiment with BridgeMixin (functional composition mixin) along with
 //  extending the component, use the following lines:
@@ -9,15 +9,18 @@ import '@vaadin/text-field';
 // class NotSupported extends BridgeMixin()( BridgeBase ) {
 
 class NotSupported extends BridgeBase {
-
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.strToDisplay = `${this.theComponentName}`;
     this.pConn = {};
@@ -33,7 +36,7 @@ class NotSupported extends BridgeBase {
   static get properties() {
     return {
       strToDisplay: { type: String },
-      pConn: { type: Object }
+      pConn: { type: Object },
       // componentName: { type: String },
       // configProps: {type: Object }
     };
@@ -41,30 +44,40 @@ class NotSupported extends BridgeBase {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-
   }
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
-    super.disconnectedCallback()
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    super.disconnectedCallback();
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
 
   /**
    *  After calling registerAndSubscribe, this function is called whenever
-   *  the store changes.  
+   *  the store changes.
    */
   onStateChange() {
     super.onStateChange();
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // This calls the getPConnect function that was passed in. The end
     //  result is that pConn is set to the pConnect object that's returned
@@ -73,20 +86,22 @@ class NotSupported extends BridgeBase {
     const pConn = this.getPConnect ? this.getPConnect() : null;
     const configProps = pConn ? pConn.getConfigProps() : null;
     const hasChildren = pConn ? pConn.hasChildren() : null;
-    this.strToDisplay = `${this.theComponentName}: configProps: ${JSON.stringify(configProps)} hasChildren: ${hasChildren}`;    
+    this.strToDisplay = `${this.theComponentName}: configProps: ${JSON.stringify(configProps)} hasChildren: ${hasChildren}`;
 
     // Demonstrate that we can call into methods added by our Mixin class (if we're using it)
-    if (typeof this.callIntoMixin === 'function') {
+    if (typeof this.callIntoMixin === "function") {
       this.callIntoMixin();
     }
-
-
   }
 
   // render function
   render() {
-    if (this.bLogging) { console.log( `${this.theComponentName}: render`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: render`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -107,16 +122,20 @@ class NotSupported extends BridgeBase {
 
     return html`
       <div>
-        <vaadin-text-field style="width: 100%; text-align: center;" value="${this.strToDisplay}" readonly>
+        <vaadin-text-field
+          style="width: 100%; text-align: center;"
+          value="${this.strToDisplay}"
+          readonly
+        >
         </vaadin-text-field>
       </div>
-      `;
+    `;
   }
-
 }
 
 // Associate the component implementation with a HTML tag using the CustomElements registry
 // As always with Web Components, tag names need to have a dash (Custom Element standard)
-customElements.define('not-supported', NotSupported);
+customElements.define("not-supported", NotSupported);
 
 export default NotSupported;
+

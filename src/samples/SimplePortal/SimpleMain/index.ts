@@ -1,31 +1,25 @@
-import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
+import { html, LitElement } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { SdkConfigAccess } from "@pega/auth/lib/sdk-auth-manager";
 
-import '@lion/button/define';
-import '@lion/textarea/define';
-import { compareSdkPCoreVersions } from '../../../helpers/versionHelpers';
+import "@lion/ui/define/lion-button.js";
+import "@lion/ui/define/lion-textarea.js";
+import { compareSdkPCoreVersions } from "../../../helpers/versionHelpers";
 
-import '../SimpleSideBar';
+import "../SimpleSideBar";
 
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
-import { simpleMainStyles } from './simple-main-styles';
+import { simpleMainStyles } from "./simple-main-styles";
 
-
-
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 declare var myLoadMashup: any;
 
-@customElement('simple-main-component')
+@customElement("simple-main-component")
 class SimpleMain extends LitElement {
-
-
-  @property( {attribute: false, type: Object } ) props; 
-  @property( {attribute: false, type: Boolean } ) bHasPConnect = false; 
-  @property( {attribute: false, type: Boolean}) bShowRoot = false;
+  @property({ attribute: false, type: Object }) props;
+  @property({ attribute: false, type: Boolean }) bHasPConnect = false;
+  @property({ attribute: false, type: Boolean }) bShowRoot = false;
 
   arCreateButtons: Array<any> = [];
   arOpenWorkItems: Array<any> = [];
@@ -33,7 +27,6 @@ class SimpleMain extends LitElement {
   // NOTE: SimpleMain is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
     super();
-
   }
 
   connectedCallback() {
@@ -43,24 +36,28 @@ class SimpleMain extends LitElement {
 
     PCore.getPubSubUtils().subscribe(
       PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
-      () => { this.cancelAssignment() },
-      "cancelAssignment"
+      () => {
+        this.cancelAssignment();
+      },
+      "cancelAssignment",
     );
 
     PCore.getPubSubUtils().subscribe(
       "assignmentFinished",
-      () => { this.assignmentFinished() },
-      "assignmentFinished"
+      () => {
+        this.assignmentFinished();
+      },
+      "assignmentFinished",
     );
 
     PCore.getPubSubUtils().subscribe(
       "showWork",
-      () => { this.showWork() },
-      "showWork"
+      () => {
+        this.showWork();
+      },
+      "showWork",
     );
-
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
@@ -68,42 +65,35 @@ class SimpleMain extends LitElement {
 
     PCore.getPubSubUtils().unsubscribe(
       PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
-      "cancelAssignment"
+      "cancelAssignment",
     );
 
     PCore.getPubSubUtils().unsubscribe(
       "assignmentFinished",
-      "assignmentFinished"
+      "assignmentFinished",
     );
 
-    PCore.getPubSubUtils().unsubscribe(
-      "showWork",
-      "showWork"
-    );
+    PCore.getPubSubUtils().unsubscribe("showWork", "showWork");
   }
-
 
   showWork() {
     this.bShowRoot = true;
   }
 
   cancelAssignment() {
-
     setTimeout(() => {
       this.bShowRoot = false;
     });
-
   }
 
   assignmentFinished() {
-
     setTimeout(() => {
       this.bShowRoot = false;
     });
   }
 
-  getToolbarHtml() : any {
-    const tBHtml = html `
+  getToolbarHtml(): any {
+    const tBHtml = html`
       <div class="psdk-toolbar">
         <h1>Simple Portal</h1>
       </div>
@@ -113,23 +103,30 @@ class SimpleMain extends LitElement {
   }
 
   getNavigationHtml(): any {
-    let sDisplay = this.bShowRoot? "block" : "none";
+    let sDisplay = this.bShowRoot ? "block" : "none";
     const nHtml = html`
-    <div class="psdk-main">
-    <aside class="psdk-aside">
-      <simple-side-bar-component .pConn="${this.props}" .arButtons="${this.arCreateButtons}" .arWorkItems="${this.arOpenWorkItems}"></simple-side-bar-component>
-    </aside>
-    <main class="psdk-main-root">
-      <root-container .pConn="${this.props}" style="display:${sDisplay}" ?isMashup="${true}"></root-container>
-    </main>
-    </div>
+      <div class="psdk-main">
+        <aside class="psdk-aside">
+          <simple-side-bar-component
+            .pConn="${this.props}"
+            .arButtons="${this.arCreateButtons}"
+            .arWorkItems="${this.arOpenWorkItems}"
+          ></simple-side-bar-component>
+        </aside>
+        <main class="psdk-main-root">
+          <root-container
+            .pConn="${this.props}"
+            style="display:${sDisplay}"
+            ?isMashup="${true}"
+          ></root-container>
+        </main>
+      </div>
     `;
 
     return nHtml;
-
   }
 
-/*
+  /*
   async firstUpdated() {
     const sdkConfigServer = SdkConfigAccess.getSdkConfigServer();
     const serverUrl = sdkConfigServer.infinityRestServerUrl;
@@ -174,7 +171,6 @@ class SimpleMain extends LitElement {
 */
 
   getCaseTypeButtons(arCaseTypes: Array<any>) {
-
     this.arCreateButtons = new Array();
 
     for (let myCase of arCaseTypes) {
@@ -185,18 +181,17 @@ class SimpleMain extends LitElement {
         oPayload["caption"] = myCase.name;
 
         this.arCreateButtons.push(oPayload);
-
       }
     }
   }
 
-  getWorkItems( results: Array<any>) {
-
+  getWorkItems(results: Array<any>) {
     this.arOpenWorkItems = new Array();
 
     for (let myWork of results) {
       let oPayload = {};
-      oPayload["caption"] = myWork.pxRefObjectInsName + " - " + myWork.pxTaskLabel;
+      oPayload["caption"] =
+        myWork.pxRefObjectInsName + " - " + myWork.pxTaskLabel;
       oPayload["pzInsKey"] = myWork.pzInsKey;
       oPayload["pxRefObjectClass"] = myWork.pxRefObjectClass;
 
@@ -204,51 +199,41 @@ class SimpleMain extends LitElement {
     }
   }
 
-
-  getSimpleMainHtml() : any {
-
+  getSimpleMainHtml(): any {
     const sMHtml: Array<any> = [];
 
-    sMHtml.push(html `${this.getToolbarHtml()}`);
+    sMHtml.push(html`${this.getToolbarHtml()}`);
 
     if (this.bHasPConnect) {
-      sMHtml.push(html `${this.getNavigationHtml()}`);
+      sMHtml.push(html`${this.getNavigationHtml()}`);
     }
-
-  
-
 
     return sMHtml;
   }
 
-
-  render(){
-
+  render() {
     const sContent = this.getSimpleMainHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
     let arHtml: Array<any> = [];
 
     // SimpleMain not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
 
     arHtml.push(simpleMainStyles);
     arHtml.push(sContent);
 
     return arHtml;
-
   }
-
 
   /**
    * kick off the Mashup that we're trying to serve up
    */
-   startMashup() {
-    
+  startMashup() {
     this.bShowRoot = true;
 
     // NOTE: When loadMashup is complete, this will be called.
-    PCore.onPCoreReady(renderObj => {
+    PCore.onPCoreReady((renderObj) => {
       // Check that we're seeing the PCore version we expect
       compareSdkPCoreVersions();
 
@@ -275,48 +260,38 @@ class SimpleMain extends LitElement {
 
       // Now, do the initial render...
       this.initialRender(renderObj);
-
     });
 
     // load the Mashup and handle the onPCoreEntry response that establishes the
     //  top level Pega root element (likely a RootContainer)
 
-     
-    myLoadMashup("pega-root", false);   // this is defined in bootstrap shell that's been loaded already
-
+    myLoadMashup("pega-root", false); // this is defined in bootstrap shell that's been loaded already
   }
 
-    /**
+  /**
    * Callback from onPCoreReady that's called once the top-level render object
    * is ready to be rendered
    * @param inRenderObj the initial, top-level PConnect object to render
    */
-     initialRender(inRenderObj) {
+  initialRender(inRenderObj) {
+    ////// This was done on login and kicked off the creation of this
+    //////  AppEntry. So don't need to to do this.
+    // With Constellation Ready, replace <div id="pega-here"></div>
+    //  with top-level ViewContainer
+    // const replaceMe = document.getElementById("pega-here");
+    // const replacement = document.createElement("app-entry");
+    // replacement.setAttribute("id", "pega-root");
+    // if (replaceMe) { replaceMe.replaceWith(replacement); }
 
-      ////// This was done on login and kicked off the creation of this
-      //////  AppEntry. So don't need to to do this.
-      // With Constellation Ready, replace <div id="pega-here"></div>
-      //  with top-level ViewContainer
-      // const replaceMe = document.getElementById("pega-here");
-      // const replacement = document.createElement("app-entry");
-      // replacement.setAttribute("id", "pega-root");
-      // if (replaceMe) { replaceMe.replaceWith(replacement); }
+    this.bHasPConnect = true;
 
-      this.bHasPConnect = true;
+    const { props } = inRenderObj;
+    this.props = props;
 
-      const { props } = inRenderObj;
-      this.props = props;
+    // this.thePConnComponentName = this.props.getPConnect().getComponentName();
 
-
-
-      // this.thePConnComponentName = this.props.getPConnect().getComponentName();
-
-      // console.log(` --> thePConnComponentName: ${this.thePConnComponentName}`);
-
+    // console.log(` --> thePConnComponentName: ${this.thePConnComponentName}`);
   }
-
-
-
 }
 
 export default SimpleMain;

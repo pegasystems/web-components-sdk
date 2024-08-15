@@ -1,14 +1,11 @@
-import { html } from '@lion/core';
+import { html } from "lit";
 
 export const stagesStyles = html`
   <style>
- 
-      
-    
     .psdk-stages-full {
-        display: block;
+      display: block;
     }
-    
+
     .psdk-stages-divider {
       border-bottom: 0.0625rem solid var(--app-neutral-light-color);
     }
@@ -67,7 +64,6 @@ export const stagesStyles = html`
     .psdk-stages-inner-future {
       color: var(--app-neutral-color);
     }
-
-
   </style>
 `;
+
