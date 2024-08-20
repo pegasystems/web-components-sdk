@@ -27,6 +27,7 @@ import "../../forms/UserReference";
 import "../../templates/Details";
 import "../../templates/DetailsTwoColumn";
 import "../../Attachment";
+import "../../templates/FieldGroupTemplate";
 
 // import the component's styles as HTML with <style>
 import { defaultFormStyles } from "./default-form-styles";

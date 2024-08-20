@@ -1,0 +1,1161 @@
+{
+  "data": {
+    "caseInfo": {
+      "content": {
+        "classID": "DIXL-MediaCo-Work-NewService",
+        "City": "",
+        "PhoneNumber": "",
+        "State": "",
+        "Street": "",
+        "Title": "",
+        "PostalCode": "",
+        "Email": "",
+        "FirstName": "",
+        "LastName": "",
+        "MiddleName": "",
+        "Suffix": "",
+        "InternetPackage": false,
+        "InternetOption": "",
+        "TVOption": "",
+        "PhonePackage": false,
+        "PhoneOption": "",
+        "TVPackage": false,
+        "pyLabel": "New Service",
+        "pyID": "N-28002"
+      },
+      "caseTypeID": "DIXL-MediaCo-Work-NewService",
+      "owner": "admin@mediaco",
+      "availableActions": [
+        {
+          "name": "Edit details",
+          "links": {
+            "open": {
+              "rel": "self",
+              "href": "/cases/DIXL-MEDIACO-WORK N-28002/actions/pyUpdateCaseDetails",
+              "type": "GET",
+              "title": "Get case action details"
+            }
+          },
+          "ID": "pyUpdateCaseDetails",
+          "type": "Case"
+        },
+        {
+          "name": "Change stage",
+          "links": {
+            "open": {
+              "rel": "self",
+              "href": "/cases/DIXL-MEDIACO-WORK N-28002/actions/pyChangeStage",
+              "type": "GET",
+              "title": "Get case action details"
+            }
+          },
+          "ID": "pyChangeStage",
+          "type": "Case"
+        }
+      ],
+      "associations": {
+        "follows": false
+      },
+      "lastUpdatedBy": "admin@mediaco",
+      "assignments": [
+        {
+          "instructions": "",
+          "canPerform": "true",
+          "assigneeInfo": {
+            "name": "admin",
+            "ID": "admin@mediaco",
+            "type": "worklist"
+          },
+          "processID": "CreateForm_Default",
+          "urgency": "10",
+          "processName": "Create",
+          "isMultiStep": "true",
+          "name": "Create",
+          "context": "",
+          "links": {
+            "open": {
+              "rel": "self",
+              "href": "/assignments/ASSIGN-WORKLIST DIXL-MEDIACO-WORK N-28002!CREATEFORM_DEFAULT",
+              "type": "GET",
+              "title": "Get assignment details"
+            }
+          },
+          "ID": "ASSIGN-WORKLIST DIXL-MEDIACO-WORK N-28002!CREATEFORM_DEFAULT",
+          "actions": [
+            {
+              "name": "Create",
+              "links": {
+                "submit": {
+                  "rel": "self",
+                  "href": "/assignments/ASSIGN-WORKLIST DIXL-MEDIACO-WORK N-28002!CREATEFORM_DEFAULT/actions/Create_1",
+                  "type": "PATCH",
+                  "title": "Submit assignment action "
+                },
+                "save": {
+                  "rel": "self",
+                  "href": "/assignments/ASSIGN-WORKLIST DIXL-MEDIACO-WORK N-28002!CREATEFORM_DEFAULT/actions/Create_1/save",
+                  "type": "PATCH",
+                  "title": "Save assignment action "
+                },
+                "open": {
+                  "rel": "self",
+                  "href": "/assignments/ASSIGN-WORKLIST DIXL-MEDIACO-WORK N-28002!CREATEFORM_DEFAULT/actions/Create_1",
+                  "type": "GET",
+                  "title": "Get assignment action details"
+                }
+              },
+              "ID": "Create_1",
+              "type": "FlowAction"
+            }
+          ]
+        }
+      ],
+      "hasNewAttachments": false,
+      "businessID": "N-28002",
+      "sla": {
+        "goal": "",
+        "deadline": ""
+      },
+      "WidgetsToRefresh": [
+        "TaskList"
+      ],
+      "caseTypeName": "New Service",
+      "urgency": "10",
+      "createTime": "2024-08-19T09:42:13.802Z",
+      "createdBy": "admin@mediaco",
+      "name": "New Service",
+      "stages": [
+        {
+          "entryTime": "2024-08-19T09:42:13.810Z",
+          "name": "Create",
+          "links": {
+            "open": {
+              "rel": "self",
+              "href": "/cases/DIXL-MEDIACO-WORK N-28002/stages/PRIM0",
+              "type": "PUT",
+              "title": "Jump to this stage"
+            }
+          },
+          "visited_status": "active",
+          "ID": "PRIM0",
+          "type": "Primary",
+          "transitionType": "create"
+        },
+        {
+          "name": "Service",
+          "links": {
+            "open": {
+              "rel": "self",
+              "href": "/cases/DIXL-MEDIACO-WORK N-28002/stages/PRIM1",
+              "type": "PUT",
+              "title": "Jump to this stage"
+            }
+          },
+          "visited_status": "future",
+          "ID": "PRIM1",
+          "type": "Primary",
+          "transitionType": "automatic"
+        },
+        {
+          "name": "Connected",
+          "links": {
+            "open": {
+              "rel": "self",
+              "href": "/cases/DIXL-MEDIACO-WORK N-28002/stages/PRIM2",
+              "type": "PUT",
+              "title": "Jump to this stage"
+            }
+          },
+          "visited_status": "future",
+          "ID": "PRIM2",
+          "type": "Primary",
+          "transitionType": "automatic"
+        },
+        {
+          "name": "Resolved",
+          "links": {
+            "open": {
+              "rel": "self",
+              "href": "/cases/DIXL-MEDIACO-WORK N-28002/stages/PRIM3",
+              "type": "PUT",
+              "title": "Jump to this stage"
+            }
+          },
+          "visited_status": "future",
+          "ID": "PRIM3",
+          "type": "Primary",
+          "transitionType": "resolution"
+        }
+      ],
+      "ID": "DIXL-MEDIACO-WORK N-28002",
+      "caseTypeIcon": "cmicons/pycase.svg",
+      "status": "New",
+      "stageID": "PRIM0",
+      "stageLabel": "Create",
+      "lastUpdateTime": "2024-08-19T09:42:13.814Z"
+    },
+    "D_pyCountryCallingCodeList": {
+      "pxResults": [
+        {
+          "classID": "-",
+          "pyCallingCode": "+1"
+        },
+        {
+          "classID": "-",
+          "pyCallingCode": "+91"
+        },
+        {
+          "classID": "-",
+          "pyCallingCode": "+48"
+        },
+        {
+          "classID": "-",
+          "pyCallingCode": "+44"
+        }
+      ]
+    },
+    "shared": {
+      "D_pyCountryCallingCodeList": {
+        "D_pyCountryCallingCodeList": {
+          "parameters": [],
+          "pxResults": [
+            {
+              "classID": "-",
+              "pyCallingCode": "+1"
+            },
+            {
+              "classID": "-",
+              "pyCallingCode": "+91"
+            },
+            {
+              "classID": "-",
+              "pyCallingCode": "+48"
+            },
+            {
+              "classID": "-",
+              "pyCallingCode": "+44"
+            }
+          ],
+          "loadTime": "2024-08-19T09:42:13.934057415Z"
+        }
+      },
+      "D_GetStates": {
+        "D_GetStates": {
+          "pxResults": [
+            {
+              "pyFieldValue": "AK",
+              "pyLocalizedValue": "AK"
+            },
+            {
+              "pyFieldValue": "AL",
+              "pyLocalizedValue": "AL"
+            },
+            {
+              "pyFieldValue": "AR",
+              "pyLocalizedValue": "AR"
+            },
+            {
+              "pyFieldValue": "AZ",
+              "pyLocalizedValue": "AZ"
+            },
+            {
+              "pyFieldValue": "CA",
+              "pyLocalizedValue": "CA"
+            },
+            {
+              "pyFieldValue": "CO",
+              "pyLocalizedValue": "CO"
+            },
+            {
+              "pyFieldValue": "CT",
+              "pyLocalizedValue": "CT"
+            },
+            {
+              "pyFieldValue": "DC",
+              "pyLocalizedValue": "DC"
+            },
+            {
+              "pyFieldValue": "DE",
+              "pyLocalizedValue": "DE"
+            },
+            {
+              "pyFieldValue": "FL",
+              "pyLocalizedValue": "FL"
+            },
+            {
+              "pyFieldValue": "GA",
+              "pyLocalizedValue": "GA"
+            },
+            {
+              "pyFieldValue": "HI",
+              "pyLocalizedValue": "HI"
+            },
+            {
+              "pyFieldValue": "IA",
+              "pyLocalizedValue": "IA"
+            },
+            {
+              "pyFieldValue": "ID",
+              "pyLocalizedValue": "ID"
+            },
+            {
+              "pyFieldValue": "IL",
+              "pyLocalizedValue": "IL"
+            },
+            {
+              "pyFieldValue": "IN",
+              "pyLocalizedValue": "IN"
+            },
+            {
+              "pyFieldValue": "KS",
+              "pyLocalizedValue": "KS"
+            },
+            {
+              "pyFieldValue": "KY",
+              "pyLocalizedValue": "KY"
+            },
+            {
+              "pyFieldValue": "LA",
+              "pyLocalizedValue": "LA"
+            },
+            {
+              "pyFieldValue": "MA",
+              "pyLocalizedValue": "MA"
+            },
+            {
+              "pyFieldValue": "MD",
+              "pyLocalizedValue": "MD"
+            },
+            {
+              "pyFieldValue": "ME",
+              "pyLocalizedValue": "ME"
+            },
+            {
+              "pyFieldValue": "MI",
+              "pyLocalizedValue": "MI"
+            },
+            {
+              "pyFieldValue": "MN",
+              "pyLocalizedValue": "MN"
+            },
+            {
+              "pyFieldValue": "MO",
+              "pyLocalizedValue": "MO"
+            },
+            {
+              "pyFieldValue": "MS",
+              "pyLocalizedValue": "MS"
+            },
+            {
+              "pyFieldValue": "MT",
+              "pyLocalizedValue": "MT"
+            },
+            {
+              "pyFieldValue": "NC",
+              "pyLocalizedValue": "NC"
+            },
+            {
+              "pyFieldValue": "ND",
+              "pyLocalizedValue": "ND"
+            },
+            {
+              "pyFieldValue": "NE",
+              "pyLocalizedValue": "NE"
+            },
+            {
+              "pyFieldValue": "NH",
+              "pyLocalizedValue": "NH"
+            },
+            {
+              "pyFieldValue": "NJ",
+              "pyLocalizedValue": "NJ"
+            },
+            {
+              "pyFieldValue": "NM",
+              "pyLocalizedValue": "NM"
+            },
+            {
+              "pyFieldValue": "NV",
+              "pyLocalizedValue": "NV"
+            },
+            {
+              "pyFieldValue": "NY",
+              "pyLocalizedValue": "NY"
+            },
+            {
+              "pyFieldValue": "OH",
+              "pyLocalizedValue": "OH"
+            },
+            {
+              "pyFieldValue": "OK",
+              "pyLocalizedValue": "OK"
+            },
+            {
+              "pyFieldValue": "OR",
+              "pyLocalizedValue": "OR"
+            },
+            {
+              "pyFieldValue": "PA",
+              "pyLocalizedValue": "PA"
+            },
+            {
+              "pyFieldValue": "RI",
+              "pyLocalizedValue": "RI"
+            },
+            {
+              "pyFieldValue": "SC",
+              "pyLocalizedValue": "SC"
+            },
+            {
+              "pyFieldValue": "SD",
+              "pyLocalizedValue": "SD"
+            },
+            {
+              "pyFieldValue": "TN",
+              "pyLocalizedValue": "TN"
+            },
+            {
+              "pyFieldValue": "TX",
+              "pyLocalizedValue": "TX"
+            },
+            {
+              "pyFieldValue": "UT",
+              "pyLocalizedValue": "UT"
+            },
+            {
+              "pyFieldValue": "VA",
+              "pyLocalizedValue": "VA"
+            },
+            {
+              "pyFieldValue": "VT",
+              "pyLocalizedValue": "VT"
+            },
+            {
+              "pyFieldValue": "WA",
+              "pyLocalizedValue": "WA"
+            },
+            {
+              "pyFieldValue": "WI",
+              "pyLocalizedValue": "WI"
+            },
+            {
+              "pyFieldValue": "WV",
+              "pyLocalizedValue": "WV"
+            },
+            {
+              "pyFieldValue": "WY",
+              "pyLocalizedValue": "WY"
+            }
+          ],
+          "parameters": [],
+          "loadTime": "2024-08-19T09:42:13.940586347Z"
+        }
+      }
+    },
+    "pulse": {
+      "messageIDs": ""
+    }
+  },
+  "uiResources": {
+    "resources": {
+      "views": {
+        "Create_1": [
+          {
+            "name": "Create_1",
+            "type": "View",
+            "config": {
+              "template": "DefaultForm",
+              "ruleClass": "DIXL-MediaCo-Work-NewService",
+              "localeReference": "@LR DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!CREATE_1"
+            },
+            "children": [
+              {
+                "name": "Fields",
+                "type": "Region",
+                "children": [
+                  {
+                    "type": "reference",
+                    "config": {
+                      "name": "CustomerAddress",
+                      "inheritedProps": [
+                        {
+                          "prop": "label",
+                          "value": "@L Customer Address"
+                        },
+                        {
+                          "prop": "showLabel",
+                          "value": true
+                        }
+                      ],
+                      "ruleClass": "DIXL-MediaCo-Work-NewService",
+                      "type": "view"
+                    }
+                  }
+                ]
+              }
+            ],
+            "classID": "DIXL-MediaCo-Work-NewService"
+          }
+        ],
+        "CustomerAddress": [
+          {
+            "name": "CustomerAddress",
+            "type": "View",
+            "config": {
+              "template": "DefaultForm",
+              "ruleClass": "DIXL-MediaCo-Work-NewService",
+              "localeReference": "@LR DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!CUSTOMERADDRESS"
+            },
+            "children": [
+              {
+                "name": "Fields",
+                "type": "Region",
+                "children": [
+                  {
+                    "type": "TextInput",
+                    "config": {
+                      "value": "@P .Street",
+                      "label": "@L Street",
+                      "testId": "@L D61EBDD8A0C0CD57C22455E9F0918C65"
+                    }
+                  },
+                  {
+                    "type": "TextInput",
+                    "config": {
+                      "value": "@P .City",
+                      "label": "@L City",
+                      "testId": "@L 57D056ED0984166336B7879C2AF3657F",
+                      "required": false
+                    }
+                  },
+                  {
+                    "type": "MyCo_Extensions_MyPicklist",
+                    "config": {
+                      "label": "@L State",
+                      "placeholder": "Select...",
+                      "listType": "associated",
+                      "datasource": "@ASSOCIATED .State",
+                      "value": "@P .State",
+                      "testId": "@L 46A2A41CC6E552044816A2D04634545D"
+                    },
+                    "fieldtype": "Picklist"
+                  },
+                  {
+                    "type": "TextInput",
+                    "config": {
+                      "value": "@P .PostalCode",
+                      "label": "@L Postal code",
+                      "testId": "@L 572ED696F21038E6CC6C86BB272A3222"
+                    }
+                  },
+                  {
+                    "type": "Phone",
+                    "config": {
+                      "value": "@P .PhoneNumber",
+                      "label": "@L Phone number",
+                      "datasource": {
+                        "source": "@DATASOURCE D_pyCountryCallingCodeList.pxResults",
+                        "fields": {
+                          "value": "@P .pyCallingCode"
+                        }
+                      },
+                      "showCountryCode": true,
+                      "testId": "@L 1F8261D17452A959E013666C5DF45E07"
+                    }
+                  },
+                  {
+                    "type": "Dropdown",
+                    "config": {
+                      "value": "@P .Title",
+                      "label": "@L Title",
+                      "placeholder": "Select...",
+                      "listType": "associated",
+                      "datasource": "@ASSOCIATED .Title"
+                    }
+                  },
+                  {
+                    "type": "reference",
+                    "config": {
+                      "name": "CustomerInfo",
+                      "inheritedProps": [
+                        {
+                          "prop": "label",
+                          "value": "@L Customer Info"
+                        },
+                        {
+                          "prop": "showLabel",
+                          "value": true
+                        }
+                      ],
+                      "ruleClass": "DIXL-MediaCo-Work-NewService",
+                      "type": "view"
+                    }
+                  }
+                ]
+              }
+            ],
+            "classID": "DIXL-MediaCo-Work-NewService"
+          }
+        ],
+        "CustomerInfo": [
+          {
+            "name": "CustomerInfo",
+            "type": "View",
+            "config": {
+              "template": "DefaultForm",
+              "ruleClass": "DIXL-MediaCo-Work-NewService",
+              "localeReference": "@LR DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!CUSTOMERINFO"
+            },
+            "children": [
+              {
+                "name": "Fields",
+                "type": "Region",
+                "children": [
+                  {
+                    "type": "TextInput",
+                    "config": {
+                      "value": "@P .FirstName",
+                      "label": "@L First Name",
+                      "required": true,
+                      "testId": "@L BC910F8BDF70F29374F496F05BE0330C"
+                    }
+                  },
+                  {
+                    "type": "TextInput",
+                    "config": {
+                      "value": "@P .MiddleName",
+                      "label": "@L Middle Name",
+                      "testId": "@L D3691D297D95C48EF1A2B7D6523EF3F0"
+                    }
+                  },
+                  {
+                    "type": "TextInput",
+                    "config": {
+                      "value": "@P .LastName",
+                      "label": "@L Last Name",
+                      "required": true,
+                      "testId": "@L 77587239BF4C54EA493C7033E1DBF636"
+                    }
+                  },
+                  {
+                    "type": "AutoComplete",
+                    "config": {
+                      "value": "@P .Suffix",
+                      "label": "@L Suffix",
+                      "placeholder": "Select...",
+                      "listType": "associated",
+                      "datasource": "@ASSOCIATED .Suffix",
+                      "testId": "@L 56E6DDD1CB6CEC596B433440DFB21C17"
+                    }
+                  },
+                  {
+                    "type": "Email",
+                    "config": {
+                      "value": "@P .Email",
+                      "label": "@L Email",
+                      "required": true,
+                      "testId": "@L CE8AE9DA5B7CD6C3DF2929543A9AF92D"
+                    }
+                  },
+                  {
+                    "type": "reference",
+                    "config": {
+                      "name": "Service",
+                      "inheritedProps": [
+                        {
+                          "prop": "label",
+                          "value": "@L Service"
+                        },
+                        {
+                          "prop": "showLabel",
+                          "value": true
+                        }
+                      ],
+                      "ruleClass": "DIXL-MediaCo-Work-NewService",
+                      "type": "view"
+                    }
+                  }
+                ]
+              }
+            ],
+            "classID": "DIXL-MediaCo-Work-NewService"
+          }
+        ],
+        "Service": [
+          {
+            "name": "Service",
+            "type": "View",
+            "config": {
+              "template": "TwoColumn",
+              "ruleClass": "DIXL-MediaCo-Work-NewService",
+              "NumCols": "3",
+              "localeReference": "@LR DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!SERVICE"
+            },
+            "children": [
+              {
+                "name": "A",
+                "type": "Region",
+                "children": [
+                  {
+                    "type": "Checkbox",
+                    "config": {
+                      "caption": "@L TV Package",
+                      "value": "@P .TVPackage",
+                      "trueText": "True",
+                      "falseText": "False",
+                      "testId": "@L 0B3244CEB2CE9879260EB560BD7A811E"
+                    }
+                  },
+                  {
+                    "type": "RadioButtons",
+                    "config": {
+                      "value": "@P .TVOption",
+                      "label": "@L TV Option",
+                      "listType": "associated",
+                      "datasource": "@ASSOCIATED .TVOption",
+                      "visibility": "@E .TVPackage == true",
+                      "testId": "@L 81DC52353BC235FE78F52FA873E0EF56"
+                    }
+                  },
+                  {
+                    "type": "Checkbox",
+                    "config": {
+                      "caption": "@L Phone Package",
+                      "value": "@P .PhonePackage",
+                      "trueText": "True",
+                      "falseText": "False",
+                      "testId": "@L 7CF3F86883596E49D8D7298CC5B928A2"
+                    }
+                  },
+                  {
+                    "type": "RadioButtons",
+                    "config": {
+                      "value": "@P .PhoneOption",
+                      "label": "@L Phone Option",
+                      "listType": "associated",
+                      "datasource": "@ASSOCIATED .PhoneOption",
+                      "visibility": "@E .PhonePackage == true",
+                      "testId": "@L D1708729D0FC9A5262C5C47244139C51"
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "B",
+                "type": "Region",
+                "children": [
+                  {
+                    "type": "Checkbox",
+                    "config": {
+                      "caption": "@L Internet Package",
+                      "value": "@P .InternetPackage",
+                      "trueText": "True",
+                      "falseText": "False",
+                      "testId": "@L C05A1E5DECC321D9792E9A9E15184BE5"
+                    }
+                  },
+                  {
+                    "type": "RadioButtons",
+                    "config": {
+                      "value": "@P .InternetOption",
+                      "label": "@L Internet Option",
+                      "listType": "associated",
+                      "datasource": "@ASSOCIATED .InternetOption",
+                      "visibility": "@E .InternetPackage == true",
+                      "testId": "@L 0F6AE305C1ACA8A9E92A5C502AC48895"
+                    }
+                  }
+                ]
+              }
+            ],
+            "classID": "DIXL-MediaCo-Work-NewService"
+          }
+        ]
+      },
+      "datapages": {
+        "D_GetStates": {
+          "classID": "Rule-Obj-FieldValue",
+          "mode": "readonly",
+          "isSearchable": false,
+          "isQueryable": false,
+          "structure": "list",
+          "isWorkObject": false
+        },
+        "D_pyCountryCallingCodeList": {
+          "classID": "Code-Pega-List",
+          "mode": "readonly",
+          "isSearchable": false,
+          "isQueryable": false,
+          "structure": "list",
+          "isWorkObject": false
+        }
+      },
+      "fields": {
+        "City": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxTextInput",
+            "label": "City"
+          }
+        ],
+        "PhoneNumber": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxPhone",
+            "label": "Phone number",
+            "validateAs": "ValidPhoneNumber"
+          }
+        ],
+        "State": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "displayAs": "pxDropdown",
+            "label": "State",
+            "datasource": {
+              "tableType": "DataPage",
+              "tableClass": "Rule-Obj-FieldValue",
+              "name": "D_GetStates",
+              "propertyForDisplayText": "@P .pyLocalizedValue",
+              "propertyForValue": "@P .pyFieldValue",
+              "parameters": []
+            }
+          }
+        ],
+        "Street": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxTextInput",
+            "label": "Street"
+          }
+        ],
+        "Title": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "displayAs": "pxDropdown",
+            "label": "Title"
+          }
+        ],
+        "PostalCode": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxTextInput",
+            "label": "Postal Code"
+          }
+        ],
+        "Email": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxEmail",
+            "label": "Email",
+            "validateAs": "ValidEmailAddress"
+          }
+        ],
+        "FirstName": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxTextInput",
+            "label": "First Name"
+          }
+        ],
+        "LastName": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxTextInput",
+            "label": "Last Name"
+          }
+        ],
+        "MiddleName": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 256,
+            "displayAs": "pxTextInput",
+            "label": "Middle Name"
+          }
+        ],
+        "Suffix": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "displayAs": "pxAutoComplete",
+            "label": "Suffix",
+            "datasource": {
+              "tableType": "PromptList",
+              "records": [
+                {
+                  "key": "Sr",
+                  "value": "Sr"
+                },
+                {
+                  "key": "Jr",
+                  "value": "Jr"
+                },
+                {
+                  "key": "III",
+                  "value": "III"
+                },
+                {
+                  "key": "IV",
+                  "value": "IV"
+                },
+                {
+                  "key": "V",
+                  "value": "V"
+                }
+              ]
+            }
+          }
+        ],
+        "InternetPackage": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "True-False",
+            "displayAs": "pxCheckbox",
+            "label": "Internet Package"
+          }
+        ],
+        "InternetOption": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "displayAs": "pxRadioButtons",
+            "label": "Internet Option",
+            "datasource": {
+              "tableType": "PromptList",
+              "records": [
+                {
+                  "key": "100 Mbps",
+                  "value": "100 Mbps"
+                },
+                {
+                  "key": "300 Mbps",
+                  "value": "300 Mbps"
+                },
+                {
+                  "key": "1 Gbps",
+                  "value": "1 Gbps"
+                }
+              ]
+            }
+          }
+        ],
+        "TVOption": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "displayAs": "pxRadioButtons",
+            "label": "TV Option",
+            "datasource": {
+              "tableType": "PromptList",
+              "records": [
+                {
+                  "key": "Basic",
+                  "value": "Basic"
+                },
+                {
+                  "key": "Basic Plus",
+                  "value": "Basic Plus"
+                },
+                {
+                  "key": "Deluxe",
+                  "value": "Deluxe"
+                },
+                {
+                  "key": "Premium",
+                  "value": "Premium"
+                }
+              ]
+            }
+          }
+        ],
+        "PhonePackage": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "True-False",
+            "displayAs": "pxCheckbox",
+            "label": "Phone Package"
+          }
+        ],
+        "PhoneOption": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "displayAs": "pxRadioButtons",
+            "label": "Phone Option",
+            "datasource": {
+              "tableType": "PromptList",
+              "records": [
+                {
+                  "key": "US/Canada",
+                  "value": "US/Canada"
+                },
+                {
+                  "key": "International Limited",
+                  "value": "International Limited"
+                },
+                {
+                  "key": "International Full",
+                  "value": "International Full"
+                }
+              ]
+            }
+          }
+        ],
+        "TVPackage": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "True-False",
+            "displayAs": "pxCheckbox",
+            "label": "TV Package"
+          }
+        ],
+        "pyCallingCode": [
+          {
+            "classID": "-",
+            "type": "Unknown"
+          }
+        ],
+        "pyLabel": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 64,
+            "displayAs": "pxTextInput",
+            "definedOnClassID": "Work-",
+            "expectedLength": 60,
+            "label": "Label"
+          }
+        ],
+        "pyID": [
+          {
+            "classID": "DIXL-MediaCo-Work-NewService",
+            "type": "Text",
+            "maxLength": 32,
+            "displayAs": "Scalar",
+            "definedOnClassID": "Work-Cover-",
+            "expectedLength": 22,
+            "label": "Case ID",
+            "isClassKey": true
+          }
+        ]
+      }
+    },
+    "components": [
+      "DefaultForm",
+      "MyCo_Extensions_MyPicklist",
+      "Email",
+      "TwoColumn",
+      "Phone",
+      "Checkbox",
+      "Dropdown",
+      "RadioButtons",
+      "Region",
+      "AutoComplete",
+      "TextInput",
+      "View"
+    ],
+    "localeReferences": [
+      "DIXL-MEDIACO-WORK-NEWSERVICE!ASSOCIATED!TITLE",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!CUSTOMERADDRESS",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!CREATE_1",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!SERVICE",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!CASE!NEW SERVICE",
+      "@BASECLASS!DATAPAGE!D_PYCOUNTRYCALLINGCODELIST",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!ASSOCIATED!SUFFIX",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!VIEW!CUSTOMERINFO",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!ASSOCIATED!PHONEOPTION",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!ASSOCIATED!TVOPTION",
+      "@BASECLASS!DATAPAGE!D_GETSTATES",
+      "DIXL-MEDIACO-WORK-NEWSERVICE!ASSOCIATED!INTERNETOPTION"
+    ],
+    "root": {
+      "type": "reference",
+      "config": {
+        "type": "view",
+        "name": "Create_1",
+        "context": "caseInfo.content"
+      }
+    },
+    "context_data": {
+      "caseInfo": {
+        "content": {
+          "summary_of_associated_lists__": {}
+        }
+      }
+    },
+    "performance": {
+      "views": {
+        "caseInfo.content.Create_1": {
+          "caseInfo.content.CustomerAddress": {
+            "caseInfo.content.CustomerInfo": {
+              "caseInfo.content.Service": {
+                "time": 1
+              },
+              "time": 2
+            },
+            "time": 18
+          },
+          "time": 18
+        }
+      }
+    },
+    "navigation": {
+      "template": "Horizontal",
+      "steps": [
+        {
+          "allow_jump": true,
+          "name": "Create",
+          "actionID": "Create_1",
+          "visited_status": "current",
+          "ID": "AssignmentSF1"
+        }
+      ]
+    },
+    "actionButtons": {
+      "secondary": [
+        {
+          "jsAction": "cancelAssignment",
+          "name": "Cancel",
+          "actionID": "cancel"
+        }
+      ],
+      "main": [
+        {
+          "jsAction": "finishAssignment",
+          "name": "Submit",
+          "actionID": "submit"
+        }
+      ]
+    }
+  },
+  "ID": "DIXL-MEDIACO-WORK N-28002",
+  "nextAssignmentInfo": {
+    "context": "self",
+    "className": "DIXL-MediaCo-Work-NewService",
+    "links": {
+      "open": {
+        "rel": "self",
+        "href": "/assignments/ASSIGN-WORKLIST DIXL-MEDIACO-WORK N-28002!CREATEFORM_DEFAULT",
+        "type": "GET",
+        "title": "Get assignment details"
+      }
+    },
+    "ID": "ASSIGN-WORKLIST DIXL-MEDIACO-WORK N-28002!CREATEFORM_DEFAULT"
+  }
+}

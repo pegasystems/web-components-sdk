@@ -336,10 +336,8 @@ export class BridgeBase extends LitElement {
     const currentComponentProps: any = this.getComponentProps();
 
     const priorProps = this.theComponentProps;
-    const priorPropsAsStr: string = JSON.stringify(priorProps);
 
     let currentProps: any = currentComponentProps;
-    let currentPropsAsStr: string = JSON.stringify(currentProps);
 
     // compare to current to prior props. If different, update stored props and return true
     // fast-deep-equal version
@@ -347,6 +345,8 @@ export class BridgeBase extends LitElement {
       bRet = !isEqual(priorProps, currentProps);
     } else {
       // stringify compare version
+      const priorPropsAsStr: string = JSON.stringify(priorProps);
+      let currentPropsAsStr: string = JSON.stringify(currentProps);
       if (priorPropsAsStr != currentPropsAsStr) {
         bRet = true;
       }
@@ -374,8 +374,8 @@ export class BridgeBase extends LitElement {
       console.log(
         `${this.theComponentName}: shouldComponentUpdate about to return ${bRet}`,
       );
-      console.log(` --> priorProps:   ${priorPropsAsStr}`);
-      console.log(` --> currentProps: ${currentPropsAsStr}`);
+      console.log(` --> priorProps:   ${JSON.stringify(priorProps)}`);
+      console.log(` --> currentProps: ${JSON.stringify(currentProps)}`);
     }
 
     return bRet;
@@ -628,6 +628,12 @@ export class BridgeBase extends LitElement {
         case "CaseHistory":
           this.renderTemplates.push(
             html`<case-history-widget .pConn=${child}></case-history-widget>`,
+          );
+          break;
+
+        case "Group":
+          this.renderTemplates.push(
+            html`<field-group-template .pConn=${child}></field-group-template>`,
           );
           break;
 
@@ -1030,7 +1036,13 @@ export class BridgeBase extends LitElement {
               </div>`,
             );
             break;
-
+          case "Group":
+            this.renderTemplates.push(
+              html`<field-group-template
+                .pConn=${child}
+              ></field-group-template>`,
+            );
+            break;
           case "Checkbox":
             theChildTemplates.push(
               html`<check-box-form .pConn=${child}></check-box-form>`,
@@ -1063,9 +1075,9 @@ export class BridgeBase extends LitElement {
 
           case "DefaultForm":
             theChildTemplates.push(
-              html`<default-form-compoent
+              html`<default-form-component
                 .pConn=${child}
-              ></default-form-compoent>`,
+              ></default-form-component>`,
             );
             break;
 

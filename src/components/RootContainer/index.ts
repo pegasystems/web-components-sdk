@@ -9,9 +9,6 @@ import "../ModalViewContainer";
 import "../ReAuthenticationModal";
 import "../Reference";
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
@@ -20,11 +17,11 @@ declare var PCore: any;
 
 @customElement("root-container")
 class RootContainer extends BridgeBase {
-  @property({ attribute: false, type: Object }) previewViewContainerConn = null;
-  @property({ attribute: false, type: Object }) modalViewContainerConn = null;
+  @property({ attribute: false, type: Object }) previewViewContainerConn;
+  @property({ attribute: false, type: Object }) modalViewContainerConn;
   @property({ attribute: false, type: Object }) createdPConnect;
-  @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
-  @property({ attribute: true, type: Boolean }) isMashup = false;
+  @property({ attribute: true, type: Boolean }) displayOnlyFA = true;
+  @property({ attribute: true, type: Boolean }) isMashup = true;
 
   componentName: string = "";
   newPConn: any;
@@ -70,36 +67,36 @@ class RootContainer extends BridgeBase {
 
     PCore.getContainerUtils().getContainerAPI().addContainerItems(items);
 
-    const configObjPreview = PCore.createPConnect({
-      meta: {
-        type: "PreviewViewContainer",
-        config: {
-          name: "preview",
+    if (!this.displayOnlyFA || !this.isMashup) {
+      const configObjPreview = PCore.createPConnect({
+        meta: {
+          type: "PreviewViewContainer",
+          config: {
+            name: "preview",
+          },
         },
-      },
-      options,
-    });
+        options,
+      });
 
-    this.previewViewContainerConn = configObjPreview.getPConnect();
+      this.previewViewContainerConn = configObjPreview.getPConnect();
 
-    const configObjModal = PCore.createPConnect({
-      meta: {
-        type: "ModalViewContainer",
-        config: {
-          name: "modal",
+      const configObjModal = PCore.createPConnect({
+        meta: {
+          type: "ModalViewContainer",
+          config: {
+            name: "modal",
+          },
         },
-      },
-      options: {
-        pageReference: "pyPortal",
-        context: myContext,
-      },
-    });
-
+        options: {
+          pageReference: "pyPortal",
+          context: myContext,
+        },
+      });
+      this.modalViewContainerConn = configObjModal.getPConnect();
+    }
     // becasue of Web Component frame work not calling constructor when root container updates, need to tell
     // flow container when to init
     window.sessionStorage.setItem("okToInitFlowContainer", "true");
-
-    this.modalViewContainerConn = configObjModal.getPConnect();
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));

@@ -6,6 +6,7 @@ import { format } from "../../../helpers/formatters/index.js";
 
 // import the component's styles as HTML with <style>
 import { textStyles } from "./text-styles";
+import "@lion/ui/define/lion-input.js";
 
 // TODO: Support formatType values and figure out where exactly this component might be utilized from
 //  I don't see this being invoked from CableConnect app using either rep or tech experience

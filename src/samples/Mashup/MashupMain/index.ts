@@ -21,6 +21,7 @@ declare var myLoadMashup: any;
 class MashupMain extends LitElement {
   bHasPConnect: boolean = false;
 
+  // declare props: any;
   @property({ attribute: false, type: Object }) props;
 
   // NOTE: MashupMain is NOT derived from BridgeBase; just derived from LitElement

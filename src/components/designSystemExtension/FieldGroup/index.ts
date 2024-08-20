@@ -19,6 +19,7 @@ function generateFields(item, fields) {
 class FieldGroup extends LitElement {
   @property({ attribute: true, type: Array }) item;
   @property({ attribute: true, type: String }) name;
+  @property({ attribute: true, type: Object }) pConn;
   fields: any = [];
 
   constructor() {

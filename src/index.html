@@ -1,35 +1,64 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Pega - Web Components SDK - Sample application</title>
-    <base href="/">
+    <base href="/" />
 
-    <link rel="icon" href="assets/img/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="assets/css/sdkStyles.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/sdkCssVars.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" as="style" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+    <link rel="icon" href="assets/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="assets/css/sdkStyles.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/sdkCssVars.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+    />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      as="style"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      rel="stylesheet"
+    />
     <!-- added line below to assist webpack-live-reload in dev mode ; remove next line for production -->
     <script src="http://localhost:35729/livereload.js"></script>
   </head>
   <body>
     <noscript>
-      <strong>The Web Components SDK example does not work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong
+        >The Web Components SDK example does not work properly without
+        JavaScript enabled. Please enable it to continue.</strong
+      >
     </noscript>
+
+    <!-- <script src="https://1vo6dyzl.pegaacademy.net/prweb/PRRestService/c11nsvc/v1/pega-embed.js"></script> -->
+    <!-- <pega-embed -->
+    <!--   id="theEmbed" -->
+    <!--   action="createCase" -->
+    <!--   caseTypeID="SL-TellUsMore-Work-Incident" -->
+    <!--   casePage="pyEmbedAssignment" -->
+    <!--   assignmentHeader="true" -->
+    <!--   appAlias="tell-us-more" -->
+    <!--   pegaServerUrl="https://1vo6dyzl.pegaacademy.net/prweb/" -->
+    <!--   autoReauth="true" -->
+    <!--   authService="pega" -->
+    <!--   clientId="91251918418382786039" -->
+    <!--   style="width: 50%" -->
+    <!-- > -->
+    <!-- </pega-embed> -->
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <!-- added JEA 13 Jan 2021 -->
     <div class="flexbox">
-      
-      <!-- routes in index.ts route components to this div-->
-      <div id="outlet" style="width: 100%;"></div>
- 
-      </div>
+      <div
+        id="outlet"
+        style="max-width: fit-content; margin-left: auto; margin-right: auto"
+      ></div>
     </div>
   </body>
 </html>

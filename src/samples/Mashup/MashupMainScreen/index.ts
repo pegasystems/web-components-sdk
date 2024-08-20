@@ -223,6 +223,7 @@ class MashupMainScreen extends LitElement {
     let actionInfo;
 
     const options: any = {
+      viewType: "page",
       pageName: "pyEmbedAssignment",
       startingFields: {},
     };

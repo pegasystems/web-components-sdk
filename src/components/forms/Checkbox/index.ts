@@ -5,7 +5,7 @@ import { formComponentStyles } from "../FormComponentBase/form-component-styles"
 
 // import the component's styles as HTML with <style>
 import { checkboxStyles } from "./check-box-styles";
-
+import "@lion/ui/define/lion-checkbox.js";
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement("check-box-form")
