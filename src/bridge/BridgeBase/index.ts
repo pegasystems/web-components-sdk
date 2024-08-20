@@ -135,6 +135,7 @@ export class BridgeBase extends LitElement {
       if (this.bLogging) {
         console.log(`${this.baseComponentName}: storeUnsubscribe for ${this.theComponentName} [${this.theComponentId}]`);
       }
+      this.removeFormField();
       this.storeUnsubscribe();
     }
   }
@@ -271,6 +272,18 @@ export class BridgeBase extends LitElement {
 
     // subscribe to the store and save returned unsubscribe callback in this.storeUnsubscribe
     this.storeUnsubscribe = this.subscribeToStore(inCallback);
+
+    this.addFormField();
+  }
+
+  addFormField() {
+    this.thePConn?.addFormField();
+  }
+
+  removeFormField() {
+    if (this.thePConn?.removeFormField) {
+      this.thePConn?.removeFormField();
+    }
   }
 
   /**
