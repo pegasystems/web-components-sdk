@@ -1,5 +1,5 @@
 import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
+import { SdkConfigAccess, getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
@@ -18,24 +18,21 @@ declare var myLoadMashup: any;
 
 @customElement('mashup-main-screen-component')
 class MashupMainScreen extends LitElement {
-
-  @property( {attribute: false, type: Object } ) pConn; 
-
+  @property({ attribute: false, type: Object }) pConn;
 
   firstConfig: any;
   secondConfig: any;
   thirdConfig: any;
 
-  @property( {attribute: false, type: Boolean} ) showTriplePlayOptions = true;
-  @property( {attribute: false, type: Boolean} ) showPega = false;
-  @property( {attribute: false, type: Boolean} ) showResolution = false;
+  @property({ attribute: false, type: Boolean }) showTriplePlayOptions = true;
+  @property({ attribute: false, type: Boolean }) showPega = false;
+  @property({ attribute: false, type: Boolean }) showResolution = false;
 
-  cableInfo: string = "";
+  cableInfo: string = '';
 
   // NOTE: MashupMainScreen is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
     super();
-
   }
 
   connectedCallback() {
@@ -45,73 +42,67 @@ class MashupMainScreen extends LitElement {
       this.pConn = this.pConn.getPConnect();
     }
 
-    this.cableInfo = "assets/img/cableinfo.png";
+    this.cableInfo = 'assets/img/cableinfo.png';
 
-    this.firstConfig = { 
-      "play" : "Triple Play",
-      "level" : "Basic",
-      "channels": "100+",
-      "channels_full" : "100+ (Basic +)",
-      "banner" : "Value package",
-      "price": "99.00",
-      "internetSpeed" : "100 Mbps",
-      "calling": "",
+    this.firstConfig = {
+      play: 'Triple Play',
+      level: 'Basic',
+      channels: '100+',
+      channels_full: '100+ (Basic +)',
+      banner: 'Value package',
+      price: '99.00',
+      internetSpeed: '100 Mbps',
+      calling: ''
     };
 
     // second
-    this.secondConfig = { 
-      "play" : "Triple Play",
-      "level" : "Silver",
-      "channels" : "125+",
-      "channels_full" : "125+ (Deluxe)",
-      "banner" : "Most popular",
-      "price": "120.00",
-      "internetSpeed" : "300 Mbps",
-      "calling": ""
+    this.secondConfig = {
+      play: 'Triple Play',
+      level: 'Silver',
+      channels: '125+',
+      channels_full: '125+ (Deluxe)',
+      banner: 'Most popular',
+      price: '120.00',
+      internetSpeed: '300 Mbps',
+      calling: ''
     };
 
     // third
-    this.thirdConfig = { 
-      "play" : "Triple Play",
-      "level" : "Gold",
-      "channels" : "175+",
-      "channels_full" : "175+ (Premium)",
-      "banner" : "All the channels you want",
-      "price": "150.00",
-      "internetSpeed" : "1 Gbps",
-      "calling": " & International"
+    this.thirdConfig = {
+      play: 'Triple Play',
+      level: 'Gold',
+      channels: '175+',
+      channels_full: '175+ (Premium)',
+      banner: 'All the channels you want',
+      price: '150.00',
+      internetSpeed: '1 Gbps',
+      calling: ' & International'
     };
 
     PCore.getPubSubUtils().subscribe(
       PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
-      () => { this.cancelAssignment() },
-      "cancelAssignment"
+      () => {
+        this.cancelAssignment();
+      },
+      'cancelAssignment'
     );
 
     PCore.getPubSubUtils().subscribe(
-      "assignmentFinished",
-      () => { this.assignmentFinished() },
-      "assignmentFinished"
+      'assignmentFinished',
+      () => {
+        this.assignmentFinished();
+      },
+      'assignmentFinished'
     );
-
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
 
-    PCore.getPubSubUtils().unsubscribe(
-      PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
-      "cancelAssignment"
-    );
+    PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, 'cancelAssignment');
 
-    PCore.getPubSubUtils().unsubscribe(
-      "assignmentFinished",
-      "assignmentFinished"
-    );
-
-
+    PCore.getPubSubUtils().unsubscribe('assignmentFinished', 'assignmentFinished');
   }
 
   cancelAssignment() {
@@ -124,98 +115,79 @@ class MashupMainScreen extends LitElement {
     this.showPega = false;
   }
 
-  
+  getMashupMainScreenHtml(): any {
+    const mMSHtml = html`
+      <div class="cc-main-div">
+        ${this.showTriplePlayOptions
+          ? html`
+              <div class="cc-main-screen">
+                <div class="cc-banner">Combine TV, Internet, and Voice for the best deal</div>
 
-  getMashupMainScreenHtml() : any {
-
-    const mMSHtml = html `
-    
-    <div class="cc-main-div">
-    ${this.showTriplePlayOptions? 
-    html`
-      <div class="cc-main-screen">
-        <div class="cc-banner">
-            Combine TV, Internet, and Voice for the best deal
-        </div>
-    
-        <div style="display: flex; justify-content: space-evenly;">
-            <mashup-bundle-swatch-component .swatchConfig="${this.firstConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
-            <mashup-bundle-swatch-component .swatchConfig="${this.secondConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
-            <mashup-bundle-swatch-component .swatchConfig="${this.thirdConfig}" @ShopNowButtonClick="${this._onShopNow}"></mashup-bundle-swatch-component>
-        </div>
-
-
-      </div>
-    `
-    :
-    html``}
-
-    ${this.showPega?
-    html`
-      <div>
-        <div class="cc-info">
-            <div class="cc-info-pega">
-                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
-                <br>
-                <div style="padding-left: 50px;"> * - required fields</div>
-            </div>
-            <div class="cc-info-banner">
-                <div class="cc-info-banner-text">
-                    We need to gather a little information about you.
+                <div style="display: flex; justify-content: space-evenly;">
+                  <mashup-bundle-swatch-component
+                    .swatchConfig="${this.firstConfig}"
+                    @ShopNowButtonClick="${this._onShopNow}"
+                  ></mashup-bundle-swatch-component>
+                  <mashup-bundle-swatch-component
+                    .swatchConfig="${this.secondConfig}"
+                    @ShopNowButtonClick="${this._onShopNow}"
+                  ></mashup-bundle-swatch-component>
+                  <mashup-bundle-swatch-component
+                    .swatchConfig="${this.thirdConfig}"
+                    @ShopNowButtonClick="${this._onShopNow}"
+                  ></mashup-bundle-swatch-component>
                 </div>
-                <div>
-                    <img src="assets/img/cableinfo.png" class="cc-info-image">
+              </div>
+            `
+          : html``}
+        ${this.showPega
+          ? html`
+              <div>
+                <div class="cc-info">
+                  <div class="cc-info-pega">
+                    <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
+                    <br />
+                    <div style="padding-left: 50px;">* - required fields</div>
+                  </div>
+                  <div class="cc-info-banner">
+                    <div class="cc-info-banner-text">We need to gather a little information about you.</div>
+                    <div>
+                      <img src="assets/img/cableinfo.png" class="cc-info-image" />
+                    </div>
+                  </div>
                 </div>
-                
-            </div>
-        </div>
-        
+              </div>
+            `
+          : html``}
+        ${this.showResolution
+          ? html`
+              <div>
+                <mashup-resolution-screen-component></mashup-resolution-screen-component>
+              </div>
+            `
+          : html``}
       </div>
-    `
-    :
-    html``}
-
-    ${this.showResolution?
-    html`
-      <div>
-        <mashup-resolution-screen-component></mashup-resolution-screen-component>
-      </div>
-      `
-    :
-    html``
-    }
-  </div>
-  `;
-
-
-
-  
-
+    `;
 
     return mMSHtml;
   }
 
-
-  render(){
-
+  render() {
     const sContent = this.getMashupMainScreenHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
     let arHtml: Array<any> = [];
 
     // MashupMainScreen not derived from BridgeBase, so we need to load Bootstrap CSS
-    arHtml.push( html`<link rel='stylesheet' href='${locBootstrap}'>`);
+    arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
 
     arHtml.push(mashupMainScreenStyles);
     arHtml.push(sContent);
 
     return arHtml;
-
   }
 
-
   _onShopNow(e: any) {
-
     let sLevel = e.target.labelLevel;
 
     this.showTriplePlayOptions = false;
@@ -223,52 +195,43 @@ class MashupMainScreen extends LitElement {
 
     let actionsApi = this.pConn.getActionsApi();
     let createWork = actionsApi.createWork.bind(actionsApi);
-    let sFlowType = "pyStartCase";
+    let sFlowType = 'pyStartCase';
 
-
-    
     //
     // NOTE:  Below, can remove case statement when 8.6.1 and pyCreate
     //        works with mashup and can default to MediaCo
 
-
     let actionInfo;
 
     switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
-      case "CableCo" :
+      case 'CableCo':
         actionInfo = {
-          containerName: "primary",
-          flowType: sFlowType ? sFlowType : "pyStartCase",
+          containerName: 'primary',
+          flowType: sFlowType ? sFlowType : 'pyStartCase',
           caseInfo: {
-            content : {
-              "Package" : sLevel
+            content: {
+              Package: sLevel
             }
           }
         };
 
-        createWork("CableC-CableCon-Work-Service", actionInfo);
+        createWork('CableC-CableCon-Work-Service', actionInfo);
         break;
-      case "MediaCo" :
-
+      case 'MediaCo':
         actionInfo = {
-          containerName: "primary",
-          flowType: sFlowType ? sFlowType : "pyStartCase",
+          containerName: 'primary',
+          flowType: sFlowType ? sFlowType : 'pyStartCase',
           caseInfo: {
-            content : {
-              "Package" : sLevel
+            content: {
+              Package: sLevel
             }
           }
         };
 
-        createWork("DIXL-MediaCo-Work-NewService", actionInfo);
+        createWork('DIXL-MediaCo-Work-NewService', actionInfo);
         break;
     }
-
-
   }
-
-
-
 }
 
 export default MashupMainScreen;

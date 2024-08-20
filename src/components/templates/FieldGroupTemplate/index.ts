@@ -1,22 +1,22 @@
-import { html, customElement, property } from "@lion/core";
-import { BridgeBase } from "../../../bridge/BridgeBase";
+import { html, customElement, property } from '@lion/core';
+import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
-import "../PromotedFilters";
-import { FieldGroupUtils } from "../../../helpers/field-group-utils";
-import "../../designSystemExtension/FieldGroup";
-import "../../designSystemExtension/FieldGroupList";
+import '../PromotedFilters';
+import { FieldGroupUtils } from '../../../helpers/field-group-utils';
+import '../../designSystemExtension/FieldGroup';
+import '../../designSystemExtension/FieldGroupList';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-@customElement("field-group-template")
+@customElement('field-group-template')
 class FieldGroupTemplate extends BridgeBase {
   @property({ attribute: true, type: Object }) configProps;
   @property({ attribute: false, type: Object }) contextClass;
   @property({ attribute: false, type: Array }) referenceList;
   @property({ attribute: false, type: Boolean }) readonlyMode: boolean | undefined;
-  heading: string = "";
-  pageReference: string = "";
+  heading: string = '';
+  pageReference: string = '';
   prevRefLength: number | undefined;
 
   constructor() {
@@ -33,7 +33,7 @@ class FieldGroupTemplate extends BridgeBase {
   willUpdate(changedProperties) {
     for (let key of changedProperties.keys()) {
       // check for property changes, if so, normalize and render
-      if (key == "configProps") {
+      if (key == 'configProps') {
         if (changedProperties[key] && changedProperties[key] != this.configProps) {
           this.updateSelf();
         }
@@ -79,16 +79,16 @@ class FieldGroupTemplate extends BridgeBase {
     }
 
     this.configProps = this.thePConn.getConfigProps();
-    const renderMode = this.configProps["renderMode"];
-    const displayMode = this.configProps["displayMode"];
-    this.readonlyMode = renderMode === "ReadOnly" || displayMode === "LABELS_LEFT";
-    this.contextClass = this.configProps["contextClass"];
-    const lookForChildInConfig = this.configProps["lookForChildInConfig"];
-    this.heading = this.configProps["heading"] ?? "Row";
+    const renderMode = this.configProps['renderMode'];
+    const displayMode = this.configProps['displayMode'];
+    this.readonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';
+    this.contextClass = this.configProps['contextClass'];
+    const lookForChildInConfig = this.configProps['lookForChildInConfig'];
+    this.heading = this.configProps['heading'] ?? 'Row';
     const resolvedList = FieldGroupUtils.getReferenceList(this.thePConn);
     this.pageReference = `${this.thePConn.getPageReference()}${resolvedList}`;
     this.thePConn.setReferenceList(resolvedList);
-    this.referenceList = this.configProps["referenceList"];
+    this.referenceList = this.configProps['referenceList'];
     if (this.prevRefLength != this.referenceList.length) {
       if (!this.readonlyMode) {
         if (this.referenceList?.length === 0) {
@@ -97,7 +97,7 @@ class FieldGroupTemplate extends BridgeBase {
         this.children = this.referenceList?.map((item, index) => ({
           id: index,
           name: `${this.heading} ${index + 1}`,
-          children: FieldGroupUtils.buildView(this.thePConn, index, lookForChildInConfig),
+          children: FieldGroupUtils.buildView(this.thePConn, index, lookForChildInConfig)
         }));
       }
     }
@@ -114,9 +114,9 @@ class FieldGroupTemplate extends BridgeBase {
 
   addFieldGroupItem() {
     if (PCore?.getPCoreVersion()?.includes('8.7')) {
-        this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
+      this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
     } else {
-        this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);
+      this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);
     }
   }
 
@@ -136,7 +136,7 @@ class FieldGroupTemplate extends BridgeBase {
 
   getReadOnlyFieldGroup() {
     return html`${this.referenceList.map((item, index) => {
-      return html`<field-group .item=${item} .name=${this.heading + " " + (index + 1)}></field-group>`;
+      return html`<field-group .item=${item} .name=${this.heading + ' ' + (index + 1)}></field-group>`;
     })}`;
   }
 

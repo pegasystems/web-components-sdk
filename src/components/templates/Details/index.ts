@@ -11,13 +11,11 @@ import '../../designSystemExtension/DetailsFields';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-
 @customElement('details-component')
 class Details extends BridgeBase {
-  @property( {attribute: false} ) viewName = null;
+  @property({ attribute: false }) viewName = null;
 
   arFields: Array<any> = [];
-
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -25,44 +23,57 @@ class Details extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = detailsStyles;
 
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-    
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug){ debugger; }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
   }
-  
+
   /**
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
     const theConfigProps = this.thePConn.getConfigProps();
- 
-    for( let prop in ['viewName']) {
-      if( this[prop] != undefined ) {
+
+    for (let prop in ['viewName']) {
+      if (this[prop] != undefined) {
         this[prop] = theConfigProps[prop];
       }
     }
@@ -72,7 +83,7 @@ class Details extends BridgeBase {
       this.arFields = [];
       let pKid = kid.getPConnect();
       const fields = pKid.getChildren();
-      fields?.forEach((field) => {
+      fields?.forEach(field => {
         const thePConn = field.getPConnect();
         const theCompType = thePConn.getComponentName().toLowerCase();
         if (theCompType === 'reference') {
@@ -91,12 +102,11 @@ class Details extends BridgeBase {
           const data = {
             type: theCompType,
             config: thePConn.getConfigProps()
-          }
+          };
           this.arFields.push(data);
         }
       });
     }
-  
   }
 
   /**
@@ -106,8 +116,12 @@ class Details extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug){ debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -116,20 +130,24 @@ class Details extends BridgeBase {
     }
   }
 
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug){ debugger; }
+  render() {
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const {viewName} = this;
+    const { viewName } = this;
 
     // Title
-    if( viewName !== null && viewName !== "" ) {
+    if (viewName !== null && viewName !== '') {
       const title = html`<text-form value=${viewName}></text-form>`;
-      this.renderTemplates.push( title );
+      this.renderTemplates.push(title);
     }
 
     // React version uses <Grid container={cols, gap:2, aslignItems:'start'} with Flex child element
@@ -138,16 +156,11 @@ class Details extends BridgeBase {
     // Opted not to use formatted-text-form as would have to emit each web component separately.  Better to have a
     //  a single component with a single set of styles defined for the entire list
 
-    const theContent = html`
-      <details-fields-extension .arFields="${this.arFields}"></details-fields-extension>
-    `;
+    const theContent = html` <details-fields-extension .arFields="${this.arFields}"></details-fields-extension> `;
     this.renderTemplates.push(theContent);
 
     return this.renderTemplates;
-
   }
-
-
 }
 
 export default Details;

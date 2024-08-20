@@ -2,7 +2,6 @@ import { html } from '@lion/core';
 
 export const multiStepStyles = html`
   <style>
-
     .psdk-vertical-step {
       position: relative;
       margin-left: 0.4375rem;
@@ -14,8 +13,6 @@ export const multiStepStyles = html`
       padding-left: 2rem;
     }
 
-
-
     /* makes the line between nodes*/
     .psdk-vertical-step::before {
       content: '';
@@ -26,7 +23,7 @@ export const multiStepStyles = html`
       height: 100%;
       top: calc(3 * 0.5rem);
       background-color: var(--app-neutral-color);
-      transition: all calc(2 * 0.25s) cubic-bezier(0.4,0.6,0.1,1);
+      transition: all calc(2 * 0.25s) cubic-bezier(0.4, 0.6, 0.1, 1);
     }
 
     /* hides line after later last node*/
@@ -46,7 +43,7 @@ export const multiStepStyles = html`
 
     .psdk-vertical-marker {
       margin-left: calc(0.9375rem / 2 * -1);
-      transition: all calc(2 * 0.25s) cubic-bezier(0.4,0.6,0.1,1);
+      transition: all calc(2 * 0.25s) cubic-bezier(0.4, 0.6, 0.1, 1);
       display: block;
       position: relative;
       z-index: 1;
@@ -54,8 +51,6 @@ export const multiStepStyles = html`
       height: 0.9375rem;
       border-radius: 100%;
       background: white;
-
-
     }
 
     ::before {
@@ -82,7 +77,6 @@ export const multiStepStyles = html`
       border: 0.0625rem solid var(--app-neutral-color);
     }
 
-
     .psdk-horizontal-progress {
       position: relative;
       padding: calc(2 * 0.5rem) 0.5rem;
@@ -94,8 +88,6 @@ export const multiStepStyles = html`
       justify-content: space-between;
       width: 100%;
     }
-
-
 
     .psdk-horizontal-assignment {
       padding-left: 2rem;
@@ -145,11 +137,11 @@ export const multiStepStyles = html`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      transition: all calc(2 * 0.25s) cubic-bezier(0.4,0.6,0.1,1);
+      transition: all calc(2 * 0.25s) cubic-bezier(0.4, 0.6, 0.1, 1);
     }
 
     .psdk-horizontal-marker {
-      transition: all calc(2 * 0.25s) cubic-bezier(0.4,0.6,0.1,1);
+      transition: all calc(2 * 0.25s) cubic-bezier(0.4, 0.6, 0.1, 1);
       display: block;
       position: relative;
       z-index: 1;
@@ -157,8 +149,6 @@ export const multiStepStyles = html`
       height: 0.9375rem;
       border-radius: 100%;
       background: white;
-
-
     }
 
     .psdk-horizontal-bar {
@@ -169,8 +159,6 @@ export const multiStepStyles = html`
       left: 2rem;
       right: calc(2% + 0.8rem);
     }
-
-
 
     .h-success {
       border: 0.15rem solid var(--app-primary-color);
@@ -190,8 +178,5 @@ export const multiStepStyles = html`
     .h-future {
       border: 0.0625rem solid var(--app-neutral-color);
     }
-
-
-
   </style>
 `;

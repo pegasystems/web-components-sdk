@@ -9,37 +9,36 @@ import '@lion/input/define';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-
 // Adapted from Cosmos React DX Component: src/components/Templates/SimpleTableSelect/PromotedFilters.js
 
-const localeCategory = "SimpleTable";
+const localeCategory = 'SimpleTable';
 
 const SUPPORTED_TYPES_IN_PROMOTED_FILTERS = [
-  "TextInput",
-  "Percentage",
-  "Email",
-  "Integer",
-  "Decimal",
-  "Checkbox",
-  "DateTime",
-  "Date",
-  "Time",
-  "Text",
-  "TextArea",
-  "Currency",
-  "URL",
-  "RichText"
+  'TextInput',
+  'Percentage',
+  'Email',
+  'Integer',
+  'Decimal',
+  'Checkbox',
+  'DateTime',
+  'Date',
+  'Time',
+  'Text',
+  'TextArea',
+  'Currency',
+  'URL',
+  'RichText'
 ];
 
-// Breaking down in separate pieces of (1) the filters to render and 
+// Breaking down in separate pieces of (1) the filters to render and
 //  (2) the component to render the filters.
 //  React DX Components bundled these into a single function call
-function Filters( /* { */ filters, transientItemID, localeReference /* } */) {
-  return filters.map((filter) => {
+function Filters(/* { */ filters, transientItemID, localeReference /* } */) {
+  return filters.map(filter => {
     const filterClone = { ...filter };
     // convert any field which is not supported to TextInput and delete the placeholder as it may contain placeholder specific to original type.
     if (!SUPPORTED_TYPES_IN_PROMOTED_FILTERS.includes(filterClone.type)) {
-      filterClone.type = "TextInput";
+      filterClone.type = 'TextInput';
       delete filterClone.config.placeholder;
     }
     filterClone.config.contextName = transientItemID;
@@ -59,35 +58,32 @@ function Filters( /* { */ filters, transientItemID, localeReference /* } */) {
 }
 
 function isValidInput(input) {
-  return Object.values(input).findIndex((v) => v) >= 0;
+  return Object.values(input).findIndex(v => v) >= 0;
 }
 
 // End: Helpers/External to component vars/functions from Cosmos React implementation
 
-
 @customElement('promoted-filters-component')
 class PromotedFilters extends BridgeBase {
   // Additional properties passed in
-  @property({ attribute: true, type: String }) viewName = "";
+  @property({ attribute: true, type: String }) viewName = '';
   @property({ attribute: true, type: Array }) filters: Array<any> = [];
   @property({ attribute: true, type: Object }) listViewProps: any = {};
-  @property({ attribute: true, type: String }) pageClass = "";
-  @property({ attribute: true, type: Object }) parameters: any = {} 
-  @property({ attribute: false }) value = "default value";
+  @property({ attribute: true, type: String }) pageClass = '';
+  @property({ attribute: true, type: Object }) parameters: any = {};
+  @property({ attribute: false }) value = 'default value';
   // Vars from Cosmos React DX Component implementation
 
   // Moved from external to component to make sure PCore is defined
   localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
-  subscribeIdConst: String = "FILTERS_CHANGE_SUBSCRIPTION";
+  subscribeIdConst: String = 'FILTERS_CHANGE_SUBSCRIPTION';
 
-
-  initTable: Boolean = false;   // initTable is a boolean in React DX Component
+  initTable: Boolean = false; // initTable is a boolean in React DX Component
   filtersProperties = {};
 
   transientItemID: any = null;
   payload: any;
-
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -95,16 +91,24 @@ class PromotedFilters extends BridgeBase {
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set Debug to false and Logging to true here. Set to your preferred value during development.
     super(false, false);
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-    if (this.bDebug) { debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.pConn = {};
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
-    if (this.bDebug) { debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = promotedFiltersStyles;
@@ -113,40 +117,38 @@ class PromotedFilters extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // Filters are passed in as a prop so this should only need to be set the first time
-    this.filters.forEach((filter) => {
-      this.filtersProperties[PCore.getAnnotationUtils().getPropertyName(filter.config.value)] = "";
+    this.filters.forEach(filter => {
+      this.filtersProperties[PCore.getAnnotationUtils().getPropertyName(filter.config.value)] = '';
     });
 
     // Set initial value of transientItemID
     this.setTransientItemID();
   }
 
-
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-    if (this.bDebug) { debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     // This is from the React DX Component useEffect return() indicating it should
     //  be called when the component is being unmounted/disconnected
-    const filterPropsWithDot = Object.keys(this.filtersProperties).map(
-      (filterName) => `.${filterName}`
-    );
+    const filterPropsWithDot = Object.keys(this.filtersProperties).map(filterName => `.${filterName}`);
 
-    PCore.getCascadeManager().unRegisterFields(
-      this.transientItemID,
-      "",
-      filterPropsWithDot,
-      this.subscribeIdConst
-    );
-
-
+    PCore.getCascadeManager().unRegisterFields(this.transientItemID, '', filterPropsWithDot, this.subscribeIdConst);
   }
 
   updateSelf() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: updateSelf`); }
-    if (this.bDebug) { debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     this.requestUpdate();
   }
@@ -158,8 +160,12 @@ class PromotedFilters extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: onStateChange`); }
-    if (this.bDebug) { debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: onStateChange`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -171,7 +177,6 @@ class PromotedFilters extends BridgeBase {
   // In React DX Components - was a useMemo with an empty dependencies array.
   //  So, we'll compute this once on creation by calling this setter and won't update it.
   setTransientItemID() {
-
     const filtersWithClassID = {
       ...this.filtersProperties,
       classID: this.pageClass
@@ -193,16 +198,15 @@ class PromotedFilters extends BridgeBase {
     this.requestUpdate();
   }
 
-  getFilterData(e: any) { 
-
+  getFilterData(e: any) {
     e.preventDefault(); // to prevent un-intended forms submission.
 
     const theTransientItem = this.transientItemID;
     const changes = PCore.getFormUtils().getChanges(theTransientItem);
     const formValues = {};
-    Object.keys(changes).forEach((key) => {
+    Object.keys(changes).forEach(key => {
       // getChanges is returning context_data and messages as well.
-      if (key !== "context_data") {
+      if (key !== 'context_data') {
         formValues[key] = changes[key];
       }
     });
@@ -227,7 +231,7 @@ class PromotedFilters extends BridgeBase {
           lhs: {
             field
           },
-          comparator: "EQ",
+          comparator: 'EQ',
           rhs: {
             value
           }
@@ -241,7 +245,7 @@ class PromotedFilters extends BridgeBase {
     const theHtml = html`
       <div>
         <label>${this.listViewProps?.title}</label>
-      </div>      
+      </div>
     `;
 
     return theHtml;
@@ -251,7 +255,7 @@ class PromotedFilters extends BridgeBase {
     const theHtml = html`
       <div>
         <div class="psdk-grid-filter">
-          ${Filters(this.filters, this.transientItemID, this.listViewProps.localeReference).map((filter) => {
+          ${Filters(this.filters, this.transientItemID, this.listViewProps.localeReference).map(filter => {
             // return the lit-html component associated with each filter so they can be rendered
             return BridgeBase.getComponentFromConfigObj(filter);
           })}
@@ -265,12 +269,12 @@ class PromotedFilters extends BridgeBase {
   getPromotedFiltersActions(): any {
     const theHtml = html`
       <div>
-        <div class='action-button'>
-          <button class="btn btn-secondary" @click=${this.clearFilterData} data-testid="clear">${this.localizedVal("Clear", localeCategory)}</button>
-          <button class="btn btn-primary" @click=${this.getFilterData} data-testid="search">${this.localizedVal("Search", localeCategory)}</button>
-        </div> 
+        <div class="action-button">
+          <button class="btn btn-secondary" @click=${this.clearFilterData} data-testid="clear">${this.localizedVal('Clear', localeCategory)}</button>
+          <button class="btn btn-primary" @click=${this.getFilterData} data-testid="search">${this.localizedVal('Search', localeCategory)}</button>
+        </div>
       </div>
-    `
+    `;
     return theHtml;
   }
 
@@ -285,8 +289,12 @@ class PromotedFilters extends BridgeBase {
   }
 
   render() {
-    if (this.bLogging) { console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`); }
-    if (this.bDebug) { debugger; }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
 
     if (!this.filters.length) {
       // Leave this debugger statement in to see if/when this is ever called.
@@ -306,7 +314,6 @@ class PromotedFilters extends BridgeBase {
 
     return this.renderTemplates;
   }
-
 }
 
 export default PromotedFilters;
