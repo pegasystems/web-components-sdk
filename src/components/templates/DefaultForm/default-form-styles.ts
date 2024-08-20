@@ -1,4 +1,4 @@
-import { html } from "@lion/core";
+import { html } from '@lion/core';
 
 export const defaultFormStyles = html`
   <style>

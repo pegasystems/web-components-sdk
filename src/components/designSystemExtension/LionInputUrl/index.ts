@@ -9,7 +9,7 @@ class LionInputUrl extends LionInput {
   connectedCallback() {
     //console.log(`LionInputUrl modelValue: ${this.modelValue}`);
     super.connectedCallback();
-    this.type= 'url';
+    this.type = 'url';
   }
 }
 export default LionInputUrl;

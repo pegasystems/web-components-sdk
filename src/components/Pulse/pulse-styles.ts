@@ -7,6 +7,5 @@ export const pulseStyles = html`
     * {
       background-color: lightskyblue;
     }
-
   </style>
 `;

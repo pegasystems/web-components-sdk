@@ -1,32 +1,32 @@
 /* eslint-disable no-nested-ternary */
-import { html, customElement, property } from "@lion/core";
-import { BridgeBase } from "../../../bridge/BridgeBase";
+import { html, customElement, property } from '@lion/core';
+import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
-import "../PromotedFilters";
-import { Utils } from "../../../helpers/utils";
-import { buildFieldsForTable } from "./helpers";
-import { FieldGroupUtils } from "../../../helpers/field-group-utils";
+import '../PromotedFilters';
+import { Utils } from '../../../helpers/utils';
+import { buildFieldsForTable } from './helpers';
+import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 
 // import the component's styles as HTML with <style>
-import { simpleTableManualStyles } from "./simple-table-manual-styles";
+import { simpleTableManualStyles } from './simple-table-manual-styles';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-@customElement("simple-table-manual")
+@customElement('simple-table-manual')
 class SimpleTableManual extends BridgeBase {
   @property({ attribute: false, type: Boolean }) visible = true;
-  @property({ attribute: false, type: String }) label = "";
+  @property({ attribute: false, type: String }) label = '';
   @property({ attribute: false, type: Boolean }) readOnlyMode = false;
   @property({ attribute: false, type: Boolean }) editableMode = false;
   @property({ attribute: false, type: Array }) rowData = [];
   @property({ attribute: false, type: Array }) elementsData = [];
   @property({ attribute: false, type: Array }) referenceList = [];
   @property({ attribute: false, type: Object }) configProps: any = {};
-  menuIconOverride = "";
+  menuIconOverride = '';
   contextClass: any;
   rawFields: Array<any> = [];
-  pageReference = "";
+  pageReference = '';
   requestedReadOnlyMode = false;
   showAddRowButton = false;
   fieldDefs: Array<any> = [];
@@ -57,7 +57,7 @@ class SimpleTableManual extends BridgeBase {
     //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    this.menuIconOverride = Utils.getImageSrc("trash", Utils.getSDKStaticContentUrl());
+    this.menuIconOverride = Utils.getImageSrc('trash', Utils.getSDKStaticContentUrl());
   }
 
   /**
@@ -87,8 +87,8 @@ class SimpleTableManual extends BridgeBase {
     }
 
     this.configProps = this.thePConn.getConfigProps();
-    if (this.configProps["visibility"] != null) {
-      this.visible = Utils.getBooleanValue(this.configProps["visibility"]);
+    if (this.configProps['visibility'] != null) {
+      this.visible = Utils.getBooleanValue(this.configProps['visibility']);
     }
 
     // NOTE: getConfigProps() has each child.config with datasource and value undefined
@@ -105,7 +105,7 @@ class SimpleTableManual extends BridgeBase {
       presets,
       allowTableEdit,
       label: labelProp,
-      propertyLabel,
+      propertyLabel
     } = this.configProps;
 
     this.label = labelProp || propertyLabel;
@@ -145,9 +145,9 @@ class SimpleTableManual extends BridgeBase {
     // This gives up the "properties" we need to map to row/column values later
     // const processedData = populateRowKey(referenceList);
 
-    this.requestedReadOnlyMode = renderMode === "ReadOnly";
-    this.readOnlyMode = renderMode === "ReadOnly";
-    this.editableMode = renderMode === "Editable";
+    this.requestedReadOnlyMode = renderMode === 'ReadOnly';
+    this.readOnlyMode = renderMode === 'ReadOnly';
+    this.editableMode = renderMode === 'Editable';
     this.showAddRowButton = !this.readOnlyMode && !hideAddRow;
     const showDeleteButton = !this.readOnlyMode && !hideDeleteRow;
 
@@ -177,7 +177,7 @@ class SimpleTableManual extends BridgeBase {
     this.processedFields = [];
 
     this.processedFields = resolvedFields.map((field, i) => {
-      field.config["name"] = this.displayedColumns[i]; // .config["value"].replace(/ ./g,"_");   // replace space dot with underscore
+      field.config['name'] = this.displayedColumns[i]; // .config["value"].replace(/ ./g,"_");   // replace space dot with underscore
       return field;
     });
 
@@ -219,7 +219,7 @@ class SimpleTableManual extends BridgeBase {
   //  of the given row field
   getRowValue(inRowData: Object, inColKey: string): any {
     // See what data (if any) we have to display
-    const refKeys: Array<string> = inColKey.split(".");
+    const refKeys: Array<string> = inColKey.split('.');
     let valBuilder = inRowData;
     for (var key of refKeys) {
       valBuilder = valBuilder[key];
@@ -234,7 +234,7 @@ class SimpleTableManual extends BridgeBase {
     if (dataPageName) {
       PCore.getDataApiUtils()
         .getData(dataPageName, null, context)
-        .then((response) => {
+        .then(response => {
           const data = this.formatRowsData(response.data.data);
           this.rowData = data;
         });
@@ -248,7 +248,7 @@ class SimpleTableManual extends BridgeBase {
   }
 
   formatRowsData(data) {
-    return data?.map((item) => {
+    return data?.map(item => {
       return this.displayedColumns.reduce((dataForRow: any, colKey) => {
         dataForRow[colKey] = this.getRowValue(item, colKey);
         return dataForRow;
@@ -261,22 +261,22 @@ class SimpleTableManual extends BridgeBase {
     const eleData: any = [];
     this.referenceList.forEach((element, index) => {
       const data: any = [];
-      this.rawFields?.forEach((item) => {
+      this.rawFields?.forEach(item => {
         // removing label field from config to hide title in the table cell
-        item = { ...item, config: { ...item.config, label: "" } };
+        item = { ...item, config: { ...item.config, label: '' } };
         const referenceListData = FieldGroupUtils.getReferenceList(this.thePConn);
-        const isDatapage = referenceListData.startsWith("D_");
+        const isDatapage = referenceListData.startsWith('D_');
         const pageReferenceValue = isDatapage
           ? `${referenceListData}[${index}]`
-          : `${this.thePConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf("."))}[${index}]`;
+          : `${this.thePConn.getPageReference()}${referenceListData.substring(referenceListData.lastIndexOf('.'))}[${index}]`;
         const config = {
           meta: item,
           options: {
             context,
             pageReference: pageReferenceValue,
             referenceList: referenceListData,
-            hasForm: true,
-          },
+            hasForm: true
+          }
         };
         const view = PCore.createPConnect(config);
         data.push(view);
@@ -290,7 +290,7 @@ class SimpleTableManual extends BridgeBase {
     const theColumnHeaders = html`
       <thead class="thead-light">
         <tr>
-          ${this.displayedColumns.map((label) => {
+          ${this.displayedColumns.map(label => {
             return html`<th scope="col">${label}</th>`;
           })}
         </tr>
@@ -299,13 +299,14 @@ class SimpleTableManual extends BridgeBase {
 
     const theDataRows = html`<tbody>
       ${this.rowData.map(
-        (row) => html`<tr scope="row">
-          ${this.displayedColumns.map((colKey) => {
-            return html`<td>
-              ${typeof row[colKey] === "boolean" && !row[colKey] ? "False" : typeof row[colKey] === "boolean" && row[colKey] ? "True" : row[colKey]}
-            </td>`;
-          })}
-        </tr>`
+        row =>
+          html`<tr scope="row">
+            ${this.displayedColumns.map(colKey => {
+              return html`<td>
+                ${typeof row[colKey] === 'boolean' && !row[colKey] ? 'False' : typeof row[colKey] === 'boolean' && row[colKey] ? 'True' : row[colKey]}
+              </td>`;
+            })}
+          </tr>`
       )}
     </tbody>`;
 
@@ -318,7 +319,7 @@ class SimpleTableManual extends BridgeBase {
     const theColumnHeaders = html`
       <thead class="thead-light">
         <tr>
-          ${this.displayedColumns.map((label) => {
+          ${this.displayedColumns.map(label => {
             return html`<th scope="col">${label}</th>`;
           })}
         </tr>
@@ -327,14 +328,15 @@ class SimpleTableManual extends BridgeBase {
 
     const theDataRows = html`<tbody>
       ${this.elementsData.map(
-        (row: any, index: number) => html`<tr scope="row">
-          ${row.map((config) => html` <td>${BridgeBase.getComponentFromConfigObj(config)}</td> `)}
-          <td>
-            <button type="button" id="delete-button" class="psdk-utility-button" @click=${() => this.deleteRecord(index)}>
-              <img class="psdk-utility-card-action-svg-icon" src=${this.menuIconOverride} />
-            </button>
-          </td>
-        </tr>`
+        (row: any, index: number) =>
+          html`<tr scope="row">
+            ${row.map(config => html` <td>${BridgeBase.getComponentFromConfigObj(config)}</td> `)}
+            <td>
+              <button type="button" id="delete-button" class="psdk-utility-button" @click=${() => this.deleteRecord(index)}>
+                <img class="psdk-utility-card-action-svg-icon" src=${this.menuIconOverride} />
+              </button>
+            </td>
+          </tr>`
       )}
     </tbody>`;
 
@@ -362,7 +364,7 @@ class SimpleTableManual extends BridgeBase {
   results() {
     const len = this.editableMode ? this.elementsData?.length : this.rowData?.length;
 
-    return len ? html` <span class="results-count"> ${len} result${len > 1 ? "s" : ""} </span>` : null;
+    return len ? html` <span class="results-count"> ${len} result${len > 1 ? 's' : ''} </span>` : null;
   }
 
   render() {

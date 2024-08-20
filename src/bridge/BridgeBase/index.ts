@@ -1,10 +1,10 @@
 /* eslint-disable sonarjs/max-switch-cases */
 // Lion doc - https://lion-web.netlify.app/docs/systems/core/overview/ - says
 //  best practice to ensure compatible versions is to import LitElement from @lion/core
-import { LitElement, property, html, nothing } from "@lion/core";
-import * as isEqual from "fast-deep-equal";
-import Utils from "../../helpers/utils";
-import { bootstrapStyles } from "./bootstrap-styles";
+import { LitElement, property, html, nothing } from '@lion/core';
+import * as isEqual from 'fast-deep-equal';
+import Utils from '../../helpers/utils';
+import { bootstrapStyles } from './bootstrap-styles';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -18,8 +18,8 @@ export class BridgeBase extends LitElement {
 
   @property({ attribute: false }) theStore: any = null;
   @property({ attribute: false }) theComponentProps: Object; // props after state change compared against theComponentProps to see if there are changes
-  @property({ attribute: false, type: String }) theComponentName = ""; // will take on name component that extends BridgeBase
-  @property({ attribute: false, type: String }) baseComponentName = "BridgeBase"; // Name of this particular component
+  @property({ attribute: false, type: String }) theComponentName = ''; // will take on name component that extends BridgeBase
+  @property({ attribute: false, type: String }) baseComponentName = 'BridgeBase'; // Name of this particular component
 
   @property({ attribute: false }) theComponentId: number = Date.now(); // in case we need a unique ID for this component
   @property({ attribute: false, type: Function }) storeUnsubscribe: Function;
@@ -46,7 +46,7 @@ export class BridgeBase extends LitElement {
     super();
 
     // Disabling 'change-in-update' warnings as receiving warnings from lion components we should continue to investigate if there are updates to Lion
-    LitElement.disableWarning?.("change-in-update");
+    LitElement.disableWarning?.('change-in-update');
     if (inDebug) {
       this.bDebug = true;
     } // If you change the assignment of this.bDebug for your local development preference, please don't commit that change
@@ -150,7 +150,7 @@ export class BridgeBase extends LitElement {
   willUpdate(changedProperties) {
     for (let key of changedProperties.keys()) {
       // check if pConn property has changed, if so, normalize and render
-      if (key == "pConn") {
+      if (key == 'pConn') {
         if (this.pConn) {
           this.normalizePConnect();
           this.localCallback();
@@ -180,9 +180,9 @@ export class BridgeBase extends LitElement {
     //  If the incoming pConn doesn't meet the criteria, we set this.thePConn to null
     //    and later on in this function, we don't try to get its children (since there aren't any)
     //  in every component derived from BridgeBase
-    if (this.pConn?.getPConnect !== undefined && typeof this.pConn.getPConnect === "function") {
+    if (this.pConn?.getPConnect !== undefined && typeof this.pConn.getPConnect === 'function') {
       this.thePConn = this.pConn.getPConnect();
-    } else if (this.pConn?.getChildren && typeof this.pConn.getChildren === "function") {
+    } else if (this.pConn?.getChildren && typeof this.pConn.getChildren === 'function') {
       this.thePConn = this.pConn;
     } else {
       // NOT a PConn -
@@ -327,10 +327,10 @@ export class BridgeBase extends LitElement {
     }
 
     // and update the component's validation message (if undefined, it should be set to "")
-    this.validateMessage = currentComponentProps.validatemessage === undefined ? "" : currentComponentProps.validatemessage;
+    this.validateMessage = currentComponentProps.validatemessage === undefined ? '' : currentComponentProps.validatemessage;
 
     // if have an error message, force update of component
-    if (this.validateMessage != "") {
+    if (this.validateMessage != '') {
       bRet = true;
     }
 
@@ -361,9 +361,9 @@ export class BridgeBase extends LitElement {
     let addProps = {};
 
     if (this.additionalProps !== undefined) {
-      if (typeof this.additionalProps === "object") {
+      if (typeof this.additionalProps === 'object') {
         addProps = this.thePConn.resolveConfigProps(this.additionalProps);
-      } else if (typeof this.additionalProps === "function") {
+      } else if (typeof this.additionalProps === 'function') {
         const propsToAdd = this.additionalProps(this.getState(), this.thePConn);
         addProps = this.thePConn.resolveConfigProps(propsToAdd);
       }
@@ -383,7 +383,7 @@ export class BridgeBase extends LitElement {
     // This block can be removed once all these props will be added as part of configs
     this.thePConn.populateAdditionalProps(compProps);
 
-    if (compProps && undefined !== compProps.validatemessage && compProps.validatemessage != "") {
+    if (compProps && undefined !== compProps.validatemessage && compProps.validatemessage != '') {
       if (this.bLogging) {
         console.log(`   validatemessage for ${this.theComponentName} ${this.theComponentId}: ${compProps.validatemessage}`);
       }
@@ -393,7 +393,7 @@ export class BridgeBase extends LitElement {
 
     return {
       ...compProps,
-      ...addProps,
+      ...addProps
     };
   }
 
@@ -402,7 +402,7 @@ export class BridgeBase extends LitElement {
    * Otherwise, return undefined.
    * @param inProp The property being requested.
    */
-  getComponentProp(inProp = "") {
+  getComponentProp(inProp = '') {
     let propVal;
 
     // Look up property in the component's entry in componentPropArray (which should have the most recent value)
@@ -461,7 +461,7 @@ export class BridgeBase extends LitElement {
 
     // converting lion form elements tagName value to native html elements tagNames. example: LION-INPUT to INPUT
     // because constellation-core js is expecting target tagNames as native html form elements
-    Object.defineProperty(event.target, "tagName", { value: Utils.getTagName(event.target.tagName) });
+    Object.defineProperty(event.target, 'tagName', { value: Utils.getTagName(event.target.tagName) });
 
     const pConnect = inComp;
     if (undefined === pConnect) {
@@ -489,8 +489,8 @@ export class BridgeBase extends LitElement {
     }
 
     if (this.thePConn.isEditable()) {
-      this.thePConn.setAction("onChange", this.changeHandler.bind(this));
-      this.thePConn.setAction("onBlur", this.eventHandler.bind(this));
+      this.thePConn.setAction('onChange', this.changeHandler.bind(this));
+      this.thePConn.setAction('onBlur', this.eventHandler.bind(this));
     }
   }
 
@@ -550,185 +550,185 @@ export class BridgeBase extends LitElement {
       }
 
       switch (childType) {
-        case "AppAnnouncement":
+        case 'AppAnnouncement':
           this.renderTemplates.push(html`<app-announcement .pConn=${child}></app-announcement>`);
           break;
 
-        case "AppShell":
+        case 'AppShell':
           this.renderTemplates.push(html`<div class="appshell-main"><app-shell .pConn=${child}></app-shell></div>`);
           break;
 
-        case "Attachment":
+        case 'Attachment':
           this.renderTemplates.push(html`<attachment-component .pConn=${child}></attachment-component>`);
           break;
 
-        case "AutoComplete":
+        case 'AutoComplete':
           this.renderTemplates.push(html`<autocomplete-form .pConn=${child}></autocomplete-form>`);
           break;
 
-        case "CaseHistory":
+        case 'CaseHistory':
           this.renderTemplates.push(html`<case-history-widget .pConn=${child}></case-history-widget>`);
           break;
 
-        case "CaseOperator":
+        case 'CaseOperator':
           this.renderTemplates.push(html`<case-operator-widget .pConn=${child}></case-operator-widget>`);
           break;
 
-        case "CaseSummary":
+        case 'CaseSummary':
           this.renderTemplates.push(html`<case-summary-template .pConn=${child}></case-summary-template>`);
           break;
 
-        case "CaseView":
+        case 'CaseView':
           this.renderTemplates.push(html`<div class="psdk-case-view"><case-view .pConn=${child}></case-view></div>`);
           break;
 
-        case "Checkbox":
+        case 'Checkbox':
           this.renderTemplates.push(html`<check-box-form .pConn=${child}></check-box-form>`);
           break;
 
-        case "Currency":
+        case 'Currency':
           this.renderTemplates.push(html`<currency-form .pConn=${child}></currency-form>`);
           break;
 
-        case "Date":
+        case 'Date':
           this.renderTemplates.push(html`<date-form .pConn=${child}></date-form>`);
           break;
 
-        case "DateTime":
+        case 'DateTime':
           this.renderTemplates.push(html`<datetime-form .pConn=${child}></datetime-form>`);
           break;
 
-        case "Decimal":
+        case 'Decimal':
           this.renderTemplates.push(html`<decimal-form .pConn=${child}></decimal-form>`);
           break;
 
-        case "DefaultForm":
+        case 'DefaultForm':
           this.renderTemplates.push(html`<default-form-component .pConn=${child}></default-form-component>`);
           break;
 
-        case "DeferLoad":
+        case 'DeferLoad':
           this.renderTemplates.push(html`<defer-load-component .pConn=${child}></defer-load-component>`);
           break;
 
-        case "Dropdown":
+        case 'Dropdown':
           this.renderTemplates.push(html`<dropdown-form .pConn=${child}></dropdown-form>`);
           break;
 
-        case "Email":
+        case 'Email':
           this.renderTemplates.push(html`<email-form .pConn=${child}></email-form>`);
           break;
 
-        case "FileUtility":
+        case 'FileUtility':
           this.renderTemplates.push(html`<file-utility-component .pConn=${child}></file-utility-component>`);
           break;
 
-        case "FlowContainer":
+        case 'FlowContainer':
           this.renderTemplates.push(html`<flow-container .pConn=${child}></flow-container>`);
           break;
 
-        case "FormattedText":
+        case 'FormattedText':
           this.renderTemplates.push(html`<formatted-text-form .pConn=${child}></formatted-text-form>`);
           break;
 
-        case "Integer":
+        case 'Integer':
           this.renderTemplates.push(html`<integer-form .pConn=${child}></integer-form>`);
           break;
 
-        case "ListPage":
+        case 'ListPage':
           this.renderTemplates.push(html`<list-page-component .pConn=${child}></list-page-component>`);
           break;
 
-        case "ListView":
+        case 'ListView':
           this.renderTemplates.push(html`<list-view-component .pConn=${child}></list-view-component>`);
           break;
 
-        case "SimpleTable":
+        case 'SimpleTable':
           this.renderTemplates.push(html`<simple-table-component .pConn=${child}></simple-table-component>`);
           break;
 
-        case "OneColumn":
+        case 'OneColumn':
           this.renderTemplates.push(html`<one-column .pConn=${child}></one-column>`);
           break;
 
-        case "Percentage":
+        case 'Percentage':
           this.renderTemplates.push(html`<percentage-form .pConn=${child}></percentage-form>`);
           break;
 
-        case "Phone":
+        case 'Phone':
           this.renderTemplates.push(html`<phone-form .pConn=${child}></phone-form>`);
           break;
 
-        case "Pulse":
+        case 'Pulse':
           this.renderTemplates.push(html`<pulse-component .pConn=${child}></pulse-component>`);
           break;
 
-        case "RadioButtons":
+        case 'RadioButtons':
           this.renderTemplates.push(html`<radio-buttons-form .pConn=${child}></radio-buttons-form>`);
           break;
 
-        case "Reference":
-        case "reference":
+        case 'Reference':
+        case 'reference':
           this.renderTemplates.push(html`<reference-component .pConn=${child}></reference-component>`);
           break;
 
-        case "Region":
+        case 'Region':
           this.renderTemplates.push(html`<region-component .pConn=${child}></region-component>`);
           break;
 
-        case "SimpleTableSelect":
+        case 'SimpleTableSelect':
           this.renderTemplates.push(html`<simple-table-select .pConn=${child}></simple-table-select>`);
           break;
 
-        case "Text":
+        case 'Text':
           this.renderTemplates.push(html`<text-form .pConn=${child}></text-form>`);
           break;
 
-        case "TextArea":
+        case 'TextArea':
           this.renderTemplates.push(html`<text-area-form .pConn=${child}></text-area-form>`);
           break;
 
-        case "TextContent":
+        case 'TextContent':
           this.renderTemplates.push(html`<text-content-form .pConn=${child}></text-content-form>`);
           break;
 
-        case "TextInput":
+        case 'TextInput':
           this.renderTemplates.push(html`<text-input-form .pConn=${child}></text-input-form>`);
           break;
 
-        case "Time":
+        case 'Time':
           this.renderTemplates.push(html`<time-form .pConn=${child}></time-form>`);
           break;
 
-        case "ToDo": // Special case of looking for either capitalization
-        case "Todo":
+        case 'ToDo': // Special case of looking for either capitalization
+        case 'Todo':
           this.renderTemplates.push(html`<todo-component .pConn=${child}></todo-component>`);
           break;
 
-        case "TwoColumn":
+        case 'TwoColumn':
           this.renderTemplates.push(html`<two-column .pConn=${child}></two-column>`);
           break;
 
-        case "TwoColumnPage":
+        case 'TwoColumnPage':
           this.renderTemplates.push(html`<two-column-page .pConn=${child}></two-column-page>`);
           break;
 
-        case "URL":
+        case 'URL':
           this.renderTemplates.push(html`<url-form .pConn=${child}></url-form>`);
           break;
 
-        case "UserReference":
+        case 'UserReference':
           this.renderTemplates.push(html`<user-reference-form .pConn=${child}></user-reference-form>`);
           break;
 
-        case "View":
+        case 'View':
           this.renderTemplates.push(html`<view-component .pConn=${child}></view-component>`);
           break;
 
-        case "ViewContainer":
+        case 'ViewContainer':
           this.renderTemplates.push(html`<view-container .pConn=${child}></view-container>`);
           break;
 
-        case "WideNarrowPage":
+        case 'WideNarrowPage':
           this.renderTemplates.push(html`<wide-narrow-page .pConn=${child}></wide-narrow-page>`);
           break;
 
@@ -766,19 +766,19 @@ export class BridgeBase extends LitElement {
 
       if (displayOnlyFA) {
         switch (childType) {
-          case "CaseView":
+          case 'CaseView':
             theChildTemplates.push(html`<div class="psdk-case-view"><case-view .pConn=${child} ?dislayOnlyFA=${displayOnlyFA}></case-view></div>`);
             break;
-          case "FlowContainer":
+          case 'FlowContainer':
             theChildTemplates.push(html`<flow-container .pConn=${child}></flow-container>`);
             break;
-          case "Region":
+          case 'Region':
             theChildTemplates.push(html`<region-component .pConn=${child}></region-component>`);
             break;
-          case "ViewContainer":
+          case 'ViewContainer':
             theChildTemplates.push(html`<view-container .pConn=${child} ?dislayOnlyFA=${displayOnlyFA}></view-container>`);
             break;
-          case "View":
+          case 'View':
             theChildTemplates.push(html`<view-component .pConn=${child} ?dislayOnlyFA=${displayOnlyFA}></view-component>`);
             break;
 
@@ -788,185 +788,185 @@ export class BridgeBase extends LitElement {
         }
       } else {
         switch (childType) {
-          case "AppAnnouncement":
+          case 'AppAnnouncement':
             theChildTemplates.push(html`<app-announcement .pConn=${child}></app-announcement>`);
             break;
 
-          case "AppShell":
+          case 'AppShell':
             theChildTemplates.push(html`<div class="appshell-main"><app-shell .pConn=${child}></app-shell></div>`);
             break;
 
-          case "Attachment":
+          case 'Attachment':
             theChildTemplates.push(html`<attachment-component .pConn=${child}></attachment-component>`);
             break;
 
-          case "AutoComplete":
+          case 'AutoComplete':
             theChildTemplates.push(html`<autocomplete-form .pConn=${child}></autocomplete-form>`);
             break;
 
-          case "CaseHistory":
+          case 'CaseHistory':
             theChildTemplates.push(html`<case-history-widget .pConn=${child}></case-history-widget>`);
             break;
 
-          case "CaseOperator":
+          case 'CaseOperator':
             theChildTemplates.push(html`<case-operator-widget .pConn=${child}></case-operator-widget>`);
             break;
 
-          case "CaseSummary":
+          case 'CaseSummary':
             theChildTemplates.push(html`<case-summary-template .pConn=${child}></case-summary-template>`);
             break;
 
-          case "CaseView":
+          case 'CaseView':
             theChildTemplates.push(html`<div class="psdk-case-view"><case-view .pConn=${child}></case-view></div>`);
             break;
 
-          case "Checkbox":
+          case 'Checkbox':
             theChildTemplates.push(html`<check-box-form .pConn=${child}></check-box-form>`);
             break;
 
-          case "Currency":
+          case 'Currency':
             theChildTemplates.push(html`<currency-form .pConn=${child}></currency-form>`);
             break;
 
-          case "Date":
+          case 'Date':
             theChildTemplates.push(html`<date-form .pConn=${child}></date-form>`);
             break;
 
-          case "DateTime":
+          case 'DateTime':
             theChildTemplates.push(html`<datetime-form .pConn=${child}></datetime-form>`);
             break;
 
-          case "Decimal":
+          case 'Decimal':
             theChildTemplates.push(html`<decimal-form .pConn=${child}></decimal-form>`);
             break;
 
-          case "DefaultForm":
+          case 'DefaultForm':
             theChildTemplates.push(html`<default-form-compoent .pConn=${child}></default-form-compoent>`);
             break;
 
-          case "DeferLoad":
+          case 'DeferLoad':
             theChildTemplates.push(html`<defer-load-component .pConn=${child}></defer-load-component>`);
             break;
 
-          case "Dropdown":
+          case 'Dropdown':
             theChildTemplates.push(html`<dropdown-form .pConn=${child}></dropdown-form>`);
             break;
 
-          case "Email":
+          case 'Email':
             theChildTemplates.push(html`<email-form .pConn=${child}></email-form>`);
             break;
 
-          case "FlowContainer":
+          case 'FlowContainer':
             theChildTemplates.push(html`<flow-container .pConn=${child}></flow-container>`);
             break;
 
-          case "FormattedText":
+          case 'FormattedText':
             theChildTemplates.push(html`<formatted-text-form .pConn=${child}></formatted-text-form>`);
             break;
 
-          case "Integer":
+          case 'Integer':
             theChildTemplates.push(html`<integer-form .pConn=${child}></integer-form>`);
             break;
 
-          case "ListPage":
+          case 'ListPage':
             theChildTemplates.push(html`<list-page-component .pConn=${child}></list-page-component>`);
             break;
 
-          case "ListView":
+          case 'ListView':
             theChildTemplates.push(html`<list-view-component .pConn=${child}></list-view-component>`);
             break;
 
-          case "SimpleTable":
+          case 'SimpleTable':
             theChildTemplates.push(html`<simple-table-component .pConn=${child}></simple-table-component>`);
             break;
 
-          case "OneColumn":
+          case 'OneColumn':
             theChildTemplates.push(html`<one-column .pConn=${child}></one-column>`);
             break;
 
-          case "Percentage":
+          case 'Percentage':
             theChildTemplates.push(html`<percentage-form .pConn=${child}></percentage-form>`);
             break;
 
-          case "Phone":
+          case 'Phone':
             theChildTemplates.push(html`<phone-form .pConn=${child}></phone-form>`);
             break;
 
-          case "Pulse":
+          case 'Pulse':
             theChildTemplates.push(html`<pulse-component .pConn=${child}></pulse-component>`);
             break;
 
-          case "RadioButtons":
+          case 'RadioButtons':
             theChildTemplates.push(html`<radio-buttons-form .pConn=${child}></radio-buttons-form>`);
             break;
 
-          case "Reference":
-          case "reference":
+          case 'Reference':
+          case 'reference':
             theChildTemplates.push(html`<reference-component .pConn=${child} class="grid-column"></reference-component>`);
             break;
 
-          case "Region":
+          case 'Region':
             theChildTemplates.push(html`<region-component .pConn=${child}></region-component>`);
             break;
 
-          case "SimpleTableSelect":
+          case 'SimpleTableSelect':
             theChildTemplates.push(html`<simple-table-select .pConn=${child}></simple-table-select>`);
             break;
 
-          case "Stages":
+          case 'Stages':
             theChildTemplates.push(html`<stages-component .pConn=${child}></stages-component>`);
             break;
 
-          case "Text":
+          case 'Text':
             theChildTemplates.push(html`<text-form .pConn=${child}></text-form>`);
             break;
 
-          case "TextArea":
+          case 'TextArea':
             theChildTemplates.push(html`<text-area-form .pConn=${child}></text-area-form>`);
             break;
 
-          case "TextContent":
+          case 'TextContent':
             theChildTemplates.push(html`<text-content-form .pConn=${child}></text-content-form>`);
             break;
 
-          case "TextInput":
+          case 'TextInput':
             theChildTemplates.push(html`<text-input-form .pConn=${child}></text-input-form>`);
             break;
 
-          case "Time":
+          case 'Time':
             theChildTemplates.push(html`<time-form .pConn=${child}></time-form>`);
             break;
 
-          case "ToDo": // Special case of looking for either capitalization
-          case "Todo":
+          case 'ToDo': // Special case of looking for either capitalization
+          case 'Todo':
             theChildTemplates.push(html`<todo-component .pConn=${child}></todo-component>`);
             break;
 
-          case "TwoColumn":
+          case 'TwoColumn':
             theChildTemplates.push(html`<two-column .pConn=${child}></two-column>`);
             break;
 
-          case "TwoColumnPage":
+          case 'TwoColumnPage':
             theChildTemplates.push(html`<two-column-page .pConn=${child}></two-column-page>`);
             break;
 
-          case "URL":
+          case 'URL':
             theChildTemplates.push(html`<url-form .pConn=${child}></url-form>`);
             break;
 
-          case "UserReference":
+          case 'UserReference':
             theChildTemplates.push(html`<user-reference-form .pConn=${child}></user-reference-form>`);
             break;
 
-          case "View":
+          case 'View':
             theChildTemplates.push(html`<view-component .pConn=${child}></view-component>`);
             break;
 
-          case "ViewContainer":
+          case 'ViewContainer':
             theChildTemplates.push(html`<view-container .pConn=${child}></view-container>`);
             break;
 
-          case "WideNarrowPage":
+          case 'WideNarrowPage':
             this.renderTemplates.push(html`<wide-narrow-page .pConn=${child}></wide-narrow-page>`);
             break;
 
@@ -995,59 +995,59 @@ export class BridgeBase extends LitElement {
 
     let theTemplateForTemplate: any = nothing;
     switch (inTemplate) {
-      case "CaseSummary":
+      case 'CaseSummary':
         theTemplateForTemplate = html`<case-summary-template .pConn=${inPConnToUse}></case-summary-template>`;
         break;
 
-      case "CaseView":
+      case 'CaseView':
         theTemplateForTemplate = html`<case-view .pConn=${inPConnToUse} ?displayOnlyFA="${displayOnlyFA}"></case-view>`;
         break;
 
-      case "DefaultForm":
+      case 'DefaultForm':
         theTemplateForTemplate = html`<default-form-component .pConn=${inPConnToUse}></default-form-component>`;
         break;
 
-      case "Details":
+      case 'Details':
         theTemplateForTemplate = html`<details-component .pConn=${inPConnToUse}></details-component>`;
         break;
 
-      case "DetailsTwoColumn":
+      case 'DetailsTwoColumn':
         theTemplateForTemplate = html`<details-two-column-component .pConn=${inPConnToUse}></details-two-columnn-component>`;
         break;
 
-      case "ListPage":
+      case 'ListPage':
         theTemplateForTemplate = html`<list-page-component .pConn=${inPConnToUse}></list-page-component>`;
         break;
 
-      case "ListView":
+      case 'ListView':
         theTemplateForTemplate = html`<list-view-component .pConn=${inPConnToUse}></list-view-component>`;
         break;
 
-      case "SimpleTable":
+      case 'SimpleTable':
         theTemplateForTemplate = html`<simple-table-component .pConn=${inPConnToUse}></simple-table-component>`;
         break;
 
-      case "OneColumn":
+      case 'OneColumn':
         theTemplateForTemplate = html`<one-column .pConn=${inPConnToUse}></one-column>`;
         break;
 
-      case "OneColumnTab":
+      case 'OneColumnTab':
         theTemplateForTemplate = html`<one-column-tab-component .pConn=${inPConnToUse}></one-column-tab-component>`;
         break;
 
-      case "DataReference":
+      case 'DataReference':
         theTemplateForTemplate = html`<data-reference-component .pConn=${inPConnToUse}></data-reference-component>`;
         break;
 
-      case "TwoColumn":
+      case 'TwoColumn':
         theTemplateForTemplate = html`<two-column .pConn=${inPConnToUse}></two-column>`;
         break;
 
-      case "TwoColumnPage":
+      case 'TwoColumnPage':
         theTemplateForTemplate = html`<two-column-page .pConn=${inPConnToUse}></two-column-page>`;
         break;
 
-      case "WideNarrowPage":
+      case 'WideNarrowPage':
         this.renderTemplates.push(html`<wide-narrow-page .pConn=${inPConnToUse}></wide-narrow-page>`);
         break;
 
@@ -1075,75 +1075,75 @@ export class BridgeBase extends LitElement {
       let theErr = ``;
 
       switch (theComponentName) {
-        case "AutoComplete":
+        case 'AutoComplete':
           theComp = html`<autocomplete-form .pConn=${thePConn}></autocomplete-form>`;
           break;
 
-        case "Checkbox":
+        case 'Checkbox':
           theComp = html`<check-box-form .pConn=${thePConn}></check-box-form>`;
           break;
 
-        case "Currency":
+        case 'Currency':
           theComp = html`<currency-form .pConn=${thePConn}></currency-form>`;
           break;
 
-        case "Date":
+        case 'Date':
           theComp = html`<date-form .pConn=${thePConn}></date-form>`;
           break;
 
-        case "DateTime":
+        case 'DateTime':
           theComp = html`<datetime-form .pConn=${thePConn}></datetime-form>`;
           break;
 
-        case "Decimal":
+        case 'Decimal':
           theComp = html`<decimal-form .pConn=${thePConn}></decimal-form>`;
           break;
 
-        case "Dropdown":
+        case 'Dropdown':
           theComp = html`<dropdown-form .pConn=${thePConn}></dropdown-form>`;
           break;
 
-        case "Email":
+        case 'Email':
           theComp = html`<email-form .pConn=${thePConn}></email-form>`;
           break;
 
-        case "Integer":
+        case 'Integer':
           theComp = html`<integer-form .pConn=${thePConn}></integer-form>`;
           break;
 
-        case "Percentage":
+        case 'Percentage':
           theComp = html`<percentage-form .pConn=${thePConn}></percentage-form>`;
           break;
 
-        case "Phone":
+        case 'Phone':
           theComp = html`<phone-form .pConn=${thePConn}></phone-form>`;
           break;
 
-        case "RadioButtons":
+        case 'RadioButtons':
           theComp = html`<radio-buttons-form .pConn=${thePConn}></radio-buttons-form>`;
           break;
 
-        case "Text":
+        case 'Text':
           theComp = html`<text-form .pConn=${thePConn}></text-form>`;
           break;
 
-        case "TextArea":
+        case 'TextArea':
           theComp = html`<text-area-form .pConn=${thePConn}></text-area-form>`;
           break;
 
-        case "TextContent":
+        case 'TextContent':
           theComp = html`<text-content-form .pConn=${thePConn}></text-content-form>`;
           break;
 
-        case "TextInput":
+        case 'TextInput':
           theComp = html`<text-input-form .pConn=${thePConn}></text-input-form>`;
           break;
 
-        case "Time":
+        case 'Time':
           theComp = html`<time-form .pConn=${thePConn}></time-form>`;
           break;
 
-        case "URL":
+        case 'URL':
           theComp = html`<url-form .pConn=${thePConn}></url-form>`;
           break;
 
@@ -1165,10 +1165,10 @@ export class BridgeBase extends LitElement {
   // Writes a console.log of the current component's children types
   logChildren() {
     let childTypes: Array<String> = [];
-    let theChildrenAsString = "";
+    let theChildrenAsString = '';
 
     if (!this.children) {
-      theChildrenAsString = "none";
+      theChildrenAsString = 'none';
     } else {
       for (var child of this.children) {
         const childPConn = child.getPConnect();
@@ -1192,20 +1192,20 @@ export class BridgeBase extends LitElement {
   }
 
   consoleKidDump(pConn: any, level: number = 1, kidNum: number = 1) {
-    let sDash = "";
+    let sDash = '';
     for (var i = 0; i < level; i++) {
-      sDash = sDash.concat("-");
+      sDash = sDash.concat('-');
     }
-    console.log(sDash + "level " + level + " component(" + kidNum + "):" + pConn.getComponentName());
+    console.log(sDash + 'level ' + level + ' component(' + kidNum + '):' + pConn.getComponentName());
     if (pConn.getConfigProps() != null) {
-      console.log(sDash + "configProps:" + JSON.stringify(pConn.getConfigProps()));
+      console.log(sDash + 'configProps:' + JSON.stringify(pConn.getConfigProps()));
     }
     if (pConn.getRawMetadata() != null) {
-      console.log(sDash + "rawMetadata:" + JSON.stringify(pConn.getRawMetadata()));
+      console.log(sDash + 'rawMetadata:' + JSON.stringify(pConn.getRawMetadata()));
     }
 
     if (pConn.hasChildren() && pConn.getChildren() != null) {
-      console.log(sDash + "kidCount:" + pConn.getChildren().length);
+      console.log(sDash + 'kidCount:' + pConn.getChildren().length);
       let kids = pConn.getChildren();
       for (let index in kids) {
         let kid = kids[index];

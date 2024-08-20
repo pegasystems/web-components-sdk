@@ -1,14 +1,14 @@
-import { html, customElement, property } from "@lion/core";
-import { BridgeBase } from "../../../bridge/BridgeBase";
+import { html, customElement, property } from '@lion/core';
+import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
-import "../PromotedFilters";
-import { Utils } from "../../../helpers/utils";
-import "./SimpleTableManual";
-import "../FieldGroupTemplate";
+import '../PromotedFilters';
+import { Utils } from '../../../helpers/utils';
+import './SimpleTableManual';
+import '../FieldGroupTemplate';
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-@customElement("simple-table-component")
+@customElement('simple-table-component')
 class SimpleTable extends BridgeBase {
   @property({ attribute: false, type: Boolean }) visible = true;
   @property({ attribute: false, type: Object }) fieldGroupProps;
@@ -64,8 +64,8 @@ class SimpleTable extends BridgeBase {
     }
 
     const theConfigProps = this.thePConn.getConfigProps();
-    if (theConfigProps["visibility"] != null) {
-      this.visible = Utils.getBooleanValue(theConfigProps["visibility"]);
+    if (theConfigProps['visibility'] != null) {
+      this.visible = Utils.getBooleanValue(theConfigProps['visibility']);
     }
 
     const { multiRecordDisplayAs } = theConfigProps;
@@ -75,7 +75,7 @@ class SimpleTable extends BridgeBase {
       listName = PCore.getAnnotationUtils().getPropertyName(listName);
       contextClass = this.thePConn.getFieldMetadata(listName)?.pageClass;
     }
-    if (multiRecordDisplayAs === "fieldGroup") {
+    if (multiRecordDisplayAs === 'fieldGroup') {
       this.fieldGroupProps = { ...theConfigProps, contextClass };
     }
   }

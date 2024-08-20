@@ -1,7 +1,3 @@
 import { html } from '@lion/core';
 
-export const oneColumnTabStyles = html`
-  <style>
-
-  </style>
-`;
+export const oneColumnTabStyles = html` <style></style> `;
