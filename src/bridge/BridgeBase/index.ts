@@ -35,7 +35,11 @@ export class BridgeBase extends LitElement {
   @property({ attribute: false, type: Object }) actions; // populated with actions object for this component (PConnect.getActions())
 
   // Common PConnect object (coming in as a LitElement property attribute - .pConn) for all components derived from BridgeBase
-  @property({ attribute: true, type: Object /* , hasChanged: BridgeBase.hasPropsChanged */ }) pConn; // will either be a PConnect object or have a getPConnect() function
+  @property({
+    attribute: true,
+    type: Object /* , hasChanged: BridgeBase.hasPropsChanged */
+  })
+  pConn; // will either be a PConnect object or have a getPConnect() function
 
   localCallback: Function = () => {};
 
@@ -310,10 +314,8 @@ export class BridgeBase extends LitElement {
     const currentComponentProps: any = this.getComponentProps();
 
     const priorProps = this.theComponentProps;
-    const priorPropsAsStr: string = JSON.stringify(priorProps);
 
     let currentProps: any = currentComponentProps;
-    let currentPropsAsStr: string = JSON.stringify(currentProps);
 
     // compare to current to prior props. If different, update stored props and return true
     // fast-deep-equal version
@@ -321,6 +323,8 @@ export class BridgeBase extends LitElement {
       bRet = !isEqual(priorProps, currentProps);
     } else {
       // stringify compare version
+      const priorPropsAsStr: string = JSON.stringify(priorProps);
+      let currentPropsAsStr: string = JSON.stringify(currentProps);
       if (priorPropsAsStr != currentPropsAsStr) {
         bRet = true;
       }
@@ -343,8 +347,8 @@ export class BridgeBase extends LitElement {
     //if (this.bLogging) { console.log(`${this.theComponentName}: shouldComponentUpdate: ${bRet}`); }
     if (bRet && this.bLogging) {
       console.log(`${this.theComponentName}: shouldComponentUpdate about to return ${bRet}`);
-      console.log(` --> priorProps:   ${priorPropsAsStr}`);
-      console.log(` --> currentProps: ${currentPropsAsStr}`);
+      console.log(` --> priorProps:   ${JSON.stringify(priorProps)}`);
+      console.log(` --> currentProps: ${JSON.stringify(currentProps)}`);
     }
 
     return bRet;
