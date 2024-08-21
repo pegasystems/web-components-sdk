@@ -152,9 +152,19 @@ export class BridgeBase extends LitElement {
         );
       }
       this.storeUnsubscribe();
+      this.removeFormField();
     }
   }
 
+  addFormField() {
+    this.thePConn?.addFormField();
+  }
+
+  removeFormField() {
+    if (this.thePConn?.removeFormField) {
+      this.thePConn?.removeFormField();
+    }
+  }
   /**
    * Web Component Lifecycle function, called when a property has changed.
    *
@@ -297,6 +307,7 @@ export class BridgeBase extends LitElement {
 
     // subscribe to the store and save returned unsubscribe callback in this.storeUnsubscribe
     this.storeUnsubscribe = this.subscribeToStore(inCallback);
+    this.addFormField();
   }
 
   /**

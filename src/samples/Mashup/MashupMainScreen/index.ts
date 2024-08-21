@@ -225,7 +225,7 @@ class MashupMainScreen extends LitElement {
     const options: any = {
       viewType: "page",
       pageName: "pyEmbedAssignment",
-      startingFields: {},
+      startingFields: { Package: sLevel },
     };
     switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
       case "Tell Us More":
@@ -269,8 +269,12 @@ class MashupMainScreen extends LitElement {
             },
           },
         };
-
-        createWork("DIXL-MediaCo-Work-NewService", actionInfo);
+        PCore.getMashupApi().createCase(
+          "DIXL-MediaCo-Work-NewService",
+          "root",
+          options,
+        );
+        // createWork("DIXL-MediaCo-Work-NewService", actionInfo);
         break;
     }
   }
