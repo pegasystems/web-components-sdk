@@ -1,4 +1,4 @@
-import { html, customElement, property } from '@lion/core';
+import { customElement } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../widgets/AppAnnouncement';
@@ -30,9 +30,6 @@ import '../templates/Details';
 import '../templates/DetailsTwoColumn';
 import '../Attachment';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('region-component')
 class Region extends BridgeBase {
   constructor() {
@@ -60,7 +57,7 @@ class Region extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -120,6 +117,7 @@ class Region extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (!this.children) {
       if (this.bLogging) {
         console.log(`${this.theComponentName}: render with NO children: ${this.children}`);

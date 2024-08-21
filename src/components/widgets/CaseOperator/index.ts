@@ -6,7 +6,7 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 import { caseOperatorStyles } from './case-operator-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('case-operator-widget')
 class CaseOperator extends BridgeBase {
@@ -45,7 +45,7 @@ class CaseOperator extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = caseOperatorStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -119,9 +119,9 @@ class CaseOperator extends BridgeBase {
         debugger;
       }
       if (res.data && res.data.pyOperatorInfo && res.data.pyOperatorInfo.pyUserName) {
-        let imgPath = '';
+        // let imgPath = '';
         if (this.thePConn && res.data.pyOperatorInfo.pyImageInsKey) {
-          imgPath = this.thePConn.getImagePath(res.data.pyOperatorInfo.pyImageInsKey);
+          // imgPath = this.thePConn.getImagePath(res.data.pyOperatorInfo.pyImageInsKey);
         }
         this.fields = [
           {

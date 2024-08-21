@@ -12,9 +12,6 @@ import '../SimpleMain';
 // import the component's styles as HTML with <style>
 import { simplePortalStyles } from './simple-portal-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('simple-portal-component')
 class SimplePortal extends LitElement {
   // NOTE: SimplePortal is NOT derived from BridgeBase; just derived from LitElement
@@ -28,7 +25,7 @@ class SimplePortal extends LitElement {
     sampleMainInit(this, 'simple-portal-component', 'simple-main-component');
 
     // Make sure sdkConfig is loaded prior to attempting to login
-    getSdkConfig().then(sdkConfig => {
+    getSdkConfig().then(() => {
       // To eliminate the login button/component, login directly
       loginIfNecessary({ appName: 'simpleportal', mainRedirect: true });
     });
@@ -40,19 +37,17 @@ class SimplePortal extends LitElement {
   }
 
   getSimplePortalHtml(): any {
-    const sPHtml = html` <div class="column main-content">
+    return html` <div class="column main-content">
       <div id="app-nopega"></div>
       <div id="pega-here"></div>
     </div>`;
-
-    return sPHtml;
   }
 
   render() {
     const sContent = this.getSimplePortalHtml();
     const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // SimplePortal not derived from BridgeBase, so we need to load Bootstrap CSS
     if (locBootstrap) {

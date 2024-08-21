@@ -2,15 +2,12 @@ import { html, customElement, property, nothing } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('reference-component')
 class Reference extends BridgeBase {
   @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
-  @property({ attribute: false, type: Object }) resolvedConfigProps = {};
+  @property({ attribute: false, type: Object }) resolvedConfigProps: any = {};
   @property({ attribute: false, type: Function }) referencedViewComponent = null;
 
   constructor() {
@@ -38,7 +35,7 @@ class Reference extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -97,11 +94,11 @@ class Reference extends BridgeBase {
     };
 
     if (this.bLogging) {
-      console.log(`Reference: about to call createComponent with pageReference: context: ${this.resolvedConfigProps['context']}`);
+      console.log(`Reference: about to call createComponent with pageReference: context: ${this.resolvedConfigProps.context}`);
     }
 
     const viewComponent = this.pConn.createComponent(viewObject, null, null, {
-      pageReference: this.resolvedConfigProps['context']
+      pageReference: this.resolvedConfigProps.context
     });
 
     // updating the referencedComponent should trigger a render
@@ -109,8 +106,8 @@ class Reference extends BridgeBase {
 
     newCompPConnect.setInheritedConfig({
       ...referenceConfig,
-      readOnly: this.resolvedConfigProps['readOnly'] ? this.resolvedConfigProps['readOnly'] : false,
-      displayMode: this.resolvedConfigProps['displayMode'] ? this.resolvedConfigProps['displayMode'] : null
+      readOnly: this.resolvedConfigProps.readOnly ? this.resolvedConfigProps.readOnly : false,
+      displayMode: this.resolvedConfigProps.displayMode ? this.resolvedConfigProps.displayMode : null
     });
 
     if (this.bLogging) {
@@ -165,15 +162,13 @@ class Reference extends BridgeBase {
       }
     }
 
-    const viewContent = this.referencedViewComponent
+    return this.referencedViewComponent
       ? html`<view-component .pConn=${this.referencedViewComponent} ?displayOnlyFA=${this.displayOnlyFA}></view-component>`
       : nothing;
-
-    return viewContent;
   }
 
   render() {
-    if (this.resolvedConfigProps['visibility'] === false) return null;
+    if (this.resolvedConfigProps.visibility === false) return null;
 
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);

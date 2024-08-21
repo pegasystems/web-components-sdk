@@ -6,9 +6,6 @@ import '../TwoColumn';
 // import the component's styles as HTML with <style>
 // NO styles for TwoColumnPage
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('wide-narrow-page')
 class WideNarrowPage extends BridgeBase {
   constructor() {
@@ -36,7 +33,7 @@ class WideNarrowPage extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 

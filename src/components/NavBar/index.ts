@@ -9,7 +9,7 @@ import { logout } from '@pega/auth/lib/sdk-auth-manager';
 import { navbarStyles } from './navbar-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('nav-bar')
 class NavBar extends BridgeBase {
@@ -34,7 +34,7 @@ class NavBar extends BridgeBase {
   createWork: any;
   showPage: any;
   logout:any;
-  
+
 */
 
   constructor() {
@@ -76,9 +76,10 @@ class NavBar extends BridgeBase {
     // making a copy, so can add info
     this.navPages = JSON.parse(JSON.stringify(this.pages));
 
-    for (let page in this.navPages) {
-      //this.navPages$[page]["iconName"] = this.translateIcon(this.navPages$[page]["pxPageViewIcon"]);
-      this.navPages[page]['iconName'] = Utils.getImageSrc(this.navPages[page]['pxPageViewIcon'], Utils.getSDKStaticContentUrl());
+    // eslint-disable-next-line no-restricted-syntax
+    for (const page in this.navPages) {
+      // this.navPages$[page]["iconName"] = this.translateIcon(this.navPages$[page]["pxPageViewIcon"]);
+      this.navPages[page].iconName = Utils.getImageSrc(this.navPages[page].pxPageViewIcon, Utils.getSDKStaticContentUrl());
     }
 
     //    this.actionsAPI = this.pConn$.getActionsApi();
@@ -88,8 +89,8 @@ class NavBar extends BridgeBase {
 
     // was "assets" in Angular SDK ; is "static" in React
     this.portalLogoImage = Utils.getIconPath(Utils.getSDKStaticContentUrl()).concat('pzpega-logo-mark.svg');
-    //this.portalOperator$ = oData["pxRequestor"].pxUserName;
-    //this.portalOperator$ = oData["D_pxEnvironmentInfo"].pxOperator.pyUserName;
+    // this.portalOperator$ = oData["pxRequestor"].pxUserName;
+    // this.portalOperator$ = oData["D_pxEnvironmentInfo"].pxOperator.pyUserName;
     this.portalOperator = PCore.getEnvironmentInfo().getOperatorName();
 
     this.portalOperatorInitials = Utils.getInitials(this.portalOperator);
@@ -169,7 +170,7 @@ class NavBar extends BridgeBase {
   navPanelCreateCaseType(sCaseType: string, sFlowType: string) {
     const actionInfo = {
       containerName: 'primary',
-      flowType: sFlowType ? sFlowType : 'pyStartCase'
+      flowType: sFlowType || 'pyStartCase'
     };
 
     this.thePConn

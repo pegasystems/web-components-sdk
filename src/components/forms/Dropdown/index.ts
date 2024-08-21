@@ -8,9 +8,6 @@ import '@lion/select/define';
 // import the component's styles as HTML with <style>
 import { dropdownStyles } from './dropdown-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('dropdown-form')
@@ -61,6 +58,7 @@ class Dropdown extends FormComponentBase {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (name === 'datasource') {
       if (newValue && oldValue !== newValue) {
         this.dataList = JSON.parse(newValue);
@@ -105,16 +103,12 @@ class Dropdown extends FormComponentBase {
   //  See https://lion-web-components.netlify.app/?path=/docs/forms-radio-group--main
 
   isSelected(buttonValue: string): boolean {
-    if (this.value === buttonValue) {
-      return true;
-    }
-
-    return false;
+    return this.value === buttonValue;
   }
 
   getErrorMessage() {
     const tempError = `${this.theComponentName}: getErrorMessage needs to have a field control implemented.`;
-    let errMessage: string = tempError;
+    const errMessage: string = tempError;
 
     console.error(tempError);
 
@@ -167,15 +161,15 @@ class Dropdown extends FormComponentBase {
           ${this.bVisible
             ? html`
               <div class="form-group">
-                <lion-select 
+                <lion-select
                   id=${this.theComponentId}
                   dataTestId=${this.testId}
-                  .fieldName=${this.label} 
+                  .fieldName=${this.label}
                   .modelValue=${this.value === '' && !this.bReadonly ? 'Select' : this.value}
                   .validators = ${this.lionValidatorsArray}
                   .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                  ?readonly=${this.bReadonly} 
-                  ?disabled=${this.bDisabled} 
+                  ?readonly=${this.bReadonly}
+                  ?disabled=${this.bDisabled}
                   /* @model-value-changed=${this.fieldOnChange} */ >
                   <span slot="label">${this.annotatedLabel}</span>
                   <select slot="input">

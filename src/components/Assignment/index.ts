@@ -13,12 +13,12 @@ import type { NotificationLitRenderer } from '@vaadin/notification/lit.js';
 import type { NotificationOpenedChangedEvent } from '@vaadin/notification';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('assignment-component')
 class Assignment extends BridgeBase {
   @property({ attribute: true }) itemKey = '';
-  @property({ attribute: false, type: Array }) arChildren: Array<any> = [];
+  @property({ attribute: false, type: Array }) arChildren: any[] = [];
   @property({ attribute: false, type: Boolean }) bHasNavigation = false;
   @property({ attribute: false, type: Boolean }) bIsVertical = false;
   // navigation
@@ -28,30 +28,30 @@ class Assignment extends BridgeBase {
   @state()
   private toastMessage: String = '';
 
-  arCurrentStepIndicies: Array<number> = new Array();
-  arNavigationSteps: Array<any> = new Array();
+  arCurrentStepIndicies: number[] = [];
+  arNavigationSteps: any[] = [];
 
   // buttons
-  arMainButtons: Array<any> = new Array();
-  arSecondaryButtons: Array<any> = new Array();
+  arMainButtons: any[] = [];
+  arSecondaryButtons: any[] = [];
 
-  bReInit: boolean = false;
+  bReInit = false;
 
-  bInit: boolean = false;
+  bInit = false;
   actionsAPI: any;
   finishAssignment: any;
   navigateToStep: any;
   cancelAssignment: any;
   showPage: any;
-  bCancelPressed: boolean = false;
+  bCancelPressed = false;
 
-  configProps: Object = {};
+  configProps: any = {};
 
-  containerName: string = '';
-  workID: string = '';
-  currentCaseID: string = '';
+  containerName = '';
+  workID = '';
+  currentCaseID = '';
 
-  templateName: string = '';
+  templateName = '';
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -81,7 +81,7 @@ class Assignment extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = assignmentStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     this.initComponent();
@@ -134,7 +134,7 @@ class Assignment extends BridgeBase {
   }
 
   assignmentHtml(): any {
-    const aHtml = html`
+    return html`
       ${this.bHasNavigation
         ? html` <div id="Assignment" class="psdk-stepper">
             <multi-step-component
@@ -164,8 +164,6 @@ class Assignment extends BridgeBase {
             ${this.notificationHtml()}
           </div>`}
     `;
-
-    return aHtml;
   }
 
   notificationHtml() {
@@ -232,7 +230,7 @@ class Assignment extends BridgeBase {
     // NOTE: With 8.7, the incoming child[ren], might be a reference component.
     //  The assignment is expecting its children to be the reference's View PConnect,
     //  NOT the reference PConnect. So, update the children as necessary.
-    const dereferencedChildren: Array<any> = [];
+    const dereferencedChildren: any[] = [];
     this.arChildren.forEach(child => {
       const childPConn = child.getPConnect();
       const childType = childPConn.getComponentName();
@@ -250,17 +248,15 @@ class Assignment extends BridgeBase {
 
     // when true, update arChildren from pConn, otherwise, arChilren will be updated in updateSelf()
 
-    let activeActionLabel: string = '';
-    //let { getPConnect } = this.arChildren[0].getPConnect();
-    //let { getPConnect } = this.arChildren[0].getPConnect();
+    // let { getPConnect } = this.arChildren[0].getPConnect();
+    // let { getPConnect } = this.arChildren[0].getPConnect();
 
-    this.templateName = this.configProps['template'];
+    this.templateName = this.configProps.template;
 
     // create pointers to functions
-    let containerMgr = this.thePConn.getContainerManager();
-    let actionsAPI = this.thePConn.getActionsApi();
-    let baseContext = this.thePConn.getContextName();
-    let acName = this.thePConn.getContainerName();
+    const actionsAPI = this.thePConn.getActionsApi();
+    const baseContext = this.thePConn.getContextName();
+    const acName = this.thePConn.getContainerName();
 
     // for now, in general this should be overridden by updateSelf(), and not be blank
     if (this.itemKey === '') {
@@ -283,7 +279,7 @@ class Assignment extends BridgeBase {
   createButtons() {
     this.bHasNavigation = false;
 
-    let oData = this.thePConn.getDataObject();
+    const oData = this.thePConn.getDataObject();
 
     // inside
     // get fist kid, get the name and displa
@@ -295,9 +291,8 @@ class Assignment extends BridgeBase {
     }
 
     // Only continue if there are children...
-    let oWorkItem = this.arChildren[0].getPConnect();
-    let oWorkMeta = oWorkItem.getRawMetadata();
-    let oWorkData = oWorkItem.getDataObject();
+    const oWorkItem = this.arChildren[0].getPConnect();
+    const oWorkData = oWorkItem.getDataObject();
 
     if (oWorkData) {
       this.actionsAPI = oWorkItem.getActionsApi();
@@ -306,7 +301,7 @@ class Assignment extends BridgeBase {
         this.containerName = oWorkData.caseInfo.assignments[0].name;
 
         // get caseInfo
-        let oCaseInfo = oData.caseInfo;
+        const oCaseInfo = oData.caseInfo;
 
         if (oCaseInfo && oCaseInfo.actionButtons) {
           if (this.bLogging) {
@@ -333,21 +328,21 @@ class Assignment extends BridgeBase {
 
           // what comes back now in configObject is the children of the flowContainer
           this.arNavigationSteps = JSON.parse(JSON.stringify(oCaseInfo.navigation.steps));
-          this.arCurrentStepIndicies = new Array();
+          this.arCurrentStepIndicies = [];
           this.arCurrentStepIndicies = this.findCurrentIndicies(this.arNavigationSteps, this.arCurrentStepIndicies, 0);
         }
       }
     }
   }
 
-  findCurrentIndicies(arStepperSteps: Array<any>, arIndicies: Array<number>, depth: number): Array<number> {
+  findCurrentIndicies(arStepperSteps: any[], arIndicies: number[], depth: number): number[] {
     let count = 0;
     arStepperSteps.forEach(step => {
       if (step.visited_status == 'current') {
         arIndicies[depth] = count;
 
         // add in
-        step['step_status'] = '';
+        step.step_status = '';
       } else if (step.visited_status == 'success') {
         count++;
         step.step_status = 'completed';
@@ -374,56 +369,50 @@ class Assignment extends BridgeBase {
     // to re-initialize
     // this.bReInit =true;
 
-    let baseContext = this.thePConn.getContextName();
-    let acName = this.thePConn.getContainerName();
-    let itemID = baseContext.concat('/').concat(acName);
-
     if (sButtonType == 'secondary') {
-      let dispatchInfo = {
+      const dispatchInfo = {
         context: this.itemKey,
         semanticURL: ''
       };
 
-      let stepID = ''; // ???
-
       // need to handle cancel as this.cancel(dispatchInfo)
-      //this.actionsAPI[sAction](dispatchInfo);
+      // this.actionsAPI[sAction](dispatchInfo);
       switch (sAction) {
         case 'navigateToStep':
           if (this.formValid()) {
             this.bReInit = true;
 
-            //this.psService.sendMessage(true);
-            let navigatePromise = this.navigateToStep('previous', this.itemKey);
+            // this.psService.sendMessage(true);
+            const navigatePromise = this.navigateToStep('previous', this.itemKey);
 
             navigatePromise
               .then(() => {
-                //this.psService.sendMessage(false);
+                // this.psService.sendMessage(false);
               })
               .catch(() => {
                 this.showToast(`Navigation failed!`);
-                //this.psService.sendMessage(false);
+                // this.psService.sendMessage(false);
               });
           }
           break;
         case 'cancelAssignment':
           this.bReInit = true;
           this.bCancelPressed = true;
-          //this.psService.sendMessage(true);
+          // this.psService.sendMessage(true);
 
           // eslint-disable-next-line no-case-declarations
-          let cancelPromise = this.cancelAssignment(dispatchInfo.context);
+          const cancelPromise = this.cancelAssignment(dispatchInfo.context);
 
           cancelPromise
             .then(() => {
-              //this.psService.sendMessage(false);
-              //this.rpcService.sendMessage(true, "cancel");
+              // this.psService.sendMessage(false);
+              // this.rpcService.sendMessage(true, "cancel");
 
               PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
             })
             .catch(() => {
               this.showToast(`Cancel failed!`);
-              //this.psService.sendMessage(false);
+              // this.psService.sendMessage(false);
             });
 
           break;
@@ -435,24 +424,25 @@ class Assignment extends BridgeBase {
         console.log('press submit');
       }
 
+      // eslint-disable-next-line sonarjs/no-small-switch
       switch (sAction) {
         case 'finishAssignment':
           if (this.formValid()) {
             this.bReInit = true;
 
-            //this.psService.sendMessage(true);
-            let finishPromise = this.finishAssignment(this.itemKey);
+            // this.psService.sendMessage(true);
+            const finishPromise = this.finishAssignment(this.itemKey);
 
             finishPromise
               .then(() => {
-                //this.psService.sendMessage(false);
+                // this.psService.sendMessage(false);
               })
               .catch(() => {
                 this.showToast(`Submit failed!`);
               });
           } else {
-            //let snackBarRef = this.snackBar.open("Please fix errors on form.",  "Ok");
-            //this.erService.sendMessage("show", "Please fix errors on form.");
+            // let snackBarRef = this.snackBar.open("Please fix errors on form.",  "Ok");
+            // this.erService.sendMessage("show", "Please fix errors on form.");
           }
           break;
         default:

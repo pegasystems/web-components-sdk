@@ -5,10 +5,13 @@ import { SdkConfigAccess, getAvailablePortals } from '@pega/auth/lib/sdk-auth-ma
 import { compareSdkPCoreVersions } from '../../helpers/versionHelpers';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
-declare var myLoadMashup;
-declare var myLoadPortal; // Experiment with this
-declare var myLoadDefaultPortal;
+declare let PCore: any;
+declare let myLoadPortal; // Experiment with this
+declare let myLoadDefaultPortal;
+
+const isObjectEmpty = objectName => {
+  return objectName && Object.keys(objectName).length === 0 && objectName.constructor === Object;
+};
 
 @customElement('app-entry')
 class AppEntry extends LitElement {
@@ -62,31 +65,8 @@ class AppEntry extends LitElement {
 
       // Need to register the callback function for PCore.registerComponentCreator
       //  This callback is invoked if/when you call a PConnect createComponent
-      PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
-        // debugger;
-
-        // eslint-disable no-console
-        // console.log(`In registerCreateComponent callback for ${JSON.stringify(c11nEnv.getPConnect().getComponentName())}`);
-        // console.log(`    c11nEnv: ${JSON.stringify(c11nEnv)}`);
-        // console.log(`    c11nEnv.getPConnect().getConfigProps(): ${JSON.stringify(c11nEnv.getPConnect().getConfigProps())}`);
-        // console.log(`    c11nEnv.getPConnect().getActions(): ${JSON.stringify(c11nEnv.getPConnect().getActions())}`);
-        // console.log(`    additionalProps: ${JSON.stringify(additionalProps)}`);
-        // eslint-enable no-console
-
+      PCore.registerComponentCreator(c11nEnv => {
         return c11nEnv;
-
-        // REACT implementaion:
-        // const PConnectComp = createPConnectComponent();
-        // return (
-        //     <PConnectComp {
-        //       ...{
-        //         ...c11nEnv,
-        //         ...c11nEnv.getPConnect().getConfigProps(),
-        //         ...c11nEnv.getPConnect().getActions(),
-        //         additionalProps
-        //       }}
-        //     />
-        //   );
       });
 
       this.initialRender(renderObj);
@@ -114,7 +94,9 @@ class AppEntry extends LitElement {
       // Getting current user's access group's available portals list other than excluded portals (relies on Traditional DX APIs)
       getAvailablePortals().then(portals => {
         // Add logic to display a portal selection screen...for now use first one
-        portals.length && myLoadPortal('pega-root', portals[0], []);
+        if (portals.length) {
+          myLoadPortal('pega-root', portals[0], []);
+        }
       });
     }
   }
@@ -129,8 +111,8 @@ class AppEntry extends LitElement {
       console.log(`${this.theComponentName} renderObj: `, inRenderObj);
     }
 
-    ////// This was done on login and kicked off the creation of this
-    //////  AppEntry. So don't need to to do this.
+    /// /// This was done on login and kicked off the creation of this
+    /// ///  AppEntry. So don't need to to do this.
     // With Constellation Ready, replace <div id="pega-here"></div>
     //  with top-level ViewContainer
     // const replaceMe = document.getElementById("pega-here");
@@ -148,15 +130,6 @@ class AppEntry extends LitElement {
     }
   }
 
-  // Utility to determine if a JSON object is empty
-  isEmptyObject(inObj: Object): Boolean {
-    var key: String;
-    for (key in inObj) {
-      return false;
-    }
-    return true;
-  }
-
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with props - ${JSON.stringify(this.props)}`);
@@ -164,19 +137,17 @@ class AppEntry extends LitElement {
 
     // NOTE: that also the AppEntry gets its initial config info as "props" from inRenderObj,
     //  we actually pass that to the RootContainer as .pConn
-    if (this.isEmptyObject(this.props)) {
+    if (isObjectEmpty(this.props)) {
       return nothing;
-    } else {
-      if (this.thePConnComponentName === 'RootContainer') {
-        return html` <!-- <div style='width: fit-content; border: dotted 1px #DDDDDD;'>${this.theComponentName}</div>  -->
-          <root-container .pConn=${this.props}></root-container>`;
-      } else {
-        if (this.bLogging) {
-          console.log(`${this.theComponentName} not known as AppEntry rendered component. So rendering NotSupported`);
-        }
-        return html` <not-supported>AppEntry got ${this.theComponentName} to render</not-supported> `;
-      }
     }
+    if (this.thePConnComponentName === 'RootContainer') {
+      return html` <!-- <div style='width: fit-content; border: dotted 1px #DDDDDD;'>${this.theComponentName}</div>  -->
+        <root-container .pConn=${this.props}></root-container>`;
+    }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName} not known as AppEntry rendered component. So rendering NotSupported`);
+    }
+    return html` <not-supported>AppEntry got ${this.theComponentName} to render</not-supported> `;
   }
 }
 

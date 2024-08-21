@@ -8,8 +8,8 @@ import '../AppEntry';
 
 @customElement('hello-world')
 class HelloWorldElem extends LitElement {
-  @property({ type: String }) title: string = 'default title';
-  @property({ type: String }) description: string = 'default description';
+  @property({ type: String }) title = 'default title';
+  @property({ type: String }) description = 'default description';
 
   render() {
     return html`

@@ -1,15 +1,11 @@
 import { html, customElement, property, nothing } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
-import { Utils } from '../../../helpers/utils';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/input-amount/define';
 
 // import the component's styles as HTML with <style>
 import { percentageStyles } from './percentage-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -46,7 +42,7 @@ class Percentage extends FormComponentBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = percentageStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -67,7 +63,7 @@ class Percentage extends FormComponentBase {
     // Reset to defaults
     this.numberOptions = {};
 
-    const theConfigProps = this.thePConn.getConfigProps();
+    // const theConfigProps = this.thePConn.getConfigProps();
 
     // Using minimum 0 digit and maximum 4 digit
     this.numberOptions = `{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }`;

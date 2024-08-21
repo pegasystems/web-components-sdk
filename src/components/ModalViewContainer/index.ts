@@ -1,4 +1,4 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
@@ -9,7 +9,7 @@ import * as isEqual from 'fast-deep-equal';
 import '../CancelAlert';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -19,14 +19,14 @@ declare var PCore: any;
 
 @customElement('modal-view-container-component')
 class ModalViewContainer extends BridgeBase {
-  arNewChildren: Array<any> = [];
+  arNewChildren: any[] = [];
   configProps: Object = {};
-  templateName: string = '';
-  buildName: string = '';
-  context: string = '';
-  title: string = '';
-  bShowModal: boolean = false;
-  itemKey: string = '';
+  templateName = '';
+  buildName = '';
+  context = '';
+  title = '';
+  bShowModal = false;
+  itemKey = '';
   oCaseInfo: Object = {};
 
   routingInfoRef: Object = {};
@@ -35,10 +35,10 @@ class ModalViewContainer extends BridgeBase {
   //  Use its PConnect to render the CaseView; DON'T replace this.pConn$
   createdViewPConn: any;
 
-  bSubscribed: boolean = false;
+  bSubscribed = false;
   cancelPConn: any;
-  bShowCancelAlert: boolean = false;
-  bAlertState: boolean = false;
+  bShowCancelAlert = false;
+  bAlertState = false;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -68,13 +68,13 @@ class ModalViewContainer extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = modalViewContainerStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    let baseContext = this.thePConn.getContextName();
-    let acName = this.thePConn.getContainerName();
+    const baseContext = this.thePConn.getContextName();
+    const acName = this.thePConn.getContainerName();
 
-    //for now, in general this should be overridden by updateSelf(), and not be blank
+    // for now, in general this should be overridden by updateSelf(), and not be blank
     if (this.itemKey === '') {
       this.itemKey = baseContext.concat('/').concat(acName);
     }
@@ -85,7 +85,7 @@ class ModalViewContainer extends BridgeBase {
       type: 'multiple'
     });
 
-    const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
+    // const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
 
     // window.PCore.getPubSubUtils().subscribe(
     //   PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
@@ -105,7 +105,7 @@ class ModalViewContainer extends BridgeBase {
       debugger;
     }
 
-    const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
+    const { PUB_SUB_EVENTS } = PCore.getConstants();
 
     PCore.getPubSubUtils().unsubscribe(
       PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
@@ -126,37 +126,37 @@ class ModalViewContainer extends BridgeBase {
     }
 
     // routingInfo was added as component prop in populateAdditionalProps
-    let routingInfo = this.getComponentProp('routingInfo');
+    const routingInfo = this.getComponentProp('routingInfo');
 
-    let loadingInfo = this.thePConn.getLoadingStatus();
-    let configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    const loadingInfo = this.thePConn.getLoadingStatus();
+    // const configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
     if (!loadingInfo) {
       // turn off spinner
-      //this.psService.sendMessage(false);
+      // this.psService.sendMessage(false);
     }
 
     if (routingInfo && !loadingInfo /* && this.bUpdate */) {
-      //console.log(" >> modal view container: has routingInfo");
+      // console.log(" >> modal view container: has routingInfo");
 
-      let currentOrder = routingInfo.accessedOrder;
+      const currentOrder = routingInfo.accessedOrder;
 
       if (undefined == currentOrder) {
         return;
       }
 
-      let currentItems = routingInfo.items;
-      //let key = currentOrder[currentOrder.length - 1];
+      const currentItems = routingInfo.items;
+      // let key = currentOrder[currentOrder.length - 1];
 
       const { key, latestItem } = this.getKeyAndLatestItem(routingInfo);
 
       if (currentOrder.length > 0) {
         if (currentItems[key] && currentItems[key].view && Object.keys(currentItems[key].view).length > 0) {
-          let currentItem = currentItems[key];
-          let rootView = currentItem.view;
-          let { context } = rootView.config;
-          let config = { meta: rootView };
-          config['options'] = {
+          const currentItem = currentItems[key];
+          const rootView = currentItem.view;
+          const { context } = rootView.config;
+          const config: any = { meta: rootView };
+          config.options = {
             context: currentItem.context,
             hasForm: true,
             pageReference: context || this.thePConn.getPageReference()
@@ -164,8 +164,8 @@ class ModalViewContainer extends BridgeBase {
 
           if (!this.bSubscribed) {
             this.bSubscribed = true;
-            const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
-            this.routingInfoRef['current'] = routingInfo;
+            const { PUB_SUB_EVENTS } = PCore.getConstants();
+            this.routingInfoRef = routingInfo;
             PCore.getPubSubUtils().subscribe(
               PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
               payload => {
@@ -176,7 +176,7 @@ class ModalViewContainer extends BridgeBase {
             );
           }
 
-          let configObject = PCore.createPConnect(config);
+          const configObject = PCore.createPConnect(config);
 
           // THIS is where the ViewContainer creates a View
           //    The config has meta.config.type = "view"
@@ -189,7 +189,7 @@ class ModalViewContainer extends BridgeBase {
           //  component is a View (and not a ViewContainer). We now look for the
           //  "template" type directly in the created component (newComp) and NOT
           //  as a child of the newly created component.
-          //console.log(`---> ModalViewContainer created new ${newCompName}`);
+          // console.log(`---> ModalViewContainer created new ${newCompName}`);
 
           // Use the newly created component (View) info but DO NOT replace
           //  this ModalViewContainer's pConn$, etc.
@@ -200,13 +200,14 @@ class ModalViewContainer extends BridgeBase {
           // right now need to check caseInfo for changes, to trigger redraw, not getting
           // changes from angularPconnect except for first draw
           if (newComp && caseInfo && this.compareCaseInfoIsDifferent(caseInfo)) {
-            //this.psService.sendMessage(false);
+            // this.psService.sendMessage(false);
 
             this.createdViewPConn = newComp;
             const newConfigProps = newComp.getConfigProps();
-            this.templateName = 'template' in newConfigProps ? newConfigProps['template'] : '';
+            this.templateName = 'template' in newConfigProps ? newConfigProps.template : '';
 
-            const { actionName, isMinimizable } = latestItem;
+            const { actionName } = latestItem;
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             const caseInfo = newComp.getCaseInfo();
             const caseName = caseInfo.getName();
             const ID = caseInfo.getID();
@@ -244,11 +245,11 @@ class ModalViewContainer extends BridgeBase {
 
             this.requestUpdate();
 
-            //console.log("view container expect redraw");
+            // console.log("view container expect redraw");
           }
 
           // this will cause a redraw
-          //this.cdRef.detectChanges();
+          // this.cdRef.detectChanges();
         }
       } else {
         this.bShowModal = false;
@@ -275,6 +276,7 @@ class ModalViewContainer extends BridgeBase {
 
     if (bShouldUpdate) {
       this.updateSelf();
+      // eslint-disable-next-line sonarjs/no-duplicated-branches
     } else if (this.bShowModal) {
       // right now onlu get one updated when initial diaplay.  So, once modal is up
       // let fall through and do a check with "compareCaseInfoIsDifferent" until fixed
@@ -283,7 +285,7 @@ class ModalViewContainer extends BridgeBase {
   }
 
   getModalViewContainerHtml(): any {
-    const mVCHtml = html`
+    return html`
       ${this.bShowModal
         ? html`
             <div id="dialog" class="psdk-dialog-background ">
@@ -303,8 +305,6 @@ class ModalViewContainer extends BridgeBase {
       <cancel-alert-component .bShowAlert=${this.bShowCancelAlert} @AlertState=${this._onAlertState}" .pConn=${this.cancelPConn}></app-cancel-alert>`
         : html``}
     `;
-
-    return mVCHtml;
   }
 
   render() {
@@ -344,13 +344,13 @@ class ModalViewContainer extends BridgeBase {
 
   _onAlertState(e: any) {
     this.bAlertState = e.detail.data;
-    if (this.bAlertState == false) {
+    if (this.bAlertState === false) {
       this.bShowCancelAlert = false;
     }
   }
 
   showAlert(payload) {
-    const { latestItem } = this.getKeyAndLatestItem(this.routingInfoRef['current']);
+    const { latestItem } = this.getKeyAndLatestItem(this.routingInfoRef);
     const { isModalAction } = payload;
 
     /*
@@ -361,7 +361,7 @@ class ModalViewContainer extends BridgeBase {
       const configObject = this.getConfigObject(latestItem, this.thePConn);
       this.cancelPConn = configObject.getPConnect();
       this.bShowCancelAlert = true;
-      //this.showCancelAlert(configObject.getPConnect, create);
+      // this.showCancelAlert(configObject.getPConnect, create);
     }
   }
 
@@ -384,14 +384,14 @@ class ModalViewContainer extends BridgeBase {
   }
 
   compareCaseInfoIsDifferent(oCurrentCaseInfo: Object): boolean {
-    let bRet: boolean = false;
+    let bRet = false;
 
     // fast-deep-equal version
     if (isEqual !== undefined) {
       bRet = !isEqual(this.oCaseInfo, oCurrentCaseInfo);
     } else {
-      let sCurrnentCaseInfo = JSON.stringify(oCurrentCaseInfo);
-      let sOldCaseInfo = JSON.stringify(this.oCaseInfo);
+      const sCurrnentCaseInfo = JSON.stringify(oCurrentCaseInfo);
+      const sOldCaseInfo = JSON.stringify(this.oCaseInfo);
       // stringify compare version
       if (sCurrnentCaseInfo != sOldCaseInfo) {
         bRet = true;

@@ -10,9 +10,6 @@ import '@lion/textarea/define';
 // import the component's styles as HTML with <style>
 import { fullPortalStyles } from './full-portal-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('full-portal-component')
 class FullPortal extends LitElement {
   // NOTE: FullPortal is NOT derived from BridgeBase; just derived from LitElement
@@ -35,19 +32,17 @@ class FullPortal extends LitElement {
   }
 
   getFullPortalHtml(): any {
-    const fPHtml = html` <div class="column main-content">
+    return html` <div class="column main-content">
       <div id="app-nopega"></div>
       <div id="pega-here"></div>
     </div>`;
-
-    return fPHtml;
   }
 
   render() {
     const sContent = this.getFullPortalHtml();
     const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // FullPortal not derived from BridgeBase, so we need to load Bootstrap CSS
     if (locBootstrap) {

@@ -4,7 +4,7 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 import '../PromotedFilters';
 import '../SimpleTable';
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // helper function copied from SimpleTableSelect DX Component
 const isSelfReferencedProperty = (param, referenceProp) => {
@@ -53,7 +53,7 @@ class SimpleTableSelect extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -125,12 +125,12 @@ class SimpleTableSelect extends BridgeBase {
       ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
       : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
 
-    const compositeKeys: Array<any> = [];
+    const compositeKeys: any[] = [];
     Object.values(fieldParameters).forEach((param: any) => {
       if (isSelfReferencedProperty(param, referenceProp)) {
         const substringOffset = param.lastIndexOf('.') + 1;
         const theSubstring = substringOffset ? param.substring(substringOffset) : null;
-        theSubstring ? compositeKeys.push(theSubstring) : null;
+        if (theSubstring) compositeKeys.push(theSubstring);
       }
     });
 
@@ -210,9 +210,7 @@ class SimpleTableSelect extends BridgeBase {
   }
 
   getSimpleTableSelectHtml(): any {
-    const theHtml = html` ${this.theComponentToRender} `;
-
-    return theHtml;
+    return html` ${this.theComponentToRender} `;
   }
 
   render() {

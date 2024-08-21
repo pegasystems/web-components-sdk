@@ -5,9 +5,6 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // import the component's styles as HTML with <style>
 import '../SimpleTable/SimpleTableManual';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('multi-reference-readonly')
 class MultiReferenceReadonly extends BridgeBase {
   @property({ attribute: false, type: Object }) pConn;
@@ -37,7 +34,7 @@ class MultiReferenceReadonly extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -89,9 +86,7 @@ class MultiReferenceReadonly extends BridgeBase {
     const configObj = this.pConn.getReferencedView();
     configObj.config.label = this.label;
     this.pConn = this.pConn.getReferencedViewPConnect(true).getPConnect();
-    const multiRefHtml = html`<simple-table-manual .pConn=${this.pConn}></simple-table-manual>`;
-
-    return multiRefHtml;
+    return html`<simple-table-manual .pConn=${this.pConn}></simple-table-manual>`;
   }
 
   render() {

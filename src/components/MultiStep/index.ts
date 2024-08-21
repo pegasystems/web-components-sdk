@@ -6,17 +6,14 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 // import the component's styles as HTML with <style>
 import { multiStepStyles } from './multi-step-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('multi-step-component')
 class MultiStep extends BridgeBase {
   @property({ type: Boolean }) bIsVertical = false;
   @property({ type: Array }) arCurrentStepIndicies = [];
   @property({ type: Array }) arMainButtons = [];
   @property({ type: Array }) arSecondaryButtons = [];
-  @property({ type: Array }) arChildren: Array<any> = [];
-  @property({ type: Array }) arNavigationSteps: Array<any> = [];
+  @property({ type: Array }) arChildren: any[] = [];
+  @property({ type: Array }) arNavigationSteps: any[] = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -46,7 +43,7 @@ class MultiStep extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = multiStepStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -62,7 +59,7 @@ class MultiStep extends BridgeBase {
   }
 
   updated(changedProperties) {
-    for (let key of changedProperties.keys()) {
+    for (const key of changedProperties.keys()) {
       // check if property changes, if so, normalize and render
       if (key == 'arNavigationSteps' || key == 'arCurrentStepIndicies') {
         this.requestUpdate();
@@ -142,6 +139,8 @@ class MultiStep extends BridgeBase {
           sStyle = 'psdk-vertical-marker v-future';
         }
         break;
+      default:
+        break;
     }
 
     return sStyle;
@@ -171,6 +170,8 @@ class MultiStep extends BridgeBase {
           sStyle = 'psdk-horizontal-marker h-future';
         }
         break;
+      default:
+        break;
     }
 
     return sStyle;
@@ -185,12 +186,12 @@ class MultiStep extends BridgeBase {
   }
 
   verticalMultiStep(): any {
-    let arVerticalSteps: Array<any> = [];
+    const arVerticalSteps: any[] = [];
 
-    for (let step of this.arNavigationSteps) {
+    for (const step of this.arNavigationSteps) {
       if (step.steps) {
-        for (let sStep of step.steps) {
-          let stepMarkerStyle = this.getStepMarkerStyle(sStep, true);
+        for (const sStep of step.steps) {
+          const stepMarkerStyle = this.getStepMarkerStyle(sStep, true);
           arVerticalSteps.push(html`
             <div class="psdk-vertical-step">
               <header class="psdk-vertical-header-step">
@@ -205,7 +206,7 @@ class MultiStep extends BridgeBase {
           }
         }
       } else {
-        let stepMarkerStyle = this.getStepMarkerStyle(step, false);
+        const stepMarkerStyle = this.getStepMarkerStyle(step, false);
         arVerticalSteps.push(html`
           <div class="psdk-vertical-step">
             <header class="psdk-vertical-header-step">
@@ -218,16 +219,14 @@ class MultiStep extends BridgeBase {
       }
     }
 
-    const vMSHtml = html` <div class="psdk-vertical-steps">${arVerticalSteps}</div> `;
-
-    return vMSHtml;
+    return html` <div class="psdk-vertical-steps">${arVerticalSteps}</div> `;
   }
 
   horizontalMultiStep(): any {
-    let arHorizontalSteps: Array<any> = [];
+    const arHorizontalSteps: any[] = [];
 
     let count = 0;
-    for (let step of this.arNavigationSteps) {
+    for (const step of this.arNavigationSteps) {
       let stepStyle = 'psdk-horizontal-header-step';
       if (count == 0) {
         stepStyle = 'psdk-horizontal-header-step-first';
@@ -235,8 +234,8 @@ class MultiStep extends BridgeBase {
         stepStyle = 'psdk-horizontal-header-step-last';
       }
       if (step.steps) {
-        for (let sStep of step.steps) {
-          let stepMarkerStyle = this.getStepMarkerStyle(sStep, true);
+        for (const sStep of step.steps) {
+          const stepMarkerStyle = this.getStepMarkerStyle(sStep, true);
           arHorizontalSteps.push(html`
             <div class="psdk-horizontal-header-step">
               <div class="psdk-horizontal-step-name">${sStep.name}</div>
@@ -245,7 +244,7 @@ class MultiStep extends BridgeBase {
           `);
         }
       } else {
-        let stepMarkerStyle = this.getStepMarkerStyle(step, false);
+        const stepMarkerStyle = this.getStepMarkerStyle(step, false);
         arHorizontalSteps.push(html`
           <div class="${stepStyle}">
             <div class="psdk-horizontal-step-name">${step.name}</div>
@@ -256,23 +255,18 @@ class MultiStep extends BridgeBase {
       count++;
     }
 
-    const vMSHtml = html`
+    return html`
       <div class="psdk-horizontal-progress">
         <div class="psdk-horizontal-steps">${arHorizontalSteps}</div>
         <div class="psdk-horizontal-bar"></div>
       </div>
       <div>${this.assignmentCardHtml()}</div>
     `;
-
-    return vMSHtml;
   }
 
   multiStepHtml(): any {
-    let currentStep = this.arNavigationSteps[this.arCurrentStepIndicies[0]];
-
-    const mSHtml = html` ${this.bIsVertical ? html`${this.verticalMultiStep()}` : html`${this.horizontalMultiStep()}`} `;
-
-    return mSHtml;
+    // const currentStep = this.arNavigationSteps[this.arCurrentStepIndicies[0]];
+    return this.bIsVertical ? html`${this.verticalMultiStep()}` : html`${this.horizontalMultiStep()}`;
   }
 
   render() {
@@ -295,7 +289,7 @@ class MultiStep extends BridgeBase {
   }
 
   _onActionButtonClick(e: any) {
-    let event = new CustomEvent('MultiStepActionButtonClick', {
+    const event = new CustomEvent('MultiStepActionButtonClick', {
       detail: { data: e.detail.data }
     });
 

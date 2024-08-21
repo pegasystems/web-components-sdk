@@ -4,8 +4,6 @@ import Utils from '../../../helpers/utils';
 // import the component's styles as HTML with <style>
 import { fieldGroupListStyles } from './field-group-list-styles';
 
-declare const PCore: any;
-
 @customElement('field-group-list')
 class FieldGroupList extends LitElement {
   @property({ attribute: true, type: Array }) items;
@@ -31,7 +29,7 @@ class FieldGroupList extends LitElement {
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
   getChildRegionArray(child: any) {
-    const theMetadataType: string = child.getPConnect().getRawMetadata()['type'].toLowerCase();
+    const theMetadataType: string = child.getPConnect().getRawMetadata().type.toLowerCase();
 
     if (theMetadataType === 'region') {
       return html`<region-component .pConn=${child.getPConnect()}></region-component>`;
@@ -69,7 +67,7 @@ class FieldGroupList extends LitElement {
 
     const addButton = html`<button style="font-size: 16px;" class="btn btn-link" @click=${this.addRecord}>+ Add</button>`;
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
     arHtml.push(fieldGroupListStyles);
     arHtml.push(sContent);
     arHtml.push(addButton);

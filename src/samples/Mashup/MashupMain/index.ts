@@ -13,12 +13,12 @@ import { compareSdkPCoreVersions } from '../../../helpers/versionHelpers';
 import { mashupMainStyles } from './mashup-main-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
-declare var myLoadMashup: any;
+declare let PCore: any;
+declare let myLoadMashup: any;
 
 @customElement('mashup-main-component')
 class MashupMain extends LitElement {
-  bHasPConnect: boolean = false;
+  bHasPConnect = false;
 
   @property({ attribute: false, type: Object }) props;
 
@@ -39,28 +39,24 @@ class MashupMain extends LitElement {
   }
 
   getToolbarHtml(): any {
-    const tBHtml = html`
+    return html`
       <div class="cc-toolbar">
         <h1>${PCore.getEnvironmentInfo().getApplicationLabel()}&nbsp;</h1>
         <img src="./assets/img/antenna.svg" class="cc-icon" />
       </div>
     `;
-
-    return tBHtml;
   }
 
   getMainHtml(): any {
-    const mHtml = html`
+    return html`
       <div>
         <mashup-main-screen-component .pConn=${this.props}></mashup-main-screen-component>
       </div>
     `;
-
-    return mHtml;
   }
 
   getMashupMainHtml(): any {
-    const mMHtml: Array<any> = [];
+    const mMHtml: any[] = [];
 
     mMHtml.push(html`${this.getToolbarHtml()}`);
 
@@ -75,7 +71,7 @@ class MashupMain extends LitElement {
     const sContent = this.getMashupMainHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // MashupMain not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
@@ -97,23 +93,8 @@ class MashupMain extends LitElement {
 
       // Need to register the callback function for PCore.registerComponentCreator
       //  This callback is invoked if/when you call a PConnect createComponent
-      PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
-        // debugger;
-
+      PCore.registerComponentCreator(c11nEnv => {
         return c11nEnv;
-
-        // REACT implementaion:
-        // const PConnectComp = createPConnectComponent();
-        // return (
-        //     <PConnectComp {
-        //       ...{
-        //         ...c11nEnv,
-        //         ...c11nEnv.getPConnect().getConfigProps(),
-        //         ...c11nEnv.getPConnect().getActions(),
-        //         additionalProps
-        //       }}
-        //     />
-        //   );
       });
 
       // Now, do the initial render...
@@ -132,8 +113,8 @@ class MashupMain extends LitElement {
    * @param inRenderObj the initial, top-level PConnect object to render
    */
   initialRender(inRenderObj) {
-    ////// This was done on login and kicked off the creation of this
-    //////  AppEntry. So don't need to to do this.
+    /// /// This was done on login and kicked off the creation of this
+    /// ///  AppEntry. So don't need to to do this.
     // With Constellation Ready, replace <div id="pega-here"></div>
     //  with top-level ViewContainer
     // const replaceMe = document.getElementById("pega-here");

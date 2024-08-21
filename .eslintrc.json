@@ -22,18 +22,9 @@
 
     // Disable rules from shared configs we're not ready for yet.
     "sonarjs/cognitive-complexity": "off",
-    "sonarjs/no-identical-functions": "off",
     "sonarjs/no-duplicate-string": "off",
-    "sonarjs/no-nested-template-literals": "off",
 
-    //
-    // JA - Override some default lint handling here
-    "@typescript-eslint/array-type": ["error", { "default": "generic" }],
-    // "import/extensions": ["warn", "never"],    // Turning off for now (see below)
-
-    //
     // Initial release: turning these off; phase in to "warn" or "error" over time
-    //  For "quotes" and "@typescript-eslint/quotes", see override below for .ts/.tsx files
     "import/extensions": ["off", "never"],
     "import/named": "off",
     "import/no-cycle": "off",
@@ -47,114 +38,30 @@
     "import/order": "off",
     "import/prefer-default-export": "off",
 
-    "no-else-return": "off",
-    "no-restricted-syntax": "off",
-    "no-underscore-dangle": "off",
+    // "no-else-return": "off",
+    "no-underscore-dangle": "off", // TODO : adhere to standard naming
+    "no-restricted-syntax": "warn", // TODO : fix for-in loops
 
-    "jsx-a11y/alt-text": "off",
-    "jsx-a11y/anchor-is-valid": "off",
-    "jsx-a11y/click-events-have-key-events": "off",
-    "jsx-a11y/label-has-associated-control": "off",
-    "jsx-a11y/no-static-element-interactions": "off",
-
-    "sonarjs/prefer-immediate-return": "off",
-    "sonarjs/no-redundant-boolean": "off",
-
-    "@typescript-eslint/dot-notation": "off", // prefer warn but needs different parserOptions
+    "class-methods-use-this": "off",
     "@typescript-eslint/naming-convention": "off", // prefer warn but needs different parserOptions
     "@typescript-eslint/ban-types": "off", // also, see override below
+    "@typescript-eslint/no-useless-constructor": "off",
 
-    //
-    // Initial release: set to error
-    "@typescript-eslint/no-inferrable-types": "off",
+    // TODO: Need to be fixed
+    "guard-for-in": "off",
     "eqeqeq": "off",
     "no-alert": "off",
-    "no-console": "off",
-    "no-fallthrough": "error",
-    "no-undef": "off",
-    "no-unused-vars": "off",
-    "no-var": "off",
-    "prefer-const": "off",
-    "yoda": "error",
-    "no-irregular-whitespace": "off",
-    "no-empty": "off",
-    "no-new-object": "off",
-
-    // added by NMR for updates to Pega configs
-    "no-unreachable-loop": "off",
-    "no-promise-executor-return": "off",
-    "prefer-regex-literals": "off",
-
-    "import/no-mutable-exports": "error",
-    "sonarjs/max-switch-cases": "error",
-    "sonarjs/no-collapsible-if": "off",
-    "sonarjs/no-all-duplicated-branches": "off",
-    "sonarjs/no-duplicated-branches": "off",
-    "sonarjs/no-gratuitous-expressions": "off",
-    "sonarjs/no-ignored-return": "off",
-    "sonarjs/no-small-switch": "off",
-    "sonarjs/prefer-object-literal": "off",
-    "sonarjs/prefer-single-boolean-return": "off",
-    "@typescript-eslint/no-shadow": "off",
-    "array-callback-return": "off",
-    "camelcase": "error",
-    "default-case": "off",
-    "func-names": "error",
-    "no-case-declarations": "error",
-    "no-lonely-if": "off",
-    "no-nested-ternary": "error",
-    "no-plusplus": "off",
-    "no-restricted-globals": "off",
-    "no-restricted-properties": "off",
-    "no-shadow": "off",
-    "radix": "off",
-    "spaced-comment": "off",
     "no-debugger": "off",
-    "import/newline-after-import": "off",
-    "sonarjs/no-nested-switch": "off",
-    "@typescript-eslint/no-array-constructor": "off",
-    "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-useless-constructor": "off",
-    "@typescript-eslint/no-unused-expressions": "off",
-    "class-methods-use-this": "off",
-    "guard-for-in": "off",
-    "no-unneeded-ternary": "off",
-    "no-unused-expressions": "off",
-    "operator-assignment": "off",
-    "prefer-template": "off",
-    "vars-on-top": "off",
-
-    "no-use-before-define": "off", // doc for @typescript-eslint/no-use-before-define says to turn off the base implementation
-    "@typescript-eslint/no-use-before-define": "error"
+    "no-console": "off",
+    "no-plusplus": "off"
   },
   "overrides": [
     {
       "files": "*.@(ts|tsx)",
       "rules": {
         "@typescript-eslint/method-signature-style": ["off", "property"],
-        // "@typescript-eslint/ban-types": [
-        //   "warn",
-        //   {
-        //     "types": {
-        //       "Omit": "Please use the 'OmitStrict' type from 'src/types/' instead.",
-        //       "object": false,
-        //       "Function": false
-        //     },
-        //     "extendDefaults": true
-        //   }
-        // ],
-
         "quotes": "off",
         "@typescript-eslint/quotes": "off"
-        // [
-        //   "error",
-        //   "single",
-        //   {
-        //     "avoidEscape": true,
-        //     "allowTemplateLiterals": false
-        //   }
-        // ]
       }
     },
     {

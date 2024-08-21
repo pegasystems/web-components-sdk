@@ -1,4 +1,4 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
@@ -9,7 +9,6 @@ import '../../../components/forms/SemanticLink';
 
 @customElement('single-reference-readonly')
 class SingleReferenceReadonly extends BridgeBase {
-  @property({ attribute: false, type: Object }) pConn;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -33,7 +32,7 @@ class SingleReferenceReadonly extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -82,9 +81,7 @@ class SingleReferenceReadonly extends BridgeBase {
   }
 
   getSingleReferenceHtml(): any {
-    const singleRefHtml = html`<semantic-link .pConn=${this.pConn}></semantic-link>`;
-
-    return singleRefHtml;
+    return html`<semantic-link .pConn=${this.pConn}></semantic-link>`;
   }
 
   render() {

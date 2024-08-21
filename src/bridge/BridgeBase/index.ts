@@ -7,7 +7,7 @@ import Utils from '../../helpers/utils';
 import { bootstrapStyles } from './bootstrap-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 export class BridgeBase extends LitElement {
   // bootstrapStyles is a (very slightly modified) version of a minified Bootstrap CSS file
@@ -79,10 +79,8 @@ export class BridgeBase extends LitElement {
       if (this.bLogging) {
         console.log(`${this.theComponentName}: [${this.theComponentId}] using deep object compare`);
       }
-    } else {
-      if (this.bLogging) {
-        console.log(`${this.theComponentName}: [${this.theComponentId}] using JSON.stringify compare`);
-      }
+    } else if (this.bLogging) {
+      console.log(`${this.theComponentName}: [${this.theComponentId}] using JSON.stringify compare`);
     }
   }
 
@@ -153,15 +151,14 @@ export class BridgeBase extends LitElement {
    * @param changedProperties
    */
   willUpdate(changedProperties) {
-    for (let key of changedProperties.keys()) {
+    for (const key of changedProperties.keys()) {
       // check if pConn property has changed, if so, normalize and render
-      if (key == 'pConn') {
-        if (this.pConn) {
-          this.normalizePConnect();
-          this.localCallback();
-          this.requestUpdate();
-        }
+      if (key === 'pConn' && this.pConn) {
+        this.normalizePConnect();
+        this.localCallback();
+        this.requestUpdate();
       }
+
       super.willUpdate(changedProperties);
     }
   }
@@ -232,6 +229,7 @@ export class BridgeBase extends LitElement {
    */
   getState(bLogMsg: boolean = false) {
     const theState: Object = this.getStore().getState();
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (bLogMsg) {
       if (this.bLogging) {
         console.log(`${this.theComponentName} Store state: ${JSON.stringify(theState)}`);
@@ -301,9 +299,7 @@ export class BridgeBase extends LitElement {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: subscribeToStore`);
     }
-    let fnUnsubscribe = this.getStore().subscribe(inCallback);
-
-    return fnUnsubscribe;
+    return this.getStore().subscribe(inCallback);
   }
 
   /**
@@ -320,14 +316,14 @@ export class BridgeBase extends LitElement {
    * If the ***inComp*** input is bad, false is also returned.
    */
   shouldComponentUpdate(): boolean {
-    let bRet: boolean = false;
+    let bRet = false;
 
     // getComponentProps returns the complete set of (resolved) properties associated with this component in Redux
     const currentComponentProps: any = this.getComponentProps();
 
     const priorProps = this.theComponentProps;
 
-    let currentProps: any = currentComponentProps;
+    const currentProps: any = currentComponentProps;
 
     // compare to current to prior props. If different, update stored props and return true
     // fast-deep-equal version
@@ -336,7 +332,7 @@ export class BridgeBase extends LitElement {
     } else {
       // stringify compare version
       const priorPropsAsStr: string = JSON.stringify(priorProps);
-      let currentPropsAsStr: string = JSON.stringify(currentProps);
+      const currentPropsAsStr: string = JSON.stringify(currentProps);
       if (priorPropsAsStr != currentPropsAsStr) {
         bRet = true;
       }
@@ -356,7 +352,7 @@ export class BridgeBase extends LitElement {
       this.theComponentProps = currentComponentProps;
     }
 
-    //if (this.bLogging) { console.log(`${this.theComponentName}: shouldComponentUpdate: ${bRet}`); }
+    // if (this.bLogging) { console.log(`${this.theComponentName}: shouldComponentUpdate: ${bRet}`); }
     if (bRet && this.bLogging) {
       console.log(`${this.theComponentName}: shouldComponentUpdate about to return ${bRet}`);
       console.log(` --> priorProps:   ${JSON.stringify(priorProps)}`);
@@ -390,15 +386,15 @@ export class BridgeBase extends LitElement {
         `${this.baseComponentName}: bad call to getComponentProps: thePConn: ${this.thePConn} from component: ${this.theComponentName}. Expected for Boilerplate example`
       );
       return compProps;
-    } else {
-      compProps = this.thePConn.getConfigProps(); // inComp.pConn$.getConfigProps();
     }
+    compProps = this.thePConn.getConfigProps(); // inComp.pConn$.getConfigProps();
 
     // The following comment is from the React version of this code. Meant as a reminder to check this occasionally
     // populate additional props which are component specific and not present in configurations
     // This block can be removed once all these props will be added as part of configs
     this.thePConn.populateAdditionalProps(compProps);
 
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (compProps && undefined !== compProps.validatemessage && compProps.validatemessage != '') {
       if (this.bLogging) {
         console.log(`   validatemessage for ${this.theComponentName} ${this.theComponentId}: ${compProps.validatemessage}`);
@@ -419,11 +415,9 @@ export class BridgeBase extends LitElement {
    * @param inProp The property being requested.
    */
   getComponentProp(inProp = '') {
-    let propVal;
-
     // Look up property in the component's entry in componentPropArray (which should have the most recent value)
     // propVal = this.theComponentProps[inProp];
-    propVal = this.getComponentProps()[inProp];
+    const propVal = this.getComponentProps()[inProp];
 
     if (this.bLogging) {
       console.log(`--> ${this.theComponentName} getComponentProp(${inProp}): ${JSON.stringify(propVal)}`);
@@ -525,6 +519,7 @@ export class BridgeBase extends LitElement {
    *  the FlowAction and not the rest of the UI around it.
    */
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   prepareForRender(inDisplayOnlyFA: boolean = false) {
     if (this.bDebug) {
       debugger;
@@ -558,7 +553,7 @@ export class BridgeBase extends LitElement {
       return;
     }
 
-    for (var child of this.children) {
+    for (const child of this.children) {
       const childPConn = child.getPConnect();
       const childType = childPConn.getComponentName();
       if (this.bLogging) {
@@ -760,7 +755,7 @@ export class BridgeBase extends LitElement {
    * represents a child of this compononent
    */
   getChildTemplateArray(displayOnlyFA: boolean = false) {
-    let theChildTemplates: Array<Object> = [];
+    const theChildTemplates: Object[] = [];
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
     if (this.children === null) {
@@ -773,7 +768,7 @@ export class BridgeBase extends LitElement {
       return theChildTemplates;
     }
 
-    for (var child of this.children) {
+    for (const child of this.children) {
       const childPConn = child.getPConnect();
       const childType = childPConn.getComponentName();
       if (this.bLogging) {
@@ -1180,13 +1175,13 @@ export class BridgeBase extends LitElement {
 
   // Writes a console.log of the current component's children types
   logChildren() {
-    let childTypes: Array<String> = [];
+    const childTypes: String[] = [];
     let theChildrenAsString = '';
 
     if (!this.children) {
       theChildrenAsString = 'none';
     } else {
-      for (var child of this.children) {
+      for (const child of this.children) {
         const childPConn = child.getPConnect();
         const childType = childPConn.getComponentName();
 
@@ -1198,34 +1193,26 @@ export class BridgeBase extends LitElement {
     console.log(`----> logChildren: ${this.theComponentName}: children: ${theChildrenAsString}`);
   }
 
-  // Utility to determine if a JSON object is empty
-  isEmptyObject(inObj: Object): Boolean {
-    var key: String;
-    for (key in inObj) {
-      return false;
-    }
-    return true;
-  }
-
   consoleKidDump(pConn: any, level: number = 1, kidNum: number = 1) {
     let sDash = '';
-    for (var i = 0; i < level; i++) {
+    for (let i = 0; i < level; i++) {
       sDash = sDash.concat('-');
     }
-    console.log(sDash + 'level ' + level + ' component(' + kidNum + '):' + pConn.getComponentName());
+    console.log(`${sDash}level ${level} component(${kidNum}):${pConn.getComponentName()}`);
     if (pConn.getConfigProps() != null) {
-      console.log(sDash + 'configProps:' + JSON.stringify(pConn.getConfigProps()));
+      console.log(`${sDash}configProps:${JSON.stringify(pConn.getConfigProps())}`);
     }
     if (pConn.getRawMetadata() != null) {
-      console.log(sDash + 'rawMetadata:' + JSON.stringify(pConn.getRawMetadata()));
+      console.log(`${sDash}rawMetadata:${JSON.stringify(pConn.getRawMetadata())}`);
     }
 
     if (pConn.hasChildren() && pConn.getChildren() != null) {
-      console.log(sDash + 'kidCount:' + pConn.getChildren().length);
-      let kids = pConn.getChildren();
-      for (let index in kids) {
-        let kid = kids[index];
-        this.consoleKidDump(kid.getPConnect(), level + 1, parseInt(index) + 1);
+      console.log(`${sDash}kidCount:${pConn.getChildren().length}`);
+      const kids = pConn.getChildren();
+      // eslint-disable-next-line no-restricted-syntax
+      for (const index in kids) {
+        const kid = kids[index];
+        this.consoleKidDump(kid.getPConnect(), level + 1, parseInt(index, 10) + 1);
       }
     }
   }

@@ -10,14 +10,13 @@ import '@lion/textarea/define';
 import { simpleSideBarStyles } from './simple-side-bar-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
-declare var myLoadMashup: any;
+declare let PCore: any;
 
 @customElement('simple-side-bar-component')
 class SimpleSideBar extends LitElement {
   @property({ attribute: false, type: Object }) pConn;
-  @property({ attribute: false, type: Array }) arButtons: Array<any> = [];
-  @property({ attribute: false, type: Array }) arWorkItems: Array<any> = [];
+  @property({ attribute: false, type: Array }) arButtons: any[] = [];
+  @property({ attribute: false, type: Array }) arWorkItems: any[] = [];
 
   // NOTE: SimpleSideBar is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -38,10 +37,11 @@ class SimpleSideBar extends LitElement {
   }
 
   updated(changedProperties) {
-    for (let key of changedProperties.keys()) {
+    for (const key of changedProperties.keys()) {
       // check for property changes, if so, normalize and render
-      if (key == 'pConn') {
-        if (this.pConn && this.pConn.getPConnect != null) {
+      // eslint-disable-next-line sonarjs/no-collapsible-if
+      if (key === 'pConn') {
+        if (this.pConn && this.pConn.getPConnect) {
           this.pConn = this.pConn.getPConnect();
         }
       }
@@ -49,9 +49,9 @@ class SimpleSideBar extends LitElement {
   }
 
   getCaseTypes() {
-    const sCTHtml: Array<any> = [];
+    const sCTHtml: any[] = [];
 
-    for (let caseTypeButton of this.arButtons) {
+    for (const caseTypeButton of this.arButtons) {
       sCTHtml.push(html`
         <div class="psdk-create-work-button">
           <button
@@ -60,7 +60,7 @@ class SimpleSideBar extends LitElement {
               this.buttonClick([caseTypeButton]);
             }}
           >
-            ${caseTypeButton['caption']}
+            ${caseTypeButton.caption}
           </button>
         </div>
       `);
@@ -70,9 +70,9 @@ class SimpleSideBar extends LitElement {
   }
 
   getWorkItems() {
-    const sWIHtml: Array<any> = [];
+    const sWIHtml: any[] = [];
 
-    for (let workItem of this.arWorkItems) {
+    for (const workItem of this.arWorkItems) {
       sWIHtml.push(html`
         <div class="psdk-open-work-button">
           <button
@@ -82,7 +82,7 @@ class SimpleSideBar extends LitElement {
               this.workButtonClick([workItem]);
             }}
           >
-            ${workItem['caption']}
+            ${workItem.caption}
           </button>
         </div>
       `);
@@ -92,7 +92,7 @@ class SimpleSideBar extends LitElement {
   }
 
   getSimpleSideBarHtml(): any {
-    const sSBHtml: Array<any> = [];
+    const sSBHtml: any[] = [];
 
     sSBHtml.push(html`<h2>Create Work</h2>`);
     sSBHtml.push(html`<div class="psdk-create-work">${this.getCaseTypes()}</div>`);
@@ -105,7 +105,7 @@ class SimpleSideBar extends LitElement {
     const sContent = this.getSimpleSideBarHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // SimpleSideBar not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
@@ -118,13 +118,13 @@ class SimpleSideBar extends LitElement {
 
   buttonClick(oButtonData: any) {
     oButtonData = oButtonData[0];
-    let actionsApi = this.pConn.getActionsApi();
-    let createWork = actionsApi.createWork.bind(actionsApi);
-    let sFlowType = 'pyStartCase';
+    const actionsApi = this.pConn.getActionsApi();
+    const createWork = actionsApi.createWork.bind(actionsApi);
+    const sFlowType = 'pyStartCase';
 
     const actionInfo = {
       containerName: 'primary',
-      flowType: sFlowType ? sFlowType : 'pyStartCase'
+      flowType: sFlowType || 'pyStartCase'
     };
 
     PCore.getPubSubUtils().publish('showWork');
@@ -134,14 +134,14 @@ class SimpleSideBar extends LitElement {
 
   workButtonClick(oButtonData: any) {
     oButtonData = oButtonData[0];
-    let actionsApi = this.pConn.getActionsApi();
-    let openAssignment = actionsApi.openAssignment.bind(actionsApi);
+    const actionsApi = this.pConn.getActionsApi();
+    const openAssignment = actionsApi.openAssignment.bind(actionsApi);
 
-    //let sKey = oButtonData.pzInsKey
+    // let sKey = oButtonData.pzInsKey
     const { pxRefObjectClass, pzInsKey } = oButtonData;
-    let sTarget = this.pConn.getContainerName();
+    const sTarget = this.pConn.getContainerName();
 
-    let options = { containerName: sTarget };
+    const options = { containerName: sTarget };
 
     PCore.getPubSubUtils().publish('showWork');
 

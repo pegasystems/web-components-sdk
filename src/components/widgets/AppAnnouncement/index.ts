@@ -5,9 +5,6 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // import the component's styles
 import { appAnnouncementStyles } from './app-announcement-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('app-announcement')
@@ -51,11 +48,11 @@ class AppAnnouncement extends BridgeBase {
 
     this.header = configProps.header;
     this.description = configProps.description;
-    this.arDetails ? configProps.details : [];
+    this.arDetails = configProps.details || [];
     this.label = configProps.label;
     this.whatsnewlink = configProps.whatsnewlink;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 

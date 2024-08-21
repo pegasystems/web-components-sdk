@@ -9,7 +9,7 @@ import { semanticLinkStyles } from './semantic-link-styles';
 class SemanticLink extends BridgeBase {
   @property({ attribute: false, type: Object }) pConn;
 
-  value: string = '';
+  value = '';
   displayMode;
   label;
   constructor() {
@@ -37,7 +37,7 @@ class SemanticLink extends BridgeBase {
       debugger;
     }
     this.theComponentStyleTemplate = semanticLinkStyles;
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
     const theConfigProps = this.pConn.getConfigProps();
     this.value = theConfigProps.text || '---';
@@ -91,13 +91,12 @@ class SemanticLink extends BridgeBase {
 
   getSingleReferenceHtml(): any {
     if (this.displayMode === 'LABELS_LEFT' || (!this.displayMode && this.label !== undefined)) {
-      const semanticHtml = html`<div>
+      return html`<div>
         <div class="psdk-grid-filter" id="semantic-link-grid">
           <div class="psdk-field-label">${this.label}</div>
           <div class="psdk-value">${this.value}</div>
         </div>
       </div>`;
-      return semanticHtml;
     }
   }
 

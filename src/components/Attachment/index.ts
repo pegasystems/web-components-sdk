@@ -12,18 +12,18 @@ import '../designSystemExtension/ProgressIndicator';
 import { attachmentStyles } from './attachment-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('attachment-component')
 class Attachment extends BridgeBase {
-  label: string = '';
+  label = '';
   value: any;
-  bRequired: boolean = false;
-  bReadonly: boolean = false;
-  bDisabled: boolean = false;
-  bVisible: boolean = true;
+  bRequired = false;
+  bReadonly = false;
+  bDisabled = false;
+  bVisible = true;
 
   @property({ attribute: false, type: Boolean }) bLoading = false;
   @property({ attribute: false, type: Boolean }) bShowSelector = true;
@@ -31,14 +31,14 @@ class Attachment extends BridgeBase {
 
   annotatedLabel: Object = {};
 
-  arFiles: Array<any> = [];
-  arFileList: Array<any> = [];
+  arFiles: any[] = [];
+  arFileList: any[] = [];
   removeFileFromList: any;
 
-  arMenuList: Array<any> = [];
+  arMenuList: any[] = [];
 
   att_valueRef: any;
-  att_categoryName: string = '';
+  att_categoryName = '';
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -68,12 +68,12 @@ class Attachment extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = attachmentStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     this.removeFileFromList = { onClick: this._removeFileFromList.bind(this) };
 
-    //let configProps: any = this.pConn$.resolveConfigProps(this.pConn$.getConfigProps());
+    // let configProps: any = this.pConn$.resolveConfigProps(this.pConn$.getConfigProps());
     this.updateSelf();
   }
 
@@ -99,12 +99,12 @@ class Attachment extends BridgeBase {
       debugger;
     }
 
-    let configProps: any = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    const configProps: any = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
-    const { value, validatemessage, label, helperText } = configProps;
+    const { value, label } = configProps;
 
-    if (configProps['required'] != null) {
-      this.bRequired = Utils.getBooleanValue(configProps['required']);
+    if (configProps.required != null) {
+      this.bRequired = Utils.getBooleanValue(configProps.required);
     }
 
     // Add asterisk to label if the field is required
@@ -117,17 +117,17 @@ class Attachment extends BridgeBase {
       this.annotatedLabel = this.label;
     }
 
-    if (configProps['visibility'] != null) {
-      this.bVisible = Utils.getBooleanValue(configProps['visibility']);
+    if (configProps.visibility != null) {
+      this.bVisible = Utils.getBooleanValue(configProps.visibility);
     }
 
     // disabled
-    if (configProps['disabled'] != undefined) {
-      this.bDisabled = Utils.getBooleanValue(configProps['disabled']);
+    if (configProps.disabled != undefined) {
+      this.bDisabled = Utils.getBooleanValue(configProps.disabled);
     }
 
-    if (configProps['readOnly'] != null) {
-      this.bReadonly = Utils.getBooleanValue(configProps['readOnly']);
+    if (configProps.readOnly != null) {
+      this.bReadonly = Utils.getBooleanValue(configProps.readOnly);
     }
 
     this.label = label;
@@ -165,7 +165,7 @@ class Attachment extends BridgeBase {
           fileTemp.props.ID = fileTemp.responseProps.pzInsKey;
 
           // create the actions for the "more" menu on the attachment
-          let arMenuList = new Array();
+          const arMenuList: any = [];
           let oMenu: any = {};
 
           oMenu.icon = 'download';
@@ -182,7 +182,7 @@ class Attachment extends BridgeBase {
           };
           arMenuList.push(oMenu);
 
-          this.arFileList = new Array();
+          this.arFileList = [];
           this.arFileList.push(
             this.getNewListUtilityItemProps({
               att: fileTemp.props,
@@ -223,7 +223,7 @@ class Attachment extends BridgeBase {
   }
 
   getAttachmentHtml() {
-    const aHtml = html`
+    return html`
       <span slot="label">${this.annotatedLabel}</span>
 
       ${this.bShowSelector
@@ -261,8 +261,6 @@ class Attachment extends BridgeBase {
           `
         : html``}
     `;
-
-    return aHtml;
   }
 
   render() {
@@ -275,7 +273,7 @@ class Attachment extends BridgeBase {
 
     const sContent = html`${this.getAttachmentHtml()}`;
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     arHtml.push(attachmentStyles);
     arHtml.push(sContent);
@@ -344,16 +342,15 @@ class Attachment extends BridgeBase {
         this.arFileList.splice(fileIndex, 1);
       }
     }
-    this.bShowSelector = this.arFileList?.length > 0 ? false : true;
+    this.bShowSelector = !(this.arFileList?.length > 0);
     this.requestUpdate();
   }
 
   uploadMyFiles($event) {
-    //alert($event.target.files[0]); // outputs the first file
     this.arFiles = this.getFiles($event.target.files);
 
     // convert FileList to an array
-    let myFiles = Array.from(this.arFiles);
+    const myFiles = Array.from(this.arFiles);
 
     if (myFiles.length == 1) {
       this.bLoading = true;
@@ -412,7 +409,7 @@ class Attachment extends BridgeBase {
           this.requestUpdate();
         })
 
-        .catch(error => {
+        .catch(() => {
           // just catching the rethrown error at uploadAttachment
           // to handle Unhandled rejections
         });
@@ -421,7 +418,7 @@ class Attachment extends BridgeBase {
 
   getNewListUtilityItemProps = ({ att, cancelFile, downloadFile, deleteFile, removeFile }) => {
     let actions;
-    let isDownloadable = false;
+    // let isDownloadable = false;
 
     if (att.progress && att.progress !== 100) {
       actions = [
@@ -461,7 +458,7 @@ class Attachment extends BridgeBase {
           actions.push(action);
         }
       });
-      isDownloadable = att.links.download;
+      // isDownloadable = att.links.download;
     } else if (att.error) {
       actions = [
         {
@@ -496,17 +493,17 @@ class Attachment extends BridgeBase {
     event.target.parentElement.getElementsByTagName('input')[0].click();
   }
 
-  onUploadProgress(ev) {}
+  onUploadProgress() {}
 
   errorHandler() {}
 
-  getFiles(arFiles: Array<any>): Array<any> {
+  getFiles(arFiles: any[]): any[] {
     return this.setNewFiles(arFiles);
   }
 
-  setNewFiles(arFiles, current = []) {
+  setNewFiles(arFiles) {
     let index = 0;
-    for (let file of arFiles) {
+    for (const file of arFiles) {
       if (!this.validateMaxSize(file, 5)) {
         file.error = true;
         file.meta = 'File is too big. Max allowed size is 5MB.';

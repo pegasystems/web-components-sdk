@@ -1,12 +1,9 @@
-import { html, customElement, property } from '@lion/core';
+import { customElement } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { oneColumnStyles } from './one-column-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 @customElement('one-column')
 class OneColumn extends BridgeBase {
@@ -38,7 +35,7 @@ class OneColumn extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = oneColumnStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 

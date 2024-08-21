@@ -7,7 +7,7 @@ import '../../NavBar';
 import { appShellStyles } from './appshell-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -48,17 +48,17 @@ class AppShell extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = appShellStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     this.configProps = this.thePConn.getConfigProps();
-    this.pages = this.configProps['pages'];
+    this.pages = this.configProps.pages;
 
     if (this.pages) {
       this.bShowAppShell = true;
     }
 
-    this.caseTypes = this.configProps['caseTypes'];
+    this.caseTypes = this.configProps.caseTypes;
   }
 
   disconnectedCallback() {
@@ -85,13 +85,13 @@ class AppShell extends BridgeBase {
 
     this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
-    this.pages = this.configProps['pages'];
+    this.pages = this.configProps.pages;
 
     if (this.pages) {
       this.bShowAppShell = true;
     }
 
-    this.caseTypes = this.configProps['caseTypes'];
+    this.caseTypes = this.configProps.caseTypes;
     this.children = this.thePConn.getChildren();
   }
 

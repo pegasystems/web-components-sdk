@@ -1,4 +1,4 @@
-import { html, property, nothing, css } from '@lion/core';
+import { html, property } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
 // FormComponentBase needs to add some styling to the BridgeBase default styles
@@ -27,7 +27,7 @@ export class FormComponentBase extends BridgeBase {
   @property({ attribute: false, type: Boolean }) bRequired = false;
   @property({ attribute: false, type: Boolean }) bVisible = true;
 
-  @property({ attribute: false, type: Array }) lionValidatorsArray: Array<Object> = [];
+  @property({ attribute: false, type: Array }) lionValidatorsArray: Object[] = [];
 
   // Note: Lion validators use the .fieldName specifier to show the label in any validation messages.
   //  Since components derived from FormComponentBase can put a modified label in annotatedLabel (see below)
@@ -78,7 +78,7 @@ export class FormComponentBase extends BridgeBase {
     // load default feedback (Lion validation) messages
     loadDefaultFeedbackMessages();
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // Do an initial updateSelf - is this always necessary?
@@ -125,15 +125,15 @@ export class FormComponentBase extends BridgeBase {
     // Clear out validators so they don't accumulate (since we're going to add them back below)
     this.lionValidatorsArray.length = 0;
 
-    if (theConfigProps['value'] != undefined) {
-      this.value = theConfigProps['value'];
+    if (theConfigProps.value != undefined) {
+      this.value = theConfigProps.value;
     }
 
-    this.label = theConfigProps['label'];
-    this.testId = theConfigProps['testId'];
+    this.label = theConfigProps.label;
+    this.testId = theConfigProps.testId;
 
-    if (theConfigProps['required'] != null) {
-      this.bRequired = Utils.getBooleanValue(theConfigProps['required']);
+    if (theConfigProps.required != null) {
+      this.bRequired = Utils.getBooleanValue(theConfigProps.required);
     }
 
     // If field is required...
@@ -153,21 +153,21 @@ export class FormComponentBase extends BridgeBase {
     const checkValidateMessage = this.getComponentProp.bind(this);
     this.lionValidatorsArray.push(new ValidateMessageValidator({ getCompPropFn: checkValidateMessage }));
 
-    if (theConfigProps['visibility'] != null) {
-      this.bVisible = Utils.getBooleanValue(theConfigProps['visibility']);
+    if (theConfigProps.visibility != null) {
+      this.bVisible = Utils.getBooleanValue(theConfigProps.visibility);
     }
 
     // disabled
-    if (theConfigProps['disabled'] != undefined) {
-      this.bDisabled = Utils.getBooleanValue(theConfigProps['disabled']);
+    if (theConfigProps.disabled != undefined) {
+      this.bDisabled = Utils.getBooleanValue(theConfigProps.disabled);
     }
 
     // readOnly is now a component property (as in each component's config.json); not using !isEditable() any more
-    if (theConfigProps['readOnly'] !== undefined) {
-      this.bReadonly = theConfigProps['readOnly'];
+    if (theConfigProps.readOnly !== undefined) {
+      this.bReadonly = theConfigProps.readOnly;
     }
 
-    this.selectionMode = theConfigProps['selectionMode'];
+    this.selectionMode = theConfigProps.selectionMode;
     if (this.selectionMode === 'multi') {
       this.selectionList = theConfigProps.selectionList;
       this.selectedvalues = theConfigProps.readonlyContextList;
@@ -198,12 +198,10 @@ export class FormComponentBase extends BridgeBase {
         // Mark as untouched to prevent any unnecessary feedback (ex: first entering a control)
         theLionComponent.touched = false;
       }
-    } else {
-      if (this.bLogging) {
-        // This isn't usually a problem. But can be helpful when debugging if you expect to find a shadowRoot
-        //  that styling can/should use.
-        console.log(`    ---> Form component - ${this.theComponentName} - did not find shadowRoot component!`);
-      }
+    } else if (this.bLogging) {
+      // This isn't usually a problem. But can be helpful when debugging if you expect to find a shadowRoot
+      //  that styling can/should use.
+      console.log(`    ---> Form component - ${this.theComponentName} - did not find shadowRoot component!`);
     }
 
     // Is this really necessary? We should try to find out why if it is...
@@ -241,14 +239,14 @@ export class FormComponentBase extends BridgeBase {
     }
 
     if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
-      let value = '';
+      const value = '';
       this.actions.onChange(this.thePConn, { value });
     } else {
       this.actions.onChange(this.thePConn, event);
     }
   }
 
-  fieldOnClick(event: any) {
+  fieldOnClick() {
     if (this.bDebug) {
       debugger;
     }
@@ -301,12 +299,11 @@ export class FormComponentBase extends BridgeBase {
         meta.el.classList.add('field-needs-attention');
         bRet = true;
         return bRet;
-      } else {
-        // don't have feedback, but do have valdiate message, so return true to show the red outline
-        // need to be able to send in the validate message to display, don't know how to do it yet.
-        bRet = true;
-        return bRet;
       }
+      // don't have feedback, but do have valdiate message, so return true to show the red outline
+      // need to be able to send in the validate message to display, don't know how to do it yet.
+      bRet = true;
+      return bRet;
     }
 
     // Remove any styling that may have beenput on invalid field.
@@ -332,6 +329,7 @@ export class FormComponentBase extends BridgeBase {
       //  required AND prefilled. So, we'll modify that here and keep the default meta.submitted.
       // This will prevent the unnecessary showing of validation messages
       // was: return originalCondition(type, meta);
+      // eslint-disable-next-line no-lonely-if
       if ((this.bRequired && meta.prefilled) || meta.submitted) {
         bRet = true;
       }

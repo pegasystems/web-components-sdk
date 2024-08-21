@@ -1,4 +1,4 @@
-import { html, css, customElement, property, nothing } from '@lion/core';
+import { html, customElement, property, nothing } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 import { formComponentStyles } from '../FormComponentBase/form-component-styles';
@@ -8,9 +8,6 @@ import '@lion/radio-group/define';
 
 // import the component's styles as HTML with <style>
 import { radioButtonStyles } from './radio-buttons-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -89,16 +86,12 @@ class RadioButtons extends FormComponentBase {
   //  See https://lion-web-components.netlify.app/?path=/docs/forms-radio-group--main
 
   isSelected(buttonValue: string): boolean {
-    if (this.value === buttonValue) {
-      return true;
-    }
-
-    return false;
+    return this.value === buttonValue;
   }
 
   getErrorMessage() {
     const tempError = `${this.theComponentName}: getErrorMessage needs to have a field control implemented.`;
-    let errMessage: string = tempError;
+    const errMessage: string = tempError;
 
     console.error(tempError);
 

@@ -13,8 +13,8 @@ import '../SimpleSideBar';
 import { simpleMainStyles } from './simple-main-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
-declare var myLoadMashup: any;
+declare let PCore: any;
+declare let myLoadMashup: any;
 
 @customElement('simple-main-component')
 class SimpleMain extends LitElement {
@@ -22,8 +22,8 @@ class SimpleMain extends LitElement {
   @property({ attribute: false, type: Boolean }) bHasPConnect = false;
   @property({ attribute: false, type: Boolean }) bShowRoot = false;
 
-  arCreateButtons: Array<any> = [];
-  arOpenWorkItems: Array<any> = [];
+  arCreateButtons: any[] = [];
+  arOpenWorkItems: any[] = [];
 
   // NOTE: SimpleMain is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -81,6 +81,7 @@ class SimpleMain extends LitElement {
     });
   }
 
+  // eslint-disable-next-line sonarjs/no-identical-functions
   assignmentFinished() {
     setTimeout(() => {
       this.bShowRoot = false;
@@ -88,18 +89,16 @@ class SimpleMain extends LitElement {
   }
 
   getToolbarHtml(): any {
-    const tBHtml = html`
+    return html`
       <div class="psdk-toolbar">
         <h1>Simple Portal</h1>
       </div>
     `;
-
-    return tBHtml;
   }
 
   getNavigationHtml(): any {
-    let sDisplay = this.bShowRoot ? 'block' : 'none';
-    const nHtml = html`
+    const sDisplay = this.bShowRoot ? 'block' : 'none';
+    return html`
       <div class="psdk-main">
         <aside class="psdk-aside">
           <simple-side-bar-component
@@ -113,8 +112,6 @@ class SimpleMain extends LitElement {
         </main>
       </div>
     `;
-
-    return nHtml;
   }
 
   /*
@@ -123,7 +120,7 @@ class SimpleMain extends LitElement {
     const serverUrl = sdkConfigServer.infinityRestServerUrl;
     const appAlias = sdkConfigServer.appAlias;
     const appAliasPath = appAlias ? `/app/${appAlias}` : '';
-    
+
     await fetch ( `${serverUrl}${appAliasPath}/api/v1/casetypes` ,
         {
           method: 'GET',
@@ -155,42 +152,42 @@ class SimpleMain extends LitElement {
 
             this.requestUpdate();
           })
-          
+
 
       })
   }
 */
 
-  getCaseTypeButtons(arCaseTypes: Array<any>) {
-    this.arCreateButtons = new Array();
+  getCaseTypeButtons(arCaseTypes: any[]) {
+    this.arCreateButtons = [];
 
-    for (let myCase of arCaseTypes) {
+    for (const myCase of arCaseTypes) {
       if (myCase.CanCreate == 'true') {
-        let oPayload = {};
-        oPayload['caseTypeID'] = myCase.ID;
-        oPayload['processID'] = myCase.startingProcesses[0].ID;
-        oPayload['caption'] = myCase.name;
+        const oPayload: any = {};
+        oPayload.caseTypeID = myCase.ID;
+        oPayload.processID = myCase.startingProcesses[0].ID;
+        oPayload.caption = myCase.name;
 
         this.arCreateButtons.push(oPayload);
       }
     }
   }
 
-  getWorkItems(results: Array<any>) {
-    this.arOpenWorkItems = new Array();
+  getWorkItems(results: any[]) {
+    this.arOpenWorkItems = [];
 
-    for (let myWork of results) {
-      let oPayload = {};
-      oPayload['caption'] = myWork.pxRefObjectInsName + ' - ' + myWork.pxTaskLabel;
-      oPayload['pzInsKey'] = myWork.pzInsKey;
-      oPayload['pxRefObjectClass'] = myWork.pxRefObjectClass;
+    for (const myWork of results) {
+      const oPayload: any = {};
+      oPayload.caption = `${myWork.pxRefObjectInsName} - ${myWork.pxTaskLabel}`;
+      oPayload.pzInsKey = myWork.pzInsKey;
+      oPayload.pxRefObjectClass = myWork.pxRefObjectClass;
 
       this.arOpenWorkItems.push(oPayload);
     }
   }
 
   getSimpleMainHtml(): any {
-    const sMHtml: Array<any> = [];
+    const sMHtml: any[] = [];
 
     sMHtml.push(html`${this.getToolbarHtml()}`);
 
@@ -205,7 +202,7 @@ class SimpleMain extends LitElement {
     const sContent = this.getSimpleMainHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // SimpleMain not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
@@ -229,23 +226,8 @@ class SimpleMain extends LitElement {
 
       // Need to register the callback function for PCore.registerComponentCreator
       //  This callback is invoked if/when you call a PConnect createComponent
-      PCore.registerComponentCreator((c11nEnv, additionalProps = {}) => {
-        // debugger;
-
+      PCore.registerComponentCreator(c11nEnv => {
         return c11nEnv;
-
-        // REACT implementaion:
-        // const PConnectComp = createPConnectComponent();
-        // return (
-        //     <PConnectComp {
-        //       ...{
-        //         ...c11nEnv,
-        //         ...c11nEnv.getPConnect().getConfigProps(),
-        //         ...c11nEnv.getPConnect().getActions(),
-        //         additionalProps
-        //       }}
-        //     />
-        //   );
       });
 
       // Now, do the initial render...
@@ -264,8 +246,8 @@ class SimpleMain extends LitElement {
    * @param inRenderObj the initial, top-level PConnect object to render
    */
   initialRender(inRenderObj) {
-    ////// This was done on login and kicked off the creation of this
-    //////  AppEntry. So don't need to to do this.
+    /// /// This was done on login and kicked off the creation of this
+    /// ///  AppEntry. So don't need to to do this.
     // With Constellation Ready, replace <div id="pega-here"></div>
     //  with top-level ViewContainer
     // const replaceMe = document.getElementById("pega-here");

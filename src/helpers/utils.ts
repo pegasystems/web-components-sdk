@@ -9,12 +9,10 @@ dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 
 export class Utils {
-  static lastControlID: number = 0;
-
-  constructor() {}
+  static lastControlID = 0;
 
   static getUniqueControlID(): string {
-    var sPrefix = 'control-';
+    const sPrefix = 'control-';
 
     this.lastControlID++;
 
@@ -32,22 +30,22 @@ export class Utils {
     return `${sdkConfigServer.sdkContentServerUrl}constellation/`;
   }
 
-  static getOptionList(configProps: any, dataObject: any): Array<any> {
-    let listType = configProps.listType;
-    let arReturn: Array<any> = [];
+  static getOptionList(configProps: any, dataObject: any): any[] {
+    const listType = configProps.listType;
+    let arReturn: any[] = [];
 
-    if (listType != null) {
+    if (listType) {
       switch (listType.toLowerCase()) {
         case 'associated':
           // data source should be an array
-          if (typeof configProps.datasource == 'object') {
+          if (typeof configProps.datasource === 'object') {
             arReturn = configProps.datasource;
           }
           break;
         case 'datapage':
           // get data page
           // eslint-disable-next-line no-case-declarations
-          let dataPage = configProps.datasource;
+          const dataPage = configProps.datasource;
           if (typeof dataPage === 'string' && dataObject[dataPage]) {
             alert('need to handle data page');
           } else {
@@ -62,6 +60,9 @@ export class Utils {
           }
 
           break;
+
+        default:
+          break;
       }
     }
 
@@ -71,14 +72,14 @@ export class Utils {
   static getInitials(userName: string): string {
     let userInitials = userName;
 
-    if (userName && userName != '') {
+    if (userName && userName !== '') {
       userInitials = userName.charAt(0);
 
       if (userName.lastIndexOf(' ') > 0) {
-        let lastName = userName.substring(userName.lastIndexOf(' ') + 1);
+        const lastName = userName.substring(userName.lastIndexOf(' ') + 1);
         userInitials += lastName.charAt(0);
       } else if (userName.lastIndexOf('.') > 0) {
-        let lastName = userName.substring(userName.lastIndexOf('.') + 1);
+        const lastName = userName.substring(userName.lastIndexOf('.') + 1);
         userInitials += lastName.charAt(0);
       }
     } else {
@@ -105,7 +106,7 @@ export class Utils {
   static getBooleanValue(inValue: any): boolean {
     let bReturn = false;
 
-    if (typeof inValue == 'string') {
+    if (typeof inValue === 'string') {
       // Experiment with having "" be true, too (and "on")
       if (inValue.toLowerCase() === 'true' || inValue.toLowerCase() === 'on' || inValue === '') {
         bReturn = true;
@@ -122,7 +123,7 @@ export class Utils {
   static generateDate(dateVal, dateFormat) {
     let sReturnDate = dateVal;
 
-    if (dateVal == null || dateVal == '') {
+    if (dateVal === undefined || dateVal === null || dateVal === '') {
       return dateVal;
     }
 
@@ -197,6 +198,8 @@ export class Utils {
         break;
       case 'DateTime-Custom':
         break;
+      default:
+        break;
     }
 
     return sReturnDate;
@@ -207,7 +210,7 @@ export class Utils {
   static generateDateTime(dateTimeVal, dateFormat) {
     let sReturnDate = dateTimeVal;
 
-    if (dateTimeVal == null || dateTimeVal == '') {
+    if (dateTimeVal === null || dateTimeVal === '') {
       return dateTimeVal;
     }
 
@@ -273,6 +276,8 @@ export class Utils {
         break;
       case 'DateTime-Custom':
         break;
+      default:
+        break;
     }
 
     return sReturnDate;
@@ -329,7 +334,8 @@ export class Utils {
       RADIO: 'radio'
     };
 
-    for (let key in TAGS_MAP) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in TAGS_MAP) {
       if (lionTagName.includes(key)) return TAGS_MAP[key];
     }
 

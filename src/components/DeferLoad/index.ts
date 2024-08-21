@@ -7,7 +7,7 @@ import '../designSystemExtension/ProgressIndicator';
 import { deferLoadStyles } from './defer-load-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -17,12 +17,12 @@ declare var PCore: any;
 
 @customElement('defer-load-component')
 class DeferLoad extends BridgeBase {
-  @property({ attribute: true, type: Object }) loadData = {};
+  @property({ attribute: true, type: Object }) loadData: any = {};
   // Making bShowDefer a property lets LitElement track it and trigger an update if it changes
   @property({ attribute: false, type: Boolean }) bShowDefer = false;
   @property({ attribute: false }) name;
 
-  componentName: string = '';
+  componentName = '';
 
   loadedPConn: any;
   loadViewCaseID: any;
@@ -67,21 +67,21 @@ class DeferLoad extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = deferLoadStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     PCore.getPubSubUtils().subscribe(
       PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
-      data => {
-        this.loadActiveTab(data);
+      () => {
+        this.loadActiveTab();
       },
       'loadActiveTab'
     );
 
     PCore.getPubSubUtils().subscribe(
       PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
-      data => {
-        this.loadActiveTab(data);
+      () => {
+        this.loadActiveTab();
       },
       'loadActiveTab'
     );
@@ -117,7 +117,7 @@ class DeferLoad extends BridgeBase {
     // this.loadActiveTab();
   }
 
-  loadActiveTab(data: any = {}) {
+  loadActiveTab() {
     if (this.resourceType === this.DATA) {
       // Rendering defer loaded tabs in data context
       if (this.containerName) {
@@ -154,7 +154,7 @@ class DeferLoad extends BridgeBase {
           this.onResponse(data.root);
         })
         .catch(error => {
-          console.log('error: ' + error);
+          console.log(`error: ${error}`);
         });
     }
   }
@@ -222,7 +222,7 @@ class DeferLoad extends BridgeBase {
   }
 
   getDeferLoadHtml(): any {
-    const arComponent: Array<any> = [];
+    const arComponent: any[] = [];
 
     switch (this.componentName) {
       case 'View':
@@ -239,14 +239,12 @@ class DeferLoad extends BridgeBase {
         break;
     }
 
-    const dLHtml = html`<div class="container-for-progress">
+    return html`<div class="container-for-progress">
       ${this.isLoading
         ? html`<div>&nbsp;<br />&nbsp;<br /></div>
             <progress-extension id="${this.theComponentId}"></progress-extension>`
         : html` <div>${arComponent}</div>`}
     </div>`;
-
-    return dLHtml;
   }
 
   render() {
@@ -269,7 +267,7 @@ class DeferLoad extends BridgeBase {
   }
 
   willUpdate(changedProperties) {
-    for (let key of changedProperties.keys()) {
+    for (const key of changedProperties.keys()) {
       // check for property changes, if so, normalize and render
       if (key == 'loadData') {
         // @ts-ignore - second parameter pageReference for getValue method should be optional

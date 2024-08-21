@@ -1,4 +1,4 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
@@ -30,9 +30,6 @@ import '../../Attachment';
 // import the component's styles as HTML with <style>
 import { defaultFormStyles } from './default-form-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('default-form-component')
 class DefaultForm extends BridgeBase {
   constructor() {
@@ -63,7 +60,7 @@ class DefaultForm extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = defaultFormStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -114,9 +111,9 @@ class DefaultForm extends BridgeBase {
   getKidsHtml(): any {}
 
   getDefaultFormHtml(): any {
-    let configProps = this.thePConn.getConfigProps();
+    const configProps = this.thePConn.getConfigProps();
 
-    let numCols = configProps.NumCols ? configProps.NumCols : '1';
+    const numCols = configProps.NumCols ? configProps.NumCols : '1';
     let divClass = '';
     switch (numCols) {
       case '1':
@@ -136,16 +133,14 @@ class DefaultForm extends BridgeBase {
     // repoint children before getting templateArray
     this.children = this.children[0].getPConnect().getChildren();
 
-    const dFHtml = html` <div class="${divClass}">${this.getChildTemplateArray()}</div> `;
-
-    return dFHtml;
+    return html` <div class="${divClass}">${this.getChildTemplateArray()}</div> `;
   }
 
   render() {
     const sContent = html`${this.getDefaultFormHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // DefaultForm not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);

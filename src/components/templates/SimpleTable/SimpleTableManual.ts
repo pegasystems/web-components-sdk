@@ -11,7 +11,7 @@ import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 import { simpleTableManualStyles } from './simple-table-manual-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('simple-table-manual')
 class SimpleTableManual extends BridgeBase {
@@ -25,13 +25,13 @@ class SimpleTableManual extends BridgeBase {
   @property({ attribute: false, type: Object }) configProps: any = {};
   menuIconOverride = '';
   contextClass: any;
-  rawFields: Array<any> = [];
+  rawFields: any[] = [];
   pageReference = '';
   requestedReadOnlyMode = false;
   showAddRowButton = false;
-  fieldDefs: Array<any> = [];
-  displayedColumns: Array<any> = [];
-  processedFields: Array<any> = [];
+  fieldDefs: any[] = [];
+  displayedColumns: any[] = [];
+  processedFields: any[] = [];
   prevRefLength: number | undefined;
 
   constructor() {
@@ -54,7 +54,7 @@ class SimpleTableManual extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = simpleTableManualStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     this.menuIconOverride = Utils.getImageSrc('trash', Utils.getSDKStaticContentUrl());
@@ -87,8 +87,8 @@ class SimpleTableManual extends BridgeBase {
     }
 
     this.configProps = this.thePConn.getConfigProps();
-    if (this.configProps['visibility'] != null) {
-      this.visible = Utils.getBooleanValue(this.configProps['visibility']);
+    if (this.configProps.visibility != null) {
+      this.visible = Utils.getBooleanValue(this.configProps.visibility);
     }
 
     // NOTE: getConfigProps() has each child.config with datasource and value undefined
@@ -110,8 +110,8 @@ class SimpleTableManual extends BridgeBase {
 
     this.label = labelProp || propertyLabel;
 
-    const hideAddRow = allowTableEdit === false ? true : false;
-    const hideDeleteRow = allowTableEdit === false ? true : false;
+    const hideAddRow = allowTableEdit === false;
+    const hideDeleteRow = allowTableEdit === false;
 
     let { contextClass } = this.configProps;
     this.referenceList = referenceList;
@@ -177,7 +177,7 @@ class SimpleTableManual extends BridgeBase {
     this.processedFields = [];
 
     this.processedFields = resolvedFields.map((field, i) => {
-      field.config['name'] = this.displayedColumns[i]; // .config["value"].replace(/ ./g,"_");   // replace space dot with underscore
+      field.config.name = this.displayedColumns[i]; // .config["value"].replace(/ ./g,"_");   // replace space dot with underscore
       return field;
     });
 
@@ -219,9 +219,9 @@ class SimpleTableManual extends BridgeBase {
   //  of the given row field
   getRowValue(inRowData: Object, inColKey: string): any {
     // See what data (if any) we have to display
-    const refKeys: Array<string> = inColKey.split('.');
+    const refKeys: string[] = inColKey.split('.');
     let valBuilder = inRowData;
-    for (var key of refKeys) {
+    for (const key of refKeys) {
       valBuilder = valBuilder[key];
     }
     return valBuilder;

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { html, customElement, property, LitElement } from '@lion/core';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
@@ -6,14 +7,11 @@ import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 // import the component's styles as HTML with <style>
 import { verticalTabsStyles } from './vertical-tabs-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('vertical-tabs-component')
 class VerticalTabs extends LitElement {
-  @property({ type: Array }) tabConfig = [];
+  @property({ type: Array }) tabConfig: any = [];
 
-  selectedIndex: number = 0; // Default to first tab in array
+  selectedIndex = 0; // Default to first tab in array
 
   // NOTE: VerticalTabs is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -24,10 +22,10 @@ class VerticalTabs extends LitElement {
     super.connectedCallback();
 
     if (this.tabConfig) {
-      for (let i in this.tabConfig) {
-        let aTab: any = this.tabConfig[i];
+      for (const i in this.tabConfig) {
+        const aTab: any = this.tabConfig[i];
         if (aTab.selected) {
-          this.selectedIndex = parseInt(i);
+          this.selectedIndex = parseInt(i, 10);
           break;
         }
       }
@@ -40,7 +38,7 @@ class VerticalTabs extends LitElement {
   }
 
   updated(changedProperties) {
-    for (let key of changedProperties.keys()) {
+    for (const key of changedProperties.keys()) {
       // check if props changes, if so, normalize and render
       if (key == 'tabConfig') {
         // console.log(`VerticalTabs: about to requestUpdate with updated: ${this.selectedIndex}`);
@@ -49,19 +47,19 @@ class VerticalTabs extends LitElement {
     }
   }
 
-  getVerticalTabsHtml(arTabs: Array<any>): any {
+  getVerticalTabsHtml(arTabs: any[]): any {
     // ${tabCount == this.selectedIndex?
     //   html` class="psdk-tab-selected" aria-selected="true" `
     //   :
     //   html` class="psdk-tab-unselected" aria-selected="false" `
     // }
 
-    const arTabsHtml: Array<any> = [];
+    const arTabsHtml: any[] = [];
 
     let tabCount = 0;
-    for (let tab of arTabs) {
-      let selected = tabCount == this.selectedIndex ? 'true' : 'false';
-      let selectedClass = tabCount == this.selectedIndex ? 'psdk-tab-selected' : 'psdk-tab-unselected';
+    for (const tab of arTabs) {
+      const selected = tabCount == this.selectedIndex ? 'true' : 'false';
+      const selectedClass = tabCount == this.selectedIndex ? 'psdk-tab-selected' : 'psdk-tab-unselected';
 
       arTabsHtml.push(
         html`<button tabId="${tab.id}" @click="${this._tabClick}" class="${selectedClass}" aria-selected="${selected}">
@@ -72,16 +70,14 @@ class VerticalTabs extends LitElement {
       tabCount++;
     }
 
-    const vTHtml = html` <div class="psdk-vertical-tabs">${arTabsHtml}</div> `;
-
-    return vTHtml;
+    return html` <div class="psdk-vertical-tabs">${arTabsHtml}</div> `;
   }
 
   render() {
     const sContent = html`${this.getVerticalTabsHtml(this.tabConfig)}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // VerticalTabs not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
@@ -93,21 +89,21 @@ class VerticalTabs extends LitElement {
   }
 
   _tabClick(e) {
-    let target = e.target;
-    let tabData = {};
+    const target = e.target;
+    const tabData: any = {};
 
-    tabData['tabId'] = target.getAttribute('tabId') || target.parentElement.getAttribute('tabId');
+    tabData.tabId = target.getAttribute('tabId') || target.parentElement.getAttribute('tabId');
 
-    for (let i in this.tabConfig) {
-      if (tabData['tabId'] == this.tabConfig[i]['id']) {
-        this.selectedIndex = parseInt(i);
+    for (const i in this.tabConfig) {
+      if (tabData.tabId == this.tabConfig[i].id) {
+        this.selectedIndex = parseInt(i, 10);
         // console.log(`VerticalTabs: about to requestUpdate for tab: ${this.selectedIndex}`);
         this.requestUpdate();
         break;
       }
     }
 
-    let event = new CustomEvent('VerticalTabClick', {
+    const event = new CustomEvent('VerticalTabClick', {
       detail: { data: tabData }
     });
 

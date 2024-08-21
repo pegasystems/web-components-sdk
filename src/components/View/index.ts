@@ -87,29 +87,29 @@ class View extends BridgeBase {
       debugger;
     }
 
-    //this.buildView();
+    // this.buildView();
 
     const configProps = this.thePConn.getConfigProps();
-    this.templateName = 'template' in configProps ? configProps['template'] : '';
+    this.templateName = 'template' in configProps ? configProps.template : '';
     if (this.bLogging) {
       console.log(`--> ${this.theComponentName} - templateName: ${this.templateName}`);
     }
-    this.title = 'title' in configProps ? configProps['title'] : '';
+    this.title = 'title' in configProps ? configProps.title : '';
   }
 
   buildView() {
     const configProps = this.thePConn.getConfigProps();
-    this.templateName = 'template' in configProps ? configProps['template'] : '';
+    this.templateName = 'template' in configProps ? configProps.template : '';
     if (this.bLogging) {
       console.log(`--> ${this.theComponentName} - templateName: ${this.templateName}`);
     }
-    this.title = 'title' in configProps ? configProps['title'] : '';
+    this.title = 'title' in configProps ? configProps.title : '';
 
     // We need to bind this component's additionalProps (defined on BridgeBase)
     //  to this implementation's computeAdditionalProps
     this.additionalProps = this.computeAdditionalProps.bind(this);
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -168,6 +168,8 @@ class View extends BridgeBase {
         case 'Details':
           allFields = getAllFields(getPConnect);
           propObj = { fields: allFields[0] };
+          break;
+        default:
           break;
       }
     }

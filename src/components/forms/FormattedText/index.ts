@@ -8,9 +8,6 @@ import { format } from '../../../helpers/formatters/';
 // import the component's styles as HTML with <style>
 import { formattedTextStyles } from './formatted-text-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // TODO: Support formatType values and figure out where exactly this component might be utilized from
 //  I don't see this being invoked from CableConnect app using either rep or tech experience
 @customElement('formatted-text-form')
@@ -75,17 +72,19 @@ class FormattedText extends BridgeBase {
     }
     const theConfigProps = this.thePConn.getConfigProps();
 
-    if (theConfigProps['visibility'] != null) {
-      this.bVisible = Utils.getBooleanValue(theConfigProps['visibility']);
+    if (theConfigProps.visibility != null) {
+      this.bVisible = Utils.getBooleanValue(theConfigProps.visibility);
     }
 
     // Boolean props
-    for (let prop in ['hideLabel']) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const prop in ['hideLabel']) {
       if (this[prop] != undefined) {
         this[prop] = Utils.getBooleanValue(theConfigProps[prop]);
       }
     }
-    for (let prop in ['formatType', 'label', 'value', 'variant', 'additionalProps']) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const prop in ['formatType', 'label', 'value', 'variant', 'additionalProps']) {
       if (this[prop] != undefined) {
         this[prop] = theConfigProps[prop];
       }
@@ -104,7 +103,7 @@ class FormattedText extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const { formatType, label, value, hideLabel, variant, additionalProps } = this;
+    const { formatType, label, value, hideLabel, additionalProps } = this;
     let text = value;
 
     text = format(text, formatType, additionalProps);

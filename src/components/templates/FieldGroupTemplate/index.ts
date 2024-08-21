@@ -7,7 +7,7 @@ import '../../designSystemExtension/FieldGroup';
 import '../../designSystemExtension/FieldGroupList';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('field-group-template')
 class FieldGroupTemplate extends BridgeBase {
@@ -15,8 +15,8 @@ class FieldGroupTemplate extends BridgeBase {
   @property({ attribute: false, type: Object }) contextClass;
   @property({ attribute: false, type: Array }) referenceList;
   @property({ attribute: false, type: Boolean }) readonlyMode: boolean | undefined;
-  heading: string = '';
-  pageReference: string = '';
+  heading = '';
+  pageReference = '';
   prevRefLength: number | undefined;
 
   constructor() {
@@ -31,8 +31,9 @@ class FieldGroupTemplate extends BridgeBase {
   }
 
   willUpdate(changedProperties) {
-    for (let key of changedProperties.keys()) {
+    for (const key of changedProperties.keys()) {
       // check for property changes, if so, normalize and render
+      // eslint-disable-next-line sonarjs/no-collapsible-if
       if (key == 'configProps') {
         if (changedProperties[key] && changedProperties[key] != this.configProps) {
           this.updateSelf();
@@ -47,7 +48,7 @@ class FieldGroupTemplate extends BridgeBase {
       console.log(`${this.theComponentName}: connectedCallback`);
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
     this.updateSelf();
   }
@@ -79,16 +80,17 @@ class FieldGroupTemplate extends BridgeBase {
     }
 
     this.configProps = this.thePConn.getConfigProps();
-    const renderMode = this.configProps['renderMode'];
-    const displayMode = this.configProps['displayMode'];
+    const renderMode = this.configProps.renderMode;
+    const displayMode = this.configProps.displayMode;
     this.readonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';
-    this.contextClass = this.configProps['contextClass'];
-    const lookForChildInConfig = this.configProps['lookForChildInConfig'];
-    this.heading = this.configProps['heading'] ?? 'Row';
+    this.contextClass = this.configProps.contextClass;
+    const lookForChildInConfig = this.configProps.lookForChildInConfig;
+    this.heading = this.configProps.heading ?? 'Row';
     const resolvedList = FieldGroupUtils.getReferenceList(this.thePConn);
     this.pageReference = `${this.thePConn.getPageReference()}${resolvedList}`;
     this.thePConn.setReferenceList(resolvedList);
-    this.referenceList = this.configProps['referenceList'];
+    this.referenceList = this.configProps.referenceList;
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (this.prevRefLength != this.referenceList.length) {
       if (!this.readonlyMode) {
         if (this.referenceList?.length === 0) {
@@ -136,7 +138,7 @@ class FieldGroupTemplate extends BridgeBase {
 
   getReadOnlyFieldGroup() {
     return html`${this.referenceList.map((item, index) => {
-      return html`<field-group .item=${item} .name=${this.heading + ' ' + (index + 1)}></field-group>`;
+      return html`<field-group .item=${item} .name="${this.heading} ${index + 1}"></field-group>`;
     })}`;
   }
 
