@@ -5,15 +5,15 @@ export const autoCompleteStyles = html`
     .psdk-full-width {
       width: 100%;
     }
-    
+
     .psdk-label-readonly {
-      font-size: 1rem; 
+      font-size: 1rem;
       display: block;
-      transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
-      -ms-transform: translateY(-1.28125em) scale(.75);
+      transform: translateY(-1.28125em) scale(0.75) perspective(100px) translateZ(0.001px);
+      -ms-transform: translateY(-1.28125em) scale(0.75);
       width: 133.33333%;
     }
-    
+
     .psdk-data-readonly {
       padding-top: 0.625rem;
       width: 100%;

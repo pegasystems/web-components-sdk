@@ -16,24 +16,18 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('E2E test', () => {
-  test('should login, create case and run different test cases for Case View', async ({
-    page
-  }) => {
-    await common.Login(
-      config.config.apps.digv2.user.username,
-      config.config.apps.digv2.user.password,
-      page
-    );
-    
+  test('should login, create case and run different test cases for Case View', async ({ page }) => {
+    await common.Login(config.config.apps.digv2.user.username, config.config.apps.digv2.user.password, page);
+
     /** Testing announcement banner presence */
     const announcementBanner = page.locator('#announcement-header');
-    await expect(announcementBanner).toBeVisible({timeout: 10000 });
-    
+    await expect(announcementBanner).toBeVisible({ timeout: 10000 });
+
     /** Testing worklist presence */
     const worklist = page.locator('#header-text');
     await expect(worklist).toBeVisible();
 
-    const createServiceNav = page.locator("#create-nav");
+    const createServiceNav = page.locator('#create-nav');
     await createServiceNav.click();
 
     /** Creating a Complex Fields case-type */
@@ -49,10 +43,10 @@ test.describe('E2E test', () => {
 
     /** Visibility of both(basically more than one) tabs should be set to true in order for them to be displayed otherwise
      *  they won't be displayed and that is what we're testing here. */
-    if(detailsTabVisible && caseHistoryTabVisible){
+    if (detailsTabVisible && caseHistoryTabVisible) {
       await expect(detailsTab).toBeVisible();
       await expect(caseHistoryTab).toBeVisible();
-    }else{
+    } else {
       await expect(detailsTab).toBeHidden();
       await expect(caseHistoryTab).toBeHidden();
     }

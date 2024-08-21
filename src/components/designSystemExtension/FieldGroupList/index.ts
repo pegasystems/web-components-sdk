@@ -1,12 +1,12 @@
-import { html, customElement, property, LitElement } from "@lion/core";
-import Utils from "../../../helpers/utils";
+import { html, customElement, property, LitElement } from '@lion/core';
+import Utils from '../../../helpers/utils';
 
 // import the component's styles as HTML with <style>
-import { fieldGroupListStyles } from "./field-group-list-styles";
+import { fieldGroupListStyles } from './field-group-list-styles';
 
 declare const PCore: any;
 
-@customElement("field-group-list")
+@customElement('field-group-list')
 class FieldGroupList extends LitElement {
   @property({ attribute: true, type: Array }) items;
   menuIconDelete: any;
@@ -18,7 +18,7 @@ class FieldGroupList extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.menuIconDelete = Utils.getImageSrc("trash", Utils.getSDKStaticContentUrl());
+    this.menuIconDelete = Utils.getImageSrc('trash', Utils.getSDKStaticContentUrl());
   }
 
   disconnectedCallback() {
@@ -31,20 +31,20 @@ class FieldGroupList extends LitElement {
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
   getChildRegionArray(child: any) {
-    const theMetadataType: string = child.getPConnect().getRawMetadata()["type"].toLowerCase();
+    const theMetadataType: string = child.getPConnect().getRawMetadata()['type'].toLowerCase();
 
-    if (theMetadataType === "region") {
+    if (theMetadataType === 'region') {
       return html`<region-component .pConn=${child.getPConnect()}></region-component>`;
     }
   }
 
   addRecord() {
-    const event = new CustomEvent("onAdd");
+    const event = new CustomEvent('onAdd');
     this.dispatchEvent(event);
   }
 
   deleteRecord(index) {
-    const event = new CustomEvent("onDelete", { detail: index });
+    const event = new CustomEvent('onDelete', { detail: index });
     this.dispatchEvent(event);
   }
 

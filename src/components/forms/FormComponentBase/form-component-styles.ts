@@ -9,4 +9,5 @@ export const formComponentStyles = css`
     border: 2px solid var(--app-error-light-color);
     border-radius: 0.5rem;
     padding: 5px;
-  }`;
+  }
+`;

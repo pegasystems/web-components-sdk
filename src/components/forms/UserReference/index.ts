@@ -1,42 +1,42 @@
-import { html, customElement, property, nothing } from "@lion/core";
-import { FormComponentBase } from "../FormComponentBase";
+import { html, customElement, property, nothing } from '@lion/core';
+import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
-import "../../widgets/CaseOperator";
+import '../../widgets/CaseOperator';
 
 // import the component's styles as HTML with <style>
-import { userReferenceStyles } from "./user-reference-styles";
+import { userReferenceStyles } from './user-reference-styles';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
 
-@customElement("user-reference-form")
+@customElement('user-reference-form')
 class UserReference extends FormComponentBase {
-  @property({ attribute: false, type: String }) userName: string = "";
-  @property({ attribute: false, type: String }) date: string = "";
-  @property({ attribute: false, type: String }) label: string = "";
+  @property({ attribute: false, type: String }) userName: string = '';
+  @property({ attribute: false, type: String }) date: string = '';
+  @property({ attribute: false, type: String }) label: string = '';
   @property({ attribute: false, type: Array }) dropDownDataSource: any = [];
-  @property({ attribute: false, type: String }) displayAs: string = "";
-  @property({ attribute: false, type: String }) SEARCH_BOX: string = "Search box";
-  @property({ attribute: false, type: String }) DROPDOWN_LIST: string = "Drop-down list";
+  @property({ attribute: false, type: String }) displayAs: string = '';
+  @property({ attribute: false, type: String }) SEARCH_BOX: string = 'Search box';
+  @property({ attribute: false, type: String }) DROPDOWN_LIST: string = 'Drop-down list';
 
   rawViewMetadata: any;
   viewName: any;
   firstChildMeta: any;
   OPERATORS_DP: string = PCore.getEnvironmentInfo().getDefaultOperatorDP();
-  userID: string = "";
+  userID: string = '';
   readOnly: boolean = false;
   showAsFormattedText: boolean = false;
 
-  isUserNameAvailable = (user) => {
-    return typeof user === "object" && user !== null && user.userName;
+  isUserNameAvailable = user => {
+    return typeof user === 'object' && user !== null && user.userName;
   };
 
-  getUserId = (user) => {
-    let userId = "";
-    if (typeof user === "object" && user !== null && user.userId) {
+  getUserId = user => {
+    let userId = '';
+    if (typeof user === 'object' && user !== null && user.userId) {
       userId = user.userId;
-    } else if (typeof user === "string" && user) {
+    } else if (typeof user === 'string' && user) {
       userId = user;
     }
     return userId;
@@ -110,9 +110,7 @@ class UserReference extends FormComponentBase {
 
     let { readOnly, required, disabled } = props;
     this.readOnly = readOnly;
-    [readOnly, required, disabled] = [readOnly, required, disabled].map(
-      (prop) => prop === true || (typeof prop === "string" && prop === "true")
-    );
+    [readOnly, required, disabled] = [readOnly, required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
 
     const userId = this.getUserId(value);
     if (this.userID === undefined) {
@@ -136,12 +134,8 @@ class UserReference extends FormComponentBase {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(this.userID).then((resp) => {
-          if (
-            resp.data &&
-            resp.data.pyOperatorInfo &&
-            resp.data.pyOperatorInfo.pyUserName
-          ) {
+        getOperatorDetails(this.userID).then(resp => {
+          if (resp.data && resp.data.pyOperatorInfo && resp.data.pyOperatorInfo.pyUserName) {
             this.userName = resp.data.pyOperatorInfo.pyUserName;
           }
         });
@@ -169,7 +163,7 @@ class UserReference extends FormComponentBase {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "dropDownDataSource") {
+    if (name === 'dropDownDataSource') {
       if (oldValue !== newValue) {
         this.getData();
       }
@@ -177,26 +171,23 @@ class UserReference extends FormComponentBase {
   }
 
   getData() {
-    if (
-      this.displayAs === this.DROPDOWN_LIST ||
-      this.displayAs === this.SEARCH_BOX
-    ) {
+    if (this.displayAs === this.DROPDOWN_LIST || this.displayAs === this.SEARCH_BOX) {
       const queryPayload = {
-        dataViewName: this.OPERATORS_DP,
+        dataViewName: this.OPERATORS_DP
       };
 
       PCore.getRestClient()
-        .invokeRestApi("getListData", { queryPayload })
-        .then((resp) => {
-          const ddDataSource = resp.data.data.map((listItem) => ({
+        .invokeRestApi('getListData', { queryPayload })
+        .then(resp => {
+          const ddDataSource = resp.data.data.map(listItem => ({
             key: listItem.pyUserIdentifier,
-            value: listItem.pyUserName,
+            value: listItem.pyUserName
           }));
           this.dropDownDataSource = ddDataSource;
           this.dropDownDataSource = JSON.stringify(this.dropDownDataSource);
           this.requestUpdate();
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     }
@@ -204,11 +195,7 @@ class UserReference extends FormComponentBase {
 
   render() {
     if (this.bLogging) {
-      console.log(
-        `${this.theComponentName}: render with pConn: ${JSON.stringify(
-          this.pConn
-        )}`
-      );
+      console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
     }
     if (this.bDebug) {
       debugger;
@@ -220,47 +207,31 @@ class UserReference extends FormComponentBase {
 
     // Handle and return if read only rendering
     if (this.readOnly) {
-      return html`
-        <operator-extension
-          class="psdk-double"
-          name=${this.userName}
-          label=${this.label}
-          theId=${this.userID}
-        ></operator-extension>
-      `;
+      return html` <operator-extension class="psdk-double" name=${this.userName} label=${this.label} theId=${this.userID}></operator-extension> `;
     } else {
       if (this.displayAs === this.DROPDOWN_LIST) {
-        return html`<dropdown-form
-          .pConn=${this.thePConn}
-          .value=${this.userID}
-          datasource=${this.dropDownDataSource}
-        ></dropdown-form>`;
+        return html`<dropdown-form .pConn=${this.thePConn} .value=${this.userID} datasource=${this.dropDownDataSource}></dropdown-form>`;
       }
 
       if (this.displayAs === this.SEARCH_BOX) {
         const columns = [
           {
-            value: "pyUserName",
-            display: "true",
+            value: 'pyUserName',
+            display: 'true',
             useForSearch: true,
-            primary: "true",
+            primary: 'true'
           },
           {
-            value: "pyUserIdentifier",
-            setProperty: "Associated property",
-            key: "true",
-            display: "true",
-            secondary: "true",
-            useForSearch: "true",
-          },
+            value: 'pyUserIdentifier',
+            setProperty: 'Associated property',
+            key: 'true',
+            display: 'true',
+            secondary: 'true',
+            useForSearch: 'true'
+          }
         ];
 
-        return html`
-          <autocomplete-form
-            .pConn=${this.thePConn}
-            datasource=${this.dropDownDataSource}
-          ></autocomplete-form>
-        `;
+        return html` <autocomplete-form .pConn=${this.thePConn} datasource=${this.dropDownDataSource}></autocomplete-form> `;
       }
     }
 

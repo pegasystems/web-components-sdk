@@ -5,15 +5,12 @@
  * PCore/PConnect is being run
  */
 
- declare const PCore;
+declare const PCore;
 
- export const sdkVersion = "8.7";
- 
- export function compareSdkPCoreVersions() {
- 
+export const sdkVersion = '8.7';
+
+export function compareSdkPCoreVersions() {
   //  const theConstellationVersion = PCore.getPCoreVersion();
- 
-   
-  console.warn(`Using Constellation version ${PCore.getPCoreVersion()}. Ensure this is the same version as your Infinity server.`); 
- }
- 
+
+  console.warn(`Using Constellation version ${PCore.getPCoreVersion()}. Ensure this is the same version as your Infinity server.`);
+}

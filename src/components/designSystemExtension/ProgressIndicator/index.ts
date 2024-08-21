@@ -4,7 +4,6 @@ import { LionProgressIndicator } from '@lion/progress-indicator';
 // NOTE: you need to import ANY component you may render.
 import '@lion/progress-indicator/define';
 
-
 // Derived from this example: https://lion-web.netlify.app/components/content/progress-indicator/examples/
 
 @customElement('progress-extension')
@@ -55,8 +54,7 @@ class ProgressExtension extends LionProgressIndicator {
             stroke-dashoffset: -127;
           }
         }
-
-      `,
+      `
     ];
   }
 

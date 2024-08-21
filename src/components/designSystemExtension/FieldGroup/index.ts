@@ -1,20 +1,20 @@
-import { html, customElement, property, LitElement } from "@lion/core";
-import Utils from "../../../helpers/utils";
+import { html, customElement, property, LitElement } from '@lion/core';
+import Utils from '../../../helpers/utils';
 
 // import the component's styles as HTML with <style>
-import { fieldGroupStyles } from "./field-group-styles";
+import { fieldGroupStyles } from './field-group-styles';
 
 function generateFields(item, fields) {
   for (const label in item) {
     if (Utils.isObject(item[label])) {
       generateFields(item[label], fields);
-    } else if (label !== "classID") {
+    } else if (label !== 'classID') {
       fields.push({ label, value: item[label] });
     }
   }
 }
 
-@customElement("field-group")
+@customElement('field-group')
 class FieldGroup extends LitElement {
   @property({ attribute: true, type: Array }) item;
   @property({ attribute: true, type: String }) name;
@@ -39,15 +39,15 @@ class FieldGroup extends LitElement {
     let formattedVal = value;
 
     // if the value is an empty string, we want to display it as "---"
-    if (formattedVal === "") {
-      formattedVal = "---";
+    if (formattedVal === '') {
+      formattedVal = '---';
     }
 
     return formattedVal;
   }
 
   getItems() {
-    return html`${this.fields.map((item) => {
+    return html`${this.fields.map(item => {
       return html`
         <div class="field-group-item">
           <div class="field-group-item-label">${item.label}</div>

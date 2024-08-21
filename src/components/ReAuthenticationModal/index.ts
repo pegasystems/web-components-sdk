@@ -8,39 +8,35 @@ declare var PCore: any;
 //  to be used as a starting point for any new components as they're built out
 @customElement('reauthentication-modal-component')
 class ReAuthenticationModal extends LitElement {
-
   bLogging: Boolean = false;
-  theComponentName: String = "ReAuthenticationModal"
- 
+  theComponentName: String = 'ReAuthenticationModal';
+
   constructor() {
     super();
-    if (this.bLogging) { console.log(`${this.theComponentName}: constructor`); }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: constructor`);
+    }
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: connectedCallback`); }
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: connectedCallback`);
+    }
 
     // Note: ReAuthenticationModal relies on a subscription to a PCore PubSub event
     //  to notify when there is a need to re-authenticate
     /* TODO use const for reAuth */
-    PCore.getPubSubUtils().subscribe(
-      "reAuth",
-      this.launchReAuthenticationModal.bind(this),
-      "launchReAuthenticationModal"
-    );
-    
+    PCore.getPubSubUtils().subscribe('reAuth', this.launchReAuthenticationModal.bind(this), 'launchReAuthenticationModal');
   }
-
 
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
-    if (this.bLogging) { console.log(`${this.theComponentName}: disconnectedCallback`); }
-
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
   }
-  
 
   launchReAuthenticationModal(reAuthProps) {
     const reauthUrl = reAuthProps.url;
@@ -49,16 +45,15 @@ class ReAuthenticationModal extends LitElement {
     //  Need to find way to be in a state where we can show a modal and let user log back in...
   }
 
-  render(){
-    if (this.bLogging) { console.log(`${this.theComponentName}: render `); }
+  render() {
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: render `);
+    }
 
-  // Note: Potentially, will render a modal if/when we can prompt user to re-authenticate
+    // Note: Potentially, will render a modal if/when we can prompt user to re-authenticate
 
     return nothing;
-
   }
-
 }
-
 
 export default ReAuthenticationModal;
