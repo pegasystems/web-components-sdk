@@ -10,6 +10,7 @@ import { formComponentStyles } from './form-component-styles';
 import { Required } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import ValidateMessageValidator from './validateMessageValidator.js';
+import { updateNewInstructions } from '../../../helpers/instructions-utils';
 
 // NOTE: FormComponentBase is an intermediate base class that is intended
 //  to extend BridgeBase (to get the Web Component Bridge functionality)
@@ -37,6 +38,12 @@ export class FormComponentBase extends BridgeBase {
   @property({ attribute: false }) controlName = false;
   @property({ attribute: false, type: Object }) annotatedLabel; // is likely a lit-html CSS object
   @property({ attribute: false, type: String }) testId = '';
+  @property({ attribute: false }) selectionMode: any;
+  @property({ attribute: false }) selectedvalues: any;
+  @property({ attribute: false }) selectionList: any;
+  @property({ attribute: false, type: String }) primaryField = '';
+  @property({ attribute: false, type: String }) selectionKey = '';
+  @property({ attribute: false, type: String }) referenceList = '';
 
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -76,6 +83,11 @@ export class FormComponentBase extends BridgeBase {
 
     // Do an initial updateSelf - is this always necessary?
     this.updateSelf();
+
+    if (this.selectionMode === 'multi' && this.referenceList?.length > 0) {
+      this.thePConn.setReferenceList(this.selectionList);
+      updateNewInstructions(this.thePConn, this.selectionList);
+    }
   }
 
   disconnectedCallback() {
@@ -153,6 +165,15 @@ export class FormComponentBase extends BridgeBase {
     // readOnly is now a component property (as in each component's config.json); not using !isEditable() any more
     if (theConfigProps['readOnly'] !== undefined) {
       this.bReadonly = theConfigProps['readOnly'];
+    }
+
+    this.selectionMode = theConfigProps['selectionMode'];
+    if (this.selectionMode === 'multi') {
+      this.selectionList = theConfigProps.selectionList;
+      this.selectedvalues = theConfigProps.readonlyContextList;
+      this.primaryField = theConfigProps.primaryField;
+      this.selectionKey = theConfigProps.selectionKey;
+      this.referenceList = theConfigProps.referenceList;
     }
 
     if (this.bLogging) {
@@ -246,7 +267,11 @@ export class FormComponentBase extends BridgeBase {
     if (this.bLogging) {
       console.log(`--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
-    this.actions.onBlur(this.thePConn, event);
+    if (this.selectionMode === 'multi') {
+      this.thePConn.getValidationApi().validate(this.selectedvalues, this.selectionList);
+    } else {
+      this.actions.onBlur(this.thePConn, event);
+    }
   }
 
   // Default Lion behavior for showing "required" feedback is when field is "touched" AND "dirty"

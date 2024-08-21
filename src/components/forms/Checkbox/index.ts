@@ -7,6 +7,7 @@ import '@lion/checkbox-group/define';
 
 // import the component's styles as HTML with <style>
 import { checkboxStyles } from './check-box-styles';
+import { deleteInstruction, insertInstruction } from '../../../helpers/instructions-utils';
 
 // Declare that PCore will be defined when this code is run
 declare var PCore: any;
@@ -26,6 +27,8 @@ class CheckBox extends FormComponentBase {
 
   @property({ attribute: false }) checkboxLabelPos = 'after';
   @property({ attribute: false }) caption = 'default caption';
+
+  @property({ attribute: false }) theConfigProps: any = {};
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -85,10 +88,10 @@ class CheckBox extends FormComponentBase {
 
     // Checkbox does some extra processing beyond what's in the super implementation
 
-    const theConfigProps = this.thePConn.getConfigProps();
+    this.theConfigProps = this.thePConn.getConfigProps();
 
     // Note: for Checkbox, the "caption" is the label...
-    this.caption = theConfigProps['caption'];
+    this.caption = this.theConfigProps['caption'];
 
     if (this.label !== '') {
       this.bShowLabel = true;
@@ -141,6 +144,25 @@ class CheckBox extends FormComponentBase {
     this.actions.onChange(this.thePConn, { value });
   }
 
+  handleChangeMultiMode(event) {
+    if (!event.currentTarget['model-value'].checked) {
+      insertInstruction(this.thePConn, this.selectionList, this.selectionKey, this.primaryField, {
+        id: event.currentTarget['model-value'].key,
+        primary: event.currentTarget['model-value'].value
+      });
+    } else {
+      deleteInstruction(this.thePConn, this.selectionList, this.selectionKey, {
+        id: event.currentTarget['model-value'].key,
+        primary: event.currentTarget['model-value'].value
+      });
+    }
+    this.thePConn.clearErrorMessages({
+      property: this.selectionList,
+      category: '',
+      context: ''
+    });
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -171,30 +193,48 @@ class CheckBox extends FormComponentBase {
 
     const bHideLabel: Boolean = this.getComponentProp('hideLabel');
 
-    const theContent = html` ${this.bVisible
-      ? html` <div class="check-box-form">
-          ${bHideLabel === true ? nothing : html`${this.label}`}
-          ${this.isChecked
-            ? html` <lion-checkbox
-                id=${this.theComponentId}
-                dataTestId=${this.testId}
-                checked
-                .fieldName=${this.label}
-                .validators=${this.lionValidatorsArray}
-                .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                ?readonly=${this.bReadonly}
-                ?disabled=${this.bDisabled}
-                .model-value=${{ value: this.caption, checked: this.isChecked }}
-                @click=${this.fieldOnChange}
-                @blur=${this.fieldOnBlur}
-                @change=${this.fieldOnChange}
-              >
-                <span slot="label">${this.caption}</span>
-              </lion-checkbox>`
-            : html`
-                <lion-checkbox
+    if (this.theConfigProps.selectionMode === 'multi') {
+      const listOfCheckboxes: any = [];
+      const listSourceItems = this.theConfigProps.datasource?.source ?? [];
+      const dataField: any = this.theConfigProps.selectionKey?.split?.('.')[1];
+      const label = html`<div class="check-box-form">${bHideLabel === true ? nothing : html`${this.label}`}</div>`;
+      listOfCheckboxes.push(label);
+      listSourceItems.forEach((element, index) => {
+        const multiChecked = this.selectedvalues?.some?.(data => data[dataField] === element.key);
+        const content = html` ${multiChecked
+          ? html`
+                <lion-checkbox 
+                    id=${index}
+                    dataTestId=${this.testId}+':'+${element.value}
+                    checked
+                    .model-value=${{ value: element.text ?? element.value, key: element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key) }}
+                    @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
+                    <span slot="label">${element.text ?? element.value}</span>
+                </lion-checkbox>
+              `
+          : html`
+                <lion-checkbox 
+                    id=${index}
+                    dataTestId=${this.testId}+':'+${element.value}
+                    .model-value=${{ value: element.text ?? element.value, key: element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key) }}
+                    @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
+                    <span slot="label">${element.text ?? element.value}</span>
+                </lion-checkbox>
+              `}`;
+        listOfCheckboxes.push(content);
+      });
+      const labelEnd = html`</div>`;
+      listOfCheckboxes.push(labelEnd);
+      this.renderTemplates.push(listOfCheckboxes);
+    } else {
+      const theContent = html` ${this.bVisible
+        ? html` <div class="check-box-form">
+            ${bHideLabel === true ? nothing : html`${this.label}`}
+            ${this.isChecked
+              ? html` <lion-checkbox
                   id=${this.theComponentId}
                   dataTestId=${this.testId}
+                  checked
                   .fieldName=${this.label}
                   .validators=${this.lionValidatorsArray}
                   .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
@@ -206,12 +246,30 @@ class CheckBox extends FormComponentBase {
                   @change=${this.fieldOnChange}
                 >
                   <span slot="label">${this.caption}</span>
-                </lion-checkbox>
-              `}
-        </div>`
-      : nothing}`;
+                </lion-checkbox>`
+              : html`
+                  <lion-checkbox
+                    id=${this.theComponentId}
+                    dataTestId=${this.testId}
+                    .fieldName=${this.label}
+                    .validators=${this.lionValidatorsArray}
+                    .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+                    ?readonly=${this.bReadonly}
+                    ?disabled=${this.bDisabled}
+                    .model-value=${{ value: this.caption, checked: this.isChecked }}
+                    @click=${this.fieldOnChange}
+                    @blur=${this.fieldOnBlur}
+                    @change=${this.fieldOnChange}
+                  >
+                    <span slot="label">${this.caption}</span>
+                  </lion-checkbox>
+                `}
+          </div>`
+        : nothing}`;
+      this.renderTemplates.push(theContent);
+    }
 
-    this.renderTemplates.push(theContent);
+    // this.renderTemplates.push( theContent );
 
     // There shouldn't be any chidren
     // this.addChildTemplates();

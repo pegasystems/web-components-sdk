@@ -250,6 +250,9 @@ class ToDo extends BridgeBase {
         if (this.bLogging) {
           console.log(`openAssignment completed`);
         }
+      })
+      .catch(() => {
+        return html`<p>Submit failed!</p>`;
       });
   }
 

@@ -260,7 +260,7 @@ class AutoComplete extends FormComponentBase {
                 ?disabled=${this.bDisabled}
               >
                 <span slot="label">${this.annotatedLabel}</span>
-                ${this.options.map(option => {
+                ${this.options?.map(option => {
                   const theOptDisplay = `${option.value}`;
                   return html` <lion-option value=${option.key} .choiceValue=${option.value}> ${theOptDisplay} </lion-option>`;
                 })}
