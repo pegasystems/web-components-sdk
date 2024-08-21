@@ -230,6 +230,25 @@ class MashupMainScreen extends LitElement {
 
         createWork('DIXL-MediaCo-Work-NewService', actionInfo);
         break;
+      case 'DigV2':
+        // actionInfo = {
+        //   containerName: 'primary',
+        //   flowType: sFlowType ? sFlowType : 'pyStartCase',
+        //   caseInfo: {
+        //     content: {
+        //       Package: sLevel
+        //     }
+        //   }
+        // };
+        //
+        // createWork('DIXL-MediaCo-Work-NewService', actionInfo);
+        //
+        PCore.getMashupApi().createCase('DXIL-DigV2-Work-ComplexFields', 'root', {
+          viewType: 'page',
+          pageName: 'pyEmbedAssignment',
+          startingFields: {}
+        });
+        break;
     }
   }
 }
