@@ -8,25 +8,25 @@ import '../../widgets/CaseOperator';
 import { userReferenceStyles } from './user-reference-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('user-reference-form')
 class UserReference extends FormComponentBase {
-  @property({ attribute: false, type: String }) userName: string = '';
-  @property({ attribute: false, type: String }) date: string = '';
-  @property({ attribute: false, type: String }) label: string = '';
+  @property({ attribute: false, type: String }) userName = '';
+  @property({ attribute: false, type: String }) date = '';
+  @property({ attribute: false, type: String }) label = '';
   @property({ attribute: false, type: Array }) dropDownDataSource: any = [];
-  @property({ attribute: false, type: String }) displayAs: string = '';
-  @property({ attribute: false, type: String }) SEARCH_BOX: string = 'Search box';
-  @property({ attribute: false, type: String }) DROPDOWN_LIST: string = 'Drop-down list';
+  @property({ attribute: false, type: String }) displayAs = '';
+  @property({ attribute: false, type: String }) SEARCH_BOX = 'Search box';
+  @property({ attribute: false, type: String }) DROPDOWN_LIST = 'Drop-down list';
 
   rawViewMetadata: any;
   viewName: any;
   firstChildMeta: any;
   OPERATORS_DP: string = PCore.getEnvironmentInfo().getDefaultOperatorDP();
-  userID: string = '';
-  readOnly: boolean = false;
-  showAsFormattedText: boolean = false;
+  userID = '';
+  readOnly = false;
+  showAsFormattedText = false;
 
   isUserNameAvailable = user => {
     return typeof user === 'object' && user !== null && user.userName;
@@ -99,7 +99,7 @@ class UserReference extends FormComponentBase {
 
     // Additional processing
 
-    let props = this.thePConn.getConfigProps();
+    const props = this.thePConn.getConfigProps();
 
     const { label, displayAs, value, showAsFormattedText } = props;
 
@@ -163,6 +163,7 @@ class UserReference extends FormComponentBase {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (name === 'dropDownDataSource') {
       if (oldValue !== newValue) {
         this.getData();
@@ -208,36 +209,35 @@ class UserReference extends FormComponentBase {
     // Handle and return if read only rendering
     if (this.readOnly) {
       return html` <operator-extension class="psdk-double" name=${this.userName} label=${this.label} theId=${this.userID}></operator-extension> `;
-    } else {
-      if (this.displayAs === this.DROPDOWN_LIST) {
-        return html`<dropdown-form .pConn=${this.thePConn} .value=${this.userID} datasource=${this.dropDownDataSource}></dropdown-form>`;
-      }
-
-      if (this.displayAs === this.SEARCH_BOX) {
-        const columns = [
-          {
-            value: 'pyUserName',
-            display: 'true',
-            useForSearch: true,
-            primary: 'true'
-          },
-          {
-            value: 'pyUserIdentifier',
-            setProperty: 'Associated property',
-            key: 'true',
-            display: 'true',
-            secondary: 'true',
-            useForSearch: 'true'
-          }
-        ];
-
-        return html` <autocomplete-form .pConn=${this.thePConn} datasource=${this.dropDownDataSource}></autocomplete-form> `;
-      }
+    }
+    if (this.displayAs === this.DROPDOWN_LIST) {
+      return html`<dropdown-form .pConn=${this.thePConn} .value=${this.userID} datasource=${this.dropDownDataSource}></dropdown-form>`;
     }
 
-    //this.renderTemplates.push( this.theRenderedDiv() )
+    if (this.displayAs === this.SEARCH_BOX) {
+      // const columns = [
+      //   {
+      //     value: 'pyUserName',
+      //     display: 'true',
+      //     useForSearch: true,
+      //     primary: 'true'
+      //   },
+      //   {
+      //     value: 'pyUserIdentifier',
+      //     setProperty: 'Associated property',
+      //     key: 'true',
+      //     display: 'true',
+      //     secondary: 'true',
+      //     useForSearch: 'true'
+      //   }
+      // ];
 
-    //return this.renderTemplates;
+      return html` <autocomplete-form .pConn=${this.thePConn} datasource=${this.dropDownDataSource}></autocomplete-form> `;
+    }
+
+    // this.renderTemplates.push( this.theRenderedDiv() )
+
+    // return this.renderTemplates;
   }
 }
 

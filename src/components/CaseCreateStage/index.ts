@@ -1,12 +1,9 @@
-import { html, customElement, property } from '@lion/core';
+import { customElement, property } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { caseCreateStageStyles } from './case-create-stage-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 @customElement('case-create-stage-component')
 class CaseCreateStage extends BridgeBase {
@@ -40,7 +37,7 @@ class CaseCreateStage extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = caseCreateStageStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 

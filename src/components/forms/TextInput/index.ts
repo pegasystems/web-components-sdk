@@ -1,4 +1,4 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement, nothing } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
@@ -6,9 +6,6 @@ import '@lion/input/define';
 
 // import the component's styles as HTML with <style>
 import { textInputStyles } from './text-input-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 @customElement('text-input-form')
 class TextInput extends FormComponentBase {

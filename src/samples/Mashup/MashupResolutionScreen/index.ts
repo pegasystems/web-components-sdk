@@ -1,4 +1,4 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { html, customElement, LitElement } from '@lion/core';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 import '@lion/button/define';
@@ -8,10 +8,6 @@ import '@lion/textarea/define';
 
 // import the component's styles as HTML with <style>
 import { mashupResolutionScreenStyles } from './mashup-resolution-sceen-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-declare var myLoadMashup: any;
 
 @customElement('mashup-resolution-screen-component')
 class MashupResolutionScreen extends LitElement {
@@ -30,7 +26,7 @@ class MashupResolutionScreen extends LitElement {
   }
 
   getResolutionScreenHtml(): any {
-    const rSHtml = html`
+    return html`
       <div class="cc-resolution">
         <div class="cc-card">
           <div class="cc-header">Welcome!</div>
@@ -46,15 +42,13 @@ class MashupResolutionScreen extends LitElement {
         </div>
       </div>
     `;
-
-    return rSHtml;
   }
 
   render() {
     const sContent = this.getResolutionScreenHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // MashupResolutionScreen not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);

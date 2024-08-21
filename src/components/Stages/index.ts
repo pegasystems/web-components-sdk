@@ -1,4 +1,4 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 
@@ -7,13 +7,10 @@ import { Utils } from '../../helpers/utils';
 // import the component's styles as HTML with <style>
 import { stagesStyles } from './stages-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('stages-component')
 class Stages extends BridgeBase {
-  checkSvgIcon: string = '';
-  imagePath: string = '';
+  checkSvgIcon = '';
+  imagePath = '';
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -43,7 +40,7 @@ class Stages extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = stagesStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     this.imagePath = Utils.getIconPath(Utils.getSDKStaticContentUrl());
@@ -109,38 +106,34 @@ class Stages extends BridgeBase {
       case 'future':
         sClass = 'psdk-stages-inner-future';
         break;
+      default:
+        break;
     }
 
-    const sIHtml = html` <div class="${sClass}">${sIconHtml}${stage.name}</div> `;
-
-    return sIHtml;
+    return html` <div class="${sClass}">${sIconHtml}${stage.name}</div> `;
   }
 
   getStageOuterHtml(stage: any) {
-    const sOHtml = html` <div class="psdk-stages-chevron">${this.getStageInnerHtml(stage)}</div> `;
-
-    return sOHtml;
+    return html` <div class="psdk-stages-chevron">${this.getStageInnerHtml(stage)}</div> `;
   }
 
   stagesHtml(): any {
-    let arStages = super.getComponentProp('stages');
-    let arStageResults: Array<any> = [];
-    let lastStage: any;
+    const arStages = super.getComponentProp('stages');
+    let arStageResults: any[] = [];
+    // let lastStage: any;
 
     if (arStages != null) {
       arStageResults = arStages;
-      lastStage = arStageResults[arStageResults.length - 1];
+      // lastStage = arStageResults[arStageResults.length - 1];
     }
 
-    const arStagesHtml: Array<any> = [];
+    const arStagesHtml: any[] = [];
 
-    for (let stage of arStageResults) {
+    for (const stage of arStageResults) {
       arStagesHtml.push(html`${this.getStageOuterHtml(stage)}`);
     }
 
-    const stagesHtml = html` <div class="psdk-stages-bar">${arStagesHtml}</div> `;
-
-    return stagesHtml;
+    return html` <div class="psdk-stages-bar">${arStagesHtml}</div> `;
   }
 
   render() {

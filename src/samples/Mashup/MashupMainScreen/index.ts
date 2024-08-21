@@ -1,5 +1,5 @@
 import { html, customElement, property, LitElement } from '@lion/core';
-import { SdkConfigAccess, getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
+import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 import '@lion/button/define';
 import '@lion/textarea/define';
@@ -13,8 +13,7 @@ import '../MashupResolutionScreen';
 import { mashupMainScreenStyles } from './mashup-main-screen-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
-declare var myLoadMashup: any;
+declare let PCore: any;
 
 @customElement('mashup-main-screen-component')
 class MashupMainScreen extends LitElement {
@@ -28,7 +27,7 @@ class MashupMainScreen extends LitElement {
   @property({ attribute: false, type: Boolean }) showPega = false;
   @property({ attribute: false, type: Boolean }) showResolution = false;
 
-  cableInfo: string = '';
+  cableInfo = '';
 
   // NOTE: MashupMainScreen is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -116,7 +115,7 @@ class MashupMainScreen extends LitElement {
   }
 
   getMashupMainScreenHtml(): any {
-    const mMSHtml = html`
+    return html`
       <div class="cc-main-div">
         ${this.showTriplePlayOptions
           ? html`
@@ -168,15 +167,13 @@ class MashupMainScreen extends LitElement {
           : html``}
       </div>
     `;
-
-    return mMSHtml;
   }
 
   render() {
     const sContent = this.getMashupMainScreenHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // MashupMainScreen not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
@@ -188,14 +185,14 @@ class MashupMainScreen extends LitElement {
   }
 
   _onShopNow(e: any) {
-    let sLevel = e.target.labelLevel;
+    const sLevel = e.target.labelLevel;
 
     this.showTriplePlayOptions = false;
     this.showPega = true;
 
-    let actionsApi = this.pConn.getActionsApi();
-    let createWork = actionsApi.createWork.bind(actionsApi);
-    let sFlowType = 'pyStartCase';
+    const actionsApi = this.pConn.getActionsApi();
+    const createWork = actionsApi.createWork.bind(actionsApi);
+    const sFlowType = 'pyStartCase';
 
     //
     // NOTE:  Below, can remove case statement when 8.6.1 and pyCreate
@@ -207,7 +204,7 @@ class MashupMainScreen extends LitElement {
       case 'CableCo':
         actionInfo = {
           containerName: 'primary',
-          flowType: sFlowType ? sFlowType : 'pyStartCase',
+          flowType: sFlowType || 'pyStartCase',
           caseInfo: {
             content: {
               Package: sLevel
@@ -220,7 +217,7 @@ class MashupMainScreen extends LitElement {
       case 'MediaCo':
         actionInfo = {
           containerName: 'primary',
-          flowType: sFlowType ? sFlowType : 'pyStartCase',
+          flowType: sFlowType || 'pyStartCase',
           caseInfo: {
             content: {
               Package: sLevel
@@ -231,23 +228,13 @@ class MashupMainScreen extends LitElement {
         createWork('DIXL-MediaCo-Work-NewService', actionInfo);
         break;
       case 'DigV2':
-        // actionInfo = {
-        //   containerName: 'primary',
-        //   flowType: sFlowType ? sFlowType : 'pyStartCase',
-        //   caseInfo: {
-        //     content: {
-        //       Package: sLevel
-        //     }
-        //   }
-        // };
-        //
-        // createWork('DIXL-MediaCo-Work-NewService', actionInfo);
-        //
         PCore.getMashupApi().createCase('DXIL-DigV2-Work-ComplexFields', 'root', {
           viewType: 'page',
           pageName: 'pyEmbedAssignment',
           startingFields: {}
         });
+        break;
+      default:
         break;
     }
   }

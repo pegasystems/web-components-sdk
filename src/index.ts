@@ -14,7 +14,7 @@ router.setRoutes([
   // External routes on top
   {
     path: '/auth.html',
-    action: (ctx, commands) => {
+    action: ctx => {
       window.location.pathname = ctx.pathname;
     }
   },

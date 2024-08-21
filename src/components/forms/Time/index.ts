@@ -1,4 +1,4 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
@@ -6,9 +6,6 @@ import '../../designSystemExtension/LionInputTimeOnly';
 
 // import the component's styles as HTML with <style>
 import { timeStyles } from './time-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 @customElement('time-form')
 class Time extends FormComponentBase {
@@ -58,7 +55,7 @@ class Time extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
-    let value = event.target.value;
+    const value = event.target.value;
 
     if (this.value === value) return;
     // if (value) {
@@ -96,7 +93,7 @@ class Time extends FormComponentBase {
       `;
     }
 
-    let sDisplay = this.bVisible ? 'block' : 'none';
+    const sDisplay = this.bVisible ? 'block' : 'none';
 
     // Lion-based version wants Date object as value
     const timeValue = this.value;
@@ -112,10 +109,10 @@ class Time extends FormComponentBase {
                         .validators = ${this.lionValidatorsArray}
                         .fieldName=${this.label}
                         .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                        ?readonly=${this.bReadonly} 
+                        ?readonly=${this.bReadonly}
                         ?disabled=${this.bDisabled}
-                        @click=${this.fieldOnChange} 
-                        @blur=${this.fieldOnBlur} 
+                        @click=${this.fieldOnChange}
+                        @blur=${this.fieldOnBlur}
                         @change=${this.fieldOnChange}>
                         <span slot="label">${this.annotatedLabel}</span>
                     </lion-input-timeoonly>

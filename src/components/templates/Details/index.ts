@@ -8,14 +8,11 @@ import { detailsStyles } from './details-styles';
 
 import '../../designSystemExtension/DetailsFields';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('details-component')
 class Details extends BridgeBase {
   @property({ attribute: false }) viewName = null;
 
-  arFields: Array<any> = [];
+  arFields: any[] = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -45,7 +42,7 @@ class Details extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = detailsStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -72,16 +69,17 @@ class Details extends BridgeBase {
     }
     const theConfigProps = this.thePConn.getConfigProps();
 
-    for (let prop in ['viewName']) {
-      if (this[prop] != undefined) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const prop in ['viewName']) {
+      if (this[prop] !== undefined) {
         this[prop] = theConfigProps[prop];
       }
     }
 
     // get primary and secodary fields
-    for (let kid of this.children) {
+    for (const kid of this.children) {
       this.arFields = [];
-      let pKid = kid.getPConnect();
+      const pKid = kid.getPConnect();
       const fields = pKid.getChildren();
       fields?.forEach(field => {
         const thePConn = field.getPConnect();

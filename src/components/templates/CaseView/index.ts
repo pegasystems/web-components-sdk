@@ -10,9 +10,6 @@ import '../../Reference';
 // import the component's styles as HTML with <style>
 import { caseViewStyles } from './case-view-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('case-view')
@@ -28,14 +25,14 @@ class CaseView extends BridgeBase {
   @property({ attribute: false }) mainTabs;
   @property({ attribute: false }) mainTabData;
 
-  arAvailableActions: Array<any> = [];
-  arAvailableProcesses: Array<any> = [];
+  arAvailableActions: any[] = [];
+  arAvailableProcesses: any[] = [];
 
-  caseTabs: Array<any> = [];
+  caseTabs: any[] = [];
 
   elMenu: any = null;
 
-  currentCaseID: string = '';
+  currentCaseID = '';
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -65,13 +62,13 @@ class CaseView extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = caseViewStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // Initialize this.mainData, tabData,caseTabs etc. on initialization ONLY
     if (!this.displayOnlyFA) {
-      for (let child of this.children) {
-        let childPConn = child.getPConnect();
+      for (const child of this.children) {
+        const childPConn = child.getPConnect();
         if (childPConn.getRawMetadata().name === 'Tabs') {
           this.mainTabs = child;
           this.mainTabData = this.mainTabs.getPConnect().getChildren();
@@ -83,6 +80,7 @@ class CaseView extends BridgeBase {
         .getChildren()
         ?.forEach((child, i) => {
           const config = child.getPConnect().resolveConfigProps(child.getPConnect().getRawMetadata()).config;
+          // eslint-disable-next-line prefer-const
           let { label, inheritedProps, visibility } = config;
 
           if (!label) {
@@ -128,18 +126,18 @@ class CaseView extends BridgeBase {
 
     const configProps = this.thePConn.getConfigProps();
 
-    this.heading = configProps['header'];
-    this.id = configProps['subheader'];
+    this.heading = configProps.header;
+    this.id = configProps.subheader;
     this.status = this.thePConn.getValue('.pyStatusWork');
 
-    this.svgCase = Utils.getImageSrc(configProps['icon'], Utils.getSDKStaticContentUrl());
+    this.svgCase = Utils.getImageSrc(configProps.icon, Utils.getSDKStaticContentUrl());
 
     // if id has changed, mark flow container needs to init container
     if (this.hasCaseIDChanged()) {
       window.sessionStorage.setItem('okToInitFlowContainer', 'true');
     }
 
-    let caseInfo = this.thePConn.getDataObject().caseInfo;
+    const caseInfo = this.thePConn.getDataObject().caseInfo;
     this.arAvailableActions = caseInfo?.availableActions ? caseInfo.availableActions : [];
     this.arAvailableProcesses = caseInfo?.availableProcesses ? caseInfo.availableProcesses : [];
   }
@@ -169,11 +167,11 @@ class CaseView extends BridgeBase {
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
-  getChildRegionArray(inName: String): Array<Object> {
+  getChildRegionArray(inName: String): Object[] {
     if (this.bDebug) {
       debugger;
     }
-    let theRetArray: Array<Object> = [];
+    const theRetArray: Object[] = [];
     let iFound = 0;
 
     // if no children, return theRetArray since nothing will be added...
@@ -181,13 +179,13 @@ class CaseView extends BridgeBase {
       return theRetArray;
     }
 
-    for (var child of this.children) {
-      const theMetadataType: string = child.getPConnect().getRawMetadata()['type'].toLowerCase();
+    for (const child of this.children) {
+      const theMetadataType: string = child.getPConnect().getRawMetadata().type.toLowerCase();
 
       // Addition of Reference component results in 2 possible components to render...
       if (theMetadataType === 'region') {
         // If the type is a Reference, there will not be a 'name'
-        const theMetadataName: string = child.getPConnect().getRawMetadata()['name'].toLowerCase();
+        const theMetadataName: string = child.getPConnect().getRawMetadata().name.toLowerCase();
 
         if (theMetadataName === inName) {
           iFound++;
@@ -206,13 +204,13 @@ class CaseView extends BridgeBase {
     return theRetArray;
   }
 
-  getActionButtonMenuHtml(availableActions: Array<any>, availableProcesses: Array<any>) {
-    const arButtonMenuHtml: Array<any> = [];
+  getActionButtonMenuHtml(availableActions: any[], availableProcesses: any[]) {
+    const arButtonMenuHtml: any[] = [];
 
-    for (let actionMenu of availableActions) {
+    for (const actionMenu of availableActions) {
       arButtonMenuHtml.push(html`
         <a
-          @click=${e => {
+          @click=${() => {
             this._actionMenuActionsClick(actionMenu);
           }}
         >
@@ -221,10 +219,10 @@ class CaseView extends BridgeBase {
       `);
     }
 
-    for (let actionMenu of availableProcesses) {
+    for (const actionMenu of availableProcesses) {
       arButtonMenuHtml.push(html`
         <a
-          @click=${e => {
+          @click=${() => {
             this._actionMenuProcessesClick(actionMenu);
           }}
         >
@@ -236,7 +234,7 @@ class CaseView extends BridgeBase {
   }
 
   getActionButtonsHtml(): any {
-    const aBHtml = html`
+    return html`
       <div class="psdk-case-view-buttons">
         <lion-button class="btn btn-light" color="secondary" @click=${this._editClick}>Edit</lion-button>
         <lion-button class="btn btn-light" color="secondary" @click=${this._showActionMenu}>Actions...</lion-button>
@@ -245,17 +243,14 @@ class CaseView extends BridgeBase {
         </div>
       </div>
     `;
-
-    return aBHtml;
   }
 
   hasCaseIDChanged(): boolean {
     if (this.currentCaseID !== this.thePConn.getDataObject().caseInfo.ID) {
       this.currentCaseID = this.thePConn.getDataObject().caseInfo.ID;
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   render() {
@@ -323,7 +318,7 @@ class CaseView extends BridgeBase {
   }
 
   _vTabClick(e: any) {
-    let tabId = e.detail.data.tabId;
+    const tabId = e.detail.data.tabId;
 
     this.tabData = this.mainTabData[tabId].getPConnect().getRawMetadata();
 
@@ -372,7 +367,7 @@ class CaseView extends BridgeBase {
   toggleActionMenu(el: any) {
     if (el != null) {
       this.elMenu = el;
-      let actionMenu = el.getElementsByClassName('psdk-action-menu-content')[0];
+      const actionMenu = el.getElementsByClassName('psdk-action-menu-content')[0];
       if (actionMenu != null) {
         actionMenu.classList.toggle('show');
       }
@@ -380,16 +375,18 @@ class CaseView extends BridgeBase {
   }
 
   _clickAway(event: any) {
-    var bInMenu = false;
+    let bInMenu = false;
 
-    //run through list of elements in path, if menu not in th path, then want to
+    // run through list of elements in path, if menu not in th path, then want to
     // hide (toggle) the menu
-    for (let i in event.path) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i in event.path) {
       if (event.path[i].className == 'psdk-utility-menu') {
         bInMenu = true;
         break;
       }
     }
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (!bInMenu) {
       if (this.elMenu != null) {
         this.toggleActionMenu(this.elMenu);

@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 /* eslint-disable no-undef */
 
 /** We're testing the visibility of tabs within the Case Summary area in the Case View here, more tests to be added in the future. */

@@ -9,13 +9,10 @@ import { summaryListStyles } from './summary-list-styles';
 import '@lion/button/define';
 import '../SummaryItem';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('summary-list-extension')
 class SummaryList extends LitElement {
-  @property({ attribute: false, type: Array }) arItems: Array<any> = [];
-  @property({ attribute: true, type: String }) icon: string = '';
+  @property({ attribute: false, type: Array }) arItems: any[] = [];
+  @property({ attribute: true, type: String }) icon = '';
 
   @property({ attribute: true, type: String }) menuIconOverride = '';
   @property({ attribute: false }) menuIconOverrideAction: any;
@@ -35,9 +32,9 @@ class SummaryList extends LitElement {
   }
 
   getItemsHtml(): any {
-    const arItemsHtml: Array<any> = [];
+    const arItemsHtml: any[] = [];
 
-    for (let item of this.arItems) {
+    for (const item of this.arItems) {
       arItemsHtml.push(html`
         <summary-item-extension
           .item="${item}"
@@ -47,16 +44,14 @@ class SummaryList extends LitElement {
       `);
     }
 
-    const iHtml = html`${arItemsHtml}`;
-
-    return iHtml;
+    return html`${arItemsHtml}`;
   }
 
   render() {
     const sContent = html`${this.getItemsHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // SummaryList not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);

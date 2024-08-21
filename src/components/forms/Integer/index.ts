@@ -1,6 +1,5 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement, nothing } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
-import { Utils } from '../../../helpers/utils';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/input-amount/define';
@@ -8,9 +7,6 @@ import '@lion/input-amount/define';
 
 // import the component's styles as HTML with <style>
 import { integerStyles } from './integer-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -44,7 +40,7 @@ class Integer extends FormComponentBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = integerStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -96,7 +92,7 @@ class Integer extends FormComponentBase {
       ? html` <lion-input-amount
           id=${this.theComponentId}
           dataTestId=${this.testId}
-          .modelValue=${parseInt(this.value)}
+          .modelValue=${parseInt(this.value, 10)}
           .fieldName=${this.label}
           .formatOptions=${{ style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }}
           .validators=${this.lionValidatorsArray}

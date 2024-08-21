@@ -8,16 +8,13 @@ import { detailsTwoColumnStyles } from './details-two-column-styles';
 
 import '../../designSystemExtension/DetailsFields';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('details-two-column-component')
 class DetailsTwoColumn extends BridgeBase {
   @property({ attribute: false }) viewName = null;
 
-  arFields: Array<any> = [];
-  arFields2: Array<any> = [];
-  arFields3: Array<any> = [];
+  arFields: any[] = [];
+  arFields2: any[] = [];
+  arFields3: any[] = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -47,7 +44,7 @@ class DetailsTwoColumn extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = detailsTwoColumnStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -74,15 +71,16 @@ class DetailsTwoColumn extends BridgeBase {
     }
     const theConfigProps = this.thePConn.getConfigProps();
 
-    for (let prop in ['viewName']) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const prop in ['viewName']) {
       if (this[prop] != undefined) {
         this[prop] = theConfigProps[prop];
       }
     }
 
-    for (let kid of this.children) {
-      let pKid = kid.getPConnect();
-      let pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
+    for (const kid of this.children) {
+      const pKid = kid.getPConnect();
+      const pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
       if (this.children.indexOf(kid) == 0) {
         this.arFields = pKidData.children;
       } else {

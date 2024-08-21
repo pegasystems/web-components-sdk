@@ -1,4 +1,4 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
@@ -8,9 +8,6 @@ import '../../designSystemExtension/LionInputDateOnly';
 
 // import the component's styles as HTML with <style>
 import { dateStyles } from './date-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: Can't use name "Date" since it's already a JS type/class
 @customElement('date-form')
@@ -63,7 +60,7 @@ class DateComponent extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
-    let value = event.target.value;
+    const value = event.target.value;
     event.value = value;
 
     super.fieldOnChange(event);
@@ -96,11 +93,11 @@ class DateComponent extends FormComponentBase {
       `;
     }
 
-    let dateValue = this.value ? new Date(this.value) : this.value;
+    const dateValue = this.value ? new Date(this.value) : this.value;
 
-    let sDisplay = this.bVisible ? 'block' : 'none';
+    const sDisplay = this.bVisible ? 'block' : 'none';
 
-    let theContent = html` <div style="display:${sDisplay};">
+    const theContent = html` <div style="display:${sDisplay};">
       <div class="form-group">
         <lion-input-dateonly
           id=${this.theComponentId}

@@ -2,13 +2,15 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "strict": true,
     "sourceMap": true,
-    "module": "es6",
-    "target": "es6",
+    "module": "ES2022",
+    "target": "ES2022",
     "moduleResolution": "node",
-    "jsx": "react",
     "allowJs": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "noImplicitOverride": false,
+    "allowSyntheticDefaultImports": true
   }
 }

@@ -10,7 +10,7 @@ import '@lion/combobox/define';
 import { autoCompleteStyles } from './autocomplete-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -85,7 +85,7 @@ class AutoComplete extends FormComponentBase {
       theConfigProps.listType = 'associated';
     }
 
-    let { listType, datasource = [], columns = [], displayMode } = theConfigProps;
+    const { listType, datasource = [], columns = [], displayMode } = theConfigProps;
     this.columns = this.preProcessColumns(columns);
     if (listType === 'associated') {
       this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
@@ -93,9 +93,9 @@ class AutoComplete extends FormComponentBase {
     if (!displayMode && listType !== 'associated' && datasource.length > 0) {
       const workListData = PCore.getDataApiUtils().getData(datasource, {});
 
-      workListData.then((workListJSON: Object) => {
-        const optionsData: Array<any> = [];
-        const results = workListJSON['data'].data;
+      workListData.then((workListJSON: any) => {
+        const optionsData: any[] = [];
+        const results = workListJSON.data.data;
         const displayColumn = this.getDisplayFieldsMetaData(this.columns);
         results?.forEach(element => {
           const val = element[displayColumn.primary]?.toString();
@@ -111,6 +111,7 @@ class AutoComplete extends FormComponentBase {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (name === 'datasource') {
       if (newValue && oldValue !== newValue) {
         this.dataList = JSON.parse(newValue);
@@ -144,11 +145,7 @@ class AutoComplete extends FormComponentBase {
   }
 
   isSelected(buttonValue: string): boolean {
-    if (this.value === buttonValue) {
-      return true;
-    }
-
-    return false;
+    return this.value === buttonValue;
   }
 
   // Original comment in fieldOnChange event handler before it moved
@@ -168,7 +165,7 @@ class AutoComplete extends FormComponentBase {
 
   getErrorMessage() {
     const tempError = `${this.theComponentName}: getErrorMessage needs to have a field control implemented.`;
-    let errMessage: string = tempError;
+    const errMessage: string = tempError;
 
     console.error(tempError);
 
@@ -191,7 +188,7 @@ class AutoComplete extends FormComponentBase {
 
   fieldOnChange(event: any) {
     if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
-      let value = '';
+      const value = '';
       this.actions.onChange(this.thePConn, { value });
     } else {
       let key = '';
@@ -237,7 +234,7 @@ class AutoComplete extends FormComponentBase {
     //    (Default seems to only show the overlay once the user has started typing.)
     //  @focus is added to mimic the Angular SDK behavior of showing the overlay of when the
     //    control gets focus.
-    //@click=${this.fieldOnChange}
+    // @click=${this.fieldOnChange}
     const theContent = html` <div>
       ${this.bVisible
         ? html`

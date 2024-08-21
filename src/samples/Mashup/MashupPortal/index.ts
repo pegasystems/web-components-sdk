@@ -1,4 +1,4 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { html, customElement, LitElement } from '@lion/core';
 import { getSdkConfig, SdkConfigAccess, loginIfNecessary, sdkSetAuthHeader } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 
@@ -11,9 +11,6 @@ import '../MashupMain';
 
 // import the component's styles as HTML with <style>
 import { mashupPortalStyles } from './mashup-portal-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 @customElement('mashup-portal-component')
 class MashupPortal extends LitElement {
@@ -57,21 +54,19 @@ class MashupPortal extends LitElement {
   }
 
   getSimplePortalHtml(): any {
-    const sPHtml = html` <div class="column main-content">
+    return html` <div class="column main-content">
       <div id="app-nopega">
         <!-- <hello-world title="Pega App Below!" description="This is a &lt;hello-world&gt; web component in components/hello-world.ts"></hello-world> -->
       </div>
       <div id="pega-here"></div>
     </div>`;
-
-    return sPHtml;
   }
 
   render() {
     const sContent = this.getSimplePortalHtml();
     const locBootstrap = SdkConfigAccess?.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // MashupPortal not derived from BridgeBase, so we need to load Bootstrap CSS
     if (locBootstrap) {

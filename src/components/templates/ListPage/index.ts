@@ -7,9 +7,6 @@ import '../ListView';
 // ListPage doesn't have any styling
 // import { boilerplateStyles } from './boilerplate-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('list-page-component')
@@ -43,9 +40,9 @@ class ListPage extends BridgeBase {
 
     // setup this component's styling...
     // ListPage doesn't have any styling
-    //this.theComponentStyleTemplate = boilerplateStyles;
+    // this.theComponentStyleTemplate = boilerplateStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 

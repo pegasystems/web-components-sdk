@@ -11,24 +11,21 @@ import '@lion/button/define';
 import '../SummaryList';
 import '../ProgressIndicator';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('list-utility-extension')
 class ListUtility extends LitElement {
   @property({ attribute: true, type: String }) name = '';
   @property({ attribute: true, type: String }) icon = '';
   @property({ attribute: true, type: Boolean }) bLoading = false;
-  @property({ attribute: false }) count: number = 0;
-  @property({ attribute: false, type: Array }) arActions: Array<any> = [];
-  @property({ attribute: false, type: Array }) arItems: Array<any> = [];
+  @property({ attribute: false }) count = 0;
+  @property({ attribute: false, type: Array }) arActions: any[] = [];
+  @property({ attribute: false, type: Array }) arItems: any[] = [];
 
-  headerSvgIcon: string = '';
-  settingsSvgIcon: string = '';
+  headerSvgIcon = '';
+  settingsSvgIcon = '';
 
-  imagePath: string = '';
+  imagePath = '';
 
-  noItemsMessage: string = 'No Items';
+  noItemsMessage = 'No Items';
 
   elMenu: any = null;
 
@@ -51,10 +48,10 @@ class ListUtility extends LitElement {
     super.disconnectedCallback();
   }
 
-  getActionButtonMenuHtml(menuActions: Array<any>) {
-    const arButtonMenuHtml: Array<any> = [];
+  getActionButtonMenuHtml(menuActions: any[]) {
+    const arButtonMenuHtml: any[] = [];
 
-    for (let actionMenu of menuActions) {
+    for (const actionMenu of menuActions) {
       arButtonMenuHtml.push(html`
         <a @click=${actionMenu.onClick}
           >${actionMenu.icon != null
@@ -68,13 +65,11 @@ class ListUtility extends LitElement {
   }
 
   getItemsHtml(): any {
-    const iHtml = html` <summary-list-extension .arItems="${this.arItems}"></summary-list-extension> `;
-
-    return iHtml;
+    return html` <summary-list-extension .arItems="${this.arItems}"></summary-list-extension> `;
   }
 
   getListUtilityHtml(): any {
-    const lUHtml = html`
+    return html`
       <div style="text-align: left;">
         <div class="psdk-utility">
           <div class="header">
@@ -107,8 +102,6 @@ class ListUtility extends LitElement {
         </div>
       </div>
     `;
-
-    return lUHtml;
   }
 
   _showActionMenu(event: any) {
@@ -128,8 +121,9 @@ class ListUtility extends LitElement {
     window.addEventListener('mouseup', this._clickAway.bind(this));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _onViewAll(event: any) {
-    let newEvent = new CustomEvent('ViewAll', {});
+    const newEvent = new CustomEvent('ViewAll', {});
 
     this.dispatchEvent(newEvent);
   }
@@ -137,31 +131,34 @@ class ListUtility extends LitElement {
   toggleActionMenu(el: any) {
     if (el != null) {
       this.elMenu = el;
-      let actionMenu = el.getElementsByClassName('psdk-action-menu-content')[0];
+      const actionMenu = el.getElementsByClassName('psdk-action-menu-content')[0];
       if (actionMenu != null) {
         actionMenu.classList.toggle('show');
       }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   actionClick(event: any) {
-    //this._showActionMenu(event);
+    // this._showActionMenu(event);
 
     // remove clickAway listener
     window.removeEventListener('mouseup', this._clickAway.bind(this));
   }
 
   _clickAway(event: any) {
-    var bInMenu = false;
+    let bInMenu = false;
 
-    //run through list of elements in path, if menu not in th path, then want to
+    // run through list of elements in path, if menu not in th path, then want to
     // hide (toggle) the menu
-    for (let i in event.path) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i in event.path) {
       if (event.path[i].className == 'psdk-utility-menu') {
         bInMenu = true;
         break;
       }
     }
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (!bInMenu) {
       if (this.elMenu != null) {
         this.toggleActionMenu(this.elMenu);
@@ -176,7 +173,7 @@ class ListUtility extends LitElement {
     const sContent = html`${this.getListUtilityHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // ListUtility not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);

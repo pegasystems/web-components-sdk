@@ -10,23 +10,20 @@ import { caseSummaryFieldsStyles } from './case-summary-fields-styles';
 
 import '@lion/button/define';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('case-summary-fields-extension')
 class SummaryItem extends LitElement {
   @property({ attribute: true, type: String }) status = '';
-  @property({ attribute: true, type: Boolean }) bShowStatus: boolean = false;
+  @property({ attribute: true, type: Boolean }) bShowStatus = false;
 
-  @property({ attribute: false, type: Array }) arPrimaryFields: Array<any> = [];
-  @property({ attribute: false, type: Array }) arSecondaryFields: Array<any> = [];
+  @property({ attribute: false, type: Array }) arPrimaryFields: any[] = [];
+  @property({ attribute: false, type: Array }) arSecondaryFields: any[] = [];
 
   // local, so that when changed, will cause render
-  @property({ attribute: false, type: Array }) arPrimaryFieldsWithStatus: Array<any> = [];
+  @property({ attribute: false, type: Array }) arPrimaryFieldsWithStatus: any[] = [];
 
-  settingsSvgIcon: string = '';
+  settingsSvgIcon = '';
 
-  imagePath: string = '';
+  imagePath = '';
 
   elMenu: any = null;
 
@@ -47,7 +44,7 @@ class SummaryItem extends LitElement {
   }
 
   willUpdate(changedProperties: any) {
-    for (let key of changedProperties.keys()) {
+    for (const key of changedProperties.keys()) {
       // check for property changes, if so, normalize and render
       if (key == 'arPrimaryFields') {
         this.updatePrimaryWithStatus();
@@ -57,7 +54,7 @@ class SummaryItem extends LitElement {
 
   updatePrimaryWithStatus() {
     this.arPrimaryFieldsWithStatus = [];
-    for (let prim of this.arPrimaryFields) {
+    for (const prim of this.arPrimaryFields) {
       this.arPrimaryFieldsWithStatus.push(prim);
     }
 
@@ -77,6 +74,7 @@ class SummaryItem extends LitElement {
     const theLabel = field.config.label;
     const theLowerCaseLabel = theLabel.toLowerCase();
 
+    // eslint-disable-next-line sonarjs/no-small-switch
     switch (field.type.toLowerCase()) {
       case 'caseoperator':
         // CaseOperator is a special case since info for created and updated is passed in
@@ -84,12 +82,11 @@ class SummaryItem extends LitElement {
 
         if (theLowerCaseLabel === 'create operator') {
           return field.config.createLabel;
-        } else if (theLowerCaseLabel === 'update operator') {
-          return field.config.updateLabel;
-        } else {
-          return theLabel;
         }
-        break;
+        if (theLowerCaseLabel === 'update operator') {
+          return field.config.updateLabel;
+        }
+        return theLabel;
 
       default:
         return field.config.label;
@@ -98,12 +95,9 @@ class SummaryItem extends LitElement {
 
   getFieldValue(field: any): any {
     if (field.config.value == null || field.config.value == '') {
-      switch (field.type.toLowerCase()) {
-        case 'caseoperator':
-          return html`<operator-extension .caseOpConfig=${field.config}></operator-extension>`;
-        default:
-          return html`<span class="psdk-csf-text-style">---</span>`;
-      }
+      return field.type.toLowerCase() === 'caseoperator'
+        ? html`<operator-extension .caseOpConfig=${field.config}></operator-extension>`
+        : html`<span class="psdk-csf-text-style">---</span>`;
     }
 
     switch (field.type.toLowerCase()) {
@@ -125,9 +119,9 @@ class SummaryItem extends LitElement {
   }
 
   getPrimaryFieldsHtml(): any {
-    let pFHtml: Array<any> = [];
+    const pFHtml: any[] = [];
 
-    for (let field of this.arPrimaryFieldsWithStatus) {
+    for (const field of this.arPrimaryFieldsWithStatus) {
       pFHtml.push(html`
         <div class="psdk-csf-primary-field">
           <dt class="psdk-csf-primary-field-header">${this.getFieldLabel(field)}</dt>
@@ -140,9 +134,9 @@ class SummaryItem extends LitElement {
   }
 
   getSecondaryFieldsHtml(): any {
-    let sFHtml: Array<any> = [];
+    const sFHtml: any[] = [];
 
-    for (let field of this.arSecondaryFields) {
+    for (const field of this.arSecondaryFields) {
       sFHtml.push(html`
         <div class="psdk-csf-secondary-field">
           <dt class="psdk-csf-secondary-field-header">${this.getFieldLabel(field)}</dt>
@@ -155,7 +149,7 @@ class SummaryItem extends LitElement {
   }
 
   getCaseSummaryFieldsHtml(): any {
-    let cSFHtml = html`
+    return html`
       <div class="psdk-case-summary-fields">
         <dl class="psdk-case-summary-fields-primary">${this.getPrimaryFieldsHtml()}</dl>
       </div>
@@ -163,15 +157,13 @@ class SummaryItem extends LitElement {
         <dl class="psdk-case-summary-fields-secondary">${this.getSecondaryFieldsHtml()}</dl>
       </div>
     `;
-
-    return cSFHtml;
   }
 
   render() {
     const sContent = html`${this.getCaseSummaryFieldsHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // SummaryItem not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);

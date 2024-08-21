@@ -9,7 +9,7 @@ import '../ReAuthenticationModal';
 import '../Reference';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -25,7 +25,7 @@ class RootContainer extends BridgeBase {
   @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
   @property({ attribute: true, type: Boolean }) isMashup = false;
 
-  componentName: string = '';
+  componentName = '';
   newPConn: any;
 
   constructor() {
@@ -98,7 +98,7 @@ class RootContainer extends BridgeBase {
 
     this.modalViewContainerConn = configObjModal.getPConnect();
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -131,17 +131,8 @@ class RootContainer extends BridgeBase {
     const renderingModes = ['portal', 'view'];
     const noPortalMode = 'noPortal';
 
-    let myContext = 'app';
-    if (this.isMashup) {
-      myContext = 'root';
-    }
-
-    const options = { context: myContext };
-
-    //const { renderingMode, viewConfig, children, skeleton } = myProps;
     const {
       renderingMode,
-      viewConfig,
       children,
       skeleton,
       /* httpMessages, */
@@ -166,12 +157,12 @@ class RootContainer extends BridgeBase {
             }
           });
 
-          //this.createdPConnect = rootObject;
+          // this.createdPConnect = rootObject;
           this.newPConn = rootObject.getPConnect();
-          //const thePConnComponentName = this.createdPConnect.getPConnect().getComponentName();
+          // const thePConnComponentName = this.createdPConnect.getPConnect().getComponentName();
           this.componentName = this.newPConn.getComponentName();
 
-          //if (this.bLogging) { console.log(`${this.theComponentName}: created ${thePConnComponentName}`); }
+          // if (this.bLogging) { console.log(`${this.theComponentName}: created ${thePConnComponentName}`); }
         }
       }
     } else if (renderingMode == noPortalMode) {
@@ -181,31 +172,31 @@ class RootContainer extends BridgeBase {
 
       const theChildren = this.children;
       if (theChildren && theChildren.length == 1) {
-        //this.createdPConnect =  theChildren[0];
-        //this.createdPConnect = null;
-        let localPConn = theChildren[0].getPConnect();
+        // this.createdPConnect =  theChildren[0];
+        // this.createdPConnect = null;
+        const localPConn = theChildren[0].getPConnect();
         this.newPConn = this.thePConn;
 
         this.componentName = localPConn.getComponentName();
 
-        //if (this.bLogging) { console.log(`${this.theComponentName}: has child ${this.createdPConnect.getPConnect().getComponentName()}`); }
+        // if (this.bLogging) { console.log(`${this.theComponentName}: has child ${this.createdPConnect.getPConnect().getComponentName()}`); }
       }
     } else if (children && children.length > 0) {
-      //return <div id="root-container">{children}</div>;
+      // return <div id="root-container">{children}</div>;
 
       // currently we never get here, but we should get here for mashup
-      alert('here with children: ' + children);
+      alert(`here with children: ${children}`);
     } else if (skeleton !== undefined) {
       if (this.bLogging) {
         console.log(`${this.theComponentName}: updateSelf: skeleton !== undefined`);
       }
       // TODO: need to update once skeletons are available;
-      //const LoadingComponent = LazyComponentMap[skeleton];
-      //return <LoadingComponent />;
-      //alert("skeleton");
+      // const LoadingComponent = LazyComponentMap[skeleton];
+      // return <LoadingComponent />;
+      // alert("skeleton");
 
       //
-      //I believe we should turn on the spinner here.  We should
+      // I believe we should turn on the spinner here.  We should
       // check if spinner is already on and if no, turn on.  We should
       // check so we don't keep update the boolean and cause an angular error
       //
@@ -217,7 +208,7 @@ class RootContainer extends BridgeBase {
       //   });
     } else {
       alert("didn't match any tests");
-      //return null;
+      // return null;
     }
   }
 
@@ -243,7 +234,7 @@ class RootContainer extends BridgeBase {
   }
 
   getRootHtml(): any {
-    let arKidHtml: Array<Object> = [];
+    const arKidHtml: Object[] = [];
     // modalviewcontainer and hybridviewcontainer are handled elsewhere
     switch (this.componentName) {
       case 'View':
@@ -306,7 +297,7 @@ class RootContainer extends BridgeBase {
     }
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
-    //this.addChildTemplates();
+    // this.addChildTemplates();
     this.renderTemplates.push(html`${this.getRootHtml()}`);
 
     // always add the ReAuthenticationModal

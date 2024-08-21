@@ -10,20 +10,20 @@ import '@lion/textarea/define';
 import { mashupBundleSwatchStyles } from './mashup-bundle-swatch-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('mashup-bundle-swatch-component')
 class MashupBundleSwatch extends LitElement {
   @property({ attribute: false, type: Object }) swatchConfig;
 
-  labelPlay: string = '';
-  labelLevel: string = '';
-  labelChannelCount: string = '';
-  labelChannelFull: string = '';
-  labelBanner: string = '';
-  labelDollars: string = '';
-  labelCents: string = '';
-  labelInternetSpeed: string = '';
+  labelPlay = '';
+  labelLevel = '';
+  labelChannelCount = '';
+  labelChannelFull = '';
+  labelBanner = '';
+  labelDollars = '';
+  labelCents = '';
+  labelInternetSpeed = '';
 
   extraCalling = '';
 
@@ -41,7 +41,7 @@ class MashupBundleSwatch extends LitElement {
     this.labelChannelFull = this.swatchConfig.channels_full;
     this.labelBanner = this.swatchConfig.banner;
     this.labelDollars = this.swatchConfig.price.substring(0, this.swatchConfig.price.indexOf('.'));
-    this.labelCents = this.swatchConfig.price.substring(this.swatchConfig.price.indexOf('.') + 1) + '/month';
+    this.labelCents = `${this.swatchConfig.price.substring(this.swatchConfig.price.indexOf('.') + 1)}/month`;
     this.extraCalling = this.swatchConfig.calling;
     this.labelInternetSpeed = this.swatchConfig.internetSpeed;
   }
@@ -52,7 +52,7 @@ class MashupBundleSwatch extends LitElement {
   }
 
   getButtonSwatchHtml(): any {
-    const bSHtml = html`
+    return html`
       <div>
         <div class="cc-swatch-header">
           <div class="cc-swatch-package">
@@ -100,15 +100,13 @@ class MashupBundleSwatch extends LitElement {
         </div>
       </div>
     `;
-
-    return bSHtml;
   }
 
   render() {
     const sContent = this.getButtonSwatchHtml();
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // MashupBundleSwatch not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
@@ -120,7 +118,7 @@ class MashupBundleSwatch extends LitElement {
   }
 
   _shopClick(sLevel: string) {
-    let event = new CustomEvent('ShopNowButtonClick', {
+    const event = new CustomEvent('ShopNowButtonClick', {
       detail: { data: sLevel }
     });
 

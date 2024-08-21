@@ -7,7 +7,7 @@ import '../MultiReferenceReadonly';
 import '../SingleReferenceReadonly';
 import '../../forms/SemanticLink';
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -25,7 +25,7 @@ class DataReference extends BridgeBase {
   @property({ attribute: false, type: Boolean }) hideLabel = false;
 
   // Vars from Cosmos React DX Component implementation
-  childrenToRender: Array<any> = [];
+  childrenToRender: any[] = [];
   dropDownDataSource: String = '';
   isDisplayModeEnabled: Boolean = false;
   propsToUse: any = {};
@@ -63,7 +63,7 @@ class DataReference extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // Update properties based on configProps
@@ -84,14 +84,14 @@ class DataReference extends BridgeBase {
     this.isDisplayModeEnabled = ['LABELS_LEFT', 'STACKED_LARGE_VAL'].includes(this.displayMode);
 
     this.propsToUse = { label: this.label, showLabel: this.showLabel, ...this.thePConn.getInheritedProps() };
-    if (this.propsToUse['showLabel'] === false) {
-      this.propsToUse['label'] = '';
+    if (this.propsToUse.showLabel === false) {
+      this.propsToUse.label = '';
     }
 
     this.rawViewMetadata = this.thePConn.getRawMetadata();
-    this.viewName = this.rawViewMetadata['name'];
-    this.firstChildMeta = this.rawViewMetadata['children'][0];
-    this.refList = this.rawViewMetadata['config']['referenceList'];
+    this.viewName = this.rawViewMetadata.name;
+    this.firstChildMeta = this.rawViewMetadata.children[0];
+    this.refList = this.rawViewMetadata.config.referenceList;
     this.canBeChangedInReviewMode = this.allowAndPersistChangesInReviewMode && (this.displayAs === 'autocomplete' || this.displayAs === 'dropdown');
 
     // Do the rest of the setup from the Cosmos React DX Component
@@ -271,26 +271,24 @@ class DataReference extends BridgeBase {
   }
 
   getDataReferenceHtml(): any {
-    const dataRefHtml = html`<div>${this.processChildrenToRender()}</div>`;
-
-    return dataRefHtml;
+    return html`<div>${this.processChildrenToRender()}</div>`;
   }
 
   processChildrenToRender(): any {
-    let childrenToRenderAsComponents: Array<any> = [];
+    const childrenToRenderAsComponents: any[] = [];
 
     if (this.displayMultiref) {
       return html`<multi-reference-readonly .pConn=${this.firstChildPConnect()} .hideLabel=${this.hideLabel} .label=${this.propsToUse.label}>
       </multi-reference-readonly>`;
-    } else if (this.displaySingleRef) {
-      return html`<single-reference-readonly .pConn=${this.firstChildPConnect()}> </single-reference-readonly>`;
-    } else {
-      this.childrenToRender.map(child => {
-        childrenToRenderAsComponents.push(this.convertChildToComponent(child));
-      });
-
-      return childrenToRenderAsComponents;
     }
+    if (this.displaySingleRef) {
+      return html`<single-reference-readonly .pConn=${this.firstChildPConnect()}> </single-reference-readonly>`;
+    }
+    this.childrenToRender.forEach(child => {
+      childrenToRenderAsComponents.push(this.convertChildToComponent(child));
+    });
+
+    return childrenToRenderAsComponents;
   }
 
   convertChildToComponent(inChild): any {

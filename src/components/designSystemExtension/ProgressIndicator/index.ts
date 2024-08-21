@@ -1,4 +1,4 @@
-import { html, css, customElement, property, LitElement, nothing } from '@lion/core';
+import { html, css, customElement } from '@lion/core';
 import { LionProgressIndicator } from '@lion/progress-indicator';
 
 // NOTE: you need to import ANY component you may render.

@@ -1,8 +1,8 @@
-import { LitElement, nothing, html, customElement, property } from '@lion/core';
+import { LitElement, nothing, customElement } from '@lion/core';
 // NOTE: you need to import ANY component you may render.
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -39,6 +39,7 @@ class ReAuthenticationModal extends LitElement {
   }
 
   launchReAuthenticationModal(reAuthProps) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const reauthUrl = reAuthProps.url;
     window.alert(`Authentication token has expired. For now, you need to close this browser window and login again.`);
     // Note: for now, this is the best we can do since the updateSession API call is giving a CORS error.

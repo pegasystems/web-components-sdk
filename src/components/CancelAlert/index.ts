@@ -6,7 +6,7 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 import { cancelAlertStyles } from './cancel-alert-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -16,10 +16,10 @@ class CancelAlert extends BridgeBase {
 
   @property({ attribute: false, type: Boolean }) bShowAlert = false;
 
-  heading: string = '';
-  body1: string = '';
-  body2: string = '';
-  itemKey: string = '';
+  heading = '';
+  body1 = '';
+  body2 = '';
+  itemKey = '';
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -49,7 +49,7 @@ class CancelAlert extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = cancelAlertStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -64,9 +64,9 @@ class CancelAlert extends BridgeBase {
     }
   }
 
-  updated(changedProperties) {
+  updated() {
     if (this.bShowAlert) {
-      //this.psService.sendMessage(false);
+      // this.psService.sendMessage(false);
 
       const contextName = this.thePConn.getContextName();
       const caseInfo = this.thePConn.getCaseInfo();
@@ -74,12 +74,12 @@ class CancelAlert extends BridgeBase {
       const ID = caseInfo.getID();
 
       this.itemKey = contextName;
-      this.heading = 'Delete ' + caseName + ' (' + ID + ')';
-      this.body1 = 'Are you sure you want to delete ' + caseName + ' (' + ID + ')?';
+      this.heading = `Delete ${caseName} (${ID})`;
+      this.body1 = `Are you sure you want to delete ${caseName} (${ID})?`;
       this.body2 = 'Alternatively, you can continue working or save your work for later.';
 
-      //this.onAlertState$.emit(true);
-      let event = new CustomEvent('AlertState', {
+      // this.onAlertState$.emit(true);
+      const event = new CustomEvent('AlertState', {
         detail: { data: true }
       });
 
@@ -121,7 +121,7 @@ class CancelAlert extends BridgeBase {
   }
 
   getCancelAlertHtml(): any {
-    const cAHtml = html`
+    return html`
       ${this.bShowAlert
         ? html` <div class="psdk-cancel-alert-background ">
             <div class="psdk-cancel-alert-top">
@@ -143,8 +143,6 @@ class CancelAlert extends BridgeBase {
           </div>`
         : html``}
     `;
-
-    return cAHtml;
   }
 
   render() {
@@ -173,9 +171,9 @@ class CancelAlert extends BridgeBase {
   dismissAlert() {
     this.bShowAlert = false;
 
-    //this.onAlertState$.emit(false);
+    // this.onAlertState$.emit(false);
 
-    let event = new CustomEvent('AlertState', {
+    const event = new CustomEvent('AlertState', {
       detail: { data: false }
     });
 
@@ -183,13 +181,13 @@ class CancelAlert extends BridgeBase {
   }
 
   sendMessage(sMessage: string) {
-    //this.snackBarRef = this.snackBar.open(sMessage,"Ok", { duration: 3000});
-    //this.erService.sendMessage("show", sMessage);
+    // this.snackBarRef = this.snackBar.open(sMessage,"Ok", { duration: 3000});
+    // this.erService.sendMessage("show", sMessage);
     alert(sMessage);
   }
 
   _buttonClick(e: any) {
-    let target = e.target;
+    const target = e.target;
     this.buttonClick(target.getAttribute('jsAction'));
   }
 
@@ -209,7 +207,7 @@ class CancelAlert extends BridgeBase {
             this.dismissAlert();
 
             this.sendMessage('Sucessfully saved!');
-            //this.erservice.sendMessage("show", "Successfully saved!");
+            // this.erservice.sendMessage("show", "Successfully saved!");
             // let timer = interval(1500).subscribe(() => {
             //   timer.unsubscribe();
             //   this.erservice.sendMessage("show", "Successfully saved!");
@@ -221,7 +219,7 @@ class CancelAlert extends BridgeBase {
             // toasterCtx.push({
             //   content: "Save failed."
             // });
-            //this.erservice.sendMessage("show", "Save failed.");
+            // this.erservice.sendMessage("show", "Save failed.");
             // let timer = interval(1500).subscribe(() => {
             //   timer.unsubscribe();
             //   this.erservice.sendMessage("show", "Save failed.");
@@ -248,6 +246,8 @@ class CancelAlert extends BridgeBase {
             //   });
             this.sendMessage('Delete failed.');
           });
+        break;
+      default:
         break;
     }
   }

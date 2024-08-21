@@ -14,7 +14,7 @@ import '../designSystemExtension/ProgressIndicator';
 import { viewContainerStyles } from './view-container-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -27,7 +27,7 @@ class ViewContainer extends BridgeBase {
   @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
 
   @property({ attribute: false, type: String }) templateName;
-  @property({ attribute: false, type: String }) title: string = `${this.theComponentName}: placeholder`;
+  @property({ attribute: false, type: String }) title = `${this.theComponentName}: placeholder`;
   @property({ attribute: false, type: String }) theBuildName;
   @property({ attribute: false, type: String }) context;
   // JA - created object is now a View with a Template
@@ -66,16 +66,16 @@ class ViewContainer extends BridgeBase {
     // Add this component's styles to the array of templates to render
     this.theComponentStyleTemplate = viewContainerStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     const configProps = this.thePConn.getConfigProps();
-    this.templateName = 'template' in configProps ? configProps['template'] : '';
-    let { loadingInfo, limit, mode } = configProps;
+    this.templateName = 'template' in configProps ? configProps.template : '';
+    const { loadingInfo, limit, mode } = configProps;
     if (this.bLogging) {
       console.log(`--> ${this.theComponentName} - templateName: ${this.templateName}`);
     }
-    this.title = 'title' in configProps ? configProps['title'] : '';
+    this.title = 'title' in configProps ? configProps.title : '';
     this.theBuildName = this.buildName();
     const { CONTAINER_TYPE, APP } = PCore.getConstants();
 
@@ -104,10 +104,11 @@ class ViewContainer extends BridgeBase {
 
     if (mode === CONTAINER_TYPE.MULTIPLE && limit) {
       /* NOTE: setContainerLimit use is temporary. It is a non-public, unsupported API. */
+      // eslint-disable-next-line no-restricted-globals
       PCore.getContainerUtils().setContainerLimit(`${APP.APP}/${name}`, limit);
     }
 
-    if (this.thePConn.getMetadata()['children']) {
+    if (this.thePConn.getMetadata().children) {
       containerMgr.addContainerItem(dispatchObject);
     }
   }
@@ -173,21 +174,21 @@ class ViewContainer extends BridgeBase {
       console.log(`${this.theComponentName}: routingInfo prop: ${JSON.stringify(routingInfo)} | loadingInfo: ${loadingInfo}`);
     }
 
-    const buildName = this.buildName();
+    // const buildName = this.buildName();
     const { CREATE_DETAILS_VIEW_NAME } = PCore.getConstants();
     if (routingInfo) {
       const { accessedOrder, items } = routingInfo;
       if (accessedOrder && items) {
         const key = accessedOrder[accessedOrder.length - 1];
-        let componentVisible = accessedOrder.length > 0;
-        const { visible } = this.state;
-        componentVisible = visible || componentVisible;
+        // let componentVisible = accessedOrder.length > 0;
+        // const { visible } = this.state;
+        // componentVisible = visible || componentVisible;
         if (items[key] && items[key].view && Object.keys(items[key].view).length > 0) {
           const latestItem = items[key];
           const rootView = latestItem.view;
           const { context, name: viewName } = rootView.config;
-          const config = { meta: rootView };
-          config['options'] = {
+          const config: any = { meta: rootView };
+          config.options = {
             context: latestItem.context,
             pageReference: context || this.thePConn.getPageReference(),
             containerName: this.thePConn.getContainerName(),
@@ -218,8 +219,8 @@ class ViewContainer extends BridgeBase {
 
           this.createdViewPConn = newComp;
           const newConfigProps = newComp.getConfigProps();
-          this.templateName = 'template' in newConfigProps ? newConfigProps['template'] : '';
-          this.title = 'title' in newConfigProps ? newConfigProps['title'] : '';
+          this.templateName = 'template' in newConfigProps ? newConfigProps.template : '';
+          this.title = 'title' in newConfigProps ? newConfigProps.title : '';
 
           // debugger;     // NOW a reference component!!!
 
@@ -251,10 +252,10 @@ class ViewContainer extends BridgeBase {
   }
 
   buildName(): string {
-    let sContext = this.thePConn.getContextName();
-    let sName = this.thePConn.getContainerName();
+    const sContext = this.thePConn.getContextName();
+    const sName = this.thePConn.getContainerName();
 
-    return sContext.toUpperCase() + '/' + sName.toUpperCase();
+    return `${sContext.toUpperCase()}/${sName.toUpperCase()}`;
   }
 
   render() {
@@ -288,6 +289,7 @@ class ViewContainer extends BridgeBase {
       theInnerTemplate = html` ${this.getChildTemplateArray()} `;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const theOuterTemplate = html`
       <div class="psdk-view-container-top" id=${this.theBuildName}>
         ${this.title !== '' ? html`<h4>${this.title}</h4>` : nothing}

@@ -1,13 +1,10 @@
-import { html, customElement, property } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../TwoColumn';
 
 // import the component's styles as HTML with <style>
 // NO styles for TwoColumnPage
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -38,7 +35,7 @@ class TwoColumnPage extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 

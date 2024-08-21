@@ -1,11 +1,9 @@
 import { customElement } from '@lion/core';
-import { LionInputDate } from '@lion/input-date';
 import { LionInput } from '@lion/input';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 
 loadDefaultFeedbackMessages();
 
-const toIsoDatetime = d => d && new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('.')[0];
 const toTime = d => d;
 
 @customElement('lion-input-timeonly')

@@ -9,9 +9,6 @@ import { summaryItemStyles } from './summary-item-styles';
 
 import '@lion/button/define';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('summary-item-extension')
 class SummaryItem extends LitElement {
   @property({ attribute: false }) item: any;
@@ -19,9 +16,9 @@ class SummaryItem extends LitElement {
   @property({ attribute: true, type: String }) menuIconOverride = '';
   @property({ attribute: false }) menuIconOverrideAction: any;
 
-  settingsSvgIcon: string = '';
+  settingsSvgIcon = '';
 
-  imagePath: string = '';
+  imagePath = '';
 
   elMenu: any = null;
 
@@ -46,10 +43,10 @@ class SummaryItem extends LitElement {
     super.disconnectedCallback();
   }
 
-  getActionButtonMenuHtml(menuActions: Array<any>) {
-    const arButtonMenuHtml: Array<any> = [];
+  getActionButtonMenuHtml(menuActions: any[]) {
+    const arButtonMenuHtml: any[] = [];
 
-    for (let actionMenu of menuActions) {
+    for (const actionMenu of menuActions) {
       arButtonMenuHtml.push(html`
         <a @click=${actionMenu.onClick}
           >${actionMenu.icon != null
@@ -63,7 +60,7 @@ class SummaryItem extends LitElement {
   }
 
   getItemHtml(): any {
-    const iHtml = html` <div class="psdk-utility-card">
+    return html` <div class="psdk-utility-card">
       <div class="psdk-utility-card-icon">
         <img class="psdk-utility-card-svg-icon" src="${this.imagePath}${this.item.visual.icon}.svg" />
       </div>
@@ -93,8 +90,6 @@ class SummaryItem extends LitElement {
             `}
       </div>
     </div>`;
-
-    return iHtml;
   }
 
   _showActionMenu(event: any) {
@@ -119,25 +114,28 @@ class SummaryItem extends LitElement {
     this._clickAway($event);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _onViewAll(event: any) {}
 
   toggleActionMenu(el: any) {
     if (el != null) {
       this.elMenu = el;
-      let actionMenu = el.getElementsByClassName('psdk-action-menu-content')[0];
+      const actionMenu = el.getElementsByClassName('psdk-action-menu-content')[0];
       if (actionMenu != null) {
         actionMenu.classList.toggle('show');
       }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   actionClick(event: any) {
-    //this._showActionMenu(event);
+    // this._showActionMenu(event);
 
     // remove clickAway listener
     window.removeEventListener('mouseup', this._clickAway.bind(this));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _clickAway(event: any) {
     if (this.elMenu != null) {
       this.toggleActionMenu(this.elMenu);
@@ -151,7 +149,7 @@ class SummaryItem extends LitElement {
     const sContent = html`${this.getItemHtml()}`;
 
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // SummaryItem not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);

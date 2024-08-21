@@ -7,18 +7,15 @@ import '../../../components/View';
 // import the component's styles as HTML with <style>
 import { detailsFieldsStyles } from './details-fields-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('details-fields-extension')
 class DetailsFields extends LitElement {
-  @property({ attribute: true, type: Array }) arFields: Array<any> = [];
-  @property({ attribute: true, type: Array }) arFields2: Array<any> = [];
-  @property({ attribute: true, type: Array }) arFields3: Array<any> = [];
+  @property({ attribute: true, type: Array }) arFields: any[] = [];
+  @property({ attribute: true, type: Array }) arFields2: any[] = [];
+  @property({ attribute: true, type: Array }) arFields3: any[] = [];
 
-  settingsSvgIcon: string = '';
+  settingsSvgIcon = '';
 
-  imagePath: string = '';
+  imagePath = '';
 
   elMenu: any = null;
 
@@ -30,7 +27,7 @@ class DetailsFields extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    //this.updateFields();
+    // this.updateFields();
   }
 
   disconnectedCallback() {
@@ -39,14 +36,14 @@ class DetailsFields extends LitElement {
   }
 
   getFieldLabel(field: any) {
-    switch (field.type.toLowerCase()) {
-      default:
-        return field.config.label;
+    if (field.type.toLowerCase()) {
+      return field.config.label;
     }
   }
 
   getFieldValue(field: any): any {
     if (field.config.value == null || field.config.value == '') {
+      // eslint-disable-next-line sonarjs/no-small-switch
       switch (field.type.toLowerCase()) {
         case 'caseoperator':
           return html``;
@@ -74,9 +71,9 @@ class DetailsFields extends LitElement {
   }
 
   getFieldsHtml(arFields): any {
-    let arFHtml: Array<any> = [];
+    const arFHtml: any[] = [];
 
-    for (let field of arFields) {
+    for (const field of arFields) {
       if (field?.type === 'reference') {
         arFHtml.push(html`
           <div>
@@ -97,22 +94,20 @@ class DetailsFields extends LitElement {
   }
 
   getDetailsFieldsHtml(): any {
-    let arDetailsHtml = html`
+    return html`
       <div class="psdk-details-group">
         <div class="psdk-details-fields">
           <dl class="psdk-details-fields-primary" id="details-fields-list">${this.getFieldsHtml(this.arFields)}</dl>
         </div>
       </div>
     `;
-
-    return arDetailsHtml;
   }
 
   render() {
     const sContent = html`${this.getDetailsFieldsHtml()}`;
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // DetailsFields not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);

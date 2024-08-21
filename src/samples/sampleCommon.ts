@@ -6,6 +6,7 @@ export const sampleMainInit = (elMain, startingComp, mainElName) => {
     if (replaceMe === null) {
       const myShadowRoot = document.getElementsByTagName(startingComp)[0].shadowRoot;
       if (myShadowRoot) {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const replaceMe = myShadowRoot.getElementById('pega-here');
         const elPrePegaHdr = myShadowRoot.getElementById('app-nopega');
         if (elPrePegaHdr) elPrePegaHdr.style.display = 'none';

@@ -8,7 +8,7 @@ import { Utils } from '../../../helpers/utils';
 import { operatorStyles } from './operator-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('operator-extension')
 class Operator extends LitElement {
@@ -42,7 +42,7 @@ class Operator extends LitElement {
     //  Create and Update operator info and we need to use the "label" to determine
     //  which is being requested.
     let theRealOperator: any = {};
-    let theRealTime: string = '';
+    let theRealTime = '';
 
     const theLowerCaseLabel = this.caseOpConfig?.label.toLowerCase();
 
@@ -55,6 +55,8 @@ class Operator extends LitElement {
       case 'update operator':
         theRealOperator = this.caseOpConfig.updateOperator;
         theRealTime = this.caseOpConfig.updateDateTime;
+        break;
+      default:
         break;
     }
 
@@ -231,7 +233,7 @@ class Operator extends LitElement {
     }
 
     const locBootstrap = SdkConfigAccess.getSdkConfigBootstrapCSS();
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
 
     // Operator not derived from BridgeBase, so we need to load Bootstrap CSS
     arHtml.push(html`<link rel="stylesheet" href="${locBootstrap}" />`);
@@ -243,11 +245,12 @@ class Operator extends LitElement {
   }
 
   _clickAway(event: any) {
-    var bInMenu = false;
+    let bInMenu = false;
 
-    //run through list of elements in path, if menu not in th path, then want to
+    // run through list of elements in path, if menu not in th path, then want to
     // hide (toggle) the menu
-    for (let i in event.path) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i in event.path) {
       if (event.path[i].className == 'psdk-operator-popover' || event.path[i].className == 'btn-link') {
         bInMenu = true;
         break;

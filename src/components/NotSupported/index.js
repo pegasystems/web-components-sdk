@@ -2,12 +2,6 @@ import { html } from '@lion/core';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import '@vaadin/text-field';
 
-// To experiment with BridgeMixin (functional composition mixin) along with
-//  extending the component, use the following lines:
-//
-// import { BridgeMixin } from '../../bridge/BridgeMixin';
-// class NotSupported extends BridgeMixin()( BridgeBase ) {
-
 class NotSupported extends BridgeBase {
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -51,7 +45,7 @@ class NotSupported extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 

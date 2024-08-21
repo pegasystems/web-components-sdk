@@ -8,9 +8,6 @@ import '@lion/input-amount/define';
 // import the component's styles as HTML with <style>
 import { currencyStyles } from './currency-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('currency-form')
@@ -48,7 +45,7 @@ class Currency extends FormComponentBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = currencyStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -73,12 +70,12 @@ class Currency extends FormComponentBase {
 
     const theConfigProps = this.thePConn.getConfigProps();
 
-    if (theConfigProps['currencyISOCode'] !== null && theConfigProps['currencyISOCode'] !== undefined) {
-      this.currencyISOCode = theConfigProps['currencyISOCode'];
+    if (theConfigProps.currencyISOCode !== null && theConfigProps.currencyISOCode !== undefined) {
+      this.currencyISOCode = theConfigProps.currencyISOCode;
     }
 
-    if (theConfigProps['allowDecimals'] !== null && theConfigProps['allowDecimals'] !== undefined) {
-      this.bAllowDecimals = Utils.getBooleanValue(theConfigProps['allowDecimals']);
+    if (theConfigProps.allowDecimals !== null && theConfigProps.allowDecimals !== undefined) {
+      this.bAllowDecimals = Utils.getBooleanValue(theConfigProps.allowDecimals);
     }
 
     if (this.bAllowDecimals) {

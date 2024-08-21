@@ -1,15 +1,11 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement, property } from '@lion/core';
 import { BridgeBase } from '../../../bridge/BridgeBase';
-import * as isEqual from 'fast-deep-equal';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { caseSummaryStyles } from './case-summary-styles';
 
 import '../../designSystemExtension/CaseSummaryFields';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -18,12 +14,12 @@ class CaseSummary extends BridgeBase {
   @property({ attribute: false, type: String }) status = '';
   @property({ attribute: false, type: Boolean }) showStatus = false;
 
-  arPrimaryFields: Array<any> = [];
-  arSecondaryFields: Array<any> = [];
+  arPrimaryFields: any[] = [];
+  arSecondaryFields: any[] = [];
 
   // copies of previous primary and secondary rawmeta
-  sOldPrimaryMeta: string = '';
-  sOldSecondaryMeta: string = '';
+  sOldPrimaryMeta = '';
+  sOldSecondaryMeta = '';
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -53,12 +49,12 @@ class CaseSummary extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = caseSummaryStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // store off old metadata
-    let primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
-    let secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
+    const primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
+    // const secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
     this.sOldPrimaryMeta = JSON.stringify(primaryMeta);
     this.sOldSecondaryMeta = JSON.stringify(primaryMeta);
   }
@@ -86,13 +82,13 @@ class CaseSummary extends BridgeBase {
     }
 
     const configProps = this.thePConn.getConfigProps();
-    this.status = configProps['status'];
-    this.showStatus = configProps['showStatus'];
+    this.status = configProps.status;
+    this.showStatus = configProps.showStatus;
 
     // get primary and secodary fields
-    for (let kid of this.children) {
-      let pKid = kid.getPConnect();
-      let pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
+    for (const kid of this.children) {
+      const pKid = kid.getPConnect();
+      const pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
       if (pKidData.name.toLowerCase() == 'primary fields') {
         this.arPrimaryFields = pKidData.children;
       } else if (pKidData.name.toLowerCase() == 'secondary fields') {
@@ -104,11 +100,11 @@ class CaseSummary extends BridgeBase {
   }
 
   rawMetaChanged(): boolean {
-    let bHasChanged: boolean = false;
+    let bHasChanged = false;
 
     // going to check
-    let primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
-    let secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
+    const primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
+    const secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
 
     bHasChanged = !(JSON.stringify(primaryMeta) == this.sOldPrimaryMeta);
     if (!bHasChanged) {
@@ -144,6 +140,7 @@ class CaseSummary extends BridgeBase {
     // standard bShouldUpdate, but if no changes, then check the raw meta data of the children (primary and secondary fields)
     if (bShouldUpdate) {
       this.updateSelf();
+      // eslint-disable-next-line sonarjs/no-duplicated-branches
     } else if (this.rawMetaChanged()) {
       this.updateSelf();
     }
@@ -153,16 +150,16 @@ class CaseSummary extends BridgeBase {
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
-  getChildRegionArray(inName: String): Array<Object> {
+  getChildRegionArray(inName: String): Object[] {
     if (this.bDebug) {
       debugger;
     }
-    let theRetArray: Array<Object> = [];
+    const theRetArray: Object[] = [];
     let iFound = 0;
 
-    for (var child of this.children) {
-      const theMetadataType: string = child.getPConnect().getRawMetadata()['type'].toLowerCase();
-      const theMetadataName: string = child.getPConnect().getRawMetadata()['name'].toLowerCase();
+    for (const child of this.children) {
+      const theMetadataType: string = child.getPConnect().getRawMetadata().type.toLowerCase();
+      const theMetadataName: string = child.getPConnect().getRawMetadata().name.toLowerCase();
 
       if (theMetadataType === 'region' && theMetadataName === inName) {
         iFound++;
@@ -199,7 +196,7 @@ class CaseSummary extends BridgeBase {
 
     this.renderTemplates.push(theContent);
 
-    //this.addChildTemplates();
+    // this.addChildTemplates();
 
     return this.renderTemplates;
   }

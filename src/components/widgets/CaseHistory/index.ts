@@ -8,7 +8,7 @@ import '../../designSystemExtension/ProgressIndicator';
 // import the component's styles as HTML with <style>
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -53,7 +53,7 @@ class CaseHistory extends BridgeBase {
       debugger;
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // const theConfigProps = this.thePConn.getConfigProps();
@@ -66,8 +66,8 @@ class CaseHistory extends BridgeBase {
 
     const historyData = PCore.getDataApiUtils().getData(dataViewName, `{"dataViewParameters":[{"CaseInstanceKey":"${caseID}"}]}`, context);
 
-    historyData.then((historyJSON: Object) => {
-      const tableDataResults = historyJSON['data'].data;
+    historyData.then((historyJSON: any) => {
+      const tableDataResults = historyJSON.data.data;
 
       // compute the rowData using the tableDataResults
       this.computeRowData(tableDataResults);
@@ -125,17 +125,17 @@ class CaseHistory extends BridgeBase {
     // Initialize rowData
     this.rowData = [];
 
-    rows.map((row: any, rowIndex) => {
+    rows.forEach((row: any, rowIndex) => {
       // only show the 1st 5 rows to reduce console clutter
       if (this.bLogging && rowIndex < 5) {
         console.log(`-> row ${rowIndex} : ${JSON.stringify(row)}`);
       }
       // Now, for each property in the index of row properties (displayedColumns), add an object
       //  to a new array of values
-      let rowDisplayValues: any = [];
-      this.displayedColumns.map((column: Object, rowValIndex) => {
-        const theType = column['type'];
-        const theFieldName = column['fieldName'];
+      const rowDisplayValues: any = [];
+      this.displayedColumns.forEach((column: any, rowValIndex) => {
+        const theType = column.type;
+        const theFieldName = column.fieldName;
         const theValue =
           theType === 'Date' || theType === 'DateTime' ? Utils.generateDateTime(row[theFieldName], 'DateTime-Short') : row[theFieldName];
         rowDisplayValues[rowValIndex] = theValue;

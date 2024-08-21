@@ -5,9 +5,6 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // import the component's styles as HTML with <style>
 import { oneColumnTabStyles } from './one-column-tab-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('one-column-tab-component')
@@ -42,7 +39,7 @@ class OneColumnTab extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = oneColumnTabStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -91,9 +88,7 @@ class OneColumnTab extends BridgeBase {
   }
 
   getOneColumnTabHtml(): any {
-    const oCTHtml = html` <one-column .pConn=${this.pConn}></one-column> `;
-
-    return oCTHtml;
+    return html` <one-column .pConn=${this.pConn}></one-column> `;
   }
 
   render() {
@@ -111,7 +106,7 @@ class OneColumnTab extends BridgeBase {
     // For test purposes, add some more content to be rendered
     //  This isn't the best way to add inner content. Just here to see that the style's
     //  be loaded and can be applied to some inner content.
-    const sampleContent = html`<div class="boilerplate-class">boilerplate-component: ${this.value}</div>`;
+    // const sampleContent = html`<div class="boilerplate-class">boilerplate-component: ${this.value}</div>`;
     this.prepareForRender();
 
     const sContent = html`${this.getOneColumnTabHtml()}`;

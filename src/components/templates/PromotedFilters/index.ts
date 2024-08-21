@@ -7,7 +7,7 @@ import '../ListView';
 import '@lion/input/define';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // Adapted from Cosmos React DX Component: src/components/Templates/SimpleTableSelect/PromotedFilters.js
 
@@ -45,15 +45,13 @@ function Filters(/* { */ filters, transientItemID, localeReference /* } */) {
     filterClone.config.readOnly = false;
     filterClone.config.context = transientItemID;
     filterClone.config.localeReference = localeReference;
-    const c11nEnv = PCore.createPConnect({
+    return PCore.createPConnect({
       meta: filterClone,
       options: {
         hasForm: true,
         contextName: transientItemID
       }
     });
-
-    return c11nEnv;
   });
 }
 
@@ -67,7 +65,7 @@ function isValidInput(input) {
 class PromotedFilters extends BridgeBase {
   // Additional properties passed in
   @property({ attribute: true, type: String }) viewName = '';
-  @property({ attribute: true, type: Array }) filters: Array<any> = [];
+  @property({ attribute: true, type: Array }) filters: any[] = [];
   @property({ attribute: true, type: Object }) listViewProps: any = {};
   @property({ attribute: true, type: String }) pageClass = '';
   @property({ attribute: true, type: Object }) parameters: any = {};
@@ -113,7 +111,7 @@ class PromotedFilters extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = promotedFiltersStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // Filters are passed in as a prop so this should only need to be set the first time
@@ -242,17 +240,15 @@ class PromotedFilters extends BridgeBase {
   }
 
   getPromotedFiltersLabel(): any {
-    const theHtml = html`
+    return html`
       <div>
         <label>${this.listViewProps?.title}</label>
       </div>
     `;
-
-    return theHtml;
   }
 
   getPromotedFiltersGrid(): any {
-    const theHtml = html`
+    return html`
       <div>
         <div class="psdk-grid-filter">
           ${Filters(this.filters, this.transientItemID, this.listViewProps.localeReference).map(filter => {
@@ -262,12 +258,10 @@ class PromotedFilters extends BridgeBase {
         </div>
       </div>
     `;
-
-    return theHtml;
   }
 
   getPromotedFiltersActions(): any {
-    const theHtml = html`
+    return html`
       <div>
         <div class="action-button">
           <button class="btn btn-secondary" @click=${this.clearFilterData} data-testid="clear">${this.localizedVal('Clear', localeCategory)}</button>
@@ -275,17 +269,15 @@ class PromotedFilters extends BridgeBase {
         </div>
       </div>
     `;
-    return theHtml;
   }
 
   getPromotedFiltersListView(): any {
-    const theHtml = html`
+    return html`
         <div>
             <list-view-component .pConn=${this.thePConn} payload=${this.payload}></list-view-component>
         </div>
       </div>
     `;
-    return theHtml;
   }
 
   render() {

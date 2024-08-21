@@ -9,9 +9,6 @@ import '@lion/input/define';
 // import the component's styles as HTML with <style>
 import { textStyles } from './text-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 // TODO: Support formatType values and figure out where exactly this component might be utilized from
 //  I don't see this being invoked from CableConnect app using either rep or tech experience
 @customElement('text-form')
@@ -21,7 +18,7 @@ class Text extends BridgeBase {
   @property({ attribute: false }) formatType = 'none';
   @property({ attribute: true }) value = undefined;
   @property({ attribute: true }) customFormat = '';
-  @property({ attribute: true, type: Object }) additionalProps = {};
+  @property({ attribute: true, type: Object }) additionalProps: any = {};
   @property({ attribute: true }) decorator = '';
   @property({ attribute: true }) displayAs = '';
   @property({ attribute: false, type: Boolean }) bVisible = true;
@@ -60,7 +57,7 @@ class Text extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = textStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -87,17 +84,19 @@ class Text extends BridgeBase {
     }
     const theConfigProps = this.thePConn.getConfigProps();
 
-    if (theConfigProps['visibility'] != null) {
-      this.bVisible = Utils.getBooleanValue(theConfigProps['visibility']);
+    if (theConfigProps.visibility != null) {
+      this.bVisible = Utils.getBooleanValue(theConfigProps.visibility);
     }
 
     // Boolean props
-    for (let prop in ['hideLabel']) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const prop in ['hideLabel']) {
       if (this[prop] != undefined) {
         this[prop] = Utils.getBooleanValue(theConfigProps[prop]);
       }
     }
-    for (let prop in [
+    // eslint-disable-next-line no-restricted-syntax
+    for (const prop in [
       'label',
       'formatType',
       'value',
@@ -165,10 +164,10 @@ class Text extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const { formatType, customFormat, label, hideLabel } = this;
+    const { formatType, customFormat, label } = this;
 
     let text = this.value;
-    const noLabel = this.additionalProps && this.additionalProps['noLabel'];
+    const noLabel = this.additionalProps && this.additionalProps.noLabel;
     if (text) {
       if (formatType === 'datetime' || formatType == 'date') {
         text = format(text, formatType, { format: customFormat || (formatType === 'date' ? 'LL' : 'LLL') });

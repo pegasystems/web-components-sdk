@@ -1,4 +1,4 @@
-import { html, css, customElement, property, nothing } from '@lion/core';
+import { html, customElement, property, nothing } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 import { formComponentStyles } from '../FormComponentBase/form-component-styles';
 
@@ -8,9 +8,6 @@ import '@lion/checkbox-group/define';
 // import the component's styles as HTML with <style>
 import { checkboxStyles } from './check-box-styles';
 import { deleteInstruction, insertInstruction } from '../../../helpers/instructions-utils';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -91,7 +88,7 @@ class CheckBox extends FormComponentBase {
     this.theConfigProps = this.thePConn.getConfigProps();
 
     // Note: for Checkbox, the "caption" is the label...
-    this.caption = this.theConfigProps['caption'];
+    this.caption = this.theConfigProps.caption;
 
     if (this.label !== '') {
       this.bShowLabel = true;
@@ -104,7 +101,7 @@ class CheckBox extends FormComponentBase {
     // For unknown reasons, the "value" is toggling between "" and false. So test for "" until we figure out why
     if (this.value === 'true' || this.value === 'on' || this.value === '') {
       this.isChecked = true;
-    } else if (typeof this.value == 'boolean' && this.value == true) {
+    } else if (typeof this.value === 'boolean' && this.value === true) {
       this.isChecked = true;
     } else {
       this.isChecked = false;
@@ -126,8 +123,6 @@ class CheckBox extends FormComponentBase {
     //   this.isChecked = event.target.checked;
     // }
 
-    let value;
-
     // handle the caption, since users click on caption as well as checkbox
     if (event.target.tagName === 'SPAN') {
       if (event.target.parentElement.checked) {
@@ -137,9 +132,8 @@ class CheckBox extends FormComponentBase {
       }
       event.target.parentElement.click();
       return;
-    } else {
-      value = event.target.checked;
     }
+    const value = event.target.checked;
 
     this.actions.onChange(this.thePConn, { value });
   }
@@ -197,13 +191,13 @@ class CheckBox extends FormComponentBase {
       const listOfCheckboxes: any = [];
       const listSourceItems = this.theConfigProps.datasource?.source ?? [];
       const dataField: any = this.theConfigProps.selectionKey?.split?.('.')[1];
-      const label = html`<div class="check-box-form">${bHideLabel === true ? nothing : html`${this.label}`}</div>`;
+      const label = html`<div class="check-box-form">${bHideLabel ? nothing : this.label}}</div>`;
       listOfCheckboxes.push(label);
       listSourceItems.forEach((element, index) => {
         const multiChecked = this.selectedvalues?.some?.(data => data[dataField] === element.key);
-        const content = html` ${multiChecked
+        const content = multiChecked
           ? html`
-                <lion-checkbox 
+                <lion-checkbox
                     id=${index}
                     dataTestId=${this.testId}+':'+${element.value}
                     checked
@@ -213,14 +207,14 @@ class CheckBox extends FormComponentBase {
                 </lion-checkbox>
               `
           : html`
-                <lion-checkbox 
+                <lion-checkbox
                     id=${index}
                     dataTestId=${this.testId}+':'+${element.value}
                     .model-value=${{ value: element.text ?? element.value, key: element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key) }}
                     @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
                     <span slot="label">${element.text ?? element.value}</span>
                 </lion-checkbox>
-              `}`;
+              `;
         listOfCheckboxes.push(content);
       });
       const labelEnd = html`</div>`;

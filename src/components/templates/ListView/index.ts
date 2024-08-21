@@ -14,7 +14,7 @@ import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 import { listViewStyles } from './list-view-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -33,10 +33,10 @@ class ListView extends BridgeBase {
   @property({ attribute: true, type: String }) payload: any = {};
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
-  gridChoice: string = 'vaadin';
+  gridChoice = 'vaadin';
   bClickEventListenerAdded: Boolean = false;
   waitingForData: Boolean = true;
-  selectionMode: string = '';
+  selectionMode = '';
   selectedValue: any;
   rowClickAction: any;
   rowID: any;
@@ -80,7 +80,7 @@ class ListView extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = listViewStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     if (this.bDebug) {
@@ -96,8 +96,8 @@ class ListView extends BridgeBase {
     this.compositeKeys = theConfigProps?.compositeKeys;
     this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
 
-    const componentConfig = this.thePConn.getRawMetadata().config;
-    const refList = theConfigProps.referenceList;
+    // const componentConfig = this.thePConn.getRawMetadata().config;
+    // const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc('search', Utils.getSDKStaticContentUrl());
     this.getListData();
   }
@@ -109,7 +109,7 @@ class ListView extends BridgeBase {
       const componentConfig = this.thePConn.getRawMetadata().config;
       const refList = theConfigProps.referenceList;
       const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
-      workListData.then((workListJSON: Object) => {
+      workListData.then((workListJSON: any) => {
         if (this.bDebug) {
           debugger;
         }
@@ -117,9 +117,9 @@ class ListView extends BridgeBase {
         // don't update these fields until we return from promise
         this.fields = theConfigProps.presets[0].children[0].children;
         // this is an unresolved version of this.fields, need unresolved, so can get the property reference
-        let columnFields = componentConfig.presets[0].children[0].children;
+        const columnFields = componentConfig.presets[0].children[0].children;
 
-        const tableDataResults = workListJSON['data'].data;
+        const tableDataResults = workListJSON.data.data;
 
         // displayedColumns is the array of property names associated with the columns.
         //  Derived from columnFields (unresolved configProps - above)
@@ -140,7 +140,7 @@ class ListView extends BridgeBase {
         //  (Partial) Example entry in array:
         //  {pxUrgencyAssign: 10, pxRefObjectInsName: "S-58001", pxFlowName: "NewService_Flow", pxAssignedOperatorID: "Rep.CableCo", pxUpdateDateTime: null, ...}
 
-        let updatedRefList = this.updateData(tableDataResults, this.fields);
+        const updatedRefList = this.updateData(tableDataResults, this.fields);
 
         // vaadin-list experiment
         if (this.gridChoice == 'vaadin') {
@@ -161,6 +161,7 @@ class ListView extends BridgeBase {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (name === 'payload') {
       if (oldValue !== newValue) {
         this.payload = newValue;
@@ -216,23 +217,26 @@ class ListView extends BridgeBase {
     }
   }
 
-  updateFields(arFields, arColumns): Array<any> {
-    let arReturn = arFields;
-    for (let i in arReturn) {
+  updateFields(arFields, arColumns): any[] {
+    const arReturn = arFields;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i in arReturn) {
       arReturn[i].config.name = arColumns[i];
     }
 
     return arReturn;
   }
 
-  updateData(listData: Array<any>, fieldData: Array<any>): Array<any> {
-    let returnList: Array<any> = new Array<any>();
-    for (let row in listData) {
+  updateData(listData: any[], fieldData: any[]): any[] {
+    const returnList: any[] = new Array<any>();
+    // eslint-disable-next-line no-restricted-syntax
+    for (const row in listData) {
       // copy
-      let rowData = JSON.parse(JSON.stringify(listData[row]));
+      const rowData = JSON.parse(JSON.stringify(listData[row]));
 
-      for (let field in fieldData) {
-        let config = fieldData[field].config;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const field in fieldData) {
+        const config = fieldData[field].config;
         let fieldName;
         let formattedDate;
 
@@ -249,6 +253,8 @@ class ListView extends BridgeBase {
 
             rowData[fieldName] = formattedDate;
             break;
+          default:
+            break;
         }
       }
 
@@ -259,7 +265,7 @@ class ListView extends BridgeBase {
   }
 
   getDisplayColums(fields = []) {
-    let arReturn = fields.map((field: any, colIndex) => {
+    return fields.map((field: any) => {
       let theField = field.config.value.substring(field.config.value.indexOf(' ') + 1);
       if (theField.indexOf('.') == 0) {
         theField = theField.substring(1);
@@ -267,7 +273,6 @@ class ListView extends BridgeBase {
 
       return theField;
     });
-    return arReturn;
   }
 
   computeColumnHeaders(fields = []): void {
@@ -278,7 +283,7 @@ class ListView extends BridgeBase {
     // initialize columnHeaders
     this.columnHeaders = [];
 
-    fields.map((field: any, colIndex) => {
+    fields.forEach((field: any, colIndex) => {
       this.columnHeaders[colIndex] = field.config.label;
     });
 
@@ -292,15 +297,15 @@ class ListView extends BridgeBase {
     // Initialize rowData
     this.rowData = [];
 
-    rows.map((row: any, rowIndex) => {
+    rows.forEach((row: any, rowIndex) => {
       // only show the 1st 5 rows to reduce console clutter
       if (this.bLogging && rowIndex < 5) {
         console.log(`-> row ${rowIndex} : ${JSON.stringify(row)}`);
       }
       // Now, for each property in the index of row properties (displayedColumns), add an object
       //  to a new array of values
-      let rowDisplayValues: any = [];
-      this.displayedColumns.map((propKey: string, rowValIndex) => {
+      const rowDisplayValues: any = [];
+      this.displayedColumns.forEach((propKey: string, rowValIndex) => {
         rowDisplayValues[rowValIndex] = row[propKey];
       });
       this.rowData[rowIndex] = rowDisplayValues;
@@ -362,17 +367,17 @@ class ListView extends BridgeBase {
   onCheckboxClick(event) {
     const value = event?.target?.value;
     const checked = event?.target?.checked;
-    const reqObj = {};
+    const reqObj: any = {};
     if (this.compositeKeys?.length > 1) {
       const index = this.response.findIndex(element => element[this.rowID] === value);
       const selectedRow = this.response[index];
       this.compositeKeys.forEach(element => {
         reqObj[element] = selectedRow[element];
       });
-      reqObj['$selected'] = checked;
+      reqObj.$selected = checked;
     } else {
       reqObj[this.rowID] = value;
-      reqObj['$selected'] = checked;
+      reqObj.$selected = checked;
     }
     this.thePConn?.getListActions()?.setSelectedRows([reqObj]);
   }
@@ -468,6 +473,8 @@ class ListView extends BridgeBase {
           // this._handleResize();
         }, 50);
 
+        break;
+      default:
         break;
     }
 

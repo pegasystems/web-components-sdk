@@ -10,14 +10,11 @@ import '../CaseCreateStage';
 // import the component's styles as HTML with <style>
 import { assignmentCardStyles } from './assignment-card-styles';
 
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
-
 @customElement('assignment-card-component')
 class AssignmentCard extends BridgeBase {
   @property({ attribute: false, type: Array }) arMainButtons = [];
   @property({ attribute: false, type: Array }) arSecondaryButtons = [];
-  @property({ attribute: false, type: Array }) arChildren: Array<any> = [];
+  @property({ attribute: false, type: Array }) arChildren: any[] = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -47,7 +44,7 @@ class AssignmentCard extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = assignmentCardStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -96,14 +93,14 @@ class AssignmentCard extends BridgeBase {
   }
 
   assignmentKids(): any {
-    let arKidHtml: Array<Object> = [];
+    const arKidHtml: Object[] = [];
 
     if (!this.arChildren || this.arChildren.length === 0) {
       return;
     }
 
-    for (let kid of this.arChildren) {
-      let kidPConn = kid.getPConnect();
+    for (const kid of this.arChildren) {
+      const kidPConn = kid.getPConnect();
       switch (kid.getPConnect().getComponentName()) {
         case 'View':
           arKidHtml.push(html`<view-component .pConn=${kidPConn}></view-component>`);
@@ -133,9 +130,9 @@ class AssignmentCard extends BridgeBase {
 
   getAssignmentCardHtml(): any {
     const kidHtml = html`${this.assignmentKids()}`;
-    //const  kidHtml = html`${this.getChildTemplateArray()}`;
+    // const  kidHtml = html`${this.getChildTemplateArray()}`;
 
-    const aCHtml = html`
+    return html`
       <form>
         <div>${kidHtml}</div>
       </form>
@@ -152,8 +149,6 @@ class AssignmentCard extends BridgeBase {
         </action-buttons-component>
       </div>
     `;
-
-    return aCHtml;
   }
 
   render() {
@@ -184,7 +179,7 @@ class AssignmentCard extends BridgeBase {
   }
 
   _onActionButtonClick(e: any) {
-    let event = new CustomEvent('AssignmentActionButtonClick', {
+    const event = new CustomEvent('AssignmentActionButtonClick', {
       detail: { data: e.detail.data }
     });
 

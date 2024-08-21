@@ -5,6 +5,7 @@ import Utils from '../../../helpers/utils';
 import { fieldGroupStyles } from './field-group-styles';
 
 function generateFields(item, fields) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const label in item) {
     if (Utils.isObject(item[label])) {
       generateFields(item[label], fields);
@@ -65,7 +66,7 @@ class FieldGroup extends LitElement {
       </div>
     `;
 
-    let arHtml: Array<any> = [];
+    const arHtml: any[] = [];
     arHtml.push(fieldGroupStyles);
     arHtml.push(sContent);
 

@@ -1,4 +1,4 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
@@ -6,9 +6,6 @@ import '../../designSystemExtension/LionInputUrl';
 
 // import the component's styles as HTML with <style>
 import { urlStyles } from './url-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 /*
     TODO: find a true Url Lion webcomponent
@@ -62,7 +59,7 @@ class URL extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
-    let value = event.target.value;
+    const value = event.target.value;
 
     if (this.value === value) return;
     // if (value) {
@@ -100,7 +97,7 @@ class URL extends FormComponentBase {
       `;
     }
 
-    let sDisplay = this.bVisible ? 'block' : 'none';
+    const sDisplay = this.bVisible ? 'block' : 'none';
 
     const theContent = html` <div style="display:${sDisplay};">
       <div class="form-group">

@@ -6,7 +6,7 @@ import { Utils } from '../../../helpers/utils';
 import './SimpleTableManual';
 import '../FieldGroupTemplate';
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 @customElement('simple-table-component')
 class SimpleTable extends BridgeBase {
@@ -33,7 +33,7 @@ class SimpleTable extends BridgeBase {
       console.log(`${this.theComponentName}: connectedCallback`);
     }
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -64,8 +64,8 @@ class SimpleTable extends BridgeBase {
     }
 
     const theConfigProps = this.thePConn.getConfigProps();
-    if (theConfigProps['visibility'] != null) {
-      this.visible = Utils.getBooleanValue(theConfigProps['visibility']);
+    if (theConfigProps.visibility != null) {
+      this.visible = Utils.getBooleanValue(theConfigProps.visibility);
     }
 
     const { multiRecordDisplayAs } = theConfigProps;

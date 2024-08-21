@@ -1,4 +1,4 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
@@ -6,9 +6,6 @@ import '../../designSystemExtension/LionInputDateTime';
 
 // import the component's styles as HTML with <style>
 import { datetimeStyles } from './datetime-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 /*
     TODO: find a DateTime webcomponent instead of using native which only work on Chrome and Safari mobile
@@ -100,7 +97,7 @@ class DateTime extends FormComponentBase {
       `;
     }
 
-    let sDisplay = this.bVisible ? 'block' : 'none';
+    const sDisplay = this.bVisible ? 'block' : 'none';
 
     // Lion-based version wants Date object as value
     const dateTimeValue = this.value ? new Date(this.value) : this.value;

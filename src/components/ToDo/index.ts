@@ -7,7 +7,7 @@ import { Utils } from '../../helpers/utils';
 import { todoStyles } from './todo-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -33,7 +33,7 @@ class ToDo extends BridgeBase {
 
   @property({ attribute: true, type: Object }) assignmentsSource;
 
-  bShowMore: boolean = true;
+  bShowMore = true;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -63,7 +63,7 @@ class ToDo extends BridgeBase {
     // Add this component's styles to the array of templates to render
     this.theComponentStyleTemplate = todoStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     PCore.getPubSubUtils().subscribe(
@@ -131,15 +131,15 @@ class ToDo extends BridgeBase {
     this.configProps = this.thePConn.getConfigProps();
 
     if (this.headerText === undefined) {
-      this.headerText = this.configProps['headerText'];
+      this.headerText = this.configProps.headerText;
     }
 
     if (this.datasource === undefined) {
-      this.datasource = this.configProps['datasource'];
+      this.datasource = this.configProps.datasource;
     }
 
     if (this.myWorkList === undefined) {
-      this.myWorkList = this.configProps['myWorkList'];
+      this.myWorkList = this.configProps.myWorkList;
     }
 
     this.assignmentsSource = this.datasource?.source || this.myWorkList.source;
@@ -154,6 +154,7 @@ class ToDo extends BridgeBase {
       }
     } else {
       // get caseInfoId assignment.
+      // eslint-disable-next-line no-lonely-if
       if (this.caseInfoID != undefined) {
         this.arAssignments = this.getCaseInfoAssignment(this.assignmentsSource, this.caseInfoID);
       }
@@ -166,11 +167,11 @@ class ToDo extends BridgeBase {
   getID(assignment: any) {
     let sID = '';
     if (assignment.value) {
-      let refKey = assignment.value;
+      const refKey = assignment.value;
       sID = refKey.substring(refKey.lastIndexOf(' ') + 1);
     } else {
-      let refKey = assignment.ID;
-      let arKeys = refKey.split('!')[0].split(' ');
+      const refKey = assignment.ID;
+      const arKeys = refKey.split('!')[0].split(' ');
 
       sID = arKeys[2];
     }
@@ -178,10 +179,10 @@ class ToDo extends BridgeBase {
     return sID;
   }
 
-  topThreeAssignments(arList: Array<any>) {
-    let arList3: Array<any> = new Array<any>();
+  topThreeAssignments(arList: any[]) {
+    const arList3: any[] = new Array<any>();
 
-    if (arList && typeof arList == 'object') {
+    if (arList && typeof arList === 'object') {
       let len = arList.length;
       if (len > 3) len = 3;
 
@@ -193,20 +194,21 @@ class ToDo extends BridgeBase {
     return arList3;
   }
 
-  getCaseInfoAssignment(arList: Array<any>, caseInfoID: string) {
-    let arList1: Array<any> = new Array<any>();
-    for (var aIndex in arList) {
+  getCaseInfoAssignment(arList: any[], caseInfoID: string) {
+    const arList1: any[] = new Array<any>();
+    // eslint-disable-next-line no-restricted-syntax
+    for (const aIndex in arList) {
       if (arList[aIndex].ID.indexOf(caseInfoID) >= 0) {
-        let listRow = JSON.parse(JSON.stringify(arList[aIndex]));
+        const listRow = JSON.parse(JSON.stringify(arList[aIndex]));
 
         // urgency becomes priority
         if (listRow.urgency) {
-          listRow['priority'] = listRow.urgency;
+          listRow.priority = listRow.urgency;
         }
 
         if (listRow.ID) {
           // mimic regular list
-          listRow['id'] = listRow['ID'];
+          listRow.id = listRow.ID;
         }
 
         arList1.push(listRow);
@@ -222,25 +224,26 @@ class ToDo extends BridgeBase {
       debugger;
     }
 
+    // eslint-disable-next-line prefer-const
     let { id, classname = '' } = inAssignmentArray[0];
 
-    let sTarget = this.thePConn.getContainerName();
-    let sTargetContainerName = sTarget;
+    const sTarget = this.thePConn.getContainerName();
+    const sTargetContainerName = sTarget;
 
-    let options = { containerName: sTargetContainerName };
+    const options: any = { containerName: sTargetContainerName };
 
     if (classname == null || classname == '') {
       classname = this.thePConn.getCaseInfo().getClassName();
     }
 
     if (sTarget === 'workarea') {
-      options['isActionFromToDoList'] = true;
-      options['target'] = '';
-      options['context'] = null;
-      options['isChild'] = undefined;
+      options.isActionFromToDoList = true;
+      options.target = '';
+      options.context = null;
+      options.isChild = undefined;
     } else {
-      options['isActionFromToDoList'] = false;
-      options['target'] = sTarget;
+      options.isActionFromToDoList = false;
+      options.target = sTarget;
     }
 
     this.thePConn

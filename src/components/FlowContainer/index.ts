@@ -11,7 +11,7 @@ import '../ToDo';
 import { flowContainerStyles } from './flow-container-styles';
 
 // Declare that PCore will be defined when this code is run
-declare var PCore: any;
+declare let PCore: any;
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -21,15 +21,15 @@ declare var PCore: any;
 
 @customElement('flow-container')
 class FlowContainer extends BridgeBase {
-  buildName: string = '';
-  containerName: string = '';
-  instructionText: string = '';
-  itemKey: string = '';
+  buildName = '';
+  containerName = '';
+  instructionText = '';
+  itemKey = '';
   configProps: Object = {};
 
-  arNewChildren: Array<any> = [];
+  arNewChildren: any[] = [];
 
-  //todo
+  // todo
 
   @property({ attribute: false, type: Boolean }) todo_showTodo = false;
   @property({ attribute: false }) todo_caseInfoID = '';
@@ -40,12 +40,12 @@ class FlowContainer extends BridgeBase {
   @property({ attribute: false }) todo_context = '';
 
   // messages
-  caseMessages: string = '';
-  bHasCaseMessages: boolean = false;
-  checkSvg: string = '';
+  caseMessages = '';
+  bHasCaseMessages = false;
+  checkSvg = '';
 
-  svgCurrent: string = '';
-  svgNotCurrent: string = '';
+  svgCurrent = '';
+  svgNotCurrent = '';
 
   newConfig: Object = {};
 
@@ -77,10 +77,10 @@ class FlowContainer extends BridgeBase {
     // setup this component's styling...
     this.theComponentStyleTemplate = flowContainerStyles;
 
-    //NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
+    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    //with init, force children to be loaded of global pConn
+    // with init, force children to be loaded of global pConn
     this.initComponent(true);
 
     // do init/add containers
@@ -100,7 +100,7 @@ class FlowContainer extends BridgeBase {
 
   getBuildName(): string {
     // let { getPConnect, name } = this.pConn$.pConn;
-    let context = this.thePConn.getContextName();
+    const context = this.thePConn.getContextName();
     let viewContainerName = this.thePConn.getContainerName();
 
     if (!viewContainerName) viewContainerName = '';
@@ -108,8 +108,8 @@ class FlowContainer extends BridgeBase {
   }
 
   initContainer() {
-    let containerMgr = this.thePConn.getContainerManager();
-    let baseContext = this.thePConn.getContextName();
+    const containerMgr = this.thePConn.getContainerManager();
+    const baseContext = this.thePConn.getContextName();
     const containerName = this.thePConn.getContainerName();
     const containerType = 'single';
 
@@ -143,7 +143,7 @@ class FlowContainer extends BridgeBase {
     }
 
     for (const assignment of assignmentsList) {
-      if (assignment['assigneeInfo']['ID'] === thisOperator) {
+      if (assignment.assigneeInfo.ID === thisOperator) {
         bAssignmentsForThisOperator = true;
       }
     }
@@ -172,17 +172,14 @@ class FlowContainer extends BridgeBase {
 
   hasChildCaseAssignments() {
     const childCases = this.thePConn.getValue('caseInfo.childCases');
-    let allAssignments = [];
-    if (childCases && childCases.length > 0) {
-      return true;
-    }
-    return false;
+    // const allAssignments = [];
+    return !!(childCases && childCases.length > 0);
   }
 
   getActiveViewLabel() {
     let activeActionLabel = '';
 
-    const { CASE_INFO: CASE_CONSTS, CONTAINER_TYPE } = PCore.getConstants();
+    const { CASE_INFO: CASE_CONSTS } = PCore.getConstants();
 
     const caseActions = this.thePConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS);
     const activeActionID = this.thePConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID);
@@ -204,13 +201,13 @@ class FlowContainer extends BridgeBase {
       debugger;
     }
 
-    let { getPConnect } = this.arNewChildren[0].getPConnect();
-    let localPConn = this.arNewChildren[0].getPConnect();
+    // const { getPConnect } = this.arNewChildren[0].getPConnect();
+    const localPConn = this.arNewChildren[0].getPConnect();
 
     this.buildName = this.getBuildName();
 
     // routingInfo was added as component prop in populateAdditionalProps
-    let routingInfo = this.getComponentProp('routingInfo');
+    const routingInfo = this.getComponentProp('routingInfo');
 
     let loadingInfo: any;
     try {
@@ -219,16 +216,16 @@ class FlowContainer extends BridgeBase {
       console.error(`${this.theComponentName}: loadingInfo catch block`);
     }
 
-    let configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    // const configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
     if (!loadingInfo) {
       // turn off spinner
-      //this.psService.sendMessage(false);
+      // this.psService.sendMessage(false);
     }
 
     const caseViewMode = this.thePConn.getValue('context_data.caseViewMode');
 
-    const { CASE_INFO: CASE_CONSTS, CONTAINER_TYPE } = PCore.getConstants();
+    const { CASE_INFO: CASE_CONSTS } = PCore.getConstants();
 
     if (caseViewMode && caseViewMode == 'review') {
       // updated for 8.7 - 30-Mar-2022
@@ -272,9 +269,8 @@ class FlowContainer extends BridgeBase {
 
       this.checkSvg = Utils.getImageSrc('check', Utils.getSDKStaticContentUrl());
       return;
-    } else {
-      this.bHasCaseMessages = false;
     }
+    this.bHasCaseMessages = false;
 
     // this check in routingInfo, mimic React to check and get the internals of the
     // flowContainer and force updates to pConnect/redux
@@ -283,24 +279,25 @@ class FlowContainer extends BridgeBase {
         console.log(`${this.theComponentName}: >>routingInfo: JSON.stringify(routingInfo)`);
       }
 
-      let currentOrder = routingInfo.accessedOrder;
-      let currentItems = routingInfo.items;
-      let type = routingInfo.type;
+      const currentOrder = routingInfo.accessedOrder;
+      const currentItems = routingInfo.items;
+      const type = routingInfo.type;
       if (currentOrder && currentItems) {
         // JA - making more similar to React version
-        let key = currentOrder[currentOrder.length - 1];
+        const key = currentOrder[currentOrder.length - 1];
 
         // save off itemKey to be used for finishAssignment, etc.
         this.itemKey = key;
 
+        // eslint-disable-next-line sonarjs/no-collapsible-if
         if (currentOrder.length > 0) {
           if (currentItems[key] && currentItems[key].view && type === 'single' && Object.keys(currentItems[key].view).length > 0) {
-            let currentItem = currentItems[key];
-            let rootView = currentItem.view;
-            let { context } = rootView.config;
-            let config = { meta: rootView };
+            const currentItem = currentItems[key];
+            const rootView = currentItem.view;
+            const { context } = rootView.config;
+            const config: any = { meta: rootView };
 
-            config['options'] = {
+            config.options = {
               context: currentItem.context,
               pageReference: context || localPConn.getPageReference(),
               hasForm: true,
@@ -310,14 +307,14 @@ class FlowContainer extends BridgeBase {
               parentPageReference: localPConn.getPageReference()
             };
 
-            let configObject = PCore.createPConnect(config);
+            const configObject = PCore.createPConnect(config);
 
             // keep track of these changes
-            this.arNewChildren = new Array();
+            this.arNewChildren = [];
             this.arNewChildren.push(configObject);
 
-            let oWorkItem = this.arNewChildren[0].getPConnect();
-            let oWorkData = oWorkItem.getDataObject();
+            const oWorkItem = this.arNewChildren[0].getPConnect();
+            const oWorkData = oWorkItem.getDataObject();
 
             // check if have oWorkData, there are times due to timing of state change, when this
             // may not be available
@@ -326,7 +323,7 @@ class FlowContainer extends BridgeBase {
               this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
             }
 
-            //this.render();
+            // this.render();
           }
         }
       }
@@ -347,22 +344,22 @@ class FlowContainer extends BridgeBase {
       console.log(`${this.theComponentName}: children update for main draw`);
     }
 
-    let oData = this.thePConn.getDataObject();
+    // const oData = this.thePConn.getDataObject();
 
-    let activeActionLabel: string = '';
-    let { getPConnect } = this.arNewChildren[0].getPConnect();
+    // const activeActionLabel = '';
+    // const { getPConnect } = this.arNewChildren[0].getPConnect();
 
     // this.templateName$ = this.configProps$["template"];
 
     this.todo_showTodo = this.getTodoVisibilty();
 
     // create pointers to functions
-    let containerMgr = this.thePConn.getContainerManager();
-    let actionsAPI = this.thePConn.getActionsApi();
-    let baseContext = this.thePConn.getContextName();
-    let acName = this.thePConn.getContainerName();
+    // const containerMgr = this.thePConn.getContainerManager();
+    // const actionsAPI = this.thePConn.getActionsApi();
+    const baseContext = this.thePConn.getContextName();
+    const acName = this.thePConn.getContainerName();
 
-    //for now, in general this should be overridden by updateSelf(), and not be blank
+    // for now, in general this should be overridden by updateSelf(), and not be blank
     if (this.itemKey === '') {
       this.itemKey = baseContext.concat('/').concat(acName);
     }
@@ -372,8 +369,8 @@ class FlowContainer extends BridgeBase {
     // inside
     // get fist kid, get the name and displa
     // pass first kid to a view container, which will disperse it to a view which will use one column, two column, etc.
-    let oWorkItem = this.arNewChildren[0].getPConnect();
-    let oWorkData = oWorkItem.getDataObject();
+    const oWorkItem = this.arNewChildren[0].getPConnect();
+    const oWorkData = oWorkItem.getDataObject();
 
     if (bLoadChildren && oWorkData) {
       this.containerName = oWorkData.caseInfo.assignments[0].name;
@@ -388,11 +385,7 @@ class FlowContainer extends BridgeBase {
     if (caseViewMode && caseViewMode === 'review') {
       return true;
     }
-    if (caseViewMode && caseViewMode === 'perform') {
-      return false;
-    }
-
-    return true;
+    return !(caseViewMode && caseViewMode === 'perform');
   }
 
   /**
@@ -417,7 +410,7 @@ class FlowContainer extends BridgeBase {
   }
 
   flowContainerHtml(): any {
-    const fCHtml = html` <div style="text-align: left;" id="${this.buildName}" class="psdk-flow-container-top">
+    return html` <div style="text-align: left;" id="${this.buildName}" class="psdk-flow-container-top">
       ${!this.bHasCaseMessages
         ? html`
       </div>
@@ -456,8 +449,6 @@ class FlowContainer extends BridgeBase {
             </div>
           `}
     </div>`;
-
-    return fCHtml;
   }
 
   render() {

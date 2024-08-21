@@ -1,4 +1,4 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, customElement, nothing } from '@lion/core';
 import { FormComponentBase } from '../FormComponentBase';
 // import { Utils } from '../../../helpers/utils';
 
@@ -7,9 +7,6 @@ import '@lion/textarea/define';
 
 // import the component's styles as HTML with <style>
 import { textAreaStyles } from './text-area-styles';
-
-// Declare that PCore will be defined when this code is run
-declare var PCore: any;
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
