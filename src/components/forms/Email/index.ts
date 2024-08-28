@@ -1,8 +1,9 @@
-import { html, customElement, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/input-email/define';
+import '@lion/ui/define/lion-input-email.js';
 
 // import the component's styles as HTML with <style>
 import { emailStyles } from './email-styles';

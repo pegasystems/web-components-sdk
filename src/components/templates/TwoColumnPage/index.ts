@@ -1,4 +1,5 @@
-import { html, customElement } from '@lion/core';
+import { html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../TwoColumn';

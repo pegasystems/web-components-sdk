@@ -1,4 +1,5 @@
-import { LitElement, nothing, customElement } from '@lion/core';
+import { LitElement, nothing } from 'lit';
+import { customElement } from 'lit/decorators.js';
 // NOTE: you need to import ANY component you may render.
 
 // Declare that PCore will be defined when this code is run

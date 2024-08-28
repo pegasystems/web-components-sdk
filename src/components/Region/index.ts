@@ -1,4 +1,4 @@
-import { customElement } from '@lion/core';
+import { customElement } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../widgets/AppAnnouncement';

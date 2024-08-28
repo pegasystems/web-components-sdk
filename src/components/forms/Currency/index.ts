@@ -1,9 +1,10 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/input-amount/define';
+import '@lion/ui/define/lion-input-amount.js';
 
 // import the component's styles as HTML with <style>
 import { currencyStyles } from './currency-styles';

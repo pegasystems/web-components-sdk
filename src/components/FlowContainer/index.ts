@@ -1,4 +1,5 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import { addContainerItem, getToDoAssignments } from './helpers';
@@ -183,7 +184,7 @@ class FlowContainer extends BridgeBase {
 
     const caseActions = this.thePConn.getValue(CASE_CONSTS.CASE_INFO_ACTIONS);
     const activeActionID = this.thePConn.getValue(CASE_CONSTS.ACTIVE_ACTION_ID);
-    const activeAction = caseActions.find(action => action.ID === activeActionID);
+    const activeAction = caseActions?.find(action => action.ID === activeActionID);
     if (activeAction) {
       activeActionLabel = activeAction.name;
     }

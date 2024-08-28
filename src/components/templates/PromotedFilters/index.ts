@@ -1,10 +1,11 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { promotedFiltersStyles } from './promoted-filters-styles';
 
 // NOTE: you need to import ANY component you may render.
 import '../ListView';
-import '@lion/input/define';
+import '@lion/ui/define/lion-input.js';
 
 // Declare that PCore will be defined when this code is run
 declare let PCore: any;

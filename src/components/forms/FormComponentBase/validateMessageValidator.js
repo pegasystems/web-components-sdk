@@ -1,4 +1,4 @@
-import { Validator } from '@lion/form-core';
+import { Validator } from '@lion/ui/form-core';
 
 class ValidateMessageValidator extends Validator {
   // param: { getCompPropFn: checkValidateMessage}
@@ -8,7 +8,7 @@ class ValidateMessageValidator extends Validator {
   execute(modelValue, param) {
     let hasFeedback = false;
     // what's the current value of "validatemessage"
-    const theValMsg = param.getCompPropFn('validatemessage');
+    const theValMsg = param?.getCompPropFn('validatemessage');
     // console.log( `ValidateMessageValidator getCompPropFn("validatemessage"): ${theValMsg}`);
     if (theValMsg !== undefined && theValMsg !== '') {
       // Indicate that there's feedback to be shown if there's a validatemessage

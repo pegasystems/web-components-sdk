@@ -1,4 +1,5 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
@@ -234,6 +235,8 @@ class UserReference extends FormComponentBase {
 
       return html` <autocomplete-form .pConn=${this.thePConn} datasource=${this.dropDownDataSource}></autocomplete-form> `;
     }
+
+    return nothing;
 
     // this.renderTemplates.push( this.theRenderedDiv() )
 

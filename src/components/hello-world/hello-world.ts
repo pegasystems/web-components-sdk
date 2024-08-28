@@ -1,4 +1,5 @@
-import { LitElement, html, customElement, property } from '@lion/core';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 //  NOTE: need to import any custom-element that you want to render
 //  Otherwise, the tag shows up but the constructor, connectedCallback, etc.

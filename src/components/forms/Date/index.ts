@@ -1,9 +1,10 @@
-import { html, customElement } from '@lion/core';
+import { html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
 
-import '@lion/input-datepicker/define';
+import '@lion/ui/define/lion-input-datepicker.js';
 import '../../designSystemExtension/LionInputDateOnly';
 
 // import the component's styles as HTML with <style>

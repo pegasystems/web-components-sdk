@@ -1,12 +1,15 @@
-import { html, customElement, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/input-amount/define';
+import '@lion/ui/define/lion-input-amount.js';
 
 // import the component's styles as HTML with <style>
 import { decimalStyles } from './decimal-styles';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+// Declare that PCore will be defined when this code is run
+// declare var PCore: any;
 
 @customElement('decimal-form')
 class Decimal extends FormComponentBase {

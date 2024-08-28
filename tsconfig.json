@@ -1,16 +1,95 @@
+// {
+//   "compilerOptions": {
+//     "outDir": "./dist/",
+//     "experimentalDecorators": true,
+//     "strict": true,
+//     "sourceMap": true,
+//     "module": "es6",
+//     "target": "es6",
+//     "moduleResolution": "node",
+//     "jsx": "react",
+//     "allowJs": true,
+//     "noImplicitAny": false,
+//     "typeRoots": ["./node_modules/@types", "./node_modules/@pega/pcore-pconnect-typedefs","./node_modules/lit", "./node_modules/lit-html", "./node_modules/@lion", "./node_modules/@lit"],
+//     "types": ["node", "@pega/pcore-pconnect-typedefs", "lit", "lit-html","@lion/ui"],
+//     "baseUrl": "./"
+//   }
+// }
+
+
+// {
+//   "compilerOptions": {
+// "plugins": [
+//       {
+//         "name": "ts-lit-plugin"
+//       }
+//     ],
+//     "target": "ES2020",
+//     "experimentalDecorators": true,
+//     "useDefineForClassFields": false,
+//     "module": "ESNext",
+//     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+//     "skipLibCheck": true,
+//     "outDir":"./dist",
+//
+//     /* Bundler mode */
+//     "moduleResolution": "bundler",
+//     // "allowImportingTsExtensions": true,
+//     // "isolatedModules": true,
+//     // "moduleDetection": "force",
+//     // "noEmit": true,
+//
+//     /* Linting */
+//     "strict": true,
+//     "noImplicitAny":false,
+//     "noUnusedLocals": false,
+//     "noUnusedParameters": false,
+//     "noFallthroughCasesInSwitch": true,
+//     "allowJs": true,
+//     "baseUrl":"",
+//     "typeRoots": ["./node_modules/@types", "./node_modules/@pega","./node_modules/lit/*", "./node_modules/lit-html/*", "./node_modules/@lion/*"],
+//     "types": ["pcore-pconnect-typedefs"],
+//   },
+//   "include": ["src"]
+// }
 {
+  "extends": "@pega/tsconfig/index.json",
   "compilerOptions": {
-    "outDir": "./dist/",
-    "experimentalDecorators": true,
-    "useDefineForClassFields": false,
+    "target": "es2021",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "lib": ["es2021", "dom", "DOM.Iterable"],
     "strict": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
     "sourceMap": true,
-    "module": "ES2022",
-    "target": "ES2022",
-    "moduleResolution": "node",
-    "allowJs": true,
-    "noImplicitAny": false,
+    "inlineSources": true,
+    "rootDir": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": false,
-    "allowSyntheticDefaultImports": true
-  }
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "allowJs":true,
+    "isolatedModules": true,
+    "useDefineForClassFields": false,
+    "moduleDetection": "force",
+    "baseUrl":"./",
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true
+      }
+    ],
+    "types": ["@pega/pcore-pconnect-typedefs", "lit", "lit-html", "dayjs"]
+  },
+  "include": ["src/*.ts","src/**/*.js","src/**/*.ts"]
 }

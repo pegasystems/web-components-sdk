@@ -1,4 +1,5 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../designSystemExtension/ProgressIndicator';
@@ -239,12 +240,17 @@ class DeferLoad extends BridgeBase {
         break;
     }
 
-    return html`<div class="container-for-progress">
-      ${this.isLoading
-        ? html`<div>&nbsp;<br />&nbsp;<br /></div>
-            <progress-extension id="${this.theComponentId}"></progress-extension>`
-        : html` <div>${arComponent}</div>`}
-    </div>`;
+    // eslint-disable-next-line sonarjs/prefer-immediate-return
+    const dLHtml = html`
+      <div class="container-for-progress">
+        ${this.bShowDefer
+          ? html` <div>${arComponent}</div>`
+          : html`<div>&nbsp;<br />&nbsp;<br /></div>
+              <progress-extension id="${this.theComponentId}"></progress-extension>`}
+      </div>
+    `;
+
+    return dLHtml;
   }
 
   render() {

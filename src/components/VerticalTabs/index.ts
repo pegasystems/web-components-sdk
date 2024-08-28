@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
-import { html, customElement, property, LitElement } from '@lion/core';
+import { html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 // NOTE: you need to import ANY component you may render.

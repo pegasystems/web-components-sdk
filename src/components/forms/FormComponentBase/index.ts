@@ -1,4 +1,5 @@
-import { html, property } from '@lion/core';
+import { html } from 'lit';
+import { property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
 // FormComponentBase needs to add some styling to the BridgeBase default styles
@@ -7,8 +8,8 @@ import { bootstrapStyles } from '../../../bridge/BridgeBase/bootstrap-styles';
 import { formComponentStyles } from './form-component-styles';
 
 // NOTE: you need to import ANY component you may render.
-import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { Required } from '@lion/ui/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import ValidateMessageValidator from './validateMessageValidator.js';
 import { updateNewInstructions } from '../../../helpers/instructions-utils';
 
@@ -150,8 +151,7 @@ export class FormComponentBase extends BridgeBase {
 
     // Always push a ValidateMessageValidator to the set of validators. This is how
     //  we get messages from "validatemessage" into the Lion validation process.
-    const checkValidateMessage = this.getComponentProp.bind(this);
-    this.lionValidatorsArray.push(new ValidateMessageValidator({ getCompPropFn: checkValidateMessage }));
+    this.lionValidatorsArray.push(new ValidateMessageValidator());
 
     if (theConfigProps.visibility != null) {
       this.bVisible = Utils.getBooleanValue(theConfigProps.visibility);

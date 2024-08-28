@@ -1,9 +1,10 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { formComponentStyles } from '../FormComponentBase/form-component-styles';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/checkbox-group/define';
+import '@lion/ui/define/lion-checkbox-group.js';
 
 // import the component's styles as HTML with <style>
 import { checkboxStyles } from './check-box-styles';

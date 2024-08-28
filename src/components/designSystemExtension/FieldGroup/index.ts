@@ -1,4 +1,5 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import Utils from '../../../helpers/utils';
 
 // import the component's styles as HTML with <style>

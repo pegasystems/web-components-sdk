@@ -1,9 +1,10 @@
-import { html, customElement, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 // import { Utils } from '../../../helpers/utils';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/textarea/define';
+import '@lion/ui/define/lion-textarea.js';
 
 // import the component's styles as HTML with <style>
 import { textAreaStyles } from './text-area-styles';
