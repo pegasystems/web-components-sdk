@@ -3,7 +3,7 @@
 //  best practice to ensure compatible versions is to import LitElement from lit
 import { LitElement, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import * as isEqual from 'fast-deep-equal';
+import isEqual from 'fast-deep-equal';
 import Utils from '../../helpers/utils';
 import { bootstrapStyles } from './bootstrap-styles';
 

@@ -5,7 +5,7 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 
 // import the component's styles as HTML with <style>
 import { modalViewContainerStyles } from './modal-view-container-styles';
-import * as isEqual from 'fast-deep-equal';
+import isEqual from 'fast-deep-equal';
 
 import '../CancelAlert';
 
