@@ -2,6 +2,22 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "experimentalDecorators": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "rootDir": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationDir": "./types",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": false,
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "isolatedModules": true,
     "useDefineForClassFields": false,
     "strict": true,
     "sourceMap": true,
@@ -9,8 +25,16 @@
     "target": "ES2022",
     "moduleResolution": "node",
     "allowJs": true,
-    "noImplicitAny": false,
-    "noImplicitOverride": false,
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "moduleDetection": "force",
+    "baseUrl": "./",
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true
+      }
+    ],
+    "types": ["@pega/pcore-pconnect-typedefs", "lit", "lit-html", "dayjs"]
+  },
+  "include": ["src/*.ts", "src/**/*.js", "src/**/*.ts"]
 }
