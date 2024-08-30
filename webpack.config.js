@@ -8,11 +8,10 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const zlib = require('zlib');
 
 module.exports = (env, argv) => {
-
   const pluginsToAdd = [];
   const webpackMode = argv.mode;
 
-  const mode=argv.mode;
+  const mode = argv.mode;
 
   pluginsToAdd.push(new CleanWebpackPlugin());
   pluginsToAdd.push(
@@ -81,7 +80,7 @@ module.exports = (env, argv) => {
   // Enable gzip and brotli compression
   //  Exclude constellation-core and bootstrap-shell files since
   //    client receives these files in gzip and brotli format
-  if(mode === 'production'){
+  if (mode === 'production') {
     pluginsToAdd.push(
       new CompressionPlugin({
         filename: '[path][base].gz',

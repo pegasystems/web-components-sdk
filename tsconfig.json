@@ -30,7 +30,7 @@
     "noImplicitOverride": false,
     "allowSyntheticDefaultImports": true,
     "moduleDetection": "force",
-    "baseUrl":"./",
+    "baseUrl": "./",
     "plugins": [
       {
         "name": "ts-lit-plugin",
@@ -39,5 +39,5 @@
     ],
     "types": ["@pega/pcore-pconnect-typedefs", "lit", "lit-html", "dayjs"]
   },
-  "include": ["src/*.ts","src/**/*.js","src/**/*.ts"]
+  "include": ["src/*.ts", "src/**/*.js", "src/**/*.ts"]
 }
