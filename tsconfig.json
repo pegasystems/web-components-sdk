@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "declaration": true,
     "declarationDir": "./types",
-    "outDir": "./dist",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
@@ -29,6 +28,16 @@
     "allowJs": true,
     "noImplicitAny": false,
     "noImplicitOverride": false,
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "moduleDetection": "force",
+    "baseUrl":"./",
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true
+      }
+    ],
+    "types": ["@pega/pcore-pconnect-typedefs", "lit", "lit-html", "dayjs"]
+  },
+  "include": ["src/*.ts","src/**/*.js","src/**/*.ts"]
 }
