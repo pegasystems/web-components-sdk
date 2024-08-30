@@ -38,3 +38,5 @@ playwright-report
 
 test-results/
 playwright-report/
+
+custom-elements.json
