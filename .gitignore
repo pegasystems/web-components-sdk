@@ -2,7 +2,6 @@
 node_modules
 /dist
 /types
-sdk-config.json
 /__DO_NOT_COMMIT
 
 # local env files
