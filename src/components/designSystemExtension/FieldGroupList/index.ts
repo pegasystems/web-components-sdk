@@ -34,6 +34,7 @@ class FieldGroupList extends LitElement {
     if (theMetadataType === 'region') {
       return html`<region-component .pConn=${child.getPConnect()}></region-component>`;
     }
+    return null;
   }
 
   addRecord() {

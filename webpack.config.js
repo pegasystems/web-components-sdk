@@ -8,8 +8,11 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const zlib = require('zlib');
 
 module.exports = (env, argv) => {
+
   const pluginsToAdd = [];
   const webpackMode = argv.mode;
+
+  const mode=argv.mode;
 
   pluginsToAdd.push(new CleanWebpackPlugin());
   pluginsToAdd.push(
@@ -41,30 +44,33 @@ module.exports = (env, argv) => {
           from: './node_modules/@pega/auth/lib/oauth-client/authDone.js',
           to: './'
         },
+        // {
+        //   from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
+        //   to: './constellation'
+        // },
         {
-          from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
-          to: './constellation'
-        },
-        {
-          from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.*.*',
-          to() {
-            return Promise.resolve('constellation/[name].[ext]');
-          }
+          from: './node_modules/@pega/constellationjs/dist/bootstrap-shell*',
+          to: './constellation/[name].[ext]'
+          // to() {
+          //   return Promise.resolve('constellation/[name][ext]');
+          // }
         },
         {
           from: './node_modules/@pega/constellationjs/dist/lib_asset.json',
           to: './constellation'
         },
         {
-          from: './node_modules/@pega/constellationjs/dist/constellation-core.*.*',
-          to() {
-            return Promise.resolve('constellation/prerequisite/[name].[ext]');
-          }
+          from: './node_modules/@pega/constellationjs/dist/constellation-core*',
+          to: './constellation/prerequisite/[name].[ext]'
+          // to() {
+          //   return Promise.resolve('constellation/prerequisite');
+          //   // return Promise.resolve('constellation/prerequisite/[name].[ext]');
+          // }
         },
         {
           from: './assets/icons/*',
           to() {
-            return Promise.resolve('constellation/icons/[name].[ext]');
+            return Promise.resolve('constellation/icons/[name][ext]');
           }
         }
       ]
@@ -74,33 +80,35 @@ module.exports = (env, argv) => {
   // Enable gzip and brotli compression
   //  Exclude constellation-core and bootstrap-shell files since
   //    client receives these files in gzip and brotli format
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].gz',
-      algorithm: 'gzip',
-      test: /\.js$|\.ts$|\.css$|\.html$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: '[path][base].br',
-      algorithm: 'brotliCompress',
-      test: /\.(js|ts|css|html|svg)$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      compressionOptions: {
-        params: {
-          [zlib.constants.BROTLI_PARAM_QUALITY]: 11
-        }
-      },
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  );
+  if(mode === 'production'){
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].gz',
+        algorithm: 'gzip',
+        test: /\.js$|\.ts$|\.css$|\.html$/,
+        exclude: /constellation-core*|bootstrap-shell*/,
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].br',
+        algorithm: 'brotliCompress',
+        test: /\.(js|ts|css|html|svg)$/,
+        exclude: /constellation-core*|bootstrap-shell*/,
+        compressionOptions: {
+          params: {
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+          }
+        },
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+  }
 
-  if (webpackMode === 'development') {
+  if (mode === 'development') {
     // In development mode, add LiveReload plug
     //  When run in conjunction with build-with-watch,
     //  This will reload the browser when code is changed/re-compiled
@@ -115,8 +123,8 @@ module.exports = (env, argv) => {
 
   // need to set mode to 'development' to get LiveReload to work
   //  and for debugger statements to not be stripped out of the bundle
-  const initConfig = {
-    mode: 'development',
+  return {
+    mode: argv.mode,
     entry: {
       app: './src/index.ts'
     },
@@ -127,7 +135,8 @@ module.exports = (env, argv) => {
       port: 3501,
       open: false
     },
-    devtool: argv.mode === 'production' ? false : 'inline-source-map',
+    devtool: 'inline-source-map',
+    // devtool: argv.mode === 'production' ? false : 'inline-source-map',
     plugins: pluginsToAdd,
     output: {
       filename: '[name].bundle.js',
@@ -136,7 +145,7 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /\.ts[x]?$/,
           use: 'ts-loader',
           exclude: /node_modules/
         },
@@ -164,5 +173,4 @@ module.exports = (env, argv) => {
       extensions: ['.tsx', '.ts', '.js']
     }
   };
-  return initConfig;
 };
