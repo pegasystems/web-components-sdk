@@ -25,7 +25,7 @@
     "lint": "run-p -cl lint:*",
     "lint:es": "eslint --color --cache --cache-location node_modules/.cache/eslint/ src",
     "lint:format": "prettier --log-level warn -c .",
-    "lint:lit-analyzer": "lit-analyzer",
+    "_lint:lit-analyzer": "lit-analyzer",
     "fix": "run-s -cl fix:*",
     "fix:es": "eslint --fix --color --cache --cache-location node_modules/.cache/eslint/ src",
     "fix:format": "prettier --log-level warn -w ."
