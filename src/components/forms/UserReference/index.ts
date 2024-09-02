@@ -241,6 +241,7 @@ class UserReference extends FormComponentBase {
     // this.renderTemplates.push( this.theRenderedDiv() )
 
     // return this.renderTemplates;
+    return null;
   }
 }
 

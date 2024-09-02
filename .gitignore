@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /dist
+/types
 /__DO_NOT_COMMIT
 
 # local env files
@@ -36,3 +37,5 @@ playwright-report
 
 test-results/
 playwright-report/
+
+custom-elements.json
