@@ -132,7 +132,7 @@ module.exports = (env, argv) => {
       static: path.join(__dirname, 'dist'),
       historyApiFallback: true,
       host: 'localhost',
-      port: 3503,
+      port: 3501,
       open: false
     },
     devtool: 'inline-source-map',
