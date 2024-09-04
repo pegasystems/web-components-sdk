@@ -5,6 +5,8 @@ import { formComponentStyles } from '../FormComponentBase/form-component-styles'
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox-indeterminate.js';
+import '@lion/ui/define/lion-checkbox.js';
 
 // import the component's styles as HTML with <style>
 import { checkboxStyles } from './check-box-styles';

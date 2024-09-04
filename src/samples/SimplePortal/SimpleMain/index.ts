@@ -82,7 +82,6 @@ class SimpleMain extends LitElement {
     });
   }
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
   assignmentFinished() {
     setTimeout(() => {
       this.bShowRoot = false;
