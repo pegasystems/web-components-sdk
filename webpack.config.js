@@ -13,7 +13,13 @@ module.exports = (env, argv) => {
 
   const mode = argv.mode;
 
-  pluginsToAdd.push(new CleanWebpackPlugin());
+  pluginsToAdd.push(
+    new CleanWebpackPlugin({
+      dry: true,
+      verbose: false,
+      dangerouslyAllowCleanPatternsOutsideProject: true
+    })
+  );
   pluginsToAdd.push(
     new HtmlWebpackPlugin({
       template: './src/index.html',
