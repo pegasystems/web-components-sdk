@@ -10,5 +10,14 @@ export const viewStyles = html`
     .psdk-view-top {
       padding: 0;
     }
+
+    .template-title-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: calc(0.9375rem);
+      font-weight: 600;
+      padding: 1rem 0;
+    }
   </style>
 `;
