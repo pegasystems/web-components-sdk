@@ -3,12 +3,16 @@ import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
 import { format } from '../../../helpers/formatters/';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input.js';
 
 // import the component's styles as HTML with <style>
 import { textStyles } from './text-styles';
+interface TextProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Text here
+}
 
 // TODO: Support formatType values and figure out where exactly this component might be utilized from
 //  I don't see this being invoked from CableConnect app using either rep or tech experience
@@ -83,7 +87,7 @@ class Text extends BridgeBase {
     if (this.bDebug) {
       debugger;
     }
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as TextProps;;
 
     if (theConfigProps.visibility != null) {
       this.bVisible = Utils.getBooleanValue(theConfigProps.visibility);

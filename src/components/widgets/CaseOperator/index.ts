@@ -6,15 +6,12 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // import the component's styles as HTML with <style>
 import { caseOperatorStyles } from './case-operator-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 @customElement('case-operator-widget')
 class CaseOperator extends BridgeBase {
   @property({ attribute: true, type: String }) label: String = 'default label';
   @property({ attribute: true, type: String }) name: String = 'default name';
   @property({ attribute: true, type: String }) helperText: String = '';
-  @property({ attribute: true, type: String }) theId: String = '';
+  @property({ attribute: true, type: String }) theId: string = '';
   @property({ attribute: false, type: Array }) fields: any = [];
   @property({ attribute: false, type: Boolean }) bShowPopover: Boolean = false;
 
@@ -115,7 +112,7 @@ class CaseOperator extends BridgeBase {
 
     const operatorPreviewPromise = PCore.getUserApi().getOperatorDetails(this.theId);
 
-    operatorPreviewPromise.then(res => {
+    operatorPreviewPromise.then((res: any) => {
       if (this.bDebug) {
         debugger;
       }

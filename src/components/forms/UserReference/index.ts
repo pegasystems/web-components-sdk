@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '../../widgets/CaseOperator';
@@ -8,8 +9,13 @@ import '../../widgets/CaseOperator';
 // import the component's styles as HTML with <style>
 import { userReferenceStyles } from './user-reference-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface UserReferenceProps extends Omit<PConnFieldProps, 'value'> {
+  // If any, enter additional props that only exist on UserReference here
+  displayAs?: string;
+  value?: any;
+  showAsFormattedText?: boolean;
+  additionalProps?: object;
+}
 
 @customElement('user-reference-form')
 class UserReference extends FormComponentBase {
@@ -17,17 +23,17 @@ class UserReference extends FormComponentBase {
   @property({ attribute: false, type: String }) date = '';
   @property({ attribute: false, type: String }) label = '';
   @property({ attribute: false, type: Array }) dropDownDataSource: any = [];
-  @property({ attribute: false, type: String }) displayAs = '';
+  @property({ attribute: false, type: String }) displayAs? = '';
   @property({ attribute: false, type: String }) SEARCH_BOX = 'Search box';
   @property({ attribute: false, type: String }) DROPDOWN_LIST = 'Drop-down list';
 
   rawViewMetadata: any;
   viewName: any;
   firstChildMeta: any;
-  OPERATORS_DP: string = PCore.getEnvironmentInfo().getDefaultOperatorDP();
+  OPERATORS_DP?: string = PCore.getEnvironmentInfo().getDefaultOperatorDP();
   userID = '';
   readOnly = false;
-  showAsFormattedText = false;
+  showAsFormattedText? = false;
 
   isUserNameAvailable = user => {
     return typeof user === 'object' && user !== null && user.userName;
@@ -100,7 +106,7 @@ class UserReference extends FormComponentBase {
 
     // Additional processing
 
-    const props = this.thePConn.getConfigProps();
+    const props = this.thePConn.getConfigProps() as UserReferenceProps;
 
     const { label, displayAs, value, showAsFormattedText } = props;
 
@@ -135,7 +141,7 @@ class UserReference extends FormComponentBase {
         // if same user ref field is referred in view as editable & readonly formatted text
         // referenced users won't be available, so get user details from dx api
         const { getOperatorDetails } = PCore.getUserApi();
-        getOperatorDetails(this.userID).then(resp => {
+        getOperatorDetails(this.userID).then((resp: any) => {
           if (resp.data && resp.data.pyOperatorInfo && resp.data.pyOperatorInfo.pyUserName) {
             this.userName = resp.data.pyOperatorInfo.pyUserName;
           }
@@ -241,6 +247,7 @@ class UserReference extends FormComponentBase {
     // this.renderTemplates.push( this.theRenderedDiv() )
 
     // return this.renderTemplates;
+    return null;
   }
 }
 

@@ -1,12 +1,19 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-amount.js';
 
 // import the component's styles as HTML with <style>
 import { percentageStyles } from './percentage-styles';
+
+interface PercentageProps extends PConnFieldProps {
+  showGroupSeparators?: string;
+  decimalPrecision?: number;
+  // If any, enter additional props that only exist on Percentage here
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out

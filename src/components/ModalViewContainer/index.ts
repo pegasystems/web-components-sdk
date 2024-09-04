@@ -9,9 +9,6 @@ import * as isEqual from 'fast-deep-equal';
 
 import '../CancelAlert';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
@@ -30,7 +27,7 @@ class ModalViewContainer extends BridgeBase {
   itemKey = '';
   oCaseInfo: Object = {};
 
-  routingInfoRef: Object = {};
+  routingInfoRef: any = {};
 
   // created object is now a View with a Template
   //  Use its PConnect to render the CaseView; DON'T replace this.pConn$
@@ -359,7 +356,7 @@ class ModalViewContainer extends BridgeBase {
       it will show two alert dialogs which is not expected. Hence isModalAction flag to avoid that.
     */
     if (latestItem && isModalAction) {
-      const configObject = this.getConfigObject(latestItem, this.thePConn);
+      const configObject: any = this.getConfigObject(latestItem, this.thePConn);
       this.cancelPConn = configObject.getPConnect();
       this.bShowCancelAlert = true;
       // this.showCancelAlert(configObject.getPConnect, create);

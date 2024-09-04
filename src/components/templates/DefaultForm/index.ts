@@ -31,6 +31,13 @@ import '../../Attachment';
 // import the component's styles as HTML with <style>
 import { defaultFormStyles } from './default-form-styles';
 
+interface DefaultFormProps {
+  // If any, enter additional props that only exist on this component
+  NumCols: string;
+  template: string;
+  instructions: string;
+}
+
 @customElement('default-form-component')
 class DefaultForm extends BridgeBase {
   constructor() {
@@ -112,7 +119,7 @@ class DefaultForm extends BridgeBase {
   getKidsHtml(): any {}
 
   getDefaultFormHtml(): any {
-    const configProps = this.thePConn.getConfigProps();
+    const configProps = this.thePConn.getConfigProps() as DefaultFormProps;
 
     const numCols = configProps.NumCols ? configProps.NumCols : '1';
     let divClass = '';

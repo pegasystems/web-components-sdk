@@ -13,9 +13,6 @@ import '../MashupResolutionScreen';
 // import the component's styles as HTML with <style>
 import { mashupMainScreenStyles } from './mashup-main-screen-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 @customElement('mashup-main-screen-component')
 class MashupMainScreen extends LitElement {
   @property({ attribute: false, type: Object }) pConn;
@@ -233,12 +230,10 @@ class MashupMainScreen extends LitElement {
           viewType: 'page',
           pageName: 'pyEmbedAssignment',
           startingFields: {}
-        });
+        } as any);
         break;
       default:
         break;
     }
   }
 }
-
-export default MashupMainScreen;

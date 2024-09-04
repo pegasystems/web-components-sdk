@@ -8,9 +8,6 @@ import '../../designSystemExtension/ProgressIndicator';
 
 // import the component's styles as HTML with <style>
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('case-history-widget')
@@ -65,7 +62,7 @@ class CaseHistory extends BridgeBase {
 
     this.waitingForData = true;
 
-    const historyData = PCore.getDataApiUtils().getData(dataViewName, `{"dataViewParameters":[{"CaseInstanceKey":"${caseID}"}]}`, context);
+    const historyData = PCore.getDataApiUtils().getData(dataViewName, `{"dataViewParameters":[{"CaseInstanceKey":"${caseID}"}]}` as any, context);
 
     historyData.then((historyJSON: any) => {
       const tableDataResults = historyJSON.data.data;

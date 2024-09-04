@@ -8,12 +8,21 @@ import { caseSummaryStyles } from './case-summary-styles';
 
 import '../../designSystemExtension/CaseSummaryFields';
 
+// CaseSummaryFields is one of the few components that does NOT have getPConnect.
+//  So, no need to extend PConnProps
+interface CaseSummaryFieldsProps {
+  // If any, enter additional props that only exist on this component
+  status?: string;
+  showStatus?: boolean;
+  theFields: any[] | any | never;
+}
+
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('case-summary-template')
 class CaseSummary extends BridgeBase {
-  @property({ attribute: false, type: String }) status = '';
-  @property({ attribute: false, type: Boolean }) showStatus = false;
+  @property({ attribute: false, type: String }) status? = '';
+  @property({ attribute: false, type: Boolean }) showStatus? = false;
 
   arPrimaryFields: any[] = [];
   arSecondaryFields: any[] = [];
@@ -82,7 +91,7 @@ class CaseSummary extends BridgeBase {
       debugger;
     }
 
-    const configProps = this.thePConn.getConfigProps();
+    const configProps = this.thePConn.getConfigProps() as CaseSummaryFieldsProps;
     this.status = configProps.status;
     this.showStatus = configProps.showStatus;
 

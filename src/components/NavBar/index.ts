@@ -9,9 +9,6 @@ import { logout } from '@pega/auth/lib/sdk-auth-manager';
 // import the component's styles
 import { navbarStyles } from './navbar-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 @customElement('nav-bar')
 class NavBar extends BridgeBase {
   // Note: these 1st 3 come in as attributes on the component
@@ -24,7 +21,7 @@ class NavBar extends BridgeBase {
   @property({ attribute: false, type: Boolean }) bShowCaseTypes = false;
   @property({ attribute: false, type: Boolean }) bShowOperatorButtons = false;
   @property({ attribute: false }) portalName = 'User Portal';
-  @property({ attribute: false }) portalApp = 'App Name';
+  @property({ attribute: false }) portalApp? = 'App Name';
   @property({ attribute: false }) portalLogoImage;
   @property({ attribute: false }) portalOperator;
   @property({ attribute: false }) portalOperatorInitials;

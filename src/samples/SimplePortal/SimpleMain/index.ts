@@ -13,8 +13,6 @@ import '../SimpleSideBar';
 // import the component's styles as HTML with <style>
 import { simpleMainStyles } from './simple-main-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
 declare let myLoadMashup: any;
 
 @customElement('simple-main-component')
@@ -82,7 +80,6 @@ class SimpleMain extends LitElement {
     });
   }
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
   assignmentFinished() {
     setTimeout(() => {
       this.bShowRoot = false;

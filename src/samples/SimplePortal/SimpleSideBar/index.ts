@@ -9,10 +9,6 @@ import '@lion/ui/define/lion-textarea.js';
 
 // import the component's styles as HTML with <style>
 import { simpleSideBarStyles } from './simple-side-bar-styles';
-
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 @customElement('simple-side-bar-component')
 class SimpleSideBar extends LitElement {
   @property({ attribute: false, type: Object }) pConn;

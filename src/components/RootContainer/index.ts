@@ -9,9 +9,6 @@ import '../ModalViewContainer';
 import '../ReAuthenticationModal';
 import '../Reference';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
@@ -20,8 +17,8 @@ declare let PCore: any;
 
 @customElement('root-container')
 class RootContainer extends BridgeBase {
-  @property({ attribute: false, type: Object }) previewViewContainerConn = null;
-  @property({ attribute: false, type: Object }) modalViewContainerConn = null;
+  @property({ attribute: false, type: Object }) previewViewContainerConn;
+  @property({ attribute: false, type: Object }) modalViewContainerConn;
   @property({ attribute: false, type: Object }) createdPConnect;
   @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
   @property({ attribute: true, type: Boolean }) isMashup = false;

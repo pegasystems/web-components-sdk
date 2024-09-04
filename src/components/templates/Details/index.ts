@@ -9,6 +9,13 @@ import { detailsStyles } from './details-styles';
 
 import '../../designSystemExtension/DetailsFields';
 
+interface DetailsProps {
+  // If any, enter additional props that only exist on this component
+  label: string;
+  showLabel: boolean;
+  showHighlightedData: boolean;
+}
+
 @customElement('details-component')
 class Details extends BridgeBase {
   @property({ attribute: false }) viewName = null;
@@ -68,7 +75,7 @@ class Details extends BridgeBase {
     if (this.bDebug) {
       debugger;
     }
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as DetailsProps;
 
     // eslint-disable-next-line no-restricted-syntax
     for (const prop in ['viewName']) {
