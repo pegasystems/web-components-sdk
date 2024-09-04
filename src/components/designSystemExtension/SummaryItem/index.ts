@@ -1,4 +1,5 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 import { Utils } from '../../../helpers/utils';
 
@@ -7,7 +8,7 @@ import { Utils } from '../../../helpers/utils';
 // import the component's styles as HTML with <style>
 import { summaryItemStyles } from './summary-item-styles';
 
-import '@lion/button/define';
+import '@lion/ui/define/lion-button.js';
 
 @customElement('summary-item-extension')
 class SummaryItem extends LitElement {

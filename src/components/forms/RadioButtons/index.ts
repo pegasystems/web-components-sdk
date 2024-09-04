@@ -1,10 +1,12 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 import { formComponentStyles } from '../FormComponentBase/form-component-styles';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/radio-group/define';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 
 // import the component's styles as HTML with <style>
 import { radioButtonStyles } from './radio-buttons-styles';

@@ -1,13 +1,14 @@
 /* eslint-disable sonarjs/max-switch-cases */
 // Lion doc - https://lion-web.netlify.app/docs/systems/core/overview/ - says
-//  best practice to ensure compatible versions is to import LitElement from @lion/core
-import { LitElement, property, html, nothing } from '@lion/core';
+//  best practice to ensure compatible versions is to import LitElement from lit
+import { LitElement, html, nothing } from 'lit';
+import { property } from 'lit/decorators.js';
 import * as isEqual from 'fast-deep-equal';
 import Utils from '../../helpers/utils';
 import { bootstrapStyles } from './bootstrap-styles';
 
 // Declare that PCore will be defined when this code is run
-declare let PCore: any;
+// declare let PCore: any;
 
 export class BridgeBase extends LitElement {
   // bootstrapStyles is a (very slightly modified) version of a minified Bootstrap CSS file

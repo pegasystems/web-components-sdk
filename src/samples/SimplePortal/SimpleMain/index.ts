@@ -1,8 +1,9 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
-import '@lion/button/define';
-import '@lion/textarea/define';
+import '@lion/ui/define/lion-button.js';
+import '@lion/ui/define/lion-textarea.js';
 import { compareSdkPCoreVersions } from '../../../helpers/versionHelpers';
 
 import '../SimpleSideBar';
@@ -81,7 +82,6 @@ class SimpleMain extends LitElement {
     });
   }
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
   assignmentFinished() {
     setTimeout(() => {
       this.bShowRoot = false;

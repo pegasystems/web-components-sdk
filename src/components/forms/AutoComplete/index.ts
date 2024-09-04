@@ -1,11 +1,11 @@
-import { html, customElement, property, nothing } from '@lion/core';
+import { html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/listbox/define'; // Combobox uses lion-option from ListBox
-import '@lion/combobox/define';
-
+import '@lion/ui/define/lion-combobox.js';
+import '@lion/ui/define/lion-option.js';
 // import the component's styles as HTML with <style>
 import { autoCompleteStyles } from './autocomplete-styles';
 

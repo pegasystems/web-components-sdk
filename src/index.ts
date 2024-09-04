@@ -1,6 +1,6 @@
 import './components/hello-world/hello-world';
-import '@lion/button/define';
-import '@lion/textarea/define';
+import '@lion/ui/define/lion-button.js';
+import '@lion/ui/define/lion-textarea.js';
 import './samples/FullPortal/FullPortal';
 import './samples/SimplePortal/SimplePortal';
 import './samples/Mashup/MashupPortal';

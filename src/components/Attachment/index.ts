@@ -1,10 +1,11 @@
-import { html, customElement, property } from '@lion/core';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import download from 'downloadjs';
 // NOTE: you need to import ANY component you may render.
 
-import '@lion/button/define';
+import '@lion/ui/define/lion-button.js';
 import '../designSystemExtension/SummaryList';
 import '../designSystemExtension/ProgressIndicator';
 

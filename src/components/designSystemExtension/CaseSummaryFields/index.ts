@@ -1,4 +1,5 @@
-import { html, customElement, property, LitElement } from '@lion/core';
+import { html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 import { format } from '../../../helpers/formatters/';
 
@@ -8,7 +9,7 @@ import '../Operator';
 // import the component's styles as HTML with <style>
 import { caseSummaryFieldsStyles } from './case-summary-fields-styles';
 
-import '@lion/button/define';
+import '@lion/ui/define/lion-button.js';
 
 @customElement('case-summary-fields-extension')
 class SummaryItem extends LitElement {

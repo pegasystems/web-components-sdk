@@ -1,4 +1,4 @@
-import { css } from '@lion/core';
+import { css } from 'lit';
 
 // NOTE: formComponentStyles is added to the static styles property of BridgeBase
 //  to give additional styles to Form Components.

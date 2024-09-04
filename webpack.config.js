@@ -49,7 +49,7 @@ module.exports = (env, argv) => {
         // },
         {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell*',
-          to: './constellation/[name].[ext]'
+          to: './constellation/[name][ext]'
           // to() {
           //   return Promise.resolve('constellation/[name][ext]');
           // }
@@ -60,7 +60,7 @@ module.exports = (env, argv) => {
         },
         {
           from: './node_modules/@pega/constellationjs/dist/constellation-core*',
-          to: './constellation/prerequisite/[name].[ext]'
+          to: './constellation/prerequisite/[name][ext]'
           // to() {
           //   return Promise.resolve('constellation/prerequisite');
           //   // return Promise.resolve('constellation/prerequisite/[name].[ext]');
@@ -68,7 +68,7 @@ module.exports = (env, argv) => {
         },
         {
           from: './assets/icons/*',
-          to: './constellation/icons/[name].[ext]'
+          to: './constellation/icons/[name][ext]'
           // to() {
           //   return Promise.resolve('constellation/icons/[name][ext]');
           // }

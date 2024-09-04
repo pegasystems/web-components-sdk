@@ -1,9 +1,10 @@
-import { html, customElement, LitElement } from '@lion/core';
+import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { getSdkConfig, SdkConfigAccess, loginIfNecessary, sdkSetAuthHeader } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 
-import '@lion/button/define';
-import '@lion/textarea/define';
+import '@lion/ui/define/lion-button.js';
+import '@lion/ui/define/lion-textarea.js';
 
 import '../MashupMain';
 
