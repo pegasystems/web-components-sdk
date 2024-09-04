@@ -9,8 +9,6 @@ const zlib = require('zlib');
 
 module.exports = (env, argv) => {
   const pluginsToAdd = [];
-  const webpackMode = argv.mode;
-
   const mode = argv.mode;
 
   pluginsToAdd.push(
@@ -78,6 +76,10 @@ module.exports = (env, argv) => {
           // to() {
           //   return Promise.resolve('constellation/icons/[name][ext]');
           // }
+        },
+        {
+          from: './node_modules/@pega/constellationjs/dist/js',
+          to: './constellation/prerequisite/js'
         }
       ]
     })
@@ -92,7 +94,7 @@ module.exports = (env, argv) => {
         filename: '[path][base].gz',
         algorithm: 'gzip',
         test: /\.js$|\.ts$|\.css$|\.html$/,
-        exclude: /constellation-core*|bootstrap-shell*/,
+        exclude: /constellation-core*|bootstrap-shell*|531.*.js/,
         threshold: 10240,
         minRatio: 0.8
       })
@@ -102,7 +104,7 @@ module.exports = (env, argv) => {
         filename: '[path][base].br',
         algorithm: 'brotliCompress',
         test: /\.(js|ts|css|html|svg)$/,
-        exclude: /constellation-core*|bootstrap-shell*/,
+        exclude: /constellation-core*|bootstrap-shell*|531.*.js/,
         compressionOptions: {
           params: {
             [zlib.constants.BROTLI_PARAM_QUALITY]: 11

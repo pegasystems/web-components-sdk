@@ -59,6 +59,22 @@ class AppShell extends BridgeBase {
       this.bShowAppShell = true;
     }
 
+    const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
+    if (caseTypesAvailableToCreateDP) {
+      const portalID = this.pConn.getPConnect().getValue('.pyOwner');
+      PCore.getDataPageUtils()
+        .getPageDataAsync(caseTypesAvailableToCreateDP, this.pConn.getPConnect().getContextName(), {
+          PortalName: portalID
+        })
+        .then(response => {
+          if (response?.pyCaseTypesAvailableToCreate) {
+            this.pConn.getPConnect().replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
+              skipDirtyValidation: true
+            });
+          }
+        });
+    }
+
     this.caseTypes = this.configProps.caseTypes;
   }
 
