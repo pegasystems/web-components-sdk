@@ -10,6 +10,8 @@ module.exports = (env, argv) => {
   const pluginsToAdd = [];
   const webpackMode = argv.mode
 
+  const mode = argv.mode;
+
   pluginsToAdd.push(new CleanWebpackPlugin());
   pluginsToAdd.push(new HtmlWebpackPlugin({
     template: './src/index.html',
@@ -38,32 +40,36 @@ module.exports = (env, argv) => {
           from: './node_modules/@pega/auth/lib/oauth-client/authDone.js',
           to: './'
         },
+        // {
+        //   from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
+        //   to: './constellation'
+        // },
         {
-          from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
-          to: './constellation'
+          from: './node_modules/@pega/constellationjs/dist/bootstrap-shell*',
+          to: './constellation/[name][ext]'
+          // to() {
+          //   return Promise.resolve('constellation/[name][ext]');
+          // }
         },
-        {
-          from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.*.*',
-          to() {
-            return Promise.resolve("constellation/[name].[ext]");
-          }
-        },        
         {
           from: './node_modules/@pega/constellationjs/dist/lib_asset.json',
           to: './constellation',
         },
         {
-          from: './node_modules/@pega/constellationjs/dist/constellation-core.*.*',
-          to() {
-            return Promise.resolve("constellation/prerequisite/[name][ext]");
-          }
+          from: './node_modules/@pega/constellationjs/dist/constellation-core*',
+          to: './constellation/prerequisite/[name][ext]'
+          // to() {
+          //   return Promise.resolve('constellation/prerequisite');
+          //   // return Promise.resolve('constellation/prerequisite/[name].[ext]');
+          // }
         },
         {
           from: './assets/icons/*',
-          to() {
-            return Promise.resolve("constellation/icons/[name][ext]");
-          } 
-        },
+          to: './constellation/icons/[name][ext]'
+          // to() {
+          //   return Promise.resolve('constellation/icons/[name][ext]');
+          // }
+        }
       ]
     }
   ));
@@ -71,35 +77,35 @@ module.exports = (env, argv) => {
   // Enable gzip and brotli compression
   //  Exclude constellation-core and bootstrap-shell files since
   //    client receives these files in gzip and brotli format
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: "[path][base].gz",
-      algorithm: "gzip",
-      test: /\.js$|\.ts$|\.css$|\.html$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      threshold: 10240,
-      minRatio: 0.8,
-    })
-  );
-  pluginsToAdd.push(
-    new CompressionPlugin({
-      filename: "[path][base].br",
-      algorithm: "brotliCompress",
-      test: /\.(js|ts|css|html|svg)$/,
-      exclude: /constellation-core.*.js|bootstrap-shell.js/,
-      compressionOptions: {
-        params: {
-          [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+  if (mode === 'production') {
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].gz',
+        algorithm: 'gzip',
+        test: /\.js$|\.ts$|\.css$|\.html$/,
+        exclude: /constellation-core*|bootstrap-shell*/,
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+    pluginsToAdd.push(
+      new CompressionPlugin({
+        filename: '[path][base].br',
+        algorithm: 'brotliCompress',
+        test: /\.(js|ts|css|html|svg)$/,
+        exclude: /constellation-core*|bootstrap-shell*/,
+        compressionOptions: {
+          params: {
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+          }
         },
-      },
-      threshold: 10240,
-      minRatio: 0.8,
-    })
-  );
+        threshold: 10240,
+        minRatio: 0.8
+      })
+    );
+  }
 
-
-  if (webpackMode === 'development') {
-    
+  if (mode === 'development') {
     // In development mode, add LiveReload plug
     //  When run in conjunction with build-with-watch,
     //  This will reload the browser when code is changed/re-compiled
@@ -115,8 +121,8 @@ module.exports = (env, argv) => {
 
   // need to set mode to 'development' to get LiveReload to work
   //  and for debugger statements to not be stripped out of the bundle
-  const initConfig = {
-    mode: 'development',
+  return {
+    mode: argv.mode,
     entry: {
         app: './src/index.ts'
     },
@@ -127,45 +133,42 @@ module.exports = (env, argv) => {
         port: 3501,
         open: false
     },
-    devtool: argv.mode === 'production' ? false : 'inline-source-map',
+    devtool: 'inline-source-map',
+    // devtool: argv.mode === 'production' ? false : 'inline-source-map',
     plugins: pluginsToAdd,
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
     module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/
-            },
-            {
-                test: /\.css$/,
-                include: path.resolve(__dirname, 'src'),
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
-            },
-            {test: /\.s[a|c]ss$/, use: [{loader: "style-loader"}, {loader: "css-loader"}, {loader: "sass-loader"}]},
-            {test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: {limit: 8192}},
-            {
-                test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
-                loader: 'url-loader',
-                options: {limit: 10000, mimetype: 'application/font-woff2'}
-            },
-            {
-                test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
-                loader: 'url-loader',
-                options: {limit: 10000, mimetype: 'application/font-woff'}
-            },
-            {test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader'}
-        ]
+      rules: [
+        {
+          test: /\.ts[x]?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        },
+        {
+          test: /\.css$/,
+          include: path.resolve(__dirname, 'src'),
+          use: ['style-loader', 'css-loader']
+        },
+        { test: /\.s[a|c]ss$/, use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }] },
+        { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
+        {
+          test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
+          loader: 'url-loader',
+          options: { limit: 10000, mimetype: 'application/font-woff2' }
+        },
+        {
+          test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
+          loader: 'url-loader',
+          options: { limit: 10000, mimetype: 'application/font-woff' }
+        },
+        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' }
+      ]
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
     }
-  } ;
-return initConfig;
+  };
 };

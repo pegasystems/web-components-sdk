@@ -55,14 +55,7 @@
 {
   "extends": "@pega/tsconfig/index.json",
   "compilerOptions": {
-    "target": "es2021",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "noEmitOnError": true,
-    "lib": ["es2021", "dom", "DOM.Iterable"],
-    "strict": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist/",
     "experimentalDecorators": true,
     "importHelpers": true,
     "sourceMap": true,
@@ -70,7 +63,8 @@
     "rootDir": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./types",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
@@ -78,11 +72,16 @@
     "noImplicitOverride": false,
     "noImplicitAny": false,
     "noImplicitThis": true,
-    "allowJs":true,
     "isolatedModules": true,
     "useDefineForClassFields": false,
+    "strict": true,
+    "module": "ES2022",
+    "target": "ES2022",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "moduleDetection": "force",
-    "baseUrl":"./",
+    "baseUrl": "./",
     "plugins": [
       {
         "name": "ts-lit-plugin",
@@ -91,5 +90,5 @@
     ],
     "types": ["@pega/pcore-pconnect-typedefs", "lit", "lit-html", "dayjs"]
   },
-  "include": ["src/*.ts","src/**/*.js","src/**/*.ts"]
+  "include": ["src/*.ts", "src/**/*.js", "src/**/*.ts"]
 }
