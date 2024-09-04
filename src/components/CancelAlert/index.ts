@@ -6,9 +6,6 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 // import the component's styles as HTML with <style>
 import { cancelAlertStyles } from './cancel-alert-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('cancel-alert-component')

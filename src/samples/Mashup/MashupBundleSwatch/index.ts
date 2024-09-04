@@ -10,9 +10,6 @@ import '@lion/ui/define/lion-textarea.js';
 // import the component's styles as HTML with <style>
 import { mashupBundleSwatchStyles } from './mashup-bundle-swatch-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 @customElement('mashup-bundle-swatch-component')
 class MashupBundleSwatch extends LitElement {
   @property({ attribute: false, type: Object }) swatchConfig;

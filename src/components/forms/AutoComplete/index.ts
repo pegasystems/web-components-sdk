@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-combobox.js';
@@ -9,8 +10,17 @@ import '@lion/ui/define/lion-option.js';
 // import the component's styles as HTML with <style>
 import { autoCompleteStyles } from './autocomplete-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface AutoCompleteProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on AutoComplete here
+  deferDatasource?: boolean;
+  datasourceMetadata?: any;
+  onRecordChange?: any;
+  additionalProps?: object;
+  listType: string;
+  parameters?: any;
+  datasource: any;
+  columns: any[];
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -79,7 +89,7 @@ class AutoComplete extends FormComponentBase {
     super.updateSelf();
 
     // AutoComplete does some additional work
-    const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as AutoCompleteProps;
     if (this.dataList.length > 0) {
       theConfigProps.datasource = this.dataList;
       theConfigProps.listType = 'associated';

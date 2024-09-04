@@ -13,8 +13,10 @@ import { notificationRenderer } from '@vaadin/notification/lit.js';
 import type { NotificationLitRenderer } from '@vaadin/notification/lit.js';
 import type { NotificationOpenedChangedEvent } from '@vaadin/notification';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface AssignmentProps {
+  // If any, enter additional props that only exist on this component
+  template: string;
+}
 
 @customElement('assignment-component')
 class Assignment extends BridgeBase {
@@ -245,7 +247,7 @@ class Assignment extends BridgeBase {
 
     this.arChildren = dereferencedChildren;
 
-    this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as AssignmentProps;
 
     // when true, update arChildren from pConn, otherwise, arChilren will be updated in updateSelf()
 

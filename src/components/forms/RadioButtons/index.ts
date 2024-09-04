@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 import { formComponentStyles } from '../FormComponentBase/form-component-styles';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-radio-group.js';
@@ -10,6 +11,12 @@ import '@lion/ui/define/lion-radio.js';
 
 // import the component's styles as HTML with <style>
 import { radioButtonStyles } from './radio-buttons-styles';
+
+interface RadioButtonsProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on RadioButtons here
+  inline: boolean;
+  fieldMetadata?: any;
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -77,7 +84,7 @@ class RadioButtons extends FormComponentBase {
     super.updateSelf();
 
     // Some additional processing
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as RadioButtonsProps;
 
     this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
   }

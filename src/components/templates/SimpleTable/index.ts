@@ -6,8 +6,24 @@ import '../PromotedFilters';
 import { Utils } from '../../../helpers/utils';
 import './SimpleTableManual';
 import '../FieldGroupTemplate';
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+
+interface SimpleTableProps {
+  // If any, enter additional props that only exist on this component
+  multiRecordDisplayAs: string;
+  contextClass: any;
+  visibility: boolean;
+  label: string;
+  propertyLabel: string;
+  displayMode: string;
+  fieldMetadata: any;
+  hideLabel: boolean;
+  parameters: any;
+  isDataObject: boolean;
+  type: string;
+  ruleClass: string;
+  authorContext: string;
+  name: string;
+}
 
 @customElement('simple-table-component')
 class SimpleTable extends BridgeBase {
@@ -64,7 +80,7 @@ class SimpleTable extends BridgeBase {
       console.log(`${this.theComponentName}: updateSelf`);
     }
 
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as SimpleTableProps;
     if (theConfigProps.visibility != null) {
       this.visible = Utils.getBooleanValue(theConfigProps.visibility);
     }

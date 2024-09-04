@@ -2,12 +2,19 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-amount.js';
 
 // import the component's styles as HTML with <style>
 import { currencyStyles } from './currency-styles';
+
+interface CurrrencyProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Currency here
+  currencyISOCode?: string;
+  allowDecimals: boolean;
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -69,7 +76,7 @@ class Currency extends FormComponentBase {
     this.bAllowDecimals = true;
     this.numberOptions = {};
 
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as CurrrencyProps;
 
     if (theConfigProps.currencyISOCode !== null && theConfigProps.currencyISOCode !== undefined) {
       this.currencyISOCode = theConfigProps.currencyISOCode;

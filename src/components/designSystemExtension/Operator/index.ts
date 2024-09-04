@@ -8,16 +8,13 @@ import { Utils } from '../../../helpers/utils';
 // import the component's styles as HTML with <style>
 import { operatorStyles } from './operator-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 @customElement('operator-extension')
 class Operator extends LitElement {
   @property({ attribute: true, type: Object }) caseOpConfig; // the config object of the CaseOperator to be displayed
   @property({ attribute: true, type: String }) label: String = '';
   @property({ attribute: true, type: String }) name: String = '';
   @property({ attribute: false, type: String }) theDateTime = '';
-  @property({ attribute: true, type: String }) theId: String = '';
+  @property({ attribute: true, type: String }) theId: any = '';
   @property({ attribute: false, type: Array }) fields: any = [];
   @property({ attribute: false, type: Boolean }) bShowPopover: Boolean = false;
 
@@ -112,7 +109,7 @@ class Operator extends LitElement {
 
     const operatorPreviewPromise = PCore.getUserApi().getOperatorDetails(this.theId);
 
-    operatorPreviewPromise.then(res => {
+    operatorPreviewPromise.then((res: any) => {
       if (this.bDebug) {
         debugger;
       }

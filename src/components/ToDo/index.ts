@@ -7,8 +7,14 @@ import { Utils } from '../../helpers/utils';
 // import the component's styles
 import { todoStyles } from './todo-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface ToDoProps {
+  // If any, enter additional props that only exist on this component
+  datasource?: any;
+  headerText?: string;
+  myWorkList?: any;
+  label?: string;
+  readOnly?: boolean;
+}
 
 const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, context) => {
   return PCore.getDataPageUtils()
@@ -162,7 +168,7 @@ class ToDo extends BridgeBase {
       debugger;
     }
 
-    this.configProps = this.thePConn.getConfigProps();
+    this.configProps = this.thePConn.getConfigProps() as ToDoProps;
 
     if (this.headerText === undefined) {
       this.headerText = this.configProps.headerText;

@@ -11,6 +11,23 @@ import '@lion/ui/define/lion-checkbox.js';
 // import the component's styles as HTML with <style>
 import { checkboxStyles } from './check-box-styles';
 import { deleteInstruction, insertInstruction } from '../../../helpers/instructions-utils';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
+
+interface CheckboxProps extends Omit<PConnFieldProps, 'value'> {
+  // If any, enter additional props that only exist on Checkbox here
+  // Everything from PConnFieldProps except value and change type of value to boolean
+  value: boolean;
+  caption?: string;
+  trueLabel?: string;
+  falseLabel?: string;
+  selectionMode?: string;
+  datasource?: any;
+  selectionKey?: string;
+  selectionList?: any;
+  primaryField: string;
+  readonlyContextList: any;
+  referenceList: string;
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -88,7 +105,7 @@ class CheckBox extends FormComponentBase {
 
     // Checkbox does some extra processing beyond what's in the super implementation
 
-    this.theConfigProps = this.thePConn.getConfigProps();
+    this.theConfigProps = this.thePConn.getConfigProps() as CheckboxProps;
 
     // Note: for Checkbox, the "caption" is the label...
     this.caption = this.theConfigProps.caption;

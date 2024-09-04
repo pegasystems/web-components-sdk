@@ -12,9 +12,6 @@ import '../../designSystemExtension/ListUtility';
 import '../../designSystemExtension/SummaryList';
 import '../../ActionButtons';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('file-utility-component')
@@ -153,7 +150,7 @@ class FileUtility extends BridgeBase {
 
       this.lu_bLoading = true;
 
-      attPromise.then(resp => {
+      attPromise.then((resp: any) => {
         this.arFullListAttachments = this.addAttachments(resp);
         this.lu_count = this.arFullListAttachments.length;
         this.lu_arActions = this.addAttachmentsActions;
@@ -428,8 +425,9 @@ class FileUtility extends BridgeBase {
     const context = this.thePConn.getContextName();
 
     attachUtils
+      // @ts-ignore - 3rd parameter "responseEncoding" should be optional
       .downloadAttachment(ID, context)
-      .then(content => {
+      .then((content: any) => {
         if (type === 'FILE') {
           this.fileDownload(content.data, name, extension);
         } else if (type === 'URL') {
@@ -501,7 +499,7 @@ class FileUtility extends BridgeBase {
     for (const file of files) {
       attachmentUtils
         .uploadAttachment(file, this.onUploadProgress, this.errorHandler, this.thePConn.getContextName())
-        .then(fileResponse => {
+        .then((fileResponse: any) => {
           if (fileResponse.type === 'File') {
             attachmentUtils
               .linkAttachmentsToCase(caseID, [fileResponse], 'File', this.thePConn.getContextName())
