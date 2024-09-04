@@ -40,6 +40,8 @@ class Attachment extends BridgeBase {
 
   att_valueRef: any;
   att_categoryName = '';
+  caseID: any;
+  displayMode: string | undefined;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -73,9 +75,10 @@ class Attachment extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     this.removeFileFromList = { onClick: this._removeFileFromList.bind(this) };
-
+    this.caseID = PCore.getStoreValue('.pyID', 'caseInfo.content', this.thePConn.getContextName());
     // let configProps: any = this.pConn$.resolveConfigProps(this.pConn$.getConfigProps());
     this.updateSelf();
+    this.getAttachments();
   }
 
   disconnectedCallback() {
@@ -87,6 +90,25 @@ class Attachment extends BridgeBase {
     if (this.bDebug) {
       debugger;
     }
+  }
+
+  getAttachments() {
+    const tempUploadedFiles = this.getCurrentAttachmentsList(this.getAttachmentKey(this.att_valueRef), this.thePConn.getContextName());
+    this.arFileList = [...this.arFileList, ...tempUploadedFiles];
+
+    if (this.arFileList?.length > 0) {
+      this.bShowJustDelete = true;
+      this.bShowSelector = false;
+    }
+
+    PCore.getPubSubUtils().subscribe(
+      PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
+      this.resetAttachmentStoredState.bind(this),
+      this.caseID
+    );
+    return () => {
+      PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, this.caseID);
+    };
   }
 
   /**
@@ -102,7 +124,7 @@ class Attachment extends BridgeBase {
 
     const configProps: any = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
-    const { value, label } = configProps;
+    const { value, label, displayMode } = configProps;
 
     if (configProps.required != null) {
       this.bRequired = Utils.getBooleanValue(configProps.required);
@@ -145,6 +167,7 @@ class Attachment extends BridgeBase {
 
     this.att_valueRef = this.thePConn.getStateProps().value;
     this.att_valueRef = this.att_valueRef.indexOf('.') === 0 ? this.att_valueRef.substring(1) : this.att_valueRef;
+    this.displayMode = displayMode;
 
     let fileTemp: any = {};
 
@@ -200,6 +223,7 @@ class Attachment extends BridgeBase {
         }
       }
     }
+    this.updateAttachments();
   }
 
   /**
@@ -282,6 +306,30 @@ class Attachment extends BridgeBase {
     return arHtml;
   }
 
+  updateAttachments() {
+    if (this.arFileList.length > 0 && this.displayMode !== 'DISPLAY_ONLY') {
+      const currentAttachmentList = this.getCurrentAttachmentsList(this.getAttachmentKey(this.att_valueRef), this.thePConn.getContextName());
+      // block duplicate files to redux store when added 1 after another to prevent multiple duplicates being added to the case on submit
+      const tempFiles = this.arFileList.filter(f => currentAttachmentList.findIndex(fr => fr.ID === f.ID) === -1 && !this.bLoading);
+      const updatedAttList = [...currentAttachmentList, ...tempFiles];
+      this.updateAttachmentState(this.thePConn, this.getAttachmentKey(this.att_valueRef), updatedAttList);
+    }
+  }
+
+  updateAttachmentState(pConn, key, attachments) {
+    PCore.getStateUtils().updateState(this.thePConn.getContextName(), key, attachments, {
+      pageReference: 'context_data',
+      isArrayDeepMerge: false
+    });
+  }
+
+  resetAttachmentStoredState() {
+    PCore.getStateUtils().updateState(this.thePConn?.getContextName(), this.getAttachmentKey(this.att_valueRef), undefined, {
+      pageReference: 'context_data',
+      isArrayDeepMerge: false
+    });
+  }
+
   _downloadFileFromList(fileObj: any) {
     PCore.getAttachmentUtils()
       .downloadAttachment(fileObj.pzInsKey, this.thePConn.getContextName())
@@ -299,8 +347,10 @@ class Attachment extends BridgeBase {
     download(atob(data), file);
   };
 
-  getCurrentAttachmentsList(context) {
-    return PCore.getStoreValue('.attachmentsList', 'context_data', context) || [];
+  getAttachmentKey = (name = '') => (name ? `attachmentsList.${name}` : 'attachmentsList');
+
+  getCurrentAttachmentsList(key, context) {
+    return PCore.getStoreValue(`.${key}`, 'context_data', context) || [];
   }
 
   _removeFileFromList(item: any) {
@@ -318,7 +368,9 @@ class Attachment extends BridgeBase {
       }
     } else {
       const attachmentsList = [];
-      const currentAttachmentList = this.getCurrentAttachmentsList(this.thePConn.getContextName()).filter(f => f.label !== this.att_valueRef);
+      const currentAttachmentList = this.getCurrentAttachmentsList(this.getAttachmentKey(this.att_valueRef), this.thePConn.getContextName()).filter(
+        f => f.label !== this.att_valueRef
+      );
       if (this.value && this.value.pxResults && +this.value.pyCount > 0) {
         const deletedFile = {
           type: 'File',
@@ -329,15 +381,25 @@ class Attachment extends BridgeBase {
           }
         };
         // updating the redux store to help form-handler in passing the data to delete the file from server
-        PCore.getStateUtils().updateState(this.thePConn.getContextName(), 'attachmentsList', [...currentAttachmentList, deletedFile], {
-          pageReference: 'context_data',
-          isArrayDeepMerge: false
-        });
+        PCore.getStateUtils().updateState(
+          this.thePConn.getContextName(),
+          this.getAttachmentKey(this.att_valueRef),
+          [...currentAttachmentList, deletedFile],
+          {
+            pageReference: 'context_data',
+            isArrayDeepMerge: false
+          }
+        );
       } else {
-        PCore.getStateUtils().updateState(this.thePConn.getContextName(), 'attachmentsList', [...currentAttachmentList, ...attachmentsList], {
-          pageReference: 'context_data',
-          isArrayDeepMerge: false
-        });
+        PCore.getStateUtils().updateState(
+          this.thePConn.getContextName(),
+          this.getAttachmentKey(this.att_valueRef),
+          [...currentAttachmentList, ...attachmentsList],
+          {
+            pageReference: 'context_data',
+            isArrayDeepMerge: false
+          }
+        );
       }
       if (fileIndex > -1) {
         this.arFileList.splice(fileIndex, 1);
@@ -374,9 +436,13 @@ class Attachment extends BridgeBase {
               label: this.att_valueRef,
               category: this.att_categoryName,
               handle: fileRes.ID,
-              ID: fileRes.clientFileID
+              ID: fileRes.clientFileID,
+              meta: 'File uploaded successfully',
+              mimeType: myFiles[0].mimeType,
+              icon: myFiles[0].icon,
+              name: myFiles[0].name
             };
-            PCore.getStateUtils().updateState(this.thePConn.getContextName(), 'attachmentsList', [reqObj], {
+            PCore.getStateUtils().updateState(this.thePConn.getContextName(), this.getAttachmentKey(this.att_valueRef), [reqObj], {
               pageReference: 'context_data',
               isArrayDeepMerge: false
             });
@@ -393,7 +459,7 @@ class Attachment extends BridgeBase {
           });
 
           this.bShowSelector = false;
-          myFiles[0].meta = 'File uplooaded successfully';
+          myFiles[0].meta = 'File uploaded successfully';
           this.arFileList = myFiles.map(att => {
             return this.getNewListUtilityItemProps({
               att,

@@ -2,8 +2,9 @@ import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import '../RootContainer';
 import '../NotSupported';
-import { SdkConfigAccess, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
+import { SdkConfigAccess, getAvailablePortals, logout } from '@pega/auth/lib/sdk-auth-manager';
 import { compareSdkPCoreVersions } from '../../helpers/versionHelpers';
+import { appEntryStyles } from './app-entry-styles';
 
 // Declare that PCore will be defined when this code is run
 declare let PCore: any;
@@ -22,8 +23,13 @@ class AppEntry extends LitElement {
   // Attribute properties
   @property({ type: Object }) props;
   // @property( {type: Function, attribute: false} ) pConn$ = () => {}
+  @property({ attribute: false, type: Object }) renderTemplates;
+  @property({ attribute: false, type: Object }) theComponentStyleTemplate: any = nothing; // Any styling lit-html template that should be added to renderTemplates
 
   bLogging: Boolean = false;
+  portalSelectionScreen = false;
+  defaultPortalName: string;
+  availablePortals: string[];
 
   // NOTE: AppEntry is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
@@ -32,6 +38,9 @@ class AppEntry extends LitElement {
       console.log(`${this.theComponentName}: constructor`);
     }
     this.props = {};
+    this.defaultPortalName = '';
+    this.availablePortals = [];
+    this.renderTemplates = [];
   }
 
   connectedCallback() {
@@ -43,6 +52,7 @@ class AppEntry extends LitElement {
     if (this.bLogging) {
       console.log(`AppEntry --> loading Portal`);
     }
+    this.theComponentStyleTemplate = appEntryStyles;
     this.startPortal();
   }
 
@@ -87,17 +97,17 @@ class AppEntry extends LitElement {
       console.log(`Loading specified appPortal: ${thePortal}`);
       myLoadPortal('pega-root', thePortal, []);
     } else if (myLoadDefaultPortal && defaultPortal && !excludePortals.includes(defaultPortal)) {
-      console.log(`Loading default portal`);
+      console.log(`Loading default portal: ${defaultPortal}`);
       myLoadDefaultPortal('pega-root', []);
     } else {
       console.log('Loading portal selection screen');
+      this.portalSelectionScreen = true;
+      this.defaultPortalName = defaultPortal ?? '';
       // Add logic to display a portal selection screen
       // Getting current user's access group's available portals list other than excluded portals (relies on Traditional DX APIs)
       getAvailablePortals().then(portals => {
-        // Add logic to display a portal selection screen...for now use first one
-        if (portals.length) {
-          myLoadPortal('pega-root', portals[0], []);
-        }
+        this.availablePortals = portals;
+        this.requestUpdate();
       });
     }
   }
@@ -131,13 +141,50 @@ class AppEntry extends LitElement {
     }
   }
 
+  loadSelectedPortal(portal) {
+    this.portalSelectionScreen = false;
+    myLoadPortal('pega-root', portal, []); // this is defined in bootstrap shell that's been loaded already
+  }
+
+  logOff() {
+    logout().then(() => {
+      // Reload the page to kick off the login
+      window.location.reload();
+    });
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with props - ${JSON.stringify(this.props)}`);
     }
+    this.renderTemplates = [];
 
     // NOTE: that also the AppEntry gets its initial config info as "props" from inRenderObj,
     //  we actually pass that to the RootContainer as .pConn
+    if (this.portalSelectionScreen) {
+      this.renderTemplates.push(this.theComponentStyleTemplate);
+
+      const content = html`
+        <div class="portal-load-error">
+          <div data-test-id="defaultPortalErrorMessage">
+            Default portal ( <span class="portal-name">${this.defaultPortalName}</span> ) for current operator is not compatible with SDK.
+            <br /><br />
+            Please select one of the portals available to the operator's access group:
+          </div>
+          <div class="portals-list">
+            ${this.availablePortals?.map(portal => {
+              const portalDisplay = `${portal}`;
+              return html`<div class="portal-list-item" @click=${() => this.loadSelectedPortal(portal)}>${portalDisplay}</div>`;
+            })}
+          </div>
+          <button class="logout-btn" @click=${this.logOff}>Logout</button>
+        </div>
+      `;
+
+      this.renderTemplates.push(content);
+
+      return this.renderTemplates;
+    }
     if (isObjectEmpty(this.props)) {
       return nothing;
     }

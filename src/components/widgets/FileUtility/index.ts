@@ -120,6 +120,7 @@ class FileUtility extends BridgeBase {
 
     this.lu_onViewAllFunction = { onClick: () => this.onViewAll };
 
+    this.updateSelf();
     this.createModalButtons();
   }
 
