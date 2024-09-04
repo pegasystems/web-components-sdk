@@ -14,8 +14,16 @@ import '../designSystemExtension/ProgressIndicator';
 // import the component's styles
 import { viewContainerStyles } from './view-container-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface ViewContainerProps {
+  // If any, enter additional props that only exist on this component
+  name?: string;
+  loadingInfo?: any; // can't be boolean until setDispatchObjState expects loadingInfo to be type null
+  routingInfo?: any;
+  mode?: string;
+  limit?: number;
+  title?: any;
+  template?: string;
+}
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -70,7 +78,7 @@ class ViewContainer extends BridgeBase {
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    const configProps = this.thePConn.getConfigProps();
+    const configProps = this.thePConn.getConfigProps() as ViewContainerProps;
     this.templateName = 'template' in configProps ? configProps.template : '';
     const { loadingInfo, limit, mode } = configProps;
     if (this.bLogging) {

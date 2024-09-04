@@ -7,9 +7,6 @@ import { promotedFiltersStyles } from './promoted-filters-styles';
 import '../ListView';
 import '@lion/ui/define/lion-input.js';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 // Adapted from Cosmos React DX Component: src/components/Templates/SimpleTableSelect/PromotedFilters.js
 
 const localeCategory = 'SimpleTable';
@@ -76,7 +73,7 @@ class PromotedFilters extends BridgeBase {
   // Moved from external to component to make sure PCore is defined
   localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
-  subscribeIdConst: String = 'FILTERS_CHANGE_SUBSCRIPTION';
+  subscribeIdConst = 'FILTERS_CHANGE_SUBSCRIPTION';
 
   initTable: Boolean = false; // initTable is a boolean in React DX Component
   filtersProperties = {};
@@ -210,7 +207,7 @@ class PromotedFilters extends BridgeBase {
       }
     });
     const promotedFilters = this.formatPromotedFilters(formValues);
-    if (PCore.getFormUtils().isFormValid(theTransientItem) && isValidInput(formValues)) {
+    if (PCore.getFormUtils().isFormValid(theTransientItem, '') && isValidInput(formValues)) {
       this.initTable = true;
       const Query: any = {
         dataViewParameters: this.parameters

@@ -2,12 +2,21 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-select.js';
 
 // import the component's styles as HTML with <style>
 import { dropdownStyles } from './dropdown-styles';
+
+interface DropdownProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on Dropdown here
+  datasource?: any[];
+  onRecordChange?: any;
+  fieldMetadata?: any;
+  listType?: any;
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -83,7 +92,7 @@ class Dropdown extends FormComponentBase {
 
     // Some additional processing
 
-    const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as DropdownProps;
 
     if (this.dataList.length > 0) {
       theConfigProps.datasource = this.dataList;

@@ -5,8 +5,6 @@
  * PCore/PConnect is being run
  */
 
-declare const PCore;
-
 export const sdkVersion = '8.7';
 
 export function compareSdkPCoreVersions() {

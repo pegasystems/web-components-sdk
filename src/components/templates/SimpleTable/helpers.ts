@@ -1,6 +1,3 @@
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 export const TABLE_CELL = 'SdkRenderer';
 export const DELETE_ICON = 'DeleteIcon';
 

@@ -7,8 +7,6 @@ import '../../forms/Dropdown';
 import '../MultiReferenceReadonly';
 import '../SingleReferenceReadonly';
 import '../../forms/SemanticLink';
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -199,7 +197,7 @@ class DataReference extends BridgeBase {
     const propValue = event?.id || event?.target.value;
     if (propValue && this.canBeChangedInReviewMode && this.isDisplayModeEnabled) {
       PCore.getDataApiUtils()
-        .getCaseEditLock(caseKey)
+        .getCaseEditLock(caseKey, '')
         .then(caseResponse => {
           const pageTokens = this.thePConn.getPageReference().replace('caseInfo.content', '').split('.');
           let curr = {};
@@ -223,11 +221,17 @@ class DataReference extends BridgeBase {
             }
           });
 
-          PCore.getDataApiUtils()
-            .updateCaseEditFieldsData(caseKey, { [caseKey]: commitData }, caseResponse.headers.etag, this.thePConn.getContextName())
-            .then(response => {
-              PCore.getContainerUtils().updateChildContainersEtag(this.thePConn.getContextName(), response.headers.etag);
-            });
+          (
+            PCore.getDataApiUtils().updateCaseEditFieldsData(
+              caseKey,
+              { [caseKey]: commitData },
+              caseResponse.headers.etag,
+              this.thePConn.getContextName()
+            ) as Promise<any>
+          ).then(response => {
+            PCore.getContainerUtils().updateParentLastUpdateTime(this.thePConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
+            PCore.getContainerUtils().updateRelatedContextEtag(this.thePConn.getContextName(), response.headers.etag);
+          });
         });
     }
   };

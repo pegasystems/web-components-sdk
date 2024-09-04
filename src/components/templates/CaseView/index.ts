@@ -11,6 +11,13 @@ import '../../Reference';
 // import the component's styles as HTML with <style>
 import { caseViewStyles } from './case-view-styles';
 
+interface CaseViewProps {
+  // If any, enter additional props that only exist on this component
+  icon: string;
+  subheader: string;
+  header: string;
+}
+
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('case-view')
@@ -125,7 +132,7 @@ class CaseView extends BridgeBase {
       debugger;
     }
 
-    const configProps = this.thePConn.getConfigProps();
+    const configProps = this.thePConn.getConfigProps() as CaseViewProps;
 
     this.heading = configProps.header;
     this.id = configProps.subheader;

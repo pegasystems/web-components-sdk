@@ -4,8 +4,21 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../PromotedFilters';
 import '../SimpleTable';
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+
+interface SimpleTableSelectProps {
+  // If any, enter additional props that only exist on this component
+  label: string;
+  referenceList: object[] | string;
+  renderMode: string;
+  showLabel: boolean;
+  promptedFilters: object[];
+  viewName: string;
+  parameters: any;
+  readonlyContextList: object[] | string;
+  dataRelationshipContext: string;
+  selectionMode?: string;
+  selectionList?: any;
+}
 
 // helper function copied from SimpleTableSelect DX Component
 const isSelfReferencedProperty = (param, referenceProp) => {
@@ -78,7 +91,7 @@ class SimpleTableSelect extends BridgeBase {
     }
 
     // Update properties based on configProps
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as SimpleTableSelectProps;
 
     this.label = theConfigProps.label;
     this.renderMode = theConfigProps.renderMode;

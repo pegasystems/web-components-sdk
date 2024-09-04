@@ -11,15 +11,20 @@ import '../ToDo';
 // import the component's styles as HTML with <style>
 import { flowContainerStyles } from './flow-container-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
 // is totally at your own risk.
 //
 
+interface FlowContainerProps {
+  // If any, enter additional props that only exist on this component
+  pageMessages: any[];
+  rootViewElement: any;
+  getPConnectOfActiveContainerItem: Function;
+  assignmentNames: string[];
+  activeContainerItemID: string;
+}
 @customElement('flow-container')
 class FlowContainer extends BridgeBase {
   buildName = '';
@@ -334,7 +339,7 @@ class FlowContainer extends BridgeBase {
   }
 
   initComponent(bLoadChildren: boolean) {
-    this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as FlowContainerProps;
 
     // when true, update arChildren from pConn, otherwise, arChilren will be updated in updateSelf()
     if (bLoadChildren) {
