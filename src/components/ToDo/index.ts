@@ -10,6 +10,38 @@ import { todoStyles } from './todo-styles';
 // Declare that PCore will be defined when this code is run
 declare let PCore: any;
 
+const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, context) => {
+  return PCore.getDataPageUtils()
+    .getDataAsync(
+      datapage,
+      context,
+      {},
+      {
+        pageNumber: 1,
+        pageSize: numberOfRecords
+      },
+      {
+        select: Object.keys(fields).map(key => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
+      },
+      {
+        additionalApiParams: {
+          includeTotalCount
+        }
+      }
+    )
+    .then(response => {
+      return {
+        ...response,
+        data: (Array.isArray(response?.data) ? response.data : []).map(row =>
+          Object.keys(fields).reduce((obj, key) => {
+            obj[key] = row[PCore.getAnnotationUtils().getPropertyName(fields[key])];
+            return obj;
+          }, {})
+        )
+      };
+    });
+};
+
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('todo-component')
@@ -35,6 +67,7 @@ class ToDo extends BridgeBase {
   @property({ attribute: true, type: Object }) assignmentsSource;
 
   bShowMore = true;
+  count;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -147,12 +180,17 @@ class ToDo extends BridgeBase {
 
     if (this.showTodoList) {
       if (this.assignmentsSource) {
-        this.assignmentCount = this.assignmentsSource != null ? this.assignmentsSource.length : 0;
+        this.count = this.assignmentsSource != null ? this.assignmentsSource.length : 0;
         this.arAssignments = this.topThreeAssignments(this.assignmentsSource);
-      } else {
-        // turn off todolist
-        this.arAssignments = [];
-      }
+      } else if (this.myWorkList.datapage) {
+          fetchMyWorkList(this.myWorkList.datapage, this.thePConn.getComponentConfig()?.myWorkList.fields, 3, true, this.context).then(responseData => {
+            this.deferLoadWorklistItems(responseData);
+          });
+        } else {
+          this.arAssignments = [];
+        }
+
+      
     } else {
       // get caseInfoId assignment.
       // eslint-disable-next-line no-lonely-if
@@ -163,6 +201,11 @@ class ToDo extends BridgeBase {
 
     this.currentUser = PCore.getEnvironmentInfo().getOperatorName();
     this.currentUserInitials = Utils.getInitials(this.currentUser);
+  }
+
+  deferLoadWorklistItems(responseData) {
+    this.count = responseData.totalCount;
+    this.arAssignments = responseData.data;
   }
 
   getID(assignment: any) {
@@ -262,15 +305,26 @@ class ToDo extends BridgeBase {
 
   _showMore() {
     this.bShowMore = false;
+    const { WORKLIST } = PCore.getConstants();
 
-    this.arAssignments = this.assignmentsSource;
+    if (this.type === WORKLIST && this.count && this.count > this.arAssignments.length) {
+      fetchMyWorkList(this.myWorkList.datapage, this.thePConn.getComponentConfig()?.myWorkList.fields, this.count, false, this.context).then(
+        response => {
+          this.arAssignments = response.data;
+        }
+      );
+    } else {
+      this.arAssignments =  this.assignmentsSource
+    }
+
     this.requestUpdate();
   }
 
   _showLess() {
     this.bShowMore = false;
+    const { WORKLIST } = PCore.getConstants();
 
-    this.arAssignments = this.topThreeAssignments(this.assignmentsSource);
+    this.arAssignments = this.type === WORKLIST ? this.arAssignments.slice(0, 3): this.topThreeAssignments(this.assignmentsSource);
     this.requestUpdate();
   }
 
@@ -294,13 +348,13 @@ class ToDo extends BridgeBase {
         <div class="psdk-todo-header">
           ${this.showTodoList ? html`<div class="psdk-avatar">${this.currentUserInitials}</div>` : nothing}
           <div class="psdk-todo-text " id="header-text">${this.headerText}</div>
-          ${this.showTodoList ? html`<div class="psdk-assignment-count">${this.assignmentCount}</div>` : nothing}
+          ${this.showTodoList ? html`<div class="psdk-assignment-count">${this.count}</div>` : nothing}
         </div>
         <br /><br />
         ${this.showTodoList ? html`<div class="psdk-display-divider"></div>` : nothing}
 
         <div class="psdk-todo-assignments">
-          ${this.arAssignments.map(
+          ${this.arAssignments?.map(
             assignment => html`
               <div class="psdk-todo-assignment">
                 <div class="psdk-avatar">${this.currentUserInitials}</div>
@@ -339,7 +393,7 @@ class ToDo extends BridgeBase {
           )}
         </div>
 
-        ${this.showTodoList
+        ${this.showTodoList && this.count > 3
           ? html`
               ${this.bShowMore
                 ? html`
