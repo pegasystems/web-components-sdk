@@ -10,6 +10,7 @@ import '../templates/ListPage';
 import '../templates/OneColumn';
 import '../Boilerplate';
 import '../designSystemExtension/ProgressIndicator';
+import { addContainerItem, configureBrowserBookmark } from './helper';
 
 // import the component's styles
 import { viewContainerStyles } from './view-container-styles';
@@ -117,9 +118,8 @@ class ViewContainer extends BridgeBase {
       PCore.getContainerUtils().setContainerLimit(`${APP.APP}/${name}`, limit);
     }
 
-    if (this.thePConn.getMetadata().children) {
-      containerMgr.addContainerItem(dispatchObject);
-    }
+    if (!PCore.checkIfSemanticURL()) addContainerItem(this.thePConn);
+    if (!this.displayOnlyFA) configureBrowserBookmark(this.thePConn);
   }
 
   disconnectedCallback() {

@@ -7,9 +7,6 @@ import * as isEqual from 'fast-deep-equal';
 import Utils from '../../helpers/utils';
 import { bootstrapStyles } from './bootstrap-styles';
 
-// Declare that PCore will be defined when this code is run
-// declare let PCore: any;
-
 export class BridgeBase extends LitElement {
   // bootstrapStyles is a (very slightly modified) version of a minified Bootstrap CSS file
   static styles = [bootstrapStyles];
