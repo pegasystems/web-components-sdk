@@ -22,6 +22,17 @@ import { getAllFields } from '../templates/utils';
 // import the component's styles as HTML with <style>
 import { viewStyles } from './view-styles';
 
+interface ViewProps {
+  // If any, enter additional props that only exist on this component
+  template?: string;
+  label?: string;
+  showLabel: boolean;
+  mode?: string;
+  title?: string;
+  visibility?: boolean;
+  name?: string;
+}
+
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
 // Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
@@ -90,7 +101,7 @@ class View extends BridgeBase {
 
     // this.buildView();
 
-    const configProps = this.thePConn.getConfigProps();
+    const configProps = this.thePConn.getConfigProps() as ViewProps;
     this.templateName = 'template' in configProps ? configProps.template : '';
     if (this.bLogging) {
       console.log(`--> ${this.theComponentName} - templateName: ${this.templateName}`);

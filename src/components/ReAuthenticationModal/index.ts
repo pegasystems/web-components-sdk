@@ -2,9 +2,6 @@ import { LitElement, nothing } from 'lit';
 import { customElement } from 'lit/decorators.js';
 // NOTE: you need to import ANY component you may render.
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
-
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('reauthentication-modal-component')

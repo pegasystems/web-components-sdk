@@ -5,8 +5,6 @@ import '../NotSupported';
 import { SdkConfigAccess, getAvailablePortals } from '@pega/auth/lib/sdk-auth-manager';
 import { compareSdkPCoreVersions } from '../../helpers/versionHelpers';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
 declare let myLoadPortal; // Experiment with this
 declare let myLoadDefaultPortal;
 

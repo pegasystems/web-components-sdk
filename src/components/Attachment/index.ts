@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import download from 'downloadjs';
+import type { PConnFieldProps } from '../../types/PConnProps.interface';
 // NOTE: you need to import ANY component you may render.
 
 import '@lion/ui/define/lion-button.js';
@@ -12,8 +13,12 @@ import '../designSystemExtension/ProgressIndicator';
 // import the component's styles as HTML with <style>
 import { attachmentStyles } from './attachment-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface AttachmentProps extends Omit<PConnFieldProps, 'value'> {
+  // If any, enter additional props that only exist on this component
+  value: any;
+  allowMultiple: string;
+  extensions: string;
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -100,7 +105,7 @@ class Attachment extends BridgeBase {
       debugger;
     }
 
-    const configProps: any = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    const configProps: any = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as AttachmentProps;
 
     const { value, label } = configProps;
 
@@ -284,8 +289,9 @@ class Attachment extends BridgeBase {
 
   _downloadFileFromList(fileObj: any) {
     PCore.getAttachmentUtils()
+      // @ts-ignore - 3rd parameter "responseEncoding" should be optional
       .downloadAttachment(fileObj.pzInsKey, this.thePConn.getContextName())
-      .then(content => {
+      .then((content: any) => {
         const extension = fileObj.pyAttachName.split('.').pop();
         this.fileDownload(content.data, fileObj.pyFileName, extension);
       })
@@ -358,7 +364,7 @@ class Attachment extends BridgeBase {
 
       PCore.getAttachmentUtils()
         .uploadAttachment(myFiles[0], this.onUploadProgress.bind(this), this.errorHandler, this.thePConn.getContextName())
-        .then(fileRes => {
+        .then((fileRes: any) => {
           let reqObj;
           if (PCore.getPCoreVersion()?.includes('8.7')) {
             reqObj = {

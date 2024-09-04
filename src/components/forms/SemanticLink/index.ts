@@ -1,10 +1,16 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
 import { semanticLinkStyles } from './semantic-link-styles';
+
+interface SemanticLinkProps extends PConnFieldProps {
+  // If any, enter additional props that only exist on SemanticLink here
+  text: string;
+}
 
 @customElement('semantic-link')
 class SemanticLink extends BridgeBase {
@@ -40,7 +46,7 @@ class SemanticLink extends BridgeBase {
     this.theComponentStyleTemplate = semanticLinkStyles;
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-    const theConfigProps = this.pConn.getConfigProps();
+    const theConfigProps = this.pConn.getConfigProps() as SemanticLinkProps;
     this.value = theConfigProps.text || '---';
     this.displayMode = theConfigProps.displayMode;
     this.label = theConfigProps.label;

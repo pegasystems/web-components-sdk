@@ -10,9 +10,29 @@ import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 
 // import the component's styles as HTML with <style>
 import { simpleTableManualStyles } from './simple-table-manual-styles';
-
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface SimpleTableManualProps {
+  // If any, enter additional props that only exist on this component
+  visibility?: boolean;
+  grouping?: any;
+  referenceList?: any[];
+  children?: any[];
+  renderMode?: string;
+  presets?: any[];
+  label?: string;
+  showLabel?: boolean;
+  dataPageName?: string;
+  contextClass?: string;
+  propertyLabel?: string;
+  fieldMetadata?: any;
+  allowTableEdit?: boolean;
+  editMode?: string;
+  addAndEditRowsWithin?: any;
+  viewForAddAndEditModal?: any;
+  editModeConfig?: any;
+  displayMode?: string;
+  useSeparateViewForEdit: any;
+  viewForEditModal: any;
+}
 
 @customElement('simple-table-manual')
 class SimpleTableManual extends BridgeBase {
@@ -87,7 +107,7 @@ class SimpleTableManual extends BridgeBase {
       console.log(`${this.theComponentName}: updateSelf`);
     }
 
-    this.configProps = this.thePConn.getConfigProps();
+    this.configProps = this.thePConn.getConfigProps() as SimpleTableManualProps;
     if (this.configProps.visibility != null) {
       this.visible = Utils.getBooleanValue(this.configProps.visibility);
     }
@@ -229,12 +249,13 @@ class SimpleTableManual extends BridgeBase {
   }
 
   generateRowsData() {
-    const { dataPageName, referenceList } = this.configProps;
+    const { dataPageName, referenceList, fieldMetadata } = this.configProps;
+    const parameters = fieldMetadata?.datasource?.parameters;
     const context = this.thePConn.getContextName();
     // if dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (dataPageName) {
       PCore.getDataApiUtils()
-        .getData(dataPageName, null, context)
+        .getData(dataPageName, parameters, context)
         .then(response => {
           const data = this.formatRowsData(response.data.data);
           this.rowData = data;

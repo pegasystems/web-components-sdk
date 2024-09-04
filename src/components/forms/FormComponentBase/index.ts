@@ -6,12 +6,23 @@ import { Utils } from '../../../helpers/utils';
 //  so we import both and combine them in our override for static styles
 import { bootstrapStyles } from '../../../bridge/BridgeBase/bootstrap-styles';
 import { formComponentStyles } from './form-component-styles';
+import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import ValidateMessageValidator from './validateMessageValidator.js';
 import { updateNewInstructions } from '../../../helpers/instructions-utils';
+
+interface FormComponentBaseProps extends PConnFieldProps {
+  referenceList: string;
+  selectionKey: string;
+  primaryField: string;
+  readonlyContextList: any;
+  selectionList: any;
+  selectionMode: any;
+  // If any, enter additional props that only exist on Text here
+}
 
 // NOTE: FormComponentBase is an intermediate base class that is intended
 //  to extend BridgeBase (to get the Web Component Bridge functionality)
@@ -121,7 +132,7 @@ export class FormComponentBase extends BridgeBase {
     this.label = 'default label';
     this.annotatedLabel = this.label;
 
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as FormComponentBaseProps;
 
     // Clear out validators so they don't accumulate (since we're going to add them back below)
     this.lionValidatorsArray.length = 0;

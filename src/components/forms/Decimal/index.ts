@@ -8,8 +8,6 @@ import '@lion/ui/define/lion-input-amount.js';
 // import the component's styles as HTML with <style>
 import { decimalStyles } from './decimal-styles';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-// Declare that PCore will be defined when this code is run
-// declare var PCore: any;
 
 @customElement('decimal-form')
 class Decimal extends FormComponentBase {

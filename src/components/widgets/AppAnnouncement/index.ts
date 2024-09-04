@@ -6,6 +6,16 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // import the component's styles
 import { appAnnouncementStyles } from './app-announcement-styles';
 
+interface AppAnnouncementProps {
+  // If any, enter additional props that only exist on this component
+  header?: string;
+  description?: string;
+  whatsnewlink?: string;
+  label?: string;
+  datasource?: any;
+  details?: any;
+}
+
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('app-announcement')
@@ -45,7 +55,7 @@ class AppAnnouncement extends BridgeBase {
     this.theComponentStyleTemplate = appAnnouncementStyles;
 
     // get some info from thePConn before we register and subscribe
-    const configProps = this.thePConn.getConfigProps();
+    const configProps = this.thePConn.getConfigProps() as AppAnnouncementProps;
 
     this.header = configProps.header;
     this.description = configProps.description;

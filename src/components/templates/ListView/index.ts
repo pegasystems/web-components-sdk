@@ -14,8 +14,21 @@ import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 // import the component's styles as HTML with <style>
 import { listViewStyles } from './list-view-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface ListViewProps {
+  // If any, enter additional props that only exist on this component
+  globalSearch?: boolean;
+  referenceList?: any;
+  rowClickAction?: any;
+  selectionMode?: string;
+  referenceType?: string;
+  compositeKeys?: any;
+  showDynamicFields?: boolean;
+  presets?: any;
+  reorderFields: string | boolean;
+  grouping: string | boolean;
+  value: any;
+  readonlyContextList: any;
+}
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -88,7 +101,7 @@ class ListView extends BridgeBase {
       debugger;
     }
 
-    const theConfigProps = this.thePConn.getConfigProps();
+    const theConfigProps = this.thePConn.getConfigProps() as ListViewProps;
     this.rowClickAction = theConfigProps.rowClickAction;
     const referenceType = theConfigProps.referenceType;
     /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */

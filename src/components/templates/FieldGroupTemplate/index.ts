@@ -7,8 +7,19 @@ import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 import '../../designSystemExtension/FieldGroup';
 import '../../designSystemExtension/FieldGroupList';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface FieldGroupTemplateProps {
+  // If any, enter additional props that only exist on this component
+  label?: string;
+  showLabel?: boolean;
+  referenceList?: any[];
+  contextClass: string;
+  renderMode?: string;
+  heading?: string;
+  lookForChildInConfig?: boolean;
+  displayMode?: string;
+  fieldHeader?: string;
+  allowTableEdit: boolean;
+}
 
 @customElement('field-group-template')
 class FieldGroupTemplate extends BridgeBase {
@@ -80,7 +91,7 @@ class FieldGroupTemplate extends BridgeBase {
       console.log(`${this.theComponentName}: updateSelf`);
     }
 
-    this.configProps = this.thePConn.getConfigProps();
+    this.configProps = this.thePConn.getConfigProps() as FieldGroupTemplateProps;
     const renderMode = this.configProps.renderMode;
     const displayMode = this.configProps.displayMode;
     this.readonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';

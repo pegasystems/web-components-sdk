@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { getSdkConfig, SdkConfigAccess, loginIfNecessary, sdkSetAuthHeader } from '@pega/auth/lib/sdk-auth-manager';
+import { getSdkConfig, SdkConfigAccess, loginIfNecessary, sdkSetAuthHeader, sdkSetCustomTokenParamsCB } from '@pega/auth/lib/sdk-auth-manager';
 import { sampleMainInit } from '../../sampleCommon';
 
 import '@lion/ui/define/lion-button.js';
@@ -44,6 +44,15 @@ class MashupPortal extends LitElement {
         const sB64 = window.btoa(`${sdkConfigAuth.mashupUserIdentifier}:${window.atob(sdkConfigAuth.mashupPassword)}:${sISOTime}`);
         sdkSetAuthHeader(`Basic ${sB64}`);
       }
+
+      if (sdkConfigAuth.customAuthType === 'CustomIdentifier') {
+        // Use custom bearer with specific custom parameter to set the desired operator via
+        //  a userIdentifier property.  (Caution: highly insecure...being used for simple demonstration)
+        sdkSetCustomTokenParamsCB(() => {
+          return { userIdentifier: sdkConfigAuth.mashupUserIdentifier };
+        });
+      }
+
 
       loginIfNecessary({ appName: 'embedded', mainRedirect: false });
     });

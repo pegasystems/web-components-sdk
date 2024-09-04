@@ -7,8 +7,22 @@ import '../../NavBar';
 // import the component's styles as HTML with <style>
 import { appShellStyles } from './appshell-styles';
 
-// Declare that PCore will be defined when this code is run
-declare let PCore: any;
+interface AppShellProps {
+  // If any, enter additional props that only exist on this component
+  showAppName: boolean;
+  pages: {
+    pxPageViewIcon: string;
+    pyClassName: string;
+    pyLabel: string;
+    pyRuleName: string;
+    pyURLContent: string;
+  }[];
+  caseTypes?: object[];
+  portalTemplate: string;
+  portalName: string;
+  portalLogo: string;
+  navDisplayOptions: { alignment: string; position: string };
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
@@ -84,7 +98,7 @@ class AppShell extends BridgeBase {
       debugger;
     }
 
-    this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+    this.configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as AppShellProps;
 
     this.pages = this.configProps.pages;
 
