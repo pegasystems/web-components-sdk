@@ -1,36 +1,39 @@
+/* eslint-disable strict */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const LiveReloadPlugin = require("@kooneko/livereload-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
+const LiveReloadPlugin = require('@kooneko/livereload-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const zlib = require('zlib');
 
 module.exports = (env, argv) => {
   const pluginsToAdd = [];
-  const webpackMode = argv.mode
+  const webpackMode = argv.mode;
 
   const mode = argv.mode;
 
   pluginsToAdd.push(new CleanWebpackPlugin());
-  pluginsToAdd.push(new HtmlWebpackPlugin({
-    template: './src/index.html',
-    filename: 'index.html'
-  }));
-  pluginsToAdd.push(new CopyWebpackPlugin(
-    {
+  pluginsToAdd.push(
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    })
+  );
+  pluginsToAdd.push(
+    new CopyWebpackPlugin({
       patterns: [
         {
           from: './sdk-config.json',
-          to: './',
+          to: './'
         },
         {
           from: './assets/img/*',
-          to: './',
+          to: './'
         },
         {
           from: './assets/css/*',
-          to: './',
+          to: './'
         },
         {
           from: './node_modules/@pega/auth/lib/oauth-client/authDone.html',
@@ -53,7 +56,7 @@ module.exports = (env, argv) => {
         },
         {
           from: './node_modules/@pega/constellationjs/dist/lib_asset.json',
-          to: './constellation',
+          to: './constellation'
         },
         {
           from: './node_modules/@pega/constellationjs/dist/constellation-core*',
@@ -71,8 +74,8 @@ module.exports = (env, argv) => {
           // }
         }
       ]
-    }
-  ));
+    })
+  );
 
   // Enable gzip and brotli compression
   //  Exclude constellation-core and bootstrap-shell files since
@@ -110,13 +113,12 @@ module.exports = (env, argv) => {
     //  When run in conjunction with build-with-watch,
     //  This will reload the browser when code is changed/re-compiled
     const liveReloadOptions = {
-      protocol: "http",
+      protocol: 'http',
       appendScriptTag: true,
       delay: 1000,
-      hostname: "localhost"
+      hostname: 'localhost'
     };
     pluginsToAdd.push(new LiveReloadPlugin(liveReloadOptions));
-    
   }
 
   // need to set mode to 'development' to get LiveReload to work
@@ -124,21 +126,21 @@ module.exports = (env, argv) => {
   return {
     mode: argv.mode,
     entry: {
-        app: './src/index.ts'
+      app: './src/index.ts'
     },
     devServer: {
-        static: path.join(__dirname, 'dist'),
-        historyApiFallback: true,
-        host: "localhost",
-        port: 3501,
-        open: false
+      static: path.join(__dirname, 'dist'),
+      historyApiFallback: true,
+      host: 'localhost',
+      port: 3501,
+      open: false
     },
     devtool: 'inline-source-map',
     // devtool: argv.mode === 'production' ? false : 'inline-source-map',
     plugins: pluginsToAdd,
     output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+      filename: '[name].bundle.js',
+      path: path.resolve(__dirname, 'dist')
     },
     module: {
       rules: [
@@ -168,7 +170,7 @@ module.exports = (env, argv) => {
       ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
+      extensions: ['.tsx', '.ts', '.js']
     }
   };
 };
