@@ -39,3 +39,5 @@ test-results/
 playwright-report/
 
 custom-elements.json
+
+_lion_core.code-search
