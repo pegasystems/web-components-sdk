@@ -9,6 +9,7 @@ import '@lion/ui/define/lion-textarea.js';
 
 // import the component's styles as HTML with <style>
 import { simpleSideBarStyles } from './simple-side-bar-styles';
+
 @customElement('simple-side-bar-component')
 class SimpleSideBar extends LitElement {
   @property({ attribute: false, type: Object }) pConn;

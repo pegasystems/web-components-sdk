@@ -14,6 +14,7 @@ import '../MashupResolutionScreen';
 import { mashupMainScreenStyles } from './mashup-main-screen-styles';
 
 @customElement('mashup-main-screen-component')
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class MashupMainScreen extends LitElement {
   @property({ attribute: false, type: Object }) pConn;
 

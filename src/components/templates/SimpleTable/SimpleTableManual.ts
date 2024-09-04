@@ -10,6 +10,7 @@ import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 
 // import the component's styles as HTML with <style>
 import { simpleTableManualStyles } from './simple-table-manual-styles';
+
 interface SimpleTableManualProps {
   // If any, enter additional props that only exist on this component
   visibility?: boolean;

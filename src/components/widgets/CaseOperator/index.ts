@@ -11,7 +11,7 @@ class CaseOperator extends BridgeBase {
   @property({ attribute: true, type: String }) label: String = 'default label';
   @property({ attribute: true, type: String }) name: String = 'default name';
   @property({ attribute: true, type: String }) helperText: String = '';
-  @property({ attribute: true, type: String }) theId: string = '';
+  @property({ attribute: true, type: String }) theId: any = '';
   @property({ attribute: false, type: Array }) fields: any = [];
   @property({ attribute: false, type: Boolean }) bShowPopover: Boolean = false;
 

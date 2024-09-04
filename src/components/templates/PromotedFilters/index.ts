@@ -73,7 +73,7 @@ class PromotedFilters extends BridgeBase {
   // Moved from external to component to make sure PCore is defined
   localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
-  subscribeIdConst: string = 'FILTERS_CHANGE_SUBSCRIPTION';
+  subscribeIdConst = 'FILTERS_CHANGE_SUBSCRIPTION';
 
   initTable: Boolean = false; // initTable is a boolean in React DX Component
   filtersProperties = {};

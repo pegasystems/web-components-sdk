@@ -14,7 +14,7 @@ class Operator extends LitElement {
   @property({ attribute: true, type: String }) label: String = '';
   @property({ attribute: true, type: String }) name: String = '';
   @property({ attribute: false, type: String }) theDateTime = '';
-  @property({ attribute: true, type: String }) theId: string = '';
+  @property({ attribute: true, type: String }) theId: any = '';
   @property({ attribute: false, type: Array }) fields: any = [];
   @property({ attribute: false, type: Boolean }) bShowPopover: Boolean = false;
 

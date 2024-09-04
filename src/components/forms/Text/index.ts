@@ -10,6 +10,7 @@ import '@lion/ui/define/lion-input.js';
 
 // import the component's styles as HTML with <style>
 import { textStyles } from './text-styles';
+
 interface TextProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Text here
 }
