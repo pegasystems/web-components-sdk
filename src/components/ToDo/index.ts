@@ -183,14 +183,12 @@ class ToDo extends BridgeBase {
         this.count = this.assignmentsSource != null ? this.assignmentsSource.length : 0;
         this.arAssignments = this.topThreeAssignments(this.assignmentsSource);
       } else if (this.myWorkList.datapage) {
-          fetchMyWorkList(this.myWorkList.datapage, this.thePConn.getComponentConfig()?.myWorkList.fields, 3, true, this.context).then(responseData => {
-            this.deferLoadWorklistItems(responseData);
-          });
-        } else {
-          this.arAssignments = [];
-        }
-
-      
+        fetchMyWorkList(this.myWorkList.datapage, this.thePConn.getComponentConfig()?.myWorkList.fields, 3, true, this.context).then(responseData => {
+          this.deferLoadWorklistItems(responseData);
+        });
+      } else {
+        this.arAssignments = [];
+      }
     } else {
       // get caseInfoId assignment.
       // eslint-disable-next-line no-lonely-if
@@ -314,7 +312,7 @@ class ToDo extends BridgeBase {
         }
       );
     } else {
-      this.arAssignments =  this.assignmentsSource
+      this.arAssignments = this.assignmentsSource;
     }
 
     this.requestUpdate();
@@ -324,7 +322,7 @@ class ToDo extends BridgeBase {
     this.bShowMore = false;
     const { WORKLIST } = PCore.getConstants();
 
-    this.arAssignments = this.type === WORKLIST ? this.arAssignments.slice(0, 3): this.topThreeAssignments(this.assignmentsSource);
+    this.arAssignments = this.type === WORKLIST ? this.arAssignments.slice(0, 3) : this.topThreeAssignments(this.assignmentsSource);
     this.requestUpdate();
   }
 
