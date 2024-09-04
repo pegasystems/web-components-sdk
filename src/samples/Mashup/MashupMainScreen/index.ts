@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
+import { getSdkConfig, SdkConfigAccess } from '@pega/auth/lib/sdk-auth-manager';
 
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-textarea.js';
@@ -189,52 +189,28 @@ class MashupMainScreen extends LitElement {
     this.showTriplePlayOptions = false;
     this.showPega = true;
 
-    const actionsApi = this.pConn.getActionsApi();
-    const createWork = actionsApi.createWork.bind(actionsApi);
-    const sFlowType = 'pyStartCase';
+    getSdkConfig().then(sdkConfig => {
+      let mashupCaseType = sdkConfig.serverConfig.appMashupCaseType;
+      if (!mashupCaseType) {
+        // @ts-ignore - Object is possibly 'null'
+        const caseTypes: any = PCore.getEnvironmentInfo().environmentInfoObject.pyCaseTypeList;
+        mashupCaseType = caseTypes[0].pyWorkTypeImplementationClassName;
+      }
 
-    //
-    // NOTE:  Below, can remove case statement when 8.6.1 and pyCreate
-    //        works with mashup and can default to MediaCo
-
-    let actionInfo;
-
-    switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
-      case 'CableCo':
-        actionInfo = {
-          containerName: 'primary',
-          flowType: sFlowType || 'pyStartCase',
-          caseInfo: {
-            content: {
-              Package: sLevel
-            }
-          }
-        };
-
-        createWork('CableC-CableCon-Work-Service', actionInfo);
-        break;
-      case 'MediaCo':
-        actionInfo = {
-          containerName: 'primary',
-          flowType: sFlowType || 'pyStartCase',
-          caseInfo: {
-            content: {
-              Package: sLevel
-            }
-          }
-        };
-
-        createWork('DIXL-MediaCo-Work-NewService', actionInfo);
-        break;
-      case 'DigV2':
-        PCore.getMashupApi().createCase('DXIL-DigV2-Work-ComplexFields', 'root', {
-          viewType: 'page',
-          pageName: 'pyEmbedAssignment',
-          startingFields: {}
-        } as any);
-        break;
-      default:
-        break;
-    }
+      const options: any = {
+        pageName: 'pyEmbedAssignment',
+        startingFields:
+          mashupCaseType === 'DIXL-MediaCo-Work-NewService'
+            ? {
+                Package: sLevel
+              }
+            : {}
+      };
+      PCore.getMashupApi()
+        .createCase(mashupCaseType, PCore.getConstants().APP.ROOT, options)
+        .then(() => {
+          console.log('createCase rendering is complete');
+        });
+    });
   }
 }
