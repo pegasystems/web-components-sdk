@@ -14,8 +14,8 @@ import type { NotificationLitRenderer } from '@vaadin/notification/lit.js';
 import type { NotificationOpenedChangedEvent } from '@vaadin/notification';
 
 interface AssignmentProps {
-   // If any, enter additional props that only exist on this component
-   template: string;
+  // If any, enter additional props that only exist on this component
+  template: string;
 }
 
 @customElement('assignment-component')

@@ -223,15 +223,15 @@ class DataReference extends BridgeBase {
 
           (
             PCore.getDataApiUtils().updateCaseEditFieldsData(
-                caseKey,
-                { [caseKey]: commitData },
-                caseResponse.headers.etag,
-                this.thePConn.getContextName()
-              ) as Promise<any>
-            ).then(response => {
-              PCore.getContainerUtils().updateParentLastUpdateTime(this.thePConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
-              PCore.getContainerUtils().updateRelatedContextEtag(this.thePConn.getContextName(), response.headers.etag);
-            });
+              caseKey,
+              { [caseKey]: commitData },
+              caseResponse.headers.etag,
+              this.thePConn.getContextName()
+            ) as Promise<any>
+          ).then(response => {
+            PCore.getContainerUtils().updateParentLastUpdateTime(this.thePConn.getContextName(), response.data.data.caseInfo.lastUpdateTime);
+            PCore.getContainerUtils().updateRelatedContextEtag(this.thePConn.getContextName(), response.headers.etag);
+          });
         });
     }
   };

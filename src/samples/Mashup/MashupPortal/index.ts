@@ -53,7 +53,6 @@ class MashupPortal extends LitElement {
         });
       }
 
-
       loginIfNecessary({ appName: 'embedded', mainRedirect: false });
     });
   }

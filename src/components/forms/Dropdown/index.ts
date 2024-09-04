@@ -15,7 +15,7 @@ interface DropdownProps extends PConnFieldProps {
   datasource?: any[];
   onRecordChange?: any;
   fieldMetadata?: any;
-  listType?: any
+  listType?: any;
 }
 
 // NOTE: this is just a boilerplate component definition intended

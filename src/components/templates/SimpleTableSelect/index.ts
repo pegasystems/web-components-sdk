@@ -17,7 +17,7 @@ interface SimpleTableSelectProps {
   readonlyContextList: object[] | string;
   dataRelationshipContext: string;
   selectionMode?: string;
-  selectionList?: any
+  selectionList?: any;
 }
 
 // helper function copied from SimpleTableSelect DX Component

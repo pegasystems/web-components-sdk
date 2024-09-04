@@ -15,14 +15,14 @@ import '../designSystemExtension/ProgressIndicator';
 import { viewContainerStyles } from './view-container-styles';
 
 interface ViewContainerProps {
-   // If any, enter additional props that only exist on this component
-   name?: string;
-   loadingInfo?: any; // can't be boolean until setDispatchObjState expects loadingInfo to be type null
-   routingInfo?: any;
-   mode?: string;
-   limit?: number;
-   title?: any;
-   template?: string;
+  // If any, enter additional props that only exist on this component
+  name?: string;
+  loadingInfo?: any; // can't be boolean until setDispatchObjState expects loadingInfo to be type null
+  routingInfo?: any;
+  mode?: string;
+  limit?: number;
+  title?: any;
+  template?: string;
 }
 
 //
