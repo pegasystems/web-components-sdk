@@ -34,9 +34,9 @@ class CaseHistory extends BridgeBase {
     this.pConn = {};
     this.fields = [];
     this.displayedColumns = [
-      { label: 'Date', type: 'DateTime', fieldName: 'pxTimeCreated' },
-      { label: 'Description', type: 'TextInput', fieldName: 'pyMessageKey' },
-      { label: 'User', type: 'TextInput', fieldName: 'pyPerformer' }
+      { label: this.thePConn.getLocalizedValue('Date', '', ''), type: 'DateTime', fieldName: 'pxTimeCreated' },
+      { label: this.thePConn.getLocalizedValue('Description', '', ''), type: 'TextInput', fieldName: 'pyMessageKey' },
+      { label: this.thePConn.getLocalizedValue('User', '', ''), type: 'TextInput', fieldName: 'pyPerformer' }
     ];
 
     this.rowData = [];

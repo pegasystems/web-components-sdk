@@ -74,7 +74,10 @@ class ToDo extends BridgeBase {
 
   bShowMore = true;
   count;
-
+  localizedVal;
+  localeCategory = 'Todo';
+  showlessLocalizedValue = '';
+  showMoreLocalizedValue = '';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -183,7 +186,9 @@ class ToDo extends BridgeBase {
     }
 
     this.assignmentsSource = this.datasource?.source || this.myWorkList.source;
-
+    this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
+    this.showlessLocalizedValue = this.localizedVal('show_less', 'CosmosFields');
+    this.showMoreLocalizedValue = this.localizedVal('show_more', 'CosmosFields');
     if (this.showTodoList) {
       if (this.assignmentsSource) {
         this.count = this.assignmentsSource != null ? this.assignmentsSource.length : 0;
@@ -366,7 +371,7 @@ class ToDo extends BridgeBase {
                   <div class="psdk-todo-assignment-title">${assignment.stepName}</div>
                   <div class="psdk-todo-assignment-data">
                     <div class="psdk-todo-assignment-task">
-                      Task in
+                      ${this.localizedVal('Task in', this.localeCategory)}
                       <span
                         class="psdk-todo-id"
                         @click=${() => {
@@ -377,7 +382,7 @@ class ToDo extends BridgeBase {
                       <span *ngIf="assignment.status != undefined">
                         &bull; <span class="psdk-todo-assignment-status">${assignment?.status}</span>
                       </span>
-                      &bull; Priority ${assignment?.priority}
+                      &bull; ${this.localizedVal('Urgency', this.localeCategory)} ${assignment?.priority}
                     </div>
                   </div>
                 </div>
@@ -388,7 +393,7 @@ class ToDo extends BridgeBase {
                       this.clickGo([assignment]);
                     }}
                   >
-                    Go
+                    ${this.localizedVal('Go', this.localeCategory)}
                   </button>
                 </div>
               </div>
@@ -402,12 +407,16 @@ class ToDo extends BridgeBase {
               ${this.bShowMore
                 ? html`
                     <div class="psdk-todo-show-more">
-                      <lion-button btn btn-link @click="${this._showMore}">Show more</lion-button>
+                      <lion-button btn btn-link @click="${this._showMore}"
+                        >${this.showMoreLocalizedValue === 'show_more' ? 'Show more' : this.showMoreLocalizedValue}</lion-button
+                      >
                     </div>
                   `
                 : html`
                     <div class="psdk-todo-show-more">
-                      <lion-button btn btn-link @click="${this._showLess}">Show less</lion-button>
+                      <lion-button btn btn-link @click="${this._showLess}"
+                        >${this.showlessLocalizedValue === 'show_less' ? 'Show less' : this.showlessLocalizedValue}</lion-button
+                      >
                     </div>
                   `}
             `

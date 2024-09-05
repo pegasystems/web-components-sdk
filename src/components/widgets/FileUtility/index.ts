@@ -610,7 +610,7 @@ class FileUtility extends BridgeBase {
       actions = [
         {
           id: `Cancel-${att.ID}`,
-          text: 'Cancel',
+          text: this.thePConn.getLocalizedValue('Cancel', '', ''),
           icon: 'times',
           onClick: cancelFile
         }
@@ -623,7 +623,7 @@ class FileUtility extends BridgeBase {
           'download',
           {
             id: `download-${ID}`,
-            text: isFile ? 'Download' : 'Open',
+            text: isFile ? this.thePConn.getLocalizedValue('Download', '', '') : this.thePConn.getLocalizedValue('Open', '', ''),
             icon: isFile ? 'download' : 'open',
             onClick: downloadFile
           }
@@ -632,7 +632,7 @@ class FileUtility extends BridgeBase {
           'delete',
           {
             id: `Delete-${ID}`,
-            text: 'Delete',
+            text: this.thePConn.getLocalizedValue('Delete', '', ''),
             icon: 'trash',
             onClick: deleteFile
           }
@@ -648,7 +648,7 @@ class FileUtility extends BridgeBase {
       actions = [
         {
           id: `Remove-${att.ID}`,
-          text: 'Remove',
+          text: this.thePConn.getLocalizedValue('Remove', '', ''),
           icon: 'trash',
           onClick: removeFile
         }
@@ -681,7 +681,7 @@ class FileUtility extends BridgeBase {
       actions = [
         {
           id: `Cancel-${att.ID}`,
-          text: 'Cancel',
+          text: this.thePConn.getLocalizedValue('Cancel', '', ''),
           icon: 'times',
           onClick: cancelFile
         }
@@ -694,7 +694,7 @@ class FileUtility extends BridgeBase {
           'download',
           {
             id: `download-${ID}`,
-            text: isFile ? 'Download' : 'Open',
+            text: isFile ? this.thePConn.getLocalizedValue('Download', '', '') : this.thePConn.getLocalizedValue('Open', '', ''),
             icon: isFile ? 'download' : 'open',
             onClick: downloadFile
           }
@@ -703,7 +703,7 @@ class FileUtility extends BridgeBase {
           'delete',
           {
             id: `Delete-${ID}`,
-            text: 'Delete',
+            text: this.thePConn.getLocalizedValue('Delete', '', ''),
             icon: 'trash',
             onClick: deleteFile
           }
@@ -719,7 +719,7 @@ class FileUtility extends BridgeBase {
       actions = [
         {
           id: `Remove-${att.ID}`,
-          text: 'Remove',
+          text: this.thePConn.getLocalizedValue('Remove', '', ''),
           icon: 'trash',
           onClick: removeFile
         }
@@ -791,11 +791,11 @@ class FileUtility extends BridgeBase {
   }
 
   createModalButtons() {
-    this.arFileMainButtons.push({ actionID: 'attach', jsAction: 'attachFiles', name: 'Attach files' });
-    this.arFileSecondaryButtons.push({ actionID: 'cancel', jsAction: 'cancel', name: 'Cancel' });
+    this.arFileMainButtons.push({ actionID: 'attach', jsAction: 'attachFiles', name: this.thePConn.getLocalizedValue('Attach files', '', '') });
+    this.arFileSecondaryButtons.push({ actionID: 'cancel', jsAction: 'cancel', name: this.thePConn.getLocalizedValue('Cancel', '', '') });
 
-    this.arLinkMainButtons.push({ actionID: 'attach', jsAction: 'attachLinks', name: 'Attach links' });
-    this.arLinkSecondaryButtons.push({ actionID: 'cancel', jsAction: 'cancel', name: 'Cancel' });
+    this.arLinkMainButtons.push({ actionID: 'attach', jsAction: 'attachLinks', name: this.thePConn.getLocalizedValue('Attach links', '', '') });
+    this.arLinkSecondaryButtons.push({ actionID: 'cancel', jsAction: 'cancel', name: this.thePConn.getLocalizedValue('Cancel', '', '') });
   }
 
   uploadMyFiles($event) {
@@ -827,7 +827,7 @@ class FileUtility extends BridgeBase {
     for (const file of arFiles) {
       if (!this.validateMaxSize(file, 5)) {
         file.error = true;
-        file.meta = 'File is too big. Max allowed size is 5MB.';
+        file.meta = this.thePConn.getLocalizedValue('File is too big. Max allowed size is 5MB.', '', '');
       }
       file.mimeType = file.type;
       file.icon = this.getIconFromFileType(file.type);

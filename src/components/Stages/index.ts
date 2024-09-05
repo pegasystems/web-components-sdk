@@ -12,6 +12,7 @@ import { stagesStyles } from './stages-styles';
 class Stages extends BridgeBase {
   checkSvgIcon = '';
   imagePath = '';
+  key: string | undefined;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -46,6 +47,8 @@ class Stages extends BridgeBase {
 
     this.imagePath = Utils.getIconPath(Utils.getSDKStaticContentUrl());
     this.checkSvgIcon = Utils.getImageSrc('check', Utils.getSDKStaticContentUrl());
+    console.log('this.pConn', this.pConn);
+    this.key = `${this.thePConn.getCaseInfo().getClassName()}!CASE!${this.thePConn.getCaseInfo().getName()}`.toUpperCase();
   }
 
   disconnectedCallback() {
@@ -111,7 +114,7 @@ class Stages extends BridgeBase {
         break;
     }
 
-    return html` <div class="${sClass}">${sIconHtml}${stage.name}</div> `;
+    return html` <div class="${sClass}">${sIconHtml}${PCore.getLocaleUtils().getLocaleValue(stage.name, '', this.key)}</div> `;
   }
 
   getStageOuterHtml(stage: any) {
