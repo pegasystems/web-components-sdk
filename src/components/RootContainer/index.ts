@@ -53,48 +53,43 @@ class RootContainer extends BridgeBase {
     }
 
     // Adapted from Angular SDK
-    let myContext = 'app';
-    if (this.isMashup) {
-      myContext = 'root';
-    }
 
-    const options = { context: myContext };
+    const options = { context: 'app', target: this.thePConn.getTarget() };
 
     const { containers } = PCore.getStore().getState();
     const items = Object.keys(containers).filter(item => item.includes('root'));
 
     PCore.getContainerUtils().getContainerAPI().addContainerItems(items);
 
-    const configObjPreview = PCore.createPConnect({
-      meta: {
-        type: 'PreviewViewContainer',
-        config: {
-          name: 'preview'
-        }
-      },
-      options
-    });
+    if (!this.displayOnlyFA) {
+      const configObjPreview = PCore.createPConnect({
+        meta: {
+          type: 'PreviewViewContainer',
+          config: {
+            name: 'preview'
+          }
+        },
+        options
+      });
 
-    this.previewViewContainerConn = configObjPreview.getPConnect();
+      this.previewViewContainerConn = configObjPreview.getPConnect();
 
-    const configObjModal = PCore.createPConnect({
-      meta: {
-        type: 'ModalViewContainer',
-        config: {
-          name: 'modal'
-        }
-      },
-      options: {
-        pageReference: 'pyPortal',
-        context: myContext
-      }
-    });
+      const configObjModal = PCore.createPConnect({
+        meta: {
+          type: 'ModalViewContainer',
+          config: {
+            name: 'modal'
+          }
+        },
+        options
+      });
+
+      this.modalViewContainerConn = configObjModal.getPConnect();
+    }
 
     // becasue of Web Component frame work not calling constructor when root container updates, need to tell
     // flow container when to init
     window.sessionStorage.setItem('okToInitFlowContainer', 'true');
-
-    this.modalViewContainerConn = configObjModal.getPConnect();
 
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
