@@ -93,9 +93,12 @@ class Integer extends FormComponentBase {
       ? html` <lion-input-amount
           id=${this.theComponentId}
           dataTestId=${this.testId}
-          .modelValue=${parseInt(this.value, 10)}
           .fieldName=${this.label}
-          .formatOptions=${{ style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }}
+          .formatOptions="${{
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          }}"
+          .modelValue=${parseInt(this.value, 10)}
           .validators=${this.lionValidatorsArray}
           .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           ?readonly=${this.bReadonly}

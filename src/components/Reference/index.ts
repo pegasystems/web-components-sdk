@@ -83,7 +83,7 @@ class Reference extends BridgeBase {
     if (!viewMetadata) {
       // This happens rarely during some transitions but doesn't seem to have an impact.
       console.warn(`View not found. getComponentConfig(): ${JSON.stringify(this.pConn.getComponentConfig())}`);
-      // return null;
+      return null;
     }
 
     const viewObject = {
