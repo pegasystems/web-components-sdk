@@ -72,7 +72,7 @@ class Reference extends BridgeBase {
 
     this.resolvedConfigProps = this.pConn.resolveConfigProps(this.pConn.getConfigProps());
 
-    const referenceConfig = { ...this.pConn.getComponentConfig() } || {};
+    const referenceConfig = { ...this.pConn.getComponentConfig() };
 
     delete referenceConfig?.name;
     delete referenceConfig?.type;
