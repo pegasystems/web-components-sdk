@@ -10,6 +10,10 @@ export const listViewStyles = html`
 */
     /* for vaadin-grid */
 
+    vaadin-grid {
+      height: auto;
+    }
+
     /* based on this thread: https://github.com/vaadin/vaadin-grid/issues/786 */
     vaadin-grid tbody#items {
       box-sizing: content-box;
