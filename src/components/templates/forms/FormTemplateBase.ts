@@ -1,52 +1,39 @@
-import { customElement } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
-// NOTE: you need to import ANY component you may render.
 
-// import the component's styles as HTML with <style>
-import { oneColumnStyles } from './one-column-styles';
-
-@customElement('one-column')
-class OneColumn extends BridgeBase {
-  constructor() {
+export class FormTemplateBase extends BridgeBase {
+  constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set both to true here. Set to false if you don't need debugger or logging, respectively.
-    super(false, false);
+    super(inDebug, inLogging);
+
     if (this.bLogging) {
       console.log(`${this.theComponentName}: constructor`);
-    }
-    if (this.bDebug) {
-      debugger;
     }
 
     this.pConn = {};
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     super.connectedCallback();
+
     if (this.bLogging) {
       console.log(`${this.theComponentName}: connectedCallback`);
     }
-    if (this.bDebug) {
-      debugger;
-    }
-
-    // setup this component's styling...
-    this.theComponentStyleTemplate = oneColumnStyles;
 
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
-  disconnectedCallback() {
-    // The super call will call storeUnsubscribe...
+  disconnectedCallback(): void {
+    // Calling removeContextTreeNode method to remove previous form fields from ContextTreeNode
+    PCore.getContextTreeManager().removeContextTreeNode(this.thePConn.getContextName());
+
     super.disconnectedCallback();
+
     if (this.bLogging) {
       console.log(`${this.theComponentName}: disconnectedCallback`);
-    }
-    if (this.bDebug) {
-      debugger;
     }
   }
 
@@ -54,11 +41,11 @@ class OneColumn extends BridgeBase {
    * updateSelf
    */
   updateSelf() {
+    // Calling removeContextTreeNode method to remove previous form fields from ContextTreeNode
+    PCore.getContextTreeManager().removeContextTreeNode(this.thePConn.getContextName());
+
     if (this.bLogging) {
       console.log(`${this.theComponentName}: updateSelf`);
-    }
-    if (this.bDebug) {
-      debugger;
     }
   }
 
@@ -72,9 +59,6 @@ class OneColumn extends BridgeBase {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: onStateChange`);
     }
-    if (this.bDebug) {
-      debugger;
-    }
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
@@ -82,23 +66,4 @@ class OneColumn extends BridgeBase {
       this.updateSelf();
     }
   }
-
-  render() {
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
-
-    // To prevent accumulation (and extra rendering) of previous renders, begin each the render
-    //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
-    this.prepareForRender();
-
-    this.addChildTemplates();
-
-    return this.renderTemplates;
-  }
 }
-
-export default OneColumn;
