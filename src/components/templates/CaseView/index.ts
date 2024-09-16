@@ -42,6 +42,7 @@ class CaseView extends BridgeBase {
 
   currentCaseID = '';
   bHasNewAttachments = false;
+  editAction: any;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -158,6 +159,8 @@ class CaseView extends BridgeBase {
     const caseInfo = this.thePConn.getDataObject().caseInfo;
     this.arAvailableActions = caseInfo?.availableActions ? caseInfo.availableActions : [];
     this.arAvailableProcesses = caseInfo?.availableProcesses ? caseInfo.availableProcesses : [];
+
+    this.editAction = this.arAvailableActions.find(action => action.ID === 'pyUpdateCaseDetails');
   }
 
   /**
@@ -254,7 +257,7 @@ class CaseView extends BridgeBase {
   getActionButtonsHtml(): any {
     return html`
       <div class="psdk-case-view-buttons">
-        <lion-button class="btn btn-light" color="secondary" @click=${this._editClick}>Edit</lion-button>
+        ${this.editAction ? html`<lion-button class="btn btn-light" color="secondary" @click=${this._editClick}>Edit</lion-button>` : html``}
         <lion-button class="btn btn-light" color="secondary" @click=${this._showActionMenu}>Actions...</lion-button>
         <div id="actionMenu" class="psdk-action-menu-content">
           ${this.getActionButtonMenuHtml(this.arAvailableActions, this.arAvailableProcesses)}
@@ -344,11 +347,10 @@ class CaseView extends BridgeBase {
   }
 
   _editClick() {
-    const editAction = this.arAvailableActions.find(action => action.ID === 'pyUpdateCaseDetails');
     const actionsAPI = this.thePConn.getActionsApi();
     const openLocalAction = actionsAPI.openLocalAction.bind(actionsAPI);
 
-    openLocalAction(editAction.ID, { ...editAction });
+    openLocalAction(this.editAction.ID, { ...this.editAction, containerName: 'modal', type: 'express' });
   }
 
   _actionMenuActionsClick(data) {
