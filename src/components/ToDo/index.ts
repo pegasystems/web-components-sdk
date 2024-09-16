@@ -316,7 +316,7 @@ class ToDo extends BridgeBase {
     this.bShowMore = false;
     const { WORKLIST } = PCore.getConstants();
 
-    if (this.type === WORKLIST && this.count && this.count > this.arAssignments.length) {
+    if (this.type === WORKLIST && this.count && this.count > this.arAssignments.length && !this.assignmentsSource) {
       fetchMyWorkList(this.myWorkList.datapage, this.thePConn.getComponentConfig()?.myWorkList.fields, this.count, false, this.context).then(
         response => {
           this.arAssignments = response.data;
@@ -330,7 +330,7 @@ class ToDo extends BridgeBase {
   }
 
   _showLess() {
-    this.bShowMore = false;
+    this.bShowMore = true;
     const { WORKLIST } = PCore.getConstants();
 
     this.arAssignments = this.type === WORKLIST ? this.arAssignments.slice(0, 3) : this.topThreeAssignments(this.assignmentsSource);

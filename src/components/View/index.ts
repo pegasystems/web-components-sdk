@@ -46,6 +46,9 @@ class View extends BridgeBase {
   @property({ attribute: false, type: String }) templateName;
   @property({ attribute: false, type: String }) title;
 
+  label = '';
+  showLabel = true;
+
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -117,9 +120,17 @@ class View extends BridgeBase {
     }
     this.title = 'title' in configProps ? configProps.title : '';
 
+    const inheritedProps$ = this.thePConn.getInheritedProps();
+
     // We need to bind this component's additionalProps (defined on BridgeBase)
     //  to this implementation's computeAdditionalProps
     this.additionalProps = this.computeAdditionalProps.bind(this);
+
+    this.label = configProps.label || '';
+    this.showLabel = configProps.showLabel || this.showLabel;
+    // label & showLabel within inheritedProps takes precedence over configProps
+    this.label = inheritedProps$.label || this.label;
+    this.showLabel = inheritedProps$.showLabel || this.showLabel;
 
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
@@ -218,7 +229,12 @@ class View extends BridgeBase {
     }
 
     const theOuterTemplate = html`
-      <div class="psdk-view-top">${this.title !== '' ? html`<h4>${this.title}</h4>` : nothing} ${theInnerTemplate}</div>
+      <div class="psdk-view-top">
+        ${this.showLabel && this.label && this.templateName !== 'SimpleTable' && this.templateName !== 'DefaultForm'
+          ? html`<div class="template-title-container"><span>${this.label}</span></div>`
+          : nothing}
+        ${theInnerTemplate}
+      </div>
     `;
 
     this.renderTemplates.push(theOuterTemplate);

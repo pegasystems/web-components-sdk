@@ -72,7 +72,7 @@ class Reference extends BridgeBase {
 
     this.resolvedConfigProps = this.pConn.resolveConfigProps(this.pConn.getConfigProps());
 
-    const referenceConfig = { ...this.pConn.getComponentConfig() } || {};
+    const referenceConfig = { ...this.pConn.getComponentConfig() };
 
     delete referenceConfig?.name;
     delete referenceConfig?.type;
@@ -83,7 +83,7 @@ class Reference extends BridgeBase {
     if (!viewMetadata) {
       // This happens rarely during some transitions but doesn't seem to have an impact.
       console.warn(`View not found. getComponentConfig(): ${JSON.stringify(this.pConn.getComponentConfig())}`);
-      // return null;
+      return null;
     }
 
     const viewObject = {

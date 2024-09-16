@@ -44,6 +44,7 @@ class CaseView extends BridgeBase {
   localizedVal = PCore.getLocaleUtils().getLocaleValue;
   localeCategory = 'CaseView';
   localeKey = '';
+  bHasNewAttachments = false;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -146,6 +147,15 @@ class CaseView extends BridgeBase {
     // if id has changed, mark flow container needs to init container
     if (this.hasCaseIDChanged()) {
       window.sessionStorage.setItem('okToInitFlowContainer', 'true');
+    }
+
+    const hasNewAttachments = this.thePConn.getDataObject().caseInfo?.hasNewAttachments;
+
+    if (hasNewAttachments !== this.bHasNewAttachments) {
+      this.bHasNewAttachments = hasNewAttachments;
+      if (this.bHasNewAttachments) {
+        PCore.getPubSubUtils().publish((PCore.getEvents().getCaseEvent() as any).CASE_ATTACHMENTS_UPDATED_FROM_CASEVIEW, true);
+      }
     }
 
     const caseInfo = this.thePConn.getDataObject().caseInfo;
