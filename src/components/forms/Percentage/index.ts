@@ -12,7 +12,6 @@ import { percentageStyles } from './percentage-styles';
 //  to be used as a starting point for any new components as they're built out
 @customElement('percentage-form')
 class Percentage extends FormComponentBase {
-
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -62,7 +61,6 @@ class Percentage extends FormComponentBase {
     // Reset to defaults
 
     // const theConfigProps = this.thePConn.getConfigProps();
-
   }
 
   render() {
