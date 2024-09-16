@@ -111,6 +111,8 @@ class Operator extends LitElement {
     }
 
     const operatorPreviewPromise = PCore.getUserApi().getOperatorDetails(this.theId);
+    const localizedVal = PCore.getLocaleUtils().getLocaleValue;
+    const localeCategory = 'Operator';
 
     operatorPreviewPromise.then(res => {
       if (this.bDebug) {
@@ -121,27 +123,27 @@ class Operator extends LitElement {
         this.fields = [
           {
             id: 'pyPosition',
-            name: 'Position',
+            name: localizedVal('Position', localeCategory),
             value: res.data.pyOperatorInfo.pyPosition ? res.data.pyOperatorInfo.pyPosition : fillerString
           },
           {
             id: 'pyOrganization',
-            name: 'Organization',
+            name: localizedVal('Organization', localeCategory),
             value: res.data.pyOperatorInfo.pyOrganization ? res.data.pyOperatorInfo.pyOrganization : fillerString
           },
           {
             id: 'ReportToUserName',
-            name: 'Reports to',
+            name: localizedVal('Reports to', localeCategory),
             value: res.data.pyOperatorInfo.pyReportToUserName ? res.data.pyOperatorInfo.pyReportToUserName : fillerString
           },
           {
             id: 'pyTelephone',
-            name: 'Telephone',
+            name: localizedVal('Telephone', localeCategory),
             value: res.data.pyOperatorInfo.pyTelephone ? res.data.pyOperatorInfo.pyTelephone : fillerString
           },
           {
             id: 'pyEmailAddress',
-            name: 'Email address',
+            name: localizedVal('Email address', localeCategory),
             value: res.data.pyOperatorInfo.pyEmailAddress ? res.data.pyOperatorInfo.pyEmailAddress : fillerString
           }
         ];
@@ -157,27 +159,27 @@ class Operator extends LitElement {
         this.fields = [
           {
             id: 'pyPosition',
-            name: 'Position',
+            name: localizedVal('Position', localeCategory),
             value: fillerString
           },
           {
             id: 'pyOrganization',
-            name: 'Organization',
+            name: localizedVal('Organization', localeCategory),
             value: fillerString
           },
           {
             id: 'ReportToUserName',
-            name: 'Reports to',
+            name: localizedVal('Reports to', localeCategory),
             value: fillerString
           },
           {
             id: 'pyTelephone',
-            name: 'Telephone',
+            name: localizedVal('Telephone', localeCategory),
             value: fillerString
           },
           {
             id: 'pyEmailAddress',
-            name: 'Email address',
+            name: localizedVal('Email address', localeCategory),
             value: fillerString
           }
         ];

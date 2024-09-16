@@ -23,6 +23,12 @@ class RadioButtons extends FormComponentBase {
 
   @property({ attribute: false, type: Array }) options;
 
+  fieldMetadata: Array<any> = [];
+  localeContext: string = '';
+  localeClass: string = '';
+  localeName: string = '';
+  localePath: string = '';
+  localizedValue: string = '';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -80,6 +86,26 @@ class RadioButtons extends FormComponentBase {
     const theConfigProps = this.thePConn.getConfigProps();
 
     this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
+
+    const propName = this.pConn.getStateProps().value;
+    const className = this.pConn.getCaseInfo().getClassName();
+    const refName = propName?.slice(propName.lastIndexOf('.') + 1);
+
+    this.fieldMetadata = theConfigProps['fieldMetadata'];
+    const metaData = Array.isArray(this.fieldMetadata) ? this.fieldMetadata.filter((field) => field?.classID === className)[0] : this.fieldMetadata;
+
+    let displayName = metaData?.datasource?.propertyForDisplayText;
+    displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
+    this.localeContext = metaData?.datasource?.tableType === 'DataPage' ? 'datapage' : 'associated';
+    this.localeClass = this.localeContext === 'datapage' ? '@baseclass' : className;
+    this.localeName = this.localeContext === 'datapage' ? metaData?.datasource?.name : refName;
+    this.localePath = this.localeContext === 'datapage' ? displayName : this.localeName;
+
+    this.localizedValue = this.pConn.getLocalizedValue(
+      this.value,
+      this.localePath,
+      this.pConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
+    );
   }
 
   // The original implementation of fieldOnChange before we switched to using the super class implementation
@@ -134,7 +160,7 @@ class RadioButtons extends FormComponentBase {
           ?disabled=${this.bDisabled}
           ?visible=${this.bVisible}
           label=${this.label}
-          value=${this.value}
+          value=${this.localizedValue}
           testId=${this.testId}
         >
         </text-form>
@@ -161,10 +187,11 @@ class RadioButtons extends FormComponentBase {
               >
                 <span slot="label" class="radio-group-label">${this.annotatedLabel}</span>
                 ${this.options.map((option: any) => {
+                  const val = this.pConn.getLocalizedValue(option.value, this.localePath, this.pConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName));
                   return html`
                     ${option.key === this.value
-                      ? html` <lion-radio class="psdk-radio-button" checked label=${option.value} .choiceValue=${option.key}></lion-radio>`
-                      : html` <lion-radio class="psdk-radio-button" label=${option.value} .choiceValue=${option.key}></lion-radio>`}
+                      ? html` <lion-radio class="psdk-radio-button" checked label=${val} .choiceValue=${option.key}></lion-radio>`
+                      : html` <lion-radio class="psdk-radio-button" label=${val} .choiceValue=${option.key}></lion-radio>`}
                   `;
                 })}
               </lion-radio-group>

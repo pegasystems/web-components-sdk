@@ -49,7 +49,9 @@ class FlowContainer extends BridgeBase {
   svgNotCurrent = '';
 
   newConfig: Object = {};
-
+  localizedVal: any;
+  localeCategory = 'Messages';
+  localeReference: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -116,6 +118,10 @@ class FlowContainer extends BridgeBase {
 
     const flowContainerTarget = `${baseContext}/${containerName}`;
     const isContainerItemAvailable = PCore.getContainerUtils().getActiveContainerItemName(flowContainerTarget);
+
+    this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
+    const caseInfo = this.thePConn.getCaseInfo();
+    this.localeReference = `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase();
 
     window.sessionStorage.setItem('okToInitFlowContainer', 'false');
 
@@ -255,6 +261,7 @@ class FlowContainer extends BridgeBase {
 
     // if have caseMessage show message and end
     this.caseMessages = this.thePConn.getValue('caseMessages');
+    this.caseMessages = this.localizedVal(this.pConn.getValue('caseMessages'), this.localeCategory);
 
     if (this.caseMessages || !this.hasAssignments()) {
       this.bHasCaseMessages = true;
@@ -262,7 +269,7 @@ class FlowContainer extends BridgeBase {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
       if (!this.caseMessages) {
-        this.caseMessages = 'Thank you! The next step in this case has been routed appropriately.';
+        this.caseMessages = this.localizedVal('Thank you! The next step in this case has been routed appropriately.', this.localeCategory);
       }
 
       // publish this "assignmentFinished" for mashup, need to get approved as a standard
@@ -320,7 +327,8 @@ class FlowContainer extends BridgeBase {
             // check if have oWorkData, there are times due to timing of state change, when this
             // may not be available
             if (oWorkData) {
-              this.containerName = this.getActiveViewLabel() || oWorkData.caseInfo.assignments[0].name;
+              const name = this.getActiveViewLabel() || oWorkData.caseInfo.assignments?.[0].name;
+              this.containerName = this.localizedVal(name, undefined, this.localeReference);
               this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
             }
 
