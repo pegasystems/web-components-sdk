@@ -137,7 +137,7 @@ class CaseView extends BridgeBase {
     }
 
     const configProps = this.thePConn.getConfigProps() as CaseViewProps;
-    console.log('caseview configProps', configProps);
+
     this.heading = configProps.header;
     this.id = configProps.subheader;
     this.status = this.thePConn.getValue('.pyStatusWork');
