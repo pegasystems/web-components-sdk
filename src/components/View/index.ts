@@ -6,14 +6,14 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 import '../templates/AppShell';
 import '../templates/TwoColumnPage';
 import '../FlowContainer';
-import '../templates/OneColumn';
+import '../templates/forms/OneColumn';
 import '../templates/OneColumnTab';
 import '../templates/WideNarrowPage';
 import '../Stages';
 import '../Boilerplate';
 import '../templates/CaseSummary';
 import '../DeferLoad';
-import '../templates/DefaultForm';
+import '../templates/forms/DefaultForm';
 import '../templates/DataReference';
 import '../templates/SimpleTable';
 
@@ -221,11 +221,11 @@ class View extends BridgeBase {
     }
 
     if (this.templateName !== '') {
-      theInnerTemplate = html` ${this.getTemplateForTemplate(this.templateName, this.pConn, this.displayOnlyFA)} `;
+      theInnerTemplate = this.getTemplateForTemplate(this.templateName, this.pConn, this.displayOnlyFA);
     } else if (this.displayOnlyFA) {
-      theInnerTemplate = html` ${this.getChildTemplateArray(this.displayOnlyFA)} `;
+      theInnerTemplate = this.getChildTemplateArray(this.displayOnlyFA);
     } else {
-      theInnerTemplate = html` ${this.getChildTemplateArray()} `;
+      theInnerTemplate = this.getChildTemplateArray();
     }
 
     const theOuterTemplate = html`

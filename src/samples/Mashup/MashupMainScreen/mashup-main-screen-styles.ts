@@ -52,6 +52,7 @@ export const mashupMainScreenStyles = html`
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 20px;
     }
 
     .cc-info-banner-text {
@@ -62,8 +63,7 @@ export const mashupMainScreenStyles = html`
     }
 
     .cc-info-image {
-      width: 700px;
-      margin: 20px;
+      width: 100%;
       border-radius: 10px;
     }
   </style>
