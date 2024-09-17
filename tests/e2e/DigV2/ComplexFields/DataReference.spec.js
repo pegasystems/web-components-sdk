@@ -1,10 +1,10 @@
 const { test, expect } = require('@playwright/test');
-const config = require('../../config');
-const common = require('../../common');
+const config = require('../../../config');
+const common = require('../../../common');
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3501/portal');
+  await page.goto(config.config.portalUrl, { waitUntil: 'networkidle' });
 });
 
 test.describe('E2E test', () => {
@@ -119,7 +119,7 @@ test.describe('E2E test', () => {
     selectedProductRow = selectedProduct.locator('input[type="checkbox"]');
     await selectedProductRow.click();
 
-    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-5"]');
+    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-6"]');
     selectedProductRow = selectedProduct.locator('input[type="checkbox"]');
     await selectedProductRow.click();
 
@@ -171,6 +171,28 @@ test.describe('E2E test', () => {
     await expect(assignment.locator('text-form[value="Basic Product"]')).toBeVisible();
     await expect(assignment.locator('text-form[value="75"]')).toBeVisible();
     await expect(assignment.locator('text-form[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
+
+    await page.locator('button:has-text("Previous")').click();
+
+    /** Sorting test */
+    await page.selectOption('lion-select[datatestid="9463d5f18a8924b3200b56efaad63bda"] select', 'Options');
+
+    await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', 'ListOfRecords');
+
+    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-19"] >> vaadin-grid-sorter').click();
+    const tableCell = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-7"]');
+    await expect(await tableCell.textContent()).toBe('');
+
+    // await productNameHeader.click();
+    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-19"] >> vaadin-grid-sorter').click();
+
+    await expect(await tableCell.textContent()).toBe('Luxury Product');
+
+    const lastCell = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-16"]');
+
+    await expect(await lastCell.textContent()).toBe('');
+
+    await page.locator('button:has-text("Next")').click();
 
     /** Submitting the case */
     await page.locator('button:has-text("submit")').click();

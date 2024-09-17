@@ -7,6 +7,7 @@ const endpoints = require('../../../sdk-config.json');
 let caseID;
 
 test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1720, height: 1080 });
   await page.goto(config.config.portalUrl);
 });
 

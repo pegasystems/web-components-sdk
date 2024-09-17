@@ -3,12 +3,12 @@
 /** We're testing the visibility of tabs within the Case Summary area in the Case View here, more tests to be added in the future. */
 
 const { test, expect } = require('@playwright/test');
-const config = require('../../config');
-const common = require('../../common');
+const config = require('../../../config');
+const common = require('../../../common');
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await page.goto('http://localhost:3501/portal');
+  await page.goto(config.config.portalUrl, { waitUntil: 'networkidle' });
 });
 
 test.describe('E2E test', () => {
@@ -95,6 +95,9 @@ test.describe('E2E test', () => {
 
     /** Editable mode type tests */
     await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', 'Editable');
+
+    /** Table rows type tests */
+    await page.selectOption('lion-select[datatestid="80c1db3a7b228760228004b1a532c71e"] select', 'Table rows');
 
     const noRecordsMsg = page.locator('div[id="no-records"]');
     await expect(noRecordsMsg).toBeVisible();
