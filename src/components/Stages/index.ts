@@ -137,7 +137,7 @@ class Stages extends BridgeBase {
       arStagesHtml.push(html`${this.getStageOuterHtml(stage)}`);
     }
 
-    return html` <div class="psdk-stages-bar">${arStagesHtml}</div> `;
+    return html` <div id="Stages" class="psdk-stages-bar">${arStagesHtml}</div> `;
   }
 
   render() {

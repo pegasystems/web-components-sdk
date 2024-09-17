@@ -57,18 +57,7 @@ class FileUtility extends BridgeBase {
 
   currentCaseID = '';
 
-  addAttachmentsActions: any[] = [
-    {
-      text: 'Add files',
-      id: 'addNewFiles',
-      onClick: () => this.createModal('addLocalFile')
-    },
-    {
-      text: 'Add links',
-      id: 'addNewLinks',
-      onClick: () => this.createModal('addLocalLink')
-    }
-  ];
+  addAttachmentsActions: any[] = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -102,6 +91,19 @@ class FileUtility extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     const configProps: any = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
+
+    this.addAttachmentsActions = [
+      {
+        text: this.thePConn.getLocalizedValue('Add files', '', ''),
+        id: 'addNewFiles',
+        onClick: () => this.createModal('addLocalFile')
+      },
+      {
+        text: this.thePConn.getLocalizedValue('Add links', '', ''),
+        id: 'addNewLinks',
+        onClick: () => this.createModal('addLocalLink')
+      }
+    ];
 
     this.lu_name = configProps.label;
     this.lu_icon = 'paper-clip';
@@ -230,7 +232,7 @@ class FileUtility extends BridgeBase {
 
   getFileUtilityHtml(): any {
     return html`
-      <div>
+      <div id="file-utility">
         <list-utility-extension
           name="${this.lu_name}"
           icon="${this.lu_icon}"
@@ -243,13 +245,15 @@ class FileUtility extends BridgeBase {
       </div>
 
       ${this.bShowFileModal
-        ? html` <div class="psdk-dialog-background">
+        ? html` <div id="attachment-dialog" class="psdk-dialog-background">
             <div class="psdk-modal-file-top">
-              <h3>Add local files</h3>
+              <h3>${this.thePConn.getLocalizedValue('Add local files', '', '')}</h3>
               <div class="psdk-modal-body">
                 <input hidden type="file" multiple #uploader @change="${this.uploadMyFiles}" id="utility-upload-input" />
 
-                <lion-button class="btn btn-link" @click="${this._onFileLoad}"> Upload file(s) </lion-button>
+                <lion-button class="btn btn-link" @click="${this._onFileLoad}"
+                  >${this.thePConn.getLocalizedValue('Attach files', '', '')}</lion-button
+                >
 
                 <summary-list-extension
                   .arItems="${this.arFileList}"
@@ -268,9 +272,9 @@ class FileUtility extends BridgeBase {
           </div>`
         : html``}
       ${this.bShowLinkModal
-        ? html` <div class="psdk-dialog-background">
+        ? html` <div id="addLink-dialog" class="psdk-dialog-background">
             <div class="psdk-modal-link-top">
-              <h3>Add local link</h3>
+              <h3>${this.thePConn.getLocalizedValue('Add links', '', '')}</h3>
               <div class="psdk-modal-body">
                 <div class="psdk-modal-links-row">
                   <div class="psdk-links-two-column">
@@ -295,7 +299,7 @@ class FileUtility extends BridgeBase {
                     </div>
                   </div>
                   <div class="psdk-links-add-link">
-                    <lion-button class="btn btn-link" @click="${this._addLink}">Add link</lion-button>
+                    <lion-button class="btn btn-link" @click="${this._addLink}">${this.thePConn.getLocalizedValue('Add link', '', '')}</lion-button>
                   </div>
                 </div>
                 <summary-list-extension

@@ -304,6 +304,7 @@ class NavBar extends BridgeBase {
           <ul class="psdk-nav-ul-middle">
             <li class="psdk-nav-li-middle">
               <button
+                id="operator"
                 @click=${this.navPanelOperatorButtonClick}
                 class="psdk-appshell-buttonnav"
                 style="width: 100%; text-align: left; padding: 1rem 0rem; margin-left: -0.75rem"

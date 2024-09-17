@@ -74,6 +74,7 @@ class SummaryItem extends LitElement {
   getFieldLabel(field: any) {
     const theLabel = field.config.label;
     const theLowerCaseLabel = theLabel.toLowerCase();
+    const displayLabel = field.config?.displayLabel?.toLowerCase();
 
     // eslint-disable-next-line sonarjs/no-small-switch
     switch (field.type.toLowerCase()) {
@@ -81,10 +82,10 @@ class SummaryItem extends LitElement {
         // CaseOperator is a special case since info for created and updated is passed in
         //  and we use the "Label" to see which we're supposed to display
 
-        if (theLowerCaseLabel === 'create operator') {
+        if (theLowerCaseLabel === 'create operator' || displayLabel === 'create operator') {
           return field.config.createLabel;
         }
-        if (theLowerCaseLabel === 'update operator') {
+        if (theLowerCaseLabel === 'update operator' || displayLabel === 'update operator') {
           return field.config.updateLabel;
         }
         return theLabel;
@@ -151,11 +152,13 @@ class SummaryItem extends LitElement {
 
   getCaseSummaryFieldsHtml(): any {
     return html`
-      <div class="psdk-case-summary-fields">
-        <dl class="psdk-case-summary-fields-primary">${this.getPrimaryFieldsHtml()}</dl>
-      </div>
-      <div class="psdk-case-summary-fields">
-        <dl class="psdk-case-summary-fields-secondary">${this.getSecondaryFieldsHtml()}</dl>
+      <div id="CaseSummary">
+        <div class="psdk-case-summary-fields">
+          <dl class="psdk-case-summary-fields-primary">${this.getPrimaryFieldsHtml()}</dl>
+        </div>
+        <div class="psdk-case-summary-fields">
+          <dl class="psdk-case-summary-fields-secondary">${this.getSecondaryFieldsHtml()}</dl>
+        </div>
       </div>
     `;
   }

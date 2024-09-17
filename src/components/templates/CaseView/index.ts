@@ -259,8 +259,10 @@ class CaseView extends BridgeBase {
   getActionButtonsHtml(): any {
     return html`
       <div class="psdk-case-view-buttons">
-        <lion-button class="btn btn-light" color="secondary" @click=${this._editClick}>${this.localizedVal('Edit', this.localeCategory)}</lion-button>
-        <lion-button class="btn btn-light" color="secondary" @click=${this._showActionMenu}
+        <lion-button id="edit" class="btn btn-light" color="secondary" @click=${this._editClick}
+          >${this.localizedVal('Edit', this.localeCategory)}</lion-button
+        >
+        <lion-button id="action-button" class="btn btn-light" color="secondary" @click=${this._showActionMenu}
           >${this.localizedVal('Actions...', this.localeCategory)}</lion-button
         >
         <div id="actionMenu" class="psdk-action-menu-content">
@@ -303,7 +305,9 @@ class CaseView extends BridgeBase {
                   <div class="psdk-case-view-heading">
                     <div id="current-caseID" hidden>${this.currentCaseID}</div>
                     <div class="psdk-case-view-heading-id" id="caseId">${this.id}</div>
-                    <div class="psdk-case-view-heading-h1">${PCore.getLocaleUtils().getLocaleValue(this.heading, '', this.localeKey)}</div>
+                    <div class="psdk-case-view-heading-h1" id="case-name">
+                      ${PCore.getLocaleUtils().getLocaleValue(this.heading, '', this.localeKey)}
+                    </div>
                   </div>
                 </div>
 

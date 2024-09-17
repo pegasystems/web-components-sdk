@@ -33,11 +33,6 @@ class CaseHistory extends BridgeBase {
 
     this.pConn = {};
     this.fields = [];
-    this.displayedColumns = [
-      { label: this.thePConn.getLocalizedValue('Date', '', ''), type: 'DateTime', fieldName: 'pxTimeCreated' },
-      { label: this.thePConn.getLocalizedValue('Description', '', ''), type: 'TextInput', fieldName: 'pyMessageKey' },
-      { label: this.thePConn.getLocalizedValue('User', '', ''), type: 'TextInput', fieldName: 'pyPerformer' }
-    ];
 
     this.rowData = [];
   }
@@ -61,6 +56,12 @@ class CaseHistory extends BridgeBase {
     const context = this.thePConn.getContextName();
 
     this.waitingForData = true;
+
+    this.displayedColumns = [
+      { label: this.thePConn.getLocalizedValue('Date', '', ''), type: 'DateTime', fieldName: 'pxTimeCreated' },
+      { label: this.thePConn.getLocalizedValue('Description', '', ''), type: 'TextInput', fieldName: 'pyMessageKey' },
+      { label: this.thePConn.getLocalizedValue('Performed by', '', ''), type: 'TextInput', fieldName: 'pyPerformer' }
+    ];
 
     const historyData = PCore.getDataApiUtils().getData(dataViewName, `{"dataViewParameters":[{"CaseInstanceKey":"${caseID}"}]}` as any, context);
 
@@ -182,7 +183,7 @@ class CaseHistory extends BridgeBase {
     `;
 
     theContent = html`
-      <div class="p-2 font-weight-light">
+      <div id="CaseHistory" class="p-2 font-weight-light">
         <p class="h6">History</p>
         <table class="table table-bordered">
           ${theColumnHeaders} ${theDataRows}

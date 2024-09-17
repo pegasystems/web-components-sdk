@@ -240,7 +240,7 @@ class DeferLoad extends BridgeBase {
     // eslint-disable-next-line sonarjs/prefer-immediate-return
     const dLHtml = html`
       <div class="container-for-progress">
-        ${this.bShowDefer
+        ${!this.isLoading
           ? html` <div>${arComponent}</div>`
           : html`<div>&nbsp;<br />&nbsp;<br /></div>
               <progress-extension id="${this.theComponentId}"></progress-extension>`}

@@ -43,19 +43,13 @@ class Operator extends LitElement {
     let theRealTime = '';
 
     const theLowerCaseLabel = this.caseOpConfig?.label.toLowerCase();
-
-    switch (theLowerCaseLabel) {
-      case 'create operator':
-        theRealOperator = this.caseOpConfig.createOperator;
-        theRealTime = this.caseOpConfig.createDateTime;
-        break;
-
-      case 'update operator':
-        theRealOperator = this.caseOpConfig.updateOperator;
-        theRealTime = this.caseOpConfig.updateDateTime;
-        break;
-      default:
-        break;
+    const displayLabel = this.caseOpConfig?.displayLabel?.toLowerCase();
+    if (theLowerCaseLabel === 'create operator' || displayLabel === 'create operator') {
+      theRealOperator = this.caseOpConfig.createOperator;
+      theRealTime = this.caseOpConfig.createDateTime;
+    } else if (theLowerCaseLabel === 'update operator' || displayLabel === 'update operator') {
+      theRealOperator = this.caseOpConfig.updateOperator;
+      theRealTime = this.caseOpConfig.updateDateTime;
     }
 
     this.name = theRealOperator.userName;
