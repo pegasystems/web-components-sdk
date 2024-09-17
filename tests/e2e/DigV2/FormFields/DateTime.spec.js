@@ -49,7 +49,7 @@ test.describe('E2E test', () => {
     await requiredDateTime.pressSequentially(formattedDate);
     page.keyboard.press('Tab');
     await requiredDateTime.pressSequentially(time);
-    
+
     attributes = await common.getAttributes(requiredDateTime);
     await expect(attributes.includes('aria-required')).toBeTruthy();
 

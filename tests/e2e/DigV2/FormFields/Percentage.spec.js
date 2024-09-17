@@ -39,7 +39,7 @@ test.describe('E2E test', () => {
     await page.locator('button:has-text("submit")').click();
 
     await page.waitForTimeout(2000);
-    
+
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeVisible();
 
     /** Required tests */
