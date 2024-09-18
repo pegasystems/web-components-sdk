@@ -29,7 +29,7 @@ class NavBar extends BridgeBase {
   localizedVal: any;
   localeCategory = 'AppShell';
   localeUtils = PCore.getLocaleUtils();
-  localeReference: string = '';
+  localeReference: string | undefined;
   /*
   actionsAPI: any;
   createWork: any;
