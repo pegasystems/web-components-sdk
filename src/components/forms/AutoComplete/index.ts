@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 import type { PConnFieldProps } from '../../../types/PConnProps.interface';
-
+import { getDataPage } from '../../../helpers/data_page';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
@@ -28,7 +28,10 @@ interface AutoCompleteProps extends PConnFieldProps {
 class AutoComplete extends FormComponentBase {
   @property({ attribute: false, type: Array }) options;
   @property({ attribute: true, type: String }) datasource = '';
+  @property({ attribute: false }) theConfigProps: any = {};
 
+  listType = '';
+  parameters = {};
   columns: any;
   dataList: any = [];
 
@@ -89,29 +92,32 @@ class AutoComplete extends FormComponentBase {
     super.updateSelf();
 
     // AutoComplete does some additional work
-    const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as AutoCompleteProps;
+    this.theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as AutoCompleteProps;
     if (this.dataList.length > 0) {
-      theConfigProps.datasource = this.dataList;
-      theConfigProps.listType = 'associated';
+      this.theConfigProps.datasource = this.dataList;
+      this.theConfigProps.listType = 'associated';
     }
 
-    const { listType, datasource = [], columns = [], displayMode } = theConfigProps;
-    this.columns = this.preProcessColumns(columns);
-    if (listType === 'associated') {
-      this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
-    }
-    if (!displayMode && listType !== 'associated' && datasource.length > 0) {
-      const workListData = PCore.getDataApiUtils().getData(datasource, {});
+    const { displayMode } = this.theConfigProps;
+    this.listType = this.theConfigProps.listType;
+    const context = this.thePConn.getContextName();
+    const { columns, datasource } = this.generateColumnsAndDataSource();
 
-      workListData.then((workListJSON: any) => {
+    if (columns) {
+      this.columns = this.preProcessColumns(columns);
+    }
+
+    if (this.listType === 'associated') {
+      this.options = Utils.getOptionList(this.theConfigProps, this.thePConn.getDataObject());
+    }
+    if (!displayMode && this.listType !== 'associated') {
+      getDataPage(datasource, this.parameters, context).then((results: any) => {
         const optionsData: any[] = [];
-        const results = workListJSON.data.data;
         const displayColumn = this.getDisplayFieldsMetaData(this.columns);
         results?.forEach(element => {
-          const val = element[displayColumn.primary]?.toString();
           const obj = {
-            key: element.pyGUID || val,
-            value: val
+            key: element[displayColumn.key] || element.pyGUID,
+            value: element[displayColumn.primary]?.toString()
           };
           optionsData.push(obj);
         });
@@ -129,6 +135,48 @@ class AutoComplete extends FormComponentBase {
         this.updateSelf();
       }
     }
+  }
+
+  generateColumnsAndDataSource() {
+    let datasource = this.theConfigProps.datasource;
+    let columns = this.theConfigProps.columns;
+    // const { deferDatasource, datasourceMetadata } = this.configProps$;
+    const { deferDatasource, datasourceMetadata }: any = this.thePConn.getConfigProps();
+    // convert associated to datapage listtype and transform props
+    // Process deferDatasource when datapage name is present. WHhen tableType is promptList / localList
+    if (deferDatasource && datasourceMetadata?.datasource?.name) {
+      this.listType = 'datapage';
+      datasource = datasourceMetadata.datasource.name;
+      const { parameters, propertyForDisplayText, propertyForValue } = datasourceMetadata.datasource;
+      this.parameters = this.flattenParameters(parameters);
+      const displayProp = propertyForDisplayText?.startsWith('@P') ? propertyForDisplayText.substring(3) : propertyForDisplayText;
+      const valueProp = propertyForValue?.startsWith('@P') ? propertyForValue.substring(3) : propertyForValue;
+      columns = [
+        {
+          key: 'true',
+          setProperty: 'Associated property',
+          value: valueProp
+        },
+        {
+          display: 'true',
+          primary: 'true',
+          useForSearch: true,
+          value: displayProp
+        }
+      ];
+    }
+
+    return { columns, datasource };
+  }
+
+  flattenParameters(params = {}) {
+    const flatParams = {};
+    Object.keys(params).forEach(key => {
+      const { name, value: theVal } = params[key];
+      flatParams[name] = theVal;
+    });
+
+    return flatParams;
   }
 
   getDisplayFieldsMetaData(columnList) {
