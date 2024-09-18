@@ -74,7 +74,7 @@ class ToDo extends BridgeBase {
 
   bShowMore = true;
   count;
-  localizedVal;
+  localizedVal: any;
   localeCategory = 'Todo';
   showlessLocalizedValue = '';
   showMoreLocalizedValue = '';
