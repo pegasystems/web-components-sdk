@@ -37,7 +37,7 @@ class ModalViewContainer extends BridgeBase {
   cancelPConn: any;
   bShowCancelAlert = false;
   bAlertState = false;
-  localizedVal: any;
+  localizedVal: Function = () => {};
   localeCategory = 'Data Object';
 
   constructor() {

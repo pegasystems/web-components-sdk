@@ -55,7 +55,7 @@ class Assignment extends BridgeBase {
   currentCaseID = '';
 
   templateName = '';
-  localizedVal;
+  localizedVal: Function = () => {};
   localeCategory = 'Assignment';
   localeReference;
 
@@ -280,6 +280,7 @@ class Assignment extends BridgeBase {
     this.showPage = actionsAPI.showPage.bind(actionsAPI);
     this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
     this.localeReference = `${this.thePConn.getCaseInfo().getClassName()}!CASE!${this.thePConn.getCaseInfo().getName()}`.toUpperCase();
+    console.log('this.localeReference', this.localeReference);
     this.createButtons();
   }
 

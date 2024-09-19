@@ -18,7 +18,7 @@ class CancelAlert extends BridgeBase {
   body1 = '';
   body2 = '';
   itemKey = '';
-  localizedVal: any;
+  localizedVal: Function = () => {};
   localeCategory = 'ModalContainer';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:

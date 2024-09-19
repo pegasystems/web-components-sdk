@@ -54,7 +54,7 @@ class FlowContainer extends BridgeBase {
   svgNotCurrent = '';
 
   newConfig: Object = {};
-  localizedVal: any;
+  localizedVal: Function = () => {};
   localeCategory = 'Messages';
   localeReference: any;
   constructor() {

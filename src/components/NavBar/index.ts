@@ -26,7 +26,7 @@ class NavBar extends BridgeBase {
   @property({ attribute: false }) portalOperator;
   @property({ attribute: false }) portalOperatorInitials;
   @property({ attribute: false }) navIcon;
-  localizedVal: any;
+  localizedVal: Function = () => {};
   localeCategory = 'AppShell';
   localeUtils = PCore.getLocaleUtils();
   localeReference: string | undefined;
