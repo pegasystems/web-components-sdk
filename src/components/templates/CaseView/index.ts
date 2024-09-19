@@ -269,9 +269,11 @@ class CaseView extends BridgeBase {
   getActionButtonsHtml(): any {
     return html`
       <div class="psdk-case-view-buttons">
-        ${this.editAction ? html`<lion-button id="edit" class="btn btn-light" color="secondary" @click=${this._editClick}
-          >${this.localizedVal('Edit', this.localeCategory)}</lion-button
-        >` : html``}
+        ${this.editAction
+          ? html`<lion-button id="edit" class="btn btn-light" color="secondary" @click=${this._editClick}
+              >${this.localizedVal('Edit', this.localeCategory)}</lion-button
+            >`
+          : html``}
         <lion-button id="action-button" class="btn btn-light" color="secondary" @click=${this._showActionMenu}
           >${this.localizedVal('Actions...', this.localeCategory)}</lion-button
         >
