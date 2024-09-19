@@ -191,17 +191,10 @@ class CheckBox extends FormComponentBase {
     this.handleChecked();
 
     // Handle and return if read only rendering
-    if (this.bReadonly) {
+    if (this.bReadonly && this.bVisible) {
       return html`
-        <text-form
-          .pConn=${this.thePConn}
-          ?disabled=${this.bDisabled}
-          ?visible=${this.bVisible}
-          label=${this.caption}
-          value=${this.value}
-          testId=${this.testId}
-        >
-        </text-form>
+        <lion-checkbox .pConn=${this.thePConn} ?disabled=${this.bReadonly} label=${this.caption} value=${this.value} testId=${this.testId}>
+        </lion-checkbox>
       `;
     }
 
