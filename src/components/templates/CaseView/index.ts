@@ -18,6 +18,13 @@ interface CaseViewProps {
   header: string;
 }
 
+interface editActionType {
+  ID: string;
+  links: any;
+  name: string;
+  type: string;
+}
+
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('case-view')
@@ -42,7 +49,7 @@ class CaseView extends BridgeBase {
 
   currentCaseID = '';
   bHasNewAttachments = false;
-  editAction: any;
+  editAction: editActionType | undefined;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -350,7 +357,7 @@ class CaseView extends BridgeBase {
     const actionsAPI = this.thePConn.getActionsApi();
     const openLocalAction = actionsAPI.openLocalAction.bind(actionsAPI);
 
-    openLocalAction(this.editAction.ID, { ...this.editAction, containerName: 'modal', type: 'express' });
+    openLocalAction(this.editAction?.ID, { ...this.editAction, containerName: 'modal', type: 'express' });
   }
 
   _actionMenuActionsClick(data) {
