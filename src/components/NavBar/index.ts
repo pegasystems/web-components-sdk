@@ -26,7 +26,10 @@ class NavBar extends BridgeBase {
   @property({ attribute: false }) portalOperator;
   @property({ attribute: false }) portalOperatorInitials;
   @property({ attribute: false }) navIcon;
-
+  localizedVal: Function = () => {};
+  localeCategory = 'AppShell';
+  localeUtils = PCore.getLocaleUtils();
+  localeReference: string | undefined;
   /*
   actionsAPI: any;
   createWork: any;
@@ -79,7 +82,7 @@ class NavBar extends BridgeBase {
       // this.navPages$[page]["iconName"] = this.translateIcon(this.navPages$[page]["pxPageViewIcon"]);
       this.navPages[page].iconName = Utils.getImageSrc(this.navPages[page].pxPageViewIcon, Utils.getSDKStaticContentUrl());
     }
-
+    this.localeReference = this.thePConn.getValue('.pyLocaleReference');
     //    this.actionsAPI = this.pConn$.getActionsApi();
     //    this.createWork = this.actionsAPI.createWork.bind(this.actionsAPI);
     //    this.showPage = this.actionsAPI.showPage.bind(this.actionsAPI);
@@ -94,6 +97,7 @@ class NavBar extends BridgeBase {
     this.portalOperatorInitials = Utils.getInitials(this.portalOperator);
 
     this.portalApp = PCore.getEnvironmentInfo().getApplicationLabel();
+    this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
   }
 
   disconnectedCallback() {
@@ -237,14 +241,16 @@ class NavBar extends BridgeBase {
                 this.navPanelCreateCaseType(caseType.pyClassName, caseType.pyFlowType);
               }}
             >
-              ${caseType.pyLabel}
+              ${this.localeUtils.getLocaleValue(caseType.pyLabel, '', this.localeReference)}
             </button>
           </div>`
       )}
     `;
 
     const theOperatorButtons = html`
-      <button class="btn btn-link text-white" style="margin-left: -0.05rem;" @click=${this.navPanelLogoutClick}>Logoff</button>
+      <button class="btn btn-link text-white" style="margin-left: -0.05rem;" @click=${this.navPanelLogoutClick}>
+        ${this.localizedVal('Log off', this.localeCategory)}
+      </button>
     `;
 
     const theTemplate = html`
@@ -288,7 +294,7 @@ class NavBar extends BridgeBase {
                     style="width: 100%; text-align: left; padding: 1rem 0rem;"
                   >
                     <img class="psdk-nav-svg-icon" src="${page.iconName}" />
-                    <span class="psdk-nav-button-span">${page.pyLabel}</span>
+                    <span class="psdk-nav-button-span">${this.localeUtils.getLocaleValue(page.pyLabel, '', this.localeReference)}</span>
                   </button>
                 </li>`
             )}
@@ -298,6 +304,7 @@ class NavBar extends BridgeBase {
           <ul class="psdk-nav-ul-middle">
             <li class="psdk-nav-li-middle">
               <button
+                id="operator"
                 @click=${this.navPanelOperatorButtonClick}
                 class="psdk-appshell-buttonnav"
                 style="width: 100%; text-align: left; padding: 1rem 0rem; margin-left: -0.75rem"

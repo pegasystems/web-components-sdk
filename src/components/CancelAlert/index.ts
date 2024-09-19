@@ -18,7 +18,8 @@ class CancelAlert extends BridgeBase {
   body1 = '';
   body2 = '';
   itemKey = '';
-
+  localizedVal: Function = () => {};
+  localeCategory = 'ModalContainer';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -70,11 +71,12 @@ class CancelAlert extends BridgeBase {
       const caseInfo = this.thePConn.getCaseInfo();
       const caseName = caseInfo.getName();
       const ID = caseInfo.getID();
+      this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
       this.itemKey = contextName;
       this.heading = `Delete ${caseName} (${ID})`;
-      this.body1 = `Are you sure you want to delete ${caseName} (${ID})?`;
-      this.body2 = 'Alternatively, you can continue working or save your work for later.';
+      this.body1 = `${this.localizedVal('Are you sure you want to delete ', this.localeCategory)} caseName (${ID})?`;
+      this.body2 = this.localizedVal('Alternatively, you can continue working or save your work for later.', this.localeCategory);
 
       // this.onAlertState$.emit(true);
       const event = new CustomEvent('AlertState', {
@@ -130,7 +132,9 @@ class CancelAlert extends BridgeBase {
               </div>
               <mat-grid-list cols="2" rowHeight="6.25rem">
                 <mat-grid-tile>
-                  <button mat-raised-button color="secondary" jsAction="save" @click="${this._buttonClick}">Save for later</button>
+                  <button mat-raised-button color="secondary" jsAction="save" @click="${this._buttonClick}">
+                    ${this.localizedVal('Save for later', this.localeCategory)}
+                  </button>
                 </mat-grid-tile>
                 <mat-grid-tile>
                   <button mat-raised-button color="secondary" jsAction="continue" @click="${this._buttonClick}">Continue working</button>
@@ -191,6 +195,7 @@ class CancelAlert extends BridgeBase {
 
   buttonClick(sAction: string) {
     const actionsAPI = this.thePConn.getActionsApi();
+    this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
 
     switch (sAction) {
       case 'save':
@@ -204,7 +209,7 @@ class CancelAlert extends BridgeBase {
             // dismiss();
             this.dismissAlert();
 
-            this.sendMessage('Sucessfully saved!');
+            this.sendMessage(this.localizedVal('Sucessfully saved', this.localeCategory));
             // this.erservice.sendMessage("show", "Successfully saved!");
             // let timer = interval(1500).subscribe(() => {
             //   timer.unsubscribe();
@@ -222,7 +227,7 @@ class CancelAlert extends BridgeBase {
             //   timer.unsubscribe();
             //   this.erservice.sendMessage("show", "Save failed.");
             //   });
-            this.sendMessage('Save failed');
+            this.sendMessage(this.localizedVal('Save failed', this.localeCategory));
           });
         break;
       case 'continue':
@@ -242,7 +247,7 @@ class CancelAlert extends BridgeBase {
             //   timer.unsubscribe();
             //   this.erservice.sendMessage("show", "Delete failed.");
             //   });
-            this.sendMessage('Delete failed.');
+            this.sendMessage(this.localizedVal('Delete failed.', this.localeCategory));
           });
         break;
       default:

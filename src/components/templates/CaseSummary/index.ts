@@ -30,7 +30,8 @@ class CaseSummary extends BridgeBase {
   // copies of previous primary and secondary rawmeta
   sOldPrimaryMeta = '';
   sOldSecondaryMeta = '';
-
+  localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  localeCategory = 'ModalContainer';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -101,12 +102,52 @@ class CaseSummary extends BridgeBase {
       const pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
       if (pKidData.name.toLowerCase() == 'primary fields') {
         this.arPrimaryFields = pKidData.children;
+        this.arPrimaryFields.forEach(field => {
+          if (field.config?.value && typeof field.config?.value === 'string') {
+            field.config.value = this.localizedVal(field.config.value, this.localeCategory);
+          }
+        });
       } else if (pKidData.name.toLowerCase() == 'secondary fields') {
+        const secondarySummaryFields = this.prepareCaseSummaryData(pKid);
         this.arSecondaryFields = pKidData.children;
+        this.arSecondaryFields.forEach((field, index) => {
+          field.config.displayLabel = secondarySummaryFields[index]?.value?.getPConnect().getConfigProps().label;
+        });
       }
     }
 
     this.requestUpdate();
+  }
+
+  prepareComponentInCaseSummary(pConnectMeta, getPConnect) {
+    const { config, children } = pConnectMeta;
+    const pConnect = getPConnect();
+
+    const caseSummaryComponentObject: any = {};
+
+    const { type } = pConnectMeta;
+    const createdComponent = pConnect.createComponent({
+      type,
+      children: children ? [...children] : [],
+      config: {
+        ...config
+      }
+    });
+
+    caseSummaryComponentObject.value = createdComponent;
+    return caseSummaryComponentObject;
+  }
+
+  prepareCaseSummaryData(summaryFieldChildren) {
+    const convertChildrenToSummaryData = kid => {
+      return kid?.map((childItem, index) => {
+        const childMeta = childItem.getPConnect().meta;
+        const caseSummaryComponentObject = this.prepareComponentInCaseSummary(childMeta, childItem.getPConnect);
+        caseSummaryComponentObject.id = index + 1;
+        return caseSummaryComponentObject;
+      });
+    };
+    return summaryFieldChildren ? convertChildrenToSummaryData(summaryFieldChildren?.getChildren()) : undefined;
   }
 
   rawMetaChanged(): boolean {

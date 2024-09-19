@@ -189,7 +189,7 @@ class SimpleTableManual extends BridgeBase {
     //  (if one exists for the field). If no "name", use "cellRenderer" (typically get DELETE_ICON)
     //  for our columns.
     this.displayedColumns = this.fieldDefs?.map((field: any) => {
-      return field.name ? field.name : field.cellRenderer;
+      return field.label ? field.label : field.name;
     });
 
     // And now we can process the resolvedFields to add in the "name"
