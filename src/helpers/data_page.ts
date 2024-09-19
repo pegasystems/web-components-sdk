@@ -6,8 +6,8 @@ export function getDataPage(dataPageName, parameters, context) {
     };
   }
   return new Promise((resolve, reject) => {
-    (PCore.getDataApiUtils().getData(dataPageName, dataViewParams, context) as any)
-      .then(response => {
+    (PCore.getDataApiUtils().getData(dataPageName, dataViewParams, context) as Promise<object>)
+      .then((response: any) => {
         resolve(response.data.data);
       })
       .catch(e => {

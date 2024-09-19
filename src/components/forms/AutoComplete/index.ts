@@ -28,11 +28,25 @@ interface AutoCompleteProps extends PConnFieldProps {
 class AutoComplete extends FormComponentBase {
   @property({ attribute: false, type: Array }) options;
   @property({ attribute: true, type: String }) datasource = '';
-  @property({ attribute: false }) theConfigProps: any = {};
+
+  theConfigProps: AutoCompleteProps = {
+    listType: '',
+    datasource: undefined,
+    columns: [],
+    label: '',
+    required: false,
+    disabled: false,
+    validatemessage: '',
+    onChange: undefined,
+    readOnly: false,
+    testId: '',
+    helperText: '',
+    hideLabel: false
+  };
 
   listType = '';
   parameters = {};
-  columns: any;
+  columns = [];
   dataList: any = [];
 
   constructor() {
@@ -140,8 +154,7 @@ class AutoComplete extends FormComponentBase {
   generateColumnsAndDataSource() {
     let datasource = this.theConfigProps.datasource;
     let columns = this.theConfigProps.columns;
-    // const { deferDatasource, datasourceMetadata } = this.configProps$;
-    const { deferDatasource, datasourceMetadata }: any = this.thePConn.getConfigProps();
+    const { deferDatasource, datasourceMetadata } = this.thePConn.getConfigProps() as AutoCompleteProps;
     // convert associated to datapage listtype and transform props
     // Process deferDatasource when datapage name is present. WHhen tableType is promptList / localList
     if (deferDatasource && datasourceMetadata?.datasource?.name) {
