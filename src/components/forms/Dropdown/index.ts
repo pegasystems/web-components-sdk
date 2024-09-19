@@ -26,7 +26,12 @@ class Dropdown extends FormComponentBase {
   @property({ attribute: true, type: String }) datasource = '';
 
   dataList: any = [];
-
+  fieldMetadata: any = [];
+  localeContext = '';
+  localeClass = '';
+  localeName = '';
+  localePath = '';
+  localizedValue = '';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -102,9 +107,29 @@ class Dropdown extends FormComponentBase {
     const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
     const index = optionsList?.findIndex(ele => ele.key === 'Select');
     if (index < 0) {
-      optionsList.unshift({ key: 'Select', value: 'Select...' });
+      optionsList?.unshift({ key: 'Select', value: this.thePConn.getLocalizedValue('Select...', '', '') });
     }
     this.options = optionsList;
+
+    const propName = this.thePConn.getStateProps().value;
+    const className = this.thePConn.getCaseInfo().getClassName();
+    const refName = propName?.slice(propName.lastIndexOf('.') + 1);
+
+    this.fieldMetadata = theConfigProps.fieldMetadata;
+    const metaData = Array.isArray(this.fieldMetadata) ? this.fieldMetadata.filter(field => field?.classID === className)[0] : this.fieldMetadata;
+
+    let displayName = metaData?.datasource?.propertyForDisplayText;
+    displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
+    this.localeContext = metaData?.datasource?.tableType === 'DataPage' ? 'datapage' : 'associated';
+    this.localeClass = this.localeContext === 'datapage' ? '@baseclass' : className;
+    this.localeName = this.localeContext === 'datapage' ? metaData?.datasource?.name : refName;
+    this.localePath = this.localeContext === 'datapage' ? displayName : this.localeName;
+
+    this.localizedValue = this.thePConn.getLocalizedValue(
+      this.value,
+      this.localePath,
+      this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
+    );
   }
 
   // Comment that was in the original fieldOnChange before we started to use
@@ -159,7 +184,7 @@ class Dropdown extends FormComponentBase {
           ?disabled=${this.bDisabled}
           ?visible=${this.bVisible}
           label=${this.label}
-          value=${this.value}
+          value=${this.localizedValue}
           testId=${this.testId}
         >
         </text-form>
@@ -184,7 +209,13 @@ class Dropdown extends FormComponentBase {
                   <span slot="label">${this.annotatedLabel}</span>
                   <select slot="input">
                     ${this.options.map(option => {
-                      return html`<option value=${option.key}>${option.value}</option>`;
+                      return html`<option value=${option.key}>
+                        ${this.thePConn.getLocalizedValue(
+                          option.value,
+                          this.localePath,
+                          this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
+                        )}
+                      </option>`;
                     })}
                   </select>
                 </lion-radio-group>

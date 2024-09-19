@@ -16,6 +16,8 @@ class ActionButtons extends LitElement {
   @property({ attribute: false, type: Array }) arMainButtons: any = [];
   @property({ attribute: false, type: Array }) arSecondaryButtons: any = [];
 
+  localizedVal = PCore?.getLocaleUtils().getLocaleValue;
+  localeCategory = 'Assignment';
   // NOTE: ActionButtons is NOT derived from BridgeBase; just derived from LitElement
   constructor() {
     super();
@@ -32,7 +34,9 @@ class ActionButtons extends LitElement {
         const jsAction: string = aButton.jsAction;
 
         arButtonHtml.push(
-          html`<button class="btn btn-primary" jsAction=${jsAction} buttonType="primary" @click="${this._buttonClick}">${name}</button>`
+          html`<button class="btn btn-primary" jsAction=${jsAction} buttonType="primary" @click="${this._buttonClick}">
+            ${this.localizedVal(name, this.localeCategory)}
+          </button>`
         );
 
         // add a space between buttons
@@ -56,7 +60,9 @@ class ActionButtons extends LitElement {
         const jsAction: string = aButton.jsAction;
 
         arButtonHtml.push(
-          html`<button class="btn btn-secondary" jsAction=${jsAction} buttonType="secondary" @click="${this._buttonClick}">${name}</button>`
+          html`<button class="btn btn-secondary" jsAction=${jsAction} buttonType="secondary" @click="${this._buttonClick}">
+            ${this.localizedVal(name, this.localeCategory)}
+          </button>`
         );
 
         // add a space between buttons

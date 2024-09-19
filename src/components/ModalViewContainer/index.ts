@@ -37,6 +37,8 @@ class ModalViewContainer extends BridgeBase {
   cancelPConn: any;
   bShowCancelAlert = false;
   bAlertState = false;
+  localizedVal: Function = () => {};
+  localeCategory = 'Data Object';
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -82,7 +84,7 @@ class ModalViewContainer extends BridgeBase {
     containerMgr.initializeContainers({
       type: 'multiple'
     });
-
+    this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
     // const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
 
     // window.PCore.getPubSubUtils().subscribe(
@@ -210,7 +212,7 @@ class ModalViewContainer extends BridgeBase {
             const caseName = caseInfo.getName();
             const ID = caseInfo.getID();
 
-            this.title = actionName || `New ${caseName} (${ID})`;
+            this.title = actionName || `${this.localizedVal('New', this.localeCategory)} ${caseName} (${ID})`;
             // // update children with new view's children
 
             // With 8.7, the newly created component can be a Reference to a View

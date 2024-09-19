@@ -55,6 +55,9 @@ class Assignment extends BridgeBase {
   currentCaseID = '';
 
   templateName = '';
+  localizedVal: Function = () => {};
+  localeCategory = 'Assignment';
+  localeReference;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -275,7 +278,9 @@ class Assignment extends BridgeBase {
     this.navigateToStep = actionsAPI.navigateToStep.bind(actionsAPI);
     this.cancelAssignment = actionsAPI.cancelAssignment.bind(actionsAPI);
     this.showPage = actionsAPI.showPage.bind(actionsAPI);
-
+    this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
+    this.localeReference = `${this.thePConn.getCaseInfo().getClassName()}!CASE!${this.thePConn.getCaseInfo().getName()}`.toUpperCase();
+    console.log('this.localeReference', this.localeReference);
     this.createButtons();
   }
 
@@ -331,6 +336,11 @@ class Assignment extends BridgeBase {
 
           // what comes back now in configObject is the children of the flowContainer
           this.arNavigationSteps = JSON.parse(JSON.stringify(oCaseInfo.navigation.steps));
+          this.arNavigationSteps.forEach(step => {
+            if (step.name) {
+              step.name = PCore.getLocaleUtils().getLocaleValue(step.name, undefined, this.localeReference);
+            }
+          });
           this.arCurrentStepIndicies = [];
           this.arCurrentStepIndicies = this.findCurrentIndicies(this.arNavigationSteps, this.arCurrentStepIndicies, 0);
         }
@@ -393,7 +403,7 @@ class Assignment extends BridgeBase {
                 // this.psService.sendMessage(false);
               })
               .catch(() => {
-                this.showToast(`Navigation failed!`);
+                this.showToast(`${this.localizedVal('Navigation failed!', this.localeCategory)}`);
                 // this.psService.sendMessage(false);
               });
           }
@@ -414,7 +424,7 @@ class Assignment extends BridgeBase {
               PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL);
             })
             .catch(() => {
-              this.showToast(`Cancel failed!`);
+              this.showToast(`${this.localizedVal('Cancel failed!', this.localeCategory)}`);
               // this.psService.sendMessage(false);
             });
 
@@ -441,7 +451,7 @@ class Assignment extends BridgeBase {
                 // this.psService.sendMessage(false);
               })
               .catch(() => {
-                this.showToast(`Submit failed!`);
+                this.showToast(`${this.localizedVal('Submit failed!', this.localeCategory)}`);
               });
           } else {
             // let snackBarRef = this.snackBar.open("Please fix errors on form.",  "Ok");

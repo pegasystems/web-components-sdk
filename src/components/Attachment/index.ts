@@ -198,14 +198,14 @@ class Attachment extends BridgeBase {
           let oMenu: any = {};
 
           oMenu.icon = 'download';
-          oMenu.text = 'Download';
+          oMenu.text = this.thePConn.getLocalizedValue('Download', '', '');
           oMenu.onClick = () => {
             this._downloadFileFromList(this.value.pxResults[0]);
           };
           arMenuList.push(oMenu);
           oMenu = {};
           oMenu.icon = 'trash';
-          oMenu.text = 'Delete';
+          oMenu.text = this.thePConn.getLocalizedValue('Delete', '', '');
           oMenu.onClick = () => {
             this._removeFileFromList(this.arFileList[0]);
           };
@@ -497,7 +497,7 @@ class Attachment extends BridgeBase {
       actions = [
         {
           id: `Cancel-${att.ID}`,
-          text: 'Cancel',
+          text: this.thePConn.getLocalizedValue('Cancel', '', ''),
           icon: 'times',
           onClick: cancelFile
         }
@@ -510,7 +510,7 @@ class Attachment extends BridgeBase {
           'download',
           {
             id: `download-${ID}`,
-            text: isFile ? 'Download' : 'Open',
+            text: isFile ? this.thePConn.getLocalizedValue('Download', '', '') : this.thePConn.getLocalizedValue('Open', '', ''),
             icon: isFile ? 'download' : 'open',
             onClick: downloadFile
           }
@@ -519,7 +519,7 @@ class Attachment extends BridgeBase {
           'delete',
           {
             id: `Delete-${ID}`,
-            text: 'Delete',
+            text: this.thePConn.getLocalizedValue('Delete', '', ''),
             icon: 'trash',
             onClick: deleteFile
           }
@@ -536,7 +536,7 @@ class Attachment extends BridgeBase {
       actions = [
         {
           id: `Remove-${att.ID}`,
-          text: 'Remove',
+          text: this.thePConn.getLocalizedValue('Remove', '', ''),
           icon: 'trash',
           onClick: removeFile
         }
@@ -579,7 +579,7 @@ class Attachment extends BridgeBase {
     for (const file of arFiles) {
       if (!this.validateMaxSize(file, 5)) {
         file.error = true;
-        file.meta = 'File is too big. Max allowed size is 5MB.';
+        file.meta = this.thePConn.getLocalizedValue('File is too big. Max allowed size is 5MB.', '', '');
       }
       file.mimeType = file.type;
       file.icon = Utils.getIconFromFileType(file.type);

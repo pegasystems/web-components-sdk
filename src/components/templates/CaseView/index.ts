@@ -41,6 +41,9 @@ class CaseView extends BridgeBase {
   elMenu: any = null;
 
   currentCaseID = '';
+  localizedVal = PCore.getLocaleUtils().getLocaleValue;
+  localeCategory = 'CaseView';
+  localeKey = '';
   bHasNewAttachments = false;
 
   constructor() {
@@ -156,6 +159,8 @@ class CaseView extends BridgeBase {
     }
 
     const caseInfo = this.thePConn.getDataObject().caseInfo;
+    const { caseTypeID = '', caseTypeName = '' } = caseInfo;
+    this.localeKey = `${caseTypeID}!CASE!${caseTypeName}`.toUpperCase();
     this.arAvailableActions = caseInfo?.availableActions ? caseInfo.availableActions : [];
     this.arAvailableProcesses = caseInfo?.availableProcesses ? caseInfo.availableProcesses : [];
   }
@@ -254,8 +259,12 @@ class CaseView extends BridgeBase {
   getActionButtonsHtml(): any {
     return html`
       <div class="psdk-case-view-buttons">
-        <lion-button class="btn btn-light" color="secondary" @click=${this._editClick}>Edit</lion-button>
-        <lion-button class="btn btn-light" color="secondary" @click=${this._showActionMenu}>Actions...</lion-button>
+        <lion-button id="edit" class="btn btn-light" color="secondary" @click=${this._editClick}
+          >${this.localizedVal('Edit', this.localeCategory)}</lion-button
+        >
+        <lion-button id="action-button" class="btn btn-light" color="secondary" @click=${this._showActionMenu}
+          >${this.localizedVal('Actions...', this.localeCategory)}</lion-button
+        >
         <div id="actionMenu" class="psdk-action-menu-content">
           ${this.getActionButtonMenuHtml(this.arAvailableActions, this.arAvailableProcesses)}
         </div>
@@ -296,7 +305,9 @@ class CaseView extends BridgeBase {
                   <div class="psdk-case-view-heading">
                     <div id="current-caseID" hidden>${this.currentCaseID}</div>
                     <div class="psdk-case-view-heading-id" id="caseId">${this.id}</div>
-                    <div class="psdk-case-view-heading-h1">${this.heading}</div>
+                    <div class="psdk-case-view-heading-h1" id="case-name">
+                      ${PCore.getLocaleUtils().getLocaleValue(this.heading, '', this.localeKey)}
+                    </div>
                   </div>
                 </div>
 
@@ -348,7 +359,7 @@ class CaseView extends BridgeBase {
     const actionsAPI = this.thePConn.getActionsApi();
     const openLocalAction = actionsAPI.openLocalAction.bind(actionsAPI);
 
-    openLocalAction(editAction.ID, { ...editAction });
+    openLocalAction(editAction.ID, { ...editAction, containerName: 'modal', type: 'express' });
   }
 
   _actionMenuActionsClick(data) {

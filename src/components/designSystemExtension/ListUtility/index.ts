@@ -82,7 +82,7 @@ class ListUtility extends LitElement {
             <div style="flex-grow: 1"></div>
             <div class="header-icon">
               <div class="psdk-utility-menu">
-                <lion-button @click=${this._showActionMenu}>
+                <lion-button id="attachments-menu" @click=${this._showActionMenu}>
                   <img class="psdk-utility-card-actions-svg-icon" src="${this.settingsSvgIcon}" />
                 </lion-button>
                 <div id="actionMenu" class="psdk-action-menu-content">${this.getActionButtonMenuHtml(this.arActions)}</div>
