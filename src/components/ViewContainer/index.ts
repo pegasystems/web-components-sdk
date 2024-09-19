@@ -7,7 +7,7 @@ import '../NotSupported';
 import '../Region';
 import '../templates/CaseView';
 import '../templates/ListPage';
-import '../templates/OneColumn';
+import '../templates/forms/OneColumn';
 import '../Boilerplate';
 import '../designSystemExtension/ProgressIndicator';
 import { addContainerItem, configureBrowserBookmark } from './helper';
