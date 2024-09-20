@@ -20,7 +20,7 @@ interface CaseViewProps {
 
 interface editActionType {
   ID: string;
-  links: any;
+  links: Object;
   name: string;
   type: string;
 }
