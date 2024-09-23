@@ -319,7 +319,9 @@ class ViewContainer extends BridgeBase {
       ?displayOnlyFA=${this.displayOnlyFA}
     ></reference-component>`;
 
-    this.renderTemplates.push(theCreatedRefComponent);
+    if (this.createdViewPConn) {
+      this.renderTemplates.push(theCreatedRefComponent);
+    }
     // was: this.renderTemplates.push(theOuterTemplate);
 
     // NOTE: lit-html knows how to render array of lit-html templates!
