@@ -124,7 +124,7 @@ class AutoComplete extends FormComponentBase {
     if (this.listType === 'associated') {
       this.options = Utils.getOptionList(this.theConfigProps, this.thePConn.getDataObject());
     }
-    if (!displayMode && this.listType !== 'associated') {
+    if (!displayMode && this.listType !== undefined && this.listType !== 'associated') {
       getDataPage(datasource, this.parameters, context).then((results: any) => {
         const optionsData: any[] = [];
         const displayColumn = this.getDisplayFieldsMetaData(this.columns);

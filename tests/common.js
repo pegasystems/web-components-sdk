@@ -8,8 +8,7 @@ const Login = async (username, password, page) => {
 };
 
 const getAttributes = async element => {
-  const attributes = await element.evaluate(async ele => ele.getAttributeNames());
-  return attributes;
+  return await element.evaluate(async ele => ele.getAttributeNames());
 };
 
 function padTo2Digits(num) {
@@ -25,8 +24,27 @@ const getNextDay = () => {
   return tomorrow.toLocaleDateString(theLocale, { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
+const getFormattedDate = date => {
+  if (!date) {
+    return date;
+  }
+
+  return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+};
+
+const getFutureDate = () => {
+  const today = new Date();
+  // add 2 days to today
+  const futureDate = new Date(today.setDate(today.getDate() + 2));
+
+  // Need to get leading zeroes on single digit months and 4 digit year
+  return getFormattedDate(futureDate);
+};
+
 module.exports = {
   Login,
   getNextDay,
-  getAttributes
+  getAttributes,
+  getFutureDate,
+  getFormattedDate
 };
