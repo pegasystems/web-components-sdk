@@ -2,7 +2,6 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const config = require('../../config');
 const common = require('../../common');
-const endpoints = require('../../../sdk-config.json');
 
 let caseID;
 
@@ -67,36 +66,21 @@ test.describe('E2E test', () => {
     await page.fill('lion-textarea[datatestid="F4C6F851B00D5518BF888815DE279ABA"] textarea', 'Thanks for the service!');
     await page.check('lion-checkbox[datatestid="C3B43E79AEC2D689F0CF97BD6AFB7DC4"] input');
 
-    const currentCaseID = await page.locator('div[id="current-caseID"]').textContent();
+    // const currentCaseID = await page.locator('div[id="current-caseID"]').textContent();
     const filePath = path.join(__dirname, '../../../assets/img/cableinfo.png');
-    const pCoreVersion = await page.evaluate(() => window.PCore.getPCoreVersion());
-    const isInfinity23OrHigher = ['8.23.0', '23.1.1'].includes(pCoreVersion);
 
-    // Insert from inline attachment field (could also do the insert from the right panel)
-    await Promise.all([
-      page.waitForResponse(
-        `${endpoints.serverConfig.infinityRestServerUrl}${
-          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
-        }/api/application/v2/attachments/upload`
-      ),
-      page.setInputFiles('#upload-input', filePath)
-    ]);
-
+    await page.setInputFiles('#upload-input', filePath)
+    await expect(page.locator('summary-list-extension')).toBeVisible();
     await page.locator('button:has-text("submit")').click();
 
-    await page.locator('list-utility-extension').getByRole('button').click();
+    await expect(page.locator('list-utility-extension >> summary-item-extension')).toBeVisible();
+    await page.locator('lion-button[id="attachments-menu"]').click();
     await page.getByText('Add files').click();
 
     // This is inserting from right panel (attach count doesn't increase with attachment added to attach control)
     await page.setInputFiles('#utility-upload-input', filePath);
-    await Promise.all([
-      page.waitForResponse(
-        `${endpoints.serverConfig.infinityRestServerUrl}${
-          endpoints.serverConfig.appAlias ? `/app/${endpoints.serverConfig.appAlias}` : ''
-        }/api/application/v2/cases/${currentCaseID}/attachments${isInfinity23OrHigher ? '?includeThumbnail=false' : ''}`
-      ),
-      page.getByText('Attach files').click()
-    ]);
+    await page.waitForTimeout(5000);
+    await page.locator('button').filter({ hasText: 'Attach files' }).click();
 
     const attachmentCount = await page.locator('div[id="attachments-count"]').textContent();
     await expect(Number(attachmentCount)).toBeGreaterThan(0);

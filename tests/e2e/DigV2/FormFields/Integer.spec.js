@@ -40,6 +40,7 @@ test.describe('E2E test', () => {
 
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeVisible();
 
+    await page.waitForTimeout(2000);
     /** Required tests */
 
     const requiredInteger = page.locator('lion-input-amount[datatestid="0658481a174254dded4a0c1ffe6b8380"] >> input');
