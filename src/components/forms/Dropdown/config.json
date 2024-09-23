@@ -1,8 +1,9 @@
 {
   "name": "Dropdown",
+  "label": "Dropdown",
   "description": "Picklist",
   "type": "Field",
-  "subtype": "PICKERS",
+  "subtype": "Picklist",
   "icon": "images/pz-dropdown-active.svg",
   "properties": [
     {
@@ -15,6 +16,34 @@
       "name": "readOnly",
       "label": "Edit mode",
       "format": "READONLY"
+    },
+    {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
     },
     {
       "label": "Input settings",
@@ -55,6 +84,26 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "label": "@L $this.label",
+    "placeholder": "@L Select...",
+    "listType": "associated",
+    "datasource": "@ASSOCIATED .$this.name"
+  }
 }

@@ -1,8 +1,9 @@
 {
   "name": "DateTime",
+  "label": "Date & time",
   "description": "Date & time",
   "type": "Field",
-  "subtype": "DATA_CAPTURE",
+  "subtype": "DateTime",
   "icon": "images/pz-date-time-active.svg",
   "properties": [
     {
@@ -20,26 +21,54 @@
       "format": "SELECT",
       "name": "clockFormat",
       "label": "Clock",
-      "defaultValue": "use locale",
+      "defaultValue": "0",
       "source": [
         {
-          "key": 0,
+          "key": "0",
           "value": "use locale"
         },
         {
-          "key": 12,
+          "key": "12",
           "value": "12 hours"
         },
         {
-          "key": 24,
+          "key": "24",
           "value": "24 hours"
         }
       ]
     },
     {
       "name": "withSeconds",
-      "label": "Display Seconds",
+      "label": "Display seconds",
       "format": "BOOLEAN"
+    },
+    {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
     },
     {
       "label": "Input settings",
@@ -151,6 +180,46 @@
           "name": "showAsFormattedText",
           "label": "Show as formatted text",
           "format": "BOOLEAN"
+        },
+        {
+          "format": "SELECT",
+          "name": "formatter",
+          "label": "Format",
+          "defaultValue": "defaultDateTime",
+          "source": [
+            {
+              "key": "defaultDateTime",
+              "value": "Default"
+            },
+            {
+              "key": "DateTime-Long",
+              "value": "Date Time (Long)"
+            },
+            {
+              "key": "DateTime-Short",
+              "value": "Date Time (Short)"
+            },
+            {
+              "key": "Date-Long",
+              "value": "Date (Long)"
+            },
+            {
+              "key": "Date-Short",
+              "value": "Date (Short)"
+            },
+            {
+              "key": "numeric",
+              "value": "Numeric"
+            },
+            {
+              "key": "DateTime-Since",
+              "value": "Since"
+            },
+            {
+              "key": "Time-Only",
+              "value": "Time only"
+            }
+          ]
         }
       ]
     },
@@ -176,6 +245,23 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "label": "@L $this.label"
+  }
 }

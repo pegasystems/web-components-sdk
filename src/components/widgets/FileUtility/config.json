@@ -7,10 +7,31 @@
   "icon": "images/pz-url-active.svg",
   "properties": [
     {
-      "name": "label",
-      "label": "Header text",
+      "name": "iconName",
+      "label": "Icon Name",
       "format": "TEXT",
-      "defaultValue": "Attachments"
+      "required": true
+    },
+    {
+      "label": "Conditions",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "visibility",
+          "label": "Visibility",
+          "format": "VISIBILITY"
+        }
+      ]
     }
-  ]
+  ],
+  "overrides": {
+    "@PLATFORMNAME == 'launchpad'": {
+      "defaultConfig": {
+        "showCategory": false
+      }
+    }
+  },
+  "defaultConfig": {
+    "iconName": "paper-clip"
+  }
 }

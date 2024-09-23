@@ -11,24 +11,60 @@
       "format": "TEXT"
     },
     {
-      "name": "helperText",
-      "label": "Helper text",
-      "format": "TEXT"
+      "label": "Input settings",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "helperText",
+          "label": "Helper text",
+          "format": "TEXT"
+        },
+        {
+          "name": "extensions",
+          "label": "Allowed file extensions",
+          "format": "TEXT",
+          "helperText": "Example: .jpg, .pdf, .docx"
+        }
+      ]
     },
     {
-      "name": "visibility",
-      "label": "Visible",
-      "format": "VISIBILITY"
+      "label": "Conditions",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "required",
+          "label": "Required",
+          "format": "REQUIRED"
+        },
+        {
+          "name": "disabled",
+          "label": "Disabled",
+          "format": "DISABLED"
+        },
+        {
+          "name": "visibility",
+          "label": "Visible",
+          "format": "VISIBILITY"
+        }
+      ]
     },
     {
-      "name": "disabled",
-      "label": "Disabled",
-      "format": "DISABLED"
-    },
-    {
-      "name": "required",
-      "label": "Required",
-      "format": "REQUIRED"
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "value": "@ATTACHMENT .$this.name",
+    "label": "@L $this.label"
+  }
 }

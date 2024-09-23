@@ -5,13 +5,18 @@
   "type": "Template",
   "subtype": "TAB",
   "icon": "OneColumnTab.svg",
-  "viewNameLabel": "Tab name",
   "properties": [
+    {
+      "name": "useConfigurableLayout",
+      "label": "Use inline layout for insights",
+      "format": "BOOLEAN"
+    },
     {
       "name": "A",
       "label": "Region A",
       "format": "CONTENTPICKER",
-      "addTypeList": ["Widgets", "Views", "Fields", "Insights"]
+      "addTypeList": ["Widgets", "Views", "Fields", "Insights"],
+      "allowCreatingGroup": true
     }
   ]
 }

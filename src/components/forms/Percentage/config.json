@@ -1,8 +1,9 @@
 {
   "name": "Percentage",
+  "label": "Percentage",
   "description": "Percentage",
   "type": "Field",
-  "subtype": "DATA_CAPTURE",
+  "subtype": "Decimal-Percentage",
   "icon": "images/pz-text-input-active.svg",
   "properties": [
     {
@@ -26,6 +27,34 @@
       "name": "showGroupSeparators",
       "label": "Show thousands separator",
       "format": "BOOLEAN"
+    },
+    {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
     },
     {
       "label": "Input settings",
@@ -66,6 +95,23 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "label": "@L $this.label"
+  }
 }
