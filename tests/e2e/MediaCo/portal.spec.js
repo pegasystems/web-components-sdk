@@ -69,7 +69,7 @@ test.describe('E2E test', () => {
     // const currentCaseID = await page.locator('div[id="current-caseID"]').textContent();
     const filePath = path.join(__dirname, '../../../assets/img/cableinfo.png');
 
-    await page.setInputFiles('#upload-input', filePath)
+    await page.setInputFiles('#upload-input', filePath);
     await expect(page.locator('summary-list-extension')).toBeVisible();
     await page.locator('button:has-text("submit")').click();
 
