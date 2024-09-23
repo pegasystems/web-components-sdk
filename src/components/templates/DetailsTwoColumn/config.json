@@ -5,18 +5,34 @@
   "type": "Template",
   "subtype": "DETAILS",
   "icon": "TwoColumnDetails.svg",
+  "viewHeadingLabel": "Default heading",
   "properties": [
+    {
+      "name": "showHighlightedData",
+      "label": "Enable highlighted fields",
+      "format": "BOOLEAN"
+    },
+    {
+      "name": "highlightedData",
+      "label": "Highlighted fields",
+      "format": "CONTENTPICKER",
+      "addTypeList": ["Fields"],
+      "visibility": "$this.showHighlightedData = true",
+      "saveToConfig": true
+    },
     {
       "name": "A",
       "label": "Region A",
       "format": "CONTENTPICKER",
-      "addTypeList": ["Fields", "Views", "UIComponents"]
+      "addTypeList": ["Fields", "Views"],
+      "allowCreatingGroup": true
     },
     {
       "name": "B",
       "label": "Region B",
       "format": "CONTENTPICKER",
-      "addTypeList": ["Fields", "Views", "UIComponents"]
+      "addTypeList": ["Fields", "Views"],
+      "allowCreatingGroup": true
     }
   ]
 }

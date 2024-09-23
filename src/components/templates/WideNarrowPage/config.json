@@ -1,0 +1,33 @@
+{
+    "name": "WideNarrowPage",
+    "label": "Wide-narrow",
+    "description": "Wide-narrow Page Template",
+    "type": "Template",
+    "subtype": "PAGE",
+    "icon": "WideNarrowPage.svg",
+    "properties": [
+      {
+        "name": "useConfigurableLayout",
+        "label": "Use inline layout for insights",
+        "format": "BOOLEAN"
+      },
+      {
+        "name": "enableGetNextWork",
+        "label": "Enable Get next work",
+        "format": "BOOLEAN",
+        "visibility": "@ISHYBRIDAPP != true"
+      },
+      {
+        "name": "A",
+        "label": "Region A",
+        "format": "CONTENTPICKER",
+        "addTypeList": ["Widgets", "Views", "Insights"]
+      },
+      {
+        "name": "B",
+        "label": "Region B",
+        "format": "CONTENTPICKER",
+        "addTypeList": ["Widgets", "Views", "Insights"]
+      }
+    ]
+  }  

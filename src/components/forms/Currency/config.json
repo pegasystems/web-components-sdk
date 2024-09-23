@@ -1,8 +1,9 @@
 {
   "name": "Currency",
+  "label": "Currency",
   "description": "Currency",
   "type": "Field",
-  "subtype": "DATA_CAPTURE",
+  "subtype": "Decimal-Currency",
   "icon": "images/pz-currency-active.svg",
   "properties": [
     {
@@ -53,6 +54,34 @@
       ]
     },
     {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
+    },
+    {
       "label": "Input settings",
       "format": "GROUP",
       "visibility": "(!readOnly = true)",
@@ -62,6 +91,12 @@
           "label": "Allow Decimals",
           "format": "BOOLEAN",
           "defaultValue": true
+        },
+        {
+          "name": "alwaysShowISOCode",
+          "label": "Show ISO Code",
+          "format": "BOOLEAN",
+          "defaultValue": false
         },
         {
           "name": "placeholder",
@@ -74,6 +109,139 @@
           "format": "TEXT"
         }
       ]
+    },
+    {
+      "label": "Read-only settings",
+      "format": "GROUP",
+      "properties": [
+        {
+          "format": "SELECT",
+          "name": "formatter",
+          "label": "Format",
+          "defaultValue": "defaultCurrency",
+          "source": [
+            {
+              "key": "defaultCurrency",
+              "value": "Default"
+            },
+            {
+              "key": "Integer",
+              "value": "Integer"
+            },
+            {
+              "key": "Decimal",
+              "value": "Decimal"
+            },
+            {
+              "key": "Percentage",
+              "value": "Percentage"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "format": "SELECT",
+      "name": "currencyDisplay",
+      "label": "Currency display",
+      "visibility": "(!formatter = Integer)&&(!formatter = Decimal)&&(!formatter = Percentage)",
+      "defaultValue": "symbol",
+      "source": [
+        {
+          "key": "symbol",
+          "value": "Auto"
+        },
+        {
+          "key": "code",
+          "value": "Code"
+        },
+        {
+          "key": "name",
+          "value": "Name"
+        }
+      ]
+    },
+    {
+      "format": "SELECT",
+      "name": "negative",
+      "label": "Negative number display",
+      "defaultValue": "minus-sign",
+      "visibility": "(!formatter = Integer)&&(!formatter = Decimal)&&(!formatter = Percentage)",
+      "source": [
+        {
+          "key": "minus-sign",
+          "value": "Standard"
+        },
+        {
+          "key": "parentheses",
+          "value": "Accounting"
+        }
+      ]
+    },
+    {
+      "format": "SELECT",
+      "name": "notation",
+      "label": "Notation",
+      "visibility": "(!negative = parentheses)&&(!formatter = Percentage)",
+      "defaultValue": "standard",
+      "source": [
+        {
+          "key": "standard",
+          "value": "Standard"
+        },
+        {
+          "key": "compact",
+          "value": "Compact"
+        }
+      ]
+    },
+    {
+      "format": "NUMBER",
+      "name": "decimalPrecision",
+      "label": "Decimal places",
+      "visibility": "(formatter = Decimal)||(formatter = Percentage)",
+      "min": 0,
+      "max": 20
+    },
+    {
+      "format": "SELECT",
+      "name": "currencyDecimalPrecision",
+      "label": "Decimal places shown",
+      "visibility": "(!formatter = Integer)&&(!formatter = Decimal)&&(!formatter = Percentage)",
+      "defaultValue": "auto",
+      "source": [
+        {
+          "key": "auto",
+          "value": "Auto"
+        },
+        {
+          "key": "0",
+          "value": "None"
+        },
+        {
+          "key": "1",
+          "value": "1"
+        },
+        {
+          "key": "2",
+          "value": "2"
+        },
+        {
+          "key": "3",
+          "value": "3"
+        },
+        {
+          "key": "4",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "name": "showGroupSeparators",
+      "label": "Show thousands separator",
+      "format": "BOOLEAN",
+      "defaultValue": true,
+      "visibility": "(formatter = Decimal)||(formatter = Integer)"
     },
     {
       "label": "Conditions",
@@ -97,6 +265,23 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "label": "@L $this.label"
+  }
 }

@@ -6,8 +6,16 @@
   "icon": "Table.svg",
   "hideTemplateEdit": true,
   "hideFromTemplatePicker": true,
-  "viewNameLabel": "List page title",
   "properties": [
+    {
+      "format": "INSIGHTUPGRADE"
+    },
+    {
+      "name": "enableGetNextWork",
+      "label": "Enable Get next work",
+      "format": "BOOLEAN",
+      "visibility": "@ISHYBRIDAPP != true"
+    },
     {
       "name": "existingOrCustomListView",
       "format": "LISTPAGE",
@@ -34,6 +42,11 @@
               "context": "global"
             },
             {
+              "name": "showDynamicFields",
+              "label": "Include all class fields in the Show/Hide menu",
+              "format": "BOOLEAN"
+            },
+            {
               "name": "presets",
               "label": "Presets",
               "format": "PRESETPICKER",
@@ -47,8 +60,18 @@
                 {
                   "format": "COMPONENTPICKER",
                   "componentsList": [
-                    { "name": "Table", "description": "Table" },
-                    { "name": "Gallery", "description": "Gallery" }
+                    {
+                      "name": "Table",
+                      "description": "Table"
+                    },
+                    {
+                      "name": "Gallery",
+                      "description": "Gallery"
+                    },
+                    {
+                      "name": "Timeline",
+                      "description": "Timeline"
+                    }
                   ]
                 },
                 {
@@ -56,16 +79,63 @@
                   "visibleFor": ["Gallery"]
                 },
                 {
+                  "name": "TimelineDetails",
+                  "format": "TIMELINEDETAILS",
+                  "visibleFor": ["Timeline"],
+                  "itemTypes": ["Fields", "Associations"],
+                  "modifyPanelOverride": "ListField"
+                },
+                {
                   "name": "Columns",
                   "label": "Columns",
                   "format": "CONTENTPICKER",
                   "addTypeList": ["Fields", "Associations"],
-                  "modifyPanelOverride": "ListField"
+                  "modifyPanelOverride": "ListField",
+                  "visibleFor": ["Table", "Gallery"]
+                },
+                {
+                  "name": "Columns",
+                  "label": "Additional fields",
+                  "format": "CONTENTPICKER",
+                  "addTypeList": ["Fields", "Associations"],
+                  "modifyPanelOverride": "ListField",
+                  "visibleFor": ["Timeline"]
                 },
                 {
                   "name": "fillAvailableSpace",
                   "label": "Column to take up remaining width",
-                  "format": "FILLCOLUMNWIDTH"
+                  "format": "FILLCOLUMNWIDTH",
+                  "visibleFor": ["Table", "Gallery"]
+                },
+                {
+                  "format": "SELECT",
+                  "name": "timelineGroupBy",
+                  "label": "Date grouping",
+                  "lookupPathOverride": "viewMetadata.config",
+                  "defaultValue": "date",
+                  "source": [
+                    {
+                      "key": "date",
+                      "value": "By day"
+                    },
+                    {
+                      "key": "monthyear",
+                      "value": "By month"
+                    },
+                    {
+                      "key": "quarteryear",
+                      "value": "By quarter"
+                    },
+                    {
+                      "key": "year",
+                      "value": "By year"
+                    },
+                    {
+                      "key": "none",
+                      "value": "Off"
+                    }
+                  ],
+                  "visibleFor": ["Timeline"]
                 },
                 {
                   "name": "columnFilter",
@@ -75,20 +145,108 @@
                 {
                   "name": "columnSort",
                   "label": "Column sort",
-                  "format": "COLUMNSORT"
+                  "format": "COLUMNSORT",
+                  "visibleFor": ["Table", "Gallery"]
+                },
+                {
+                  "format": "SELECT",
+                  "name": "timelineSortBy",
+                  "label": "Sort by",
+                  "lookupPathOverride": "viewMetadata.config",
+                  "defaultValue": "descending",
+                  "source": [
+                    {
+                      "key": "descending",
+                      "value": "Newest first"
+                    },
+                    {
+                      "key": "ascending",
+                      "value": "Oldest first"
+                    }
+                  ],
+                  "visibleFor": ["Timeline"]
                 },
                 {
                   "name": "groupBy",
                   "label": "Group By",
                   "format": "GROUPBY",
                   "visibleFor": ["Table"]
+                },
+                {
+                  "name": "defaultRowHeight",
+                  "label": "Row density",
+                  "format": "SELECT",
+                  "defaultValue": "Default",
+                  "lookupPathOverride": "viewMetadata.config",
+                  "visibleFor": ["Table"],
+                  "source": [
+                    {
+                      "key": "",
+                      "value": "Default"
+                    },
+                    {
+                      "key": "1",
+                      "value": "Short"
+                    },
+                    {
+                      "key": "2",
+                      "value": "Medium"
+                    },
+                    {
+                      "key": "3",
+                      "value": "Tall"
+                    },
+                    {
+                      "key": "4",
+                      "value": "Full content"
+                    }
+                  ]
                 }
               ]
             },
             {
-              "name": "editing",
+              "name": "allowBulkActions",
+              "label": "Allow bulk actions",
+              "format": "BOOLEAN",
+              "visibility": "@ISCASETYPEWORKOBJECTSOURCE IS_NOT_NULL"
+            },
+            {
+              "name": "allowUploadRecords",
+              "label": "Allow import to create multiple records",
+              "format": "UPLOADRECORDS",
+              "visibility": "$this.showUploadRecords == true"
+            },
+            {
+              "label": "End user filtering",
+              "format": "GROUP",
+              "properties": [
+                {
+                  "name": "showPromotedFilters",
+                  "label": "Promoted filters",
+                  "format": "BOOLEAN",
+                  "defaultValue": false
+                },
+                {
+                  "name": "promotedFilters",
+                  "label": "Promoted filters",
+                  "format": "CONTENTPICKER",
+                  "addTypeList": ["Fields", "Associations"],
+                  "modifyPanelOverride": "PromotedFilter",
+                  "visibility": "$this.showPromotedFilters = true",
+                  "isArrayOfMetadata": true
+                }
+              ]
+            },
+            {
+              "name": "worktype",
+              "label": "worktype",
+              "format": "WORKTYPE"
+            },
+            {
               "label": "Editing",
-              "format": "EDITING"
+              "name": "Datatype",
+              "format": "DATATYPE",
+              "visibility": "@ISDATAOBJECTSOURCE IS_NOT_NULL"
             },
             {
               "label": "User personalization",

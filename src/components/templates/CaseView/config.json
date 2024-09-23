@@ -1,33 +1,47 @@
 {
   "name": "CaseView",
-  "label": "Case page",
+  "label": "Object page",
   "description": "Standard case page",
   "type": "Template",
   "subtype": "CASEVIEW",
-  "icon": "CasePage.svg",
+  "icon": "ObjectPage.svg",
   "hideTemplateEdit": true,
   "hideViewName": true,
+  "hideTemplatePicker": true,
   "properties": [
     {
       "name": "header",
-      "label": "Header",
-      "format": "PROPERTY"
+      "label": "Heading",
+      "format": "PROPERTY",
+      "required": true
     },
     {
       "name": "subheader",
-      "label": "Subheader",
+      "label": "Subheading",
       "format": "PROPERTY"
     },
     {
-      "name": "showIconInHeader",
-      "label": "Show icon in header",
-      "format": "BOOLEAN"
+      "format": "EDITVIEWPORTLET",
+      "viewName": "pyCaseSummary",
+      "properties": [
+        {
+          "name": "Primary fields",
+          "label": "Highlighted fields",
+          "format": "CONTENTPICKER",
+          "addTypeList": ["Fields", "Widgets"]
+        },
+        {
+          "name": "Secondary fields",
+          "label": "Summary",
+          "format": "CONTENTPICKER",
+          "addTypeList": ["Fields", "Widgets"]
+        }
+      ]
     },
     {
       "name": "Tabs",
       "label": "Tabs",
       "format": "CONTENTPICKER",
-      "modifyPanelOverride": "DeferLoad",
       "addTypeList": ["Tabs"]
     },
     {
@@ -35,6 +49,32 @@
       "label": "Utilities",
       "format": "CONTENTPICKER",
       "addTypeList": ["Widgets"]
+    },
+    {
+      "label": "Options",
+      "format": "GROUP",
+      "collapsible": false,
+      "defaultCollapsed": false,
+      "properties": [
+        {
+          "name": "showIconInHeader",
+          "label": "Show Case icon",
+          "format": "BOOLEAN",
+          "defaultValue": true
+        },
+        {
+          "name": "showCaseLifecycle",
+          "label": "Show Case Life Cycle",
+          "format": "BOOLEAN",
+          "defaultValue": true
+        },
+        {
+          "name": "showPromotedAction",
+          "label": "Show promoted Action",
+          "format": "BOOLEAN",
+          "defaultValue": false
+        }
+      ]
     }
   ]
 }

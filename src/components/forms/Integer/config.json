@@ -1,8 +1,9 @@
 {
   "name": "Integer",
+  "label": "Integer",
   "description": "Integer",
   "type": "Field",
-  "subtype": "DATA_CAPTURE",
+  "subtype": "Integer",
   "icon": "images/pz-integer-active.svg",
   "properties": [
     {
@@ -19,7 +20,37 @@
     {
       "name": "showGroupSeparators",
       "label": "Show thousands separator",
-      "format": "BOOLEAN"
+      "format": "BOOLEAN",
+      "defaultValue": true,
+      "visibility": "(!displayAs = slider)"
+    },
+    {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
     },
     {
       "label": "Input settings",
@@ -27,14 +58,242 @@
       "visibility": "(!readOnly = true)",
       "properties": [
         {
+          "name": "displayAs",
+          "label": "Display as",
+          "format": "SELECT",
+          "defaultValue": "input",
+          "source": [
+            {
+              "key": "input",
+              "value": "Input"
+            },
+            {
+              "key": "stepper",
+              "value": "Stepper"
+            },
+            {
+              "key": "slider",
+              "value": "Slider"
+            }
+          ]
+        },
+        {
+          "name": "min",
+          "label": "Min value",
+          "format": "NUMBER",
+          "defaultValue": "0",
+          "required": true,
+          "visibility": "(displayAs = slider)"
+        },
+        {
+          "name": "max",
+          "label": "Max value",
+          "format": "NUMBER",
+          "defaultValue": "100",
+          "required": true,
+          "visibility": "(displayAs = slider)"
+        },
+        {
+          "name": "defaultValue",
+          "label": "Default value",
+          "format": "NUMBER",
+          "visibility": "(displayAs = slider)"
+        },
+        {
+          "name": "step",
+          "label": "Increment",
+          "format": "NUMBER",
+          "defaultValue": "1",
+          "min": 1,
+          "visibility": "(displayAs = slider)"
+        },
+        {
           "name": "placeholder",
           "label": "Placeholder",
-          "format": "TEXT"
+          "format": "TEXT",
+          "visibility": "(!displayAs = slider && !displayAs = stepper)"
         },
         {
           "name": "helperText",
           "label": "Helper text",
           "format": "TEXT"
+        },
+        {
+          "name": "showInput",
+          "label": "Show numeric input",
+          "format": "BOOLEAN",
+          "defaultValue": true,
+          "visibility": "(displayAs = slider)"
+        },
+        {
+          "name": "showTicks",
+          "label": "Show ticks",
+          "format": "BOOLEAN",
+          "defaultValue": true,
+          "visibility": "(displayAs = slider)"
+        }
+      ]
+    },
+    {
+      "label": "Read-only settings",
+      "format": "GROUP",
+      "properties": [
+        {
+          "format": "SELECT",
+          "name": "formatter",
+          "label": "Format",
+          "defaultValue": "defaultInteger",
+          "source": [
+            {
+              "key": "defaultInteger",
+              "value": "Default"
+            },
+            {
+              "key": "Decimal",
+              "value": "Decimal"
+            },
+            {
+              "key": "Currency",
+              "value": "Currency"
+            },
+            {
+              "key": "Percentage",
+              "value": "Percentage"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "format": "CASCADE",
+      "visibility": "(formatter = Currency)",
+      "source": {
+        "format": "SELECT",
+        "label": "ISO Code Selection",
+        "name": "isoCodeSelection",
+        "defaultValue": "constant",
+        "source": [
+          {
+            "key": "constant",
+            "value": "Constant"
+          },
+          {
+            "key": "propertyRef",
+            "value": "Property Reference"
+          }
+        ]
+      },
+      "cascadeElements": [
+        {
+          "key": "currencyISOCode",
+          "format": "TEXT",
+          "name": "currencyISOCode",
+          "label": "Currency ISO Code",
+          "defaultValue": "USD",
+          "match": "constant"
+        },
+        {
+          "key": "currencyISOCode",
+          "format": "PROPERTY",
+          "name": "currencyISOCode",
+          "label": "Currency ISO Code",
+          "match": "propertyRef"
+        }
+      ]
+    },
+    {
+      "format": "SELECT",
+      "name": "currencyDisplay",
+      "label": "Currency display",
+      "visibility": "(formatter = Currency)",
+      "defaultValue": "symbol",
+      "source": [
+        {
+          "key": "symbol",
+          "value": "Auto"
+        },
+        {
+          "key": "code",
+          "value": "Code"
+        },
+        {
+          "key": "name",
+          "value": "Name"
+        }
+      ]
+    },
+    {
+      "format": "SELECT",
+      "name": "negative",
+      "label": "Negative number display",
+      "visibility": "(formatter = Currency)",
+      "defaultValue": "minus-sign",
+      "source": [
+        {
+          "key": "minus-sign",
+          "value": "Standard"
+        },
+        {
+          "key": "parentheses",
+          "value": "Accounting"
+        }
+      ]
+    },
+    {
+      "format": "SELECT",
+      "name": "notation",
+      "label": "Notation",
+      "visibility": "(!negative = parentheses)&&(!formatter = Percentage)",
+      "defaultValue": "standard",
+      "source": [
+        {
+          "key": "standard",
+          "value": "Standard"
+        },
+        {
+          "key": "compact",
+          "value": "Compact"
+        }
+      ]
+    },
+    {
+      "name": "decimalPrecision",
+      "label": "Decimal places",
+      "format": "NUMBER",
+      "visibility": "(formatter = Decimal)||(formatter = Percentage)",
+      "min": 0,
+      "max": 20
+    },
+    {
+      "format": "SELECT",
+      "name": "currencyDecimalPrecision",
+      "label": "Decimal places shown",
+      "visibility": "(formatter = Currency)",
+      "defaultValue": "auto",
+      "source": [
+        {
+          "key": "auto",
+          "value": "Auto"
+        },
+        {
+          "key": "0",
+          "value": "None"
+        },
+        {
+          "key": "1",
+          "value": "1"
+        },
+        {
+          "key": "2",
+          "value": "2"
+        },
+        {
+          "key": "3",
+          "value": "3"
+        },
+        {
+          "key": "4",
+          "value": "4"
         }
       ]
     },
@@ -60,6 +319,23 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "label": "@L $this.label"
+  }
 }

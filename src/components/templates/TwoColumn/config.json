@@ -4,41 +4,21 @@
   "description": "TwoColumn Template",
   "type": "Template",
   "subtype": "FORM",
+  "hideFromTemplatePicker": true,
+  "hideFromAddView": true,
   "icon": "TwoColumn.svg",
   "properties": [
     {
       "name": "A",
       "label": "Region A",
-      "format": "CONTENTPICKER"
+      "format": "CONTENTPICKER",
+      "allowCreatingGroup": true
     },
     {
       "name": "B",
       "label": "Region B",
-      "format": "CONTENTPICKER"
-    },
-    {
-      "label": "Conditions",
-      "format": "GROUP",
-      "properties": [
-        {
-          "name": "required",
-          "label": "Required",
-          "format": "REQUIRED",
-          "saveToReference": true
-        },
-        {
-          "name": "disabled",
-          "label": "Disabled",
-          "format": "DISABLED",
-          "saveToReference": true
-        },
-        {
-          "name": "visibility",
-          "label": "Visibility",
-          "format": "VISIBILITY",
-          "saveToReference": true
-        }
-      ]
+      "format": "CONTENTPICKER",
+      "allowCreatingGroup": true
     }
   ]
 }

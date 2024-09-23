@@ -1,8 +1,9 @@
 {
   "name": "Phone",
+  "label": "Phone",
   "description": "Phone",
   "type": "Field",
-  "subtype": "DATA_CAPTURE",
+  "subtype": "Text-Phone",
   "icon": "images/pz-phone-active.svg",
   "properties": [
     {
@@ -21,6 +22,34 @@
       "label": "Show Country Code",
       "format": "BOOLEAN",
       "defaultValue": true
+    },
+    {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
     },
     {
       "label": "Input settings",
@@ -61,6 +90,42 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "label": "@L $this.label",
+    "datasource": {
+      "source": "@DATASOURCE D_pyCountryCallingCodeList.pxResults",
+      "fields": {
+        "value": "@P .pyCallingCode"
+      }
+    }
+  },
+  "overrides": {
+    "@PLATFORMNAME == 'launchpad'": {
+      "defaultConfig": {
+        "label": "@L $this.label",
+        "datasource": {
+          "source": "@DATASOURCE CountryList.pxResults",
+          "fields": {
+            "value": "@P .ISDCode"
+          }
+        }
+      }
+    }
+  }
 }

@@ -5,8 +5,18 @@
   "type": "Template",
   "subtype": "PAGE",
   "icon": "TwoColumnPage.svg",
-  "viewNameLabel": "Page title",
   "properties": [
+    {
+      "name": "useConfigurableLayout",
+      "label": "Use inline layout for insights",
+      "format": "BOOLEAN"
+    },
+    {
+      "name": "enableGetNextWork",
+      "label": "Enable Get next work",
+      "format": "BOOLEAN",
+      "visibility": "@ISHYBRIDAPP != true"
+    },
     {
       "name": "A",
       "label": "Region A",
