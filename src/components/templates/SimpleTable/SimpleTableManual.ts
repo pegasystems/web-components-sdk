@@ -189,7 +189,7 @@ class SimpleTableManual extends BridgeBase {
     //  (if one exists for the field). If no "name", use "cellRenderer" (typically get DELETE_ICON)
     //  for our columns.
     this.displayedColumns = this.fieldDefs?.map((field: any) => {
-      return field.label ? field.label : field.name;
+      return field.name ? field.name : field.cellRenderer;
     });
 
     // And now we can process the resolvedFields to add in the "name"
@@ -313,8 +313,8 @@ class SimpleTableManual extends BridgeBase {
     const theColumnHeaders = html`
       <thead class="thead-light">
         <tr>
-          ${this.displayedColumns.map(label => {
-            return html`<th scope="col">${label}</th>`;
+          ${this.fieldDefs.map(field => {
+            return html`<th scope="col">${field.label}</th>`;
           })}
         </tr>
       </thead>
@@ -342,8 +342,8 @@ class SimpleTableManual extends BridgeBase {
     const theColumnHeaders = html`
       <thead class="thead-light">
         <tr>
-          ${this.displayedColumns.map(label => {
-            return html`<th scope="col">${label}</th>`;
+          ${this.fieldDefs.map(field => {
+            return html`<th scope="col">${field.label}</th>`;
           })}
         </tr>
       </thead>

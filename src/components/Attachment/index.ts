@@ -301,7 +301,7 @@ class Attachment extends BridgeBase {
       debugger;
     }
 
-    const sContent = html`${this.getAttachmentHtml()}`;
+    const sContent = this.bVisible ? html`${this.getAttachmentHtml()}` : '';
 
     const arHtml: any[] = [];
 

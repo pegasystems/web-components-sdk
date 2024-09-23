@@ -305,8 +305,8 @@ class Assignment extends BridgeBase {
     if (oWorkData) {
       this.actionsAPI = oWorkItem.getActionsApi();
 
-      if (oWorkData.caseInfo && oWorkData.caseInfo.assignments != null) {
-        this.containerName = oWorkData.caseInfo.assignments[0].name;
+      if (oWorkData.caseInfo && oWorkData.caseInfo.assignments !== null) {
+        this.containerName = oWorkData.caseInfo.assignments?.[0].name;
 
         // get caseInfo
         const oCaseInfo = oData.caseInfo;

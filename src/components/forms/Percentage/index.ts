@@ -1,5 +1,5 @@
 import { html, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
@@ -12,9 +12,6 @@ import { percentageStyles } from './percentage-styles';
 //  to be used as a starting point for any new components as they're built out
 @customElement('percentage-form')
 class Percentage extends FormComponentBase {
-  // lion-input-amount options as based on Intl.NumberFormat standard
-  @property({ attribute: false, type: Object }) numberOptions = {};
-
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -62,12 +59,8 @@ class Percentage extends FormComponentBase {
     super.updateSelf();
 
     // Reset to defaults
-    this.numberOptions = {};
 
     // const theConfigProps = this.thePConn.getConfigProps();
-
-    // Using minimum 0 digit and maximum 4 digit
-    this.numberOptions = `{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }`;
   }
 
   render() {
@@ -105,7 +98,7 @@ class Percentage extends FormComponentBase {
           dataTestId=${this.testId}
           .modelValue=${parseFloat(this.value)}
           .fieldName=${this.label}
-          .formatOptions=${this.numberOptions}
+          .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
           .validators=${this.lionValidatorsArray}
           .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           ?readonly=${this.bReadonly}
