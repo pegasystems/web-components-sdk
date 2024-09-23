@@ -30,6 +30,7 @@ const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, c
         select: Object.keys(fields).map(key => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
       },
       {
+        invalidateCache: true,
         additionalApiParams: {
           includeTotalCount
         }
