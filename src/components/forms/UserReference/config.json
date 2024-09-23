@@ -1,6 +1,6 @@
 {
   "name": "UserReference",
-  "description": "User reference",
+  "description": "User Reference",
   "type": "Field",
   "subtype": "DATA_CAPTURE",
   "icon": "images/pz-text-input-active.svg",
@@ -21,6 +21,39 @@
       "name": "readOnly",
       "label": "Edit mode",
       "format": "READONLY"
+    },
+    {
+      "label": "Data page",
+      "format": "DATAPAGE",
+      "datapageClass": "Data-Admin-Operator-ID"
+    },
+    {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
     },
     {
       "label": "Input settings",
@@ -72,6 +105,23 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "placeholder": "@L Select..."
+  }
 }

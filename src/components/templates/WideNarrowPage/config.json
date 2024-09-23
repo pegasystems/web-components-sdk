@@ -1,10 +1,10 @@
 {
-  "name": "TwoColumnPage",
-  "label": "Two column",
-  "description": "TwoColumn Page Template",
+  "name": "WideNarrowPage",
+  "label": "Wide-narrow",
+  "description": "Wide-narrow Page Template",
   "type": "Template",
   "subtype": "PAGE",
-  "icon": "TwoColumnPage.svg",
+  "icon": "WideNarrowPage.svg",
   "properties": [
     {
       "name": "useConfigurableLayout",

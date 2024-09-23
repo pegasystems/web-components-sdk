@@ -1,9 +1,10 @@
 {
-  "name": "Time",
-  "description": "Time only",
+  "name": "URL",
+  "label": "URL",
+  "description": "URL",
   "type": "Field",
-  "subtype": "DATA_CAPTURE",
-  "icon": "images/pz-date-time-active.svg",
+  "subtype": "Text-URL",
+  "icon": "images/pz-url-active.svg",
   "properties": [
     {
       "name": "label",
@@ -17,29 +18,32 @@
       "format": "READONLY"
     },
     {
-      "format": "SELECT",
-      "name": "clockFormat",
-      "label": "Clock",
-      "defaultValue": "use locale",
-      "source": [
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
         {
-          "key": 0,
-          "value": "use locale"
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
         },
         {
-          "key": 12,
-          "value": "12 hours"
-        },
-        {
-          "key": 24,
-          "value": "24 hours"
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
         }
       ]
-    },
-    {
-      "name": "withSeconds",
-      "label": "Display Seconds",
-      "format": "BOOLEAN"
     },
     {
       "label": "Input settings",
@@ -47,41 +51,140 @@
       "visibility": "(!readOnly = true)",
       "properties": [
         {
-          "format": "SELECT",
-          "name": "pickerInterval",
-          "label": "Time picker",
-          "defaultValue": "30",
-          "source": [
-            {
-              "key": "5",
-              "value": "5 min"
-            },
-            {
-              "key": "10",
-              "value": "10 min"
-            },
-            {
-              "key": "15",
-              "value": "15 min"
-            },
-            {
-              "key": "20",
-              "value": "20 min"
-            },
-            {
-              "key": "30",
-              "value": "30 min"
-            },
-            {
-              "key": "60",
-              "value": "1 hr"
-            }
-          ]
+          "name": "placeholder",
+          "label": "Placeholder",
+          "format": "TEXT"
         },
         {
           "name": "helperText",
           "label": "Helper text",
           "format": "TEXT"
+        }
+      ]
+    },
+    {
+      "label": "Read-only settings",
+      "format": "GROUP",
+      "properties": [
+        {
+          "format": "SELECT",
+          "name": "displayAs",
+          "label": "Display As",
+          "defaultValue": "defaultURL",
+          "source": [
+            {
+              "key": "defaultURL",
+              "value": "URL"
+            },
+            {
+              "key": "Image",
+              "value": "Image"
+            },
+            {
+              "key": "labelText",
+              "value": "URL Label"
+            }
+          ]
+        },
+        {
+          "format": "CASCADE",
+          "visibility": "(displayAs = labelText)",
+          "source": {
+            "format": "SELECT",
+            "label": "Display text Selection",
+            "name": "urlLabelSelection",
+            "defaultValue": "constant",
+            "source": [
+              {
+                "key": "constant",
+                "value": "Constant"
+              },
+              {
+                "key": "propertyRef",
+                "value": "Property Reference"
+              }
+            ]
+          },
+          "cascadeElements": [
+            {
+              "key": "urlLabel",
+              "format": "TEXT",
+              "name": "urlLabel",
+              "label": "Display text",
+              "match": "constant"
+            },
+            {
+              "key": "urlLabel",
+              "format": "PROPERTY",
+              "name": "propUrlLabel",
+              "label": "Display text",
+              "match": "propertyRef"
+            }
+          ]
+        },
+        {
+          "format": "GROUP",
+          "visibility": "(displayAs = Image)",
+          "properties": [
+            {
+              "format": "SELECT",
+              "name": "widthSel",
+              "label": "Width",
+              "defaultValue": "defaultWidth",
+              "source": [
+                {
+                  "key": "defaultWidth",
+                  "value": "Default Width"
+                },
+                {
+                  "key": "widthpx",
+                  "value": "Custom Width"
+                }
+              ]
+            },
+            {
+              "name": "customWidth",
+              "label": "Width (px)",
+              "visibility": "(widthSel = widthpx)",
+              "format": "NUMBER"
+            },
+            {
+              "format": "CASCADE",
+              "source": {
+                "format": "SELECT",
+                "label": "Image Alt Text",
+                "name": "altText",
+                "defaultValue": "constant",
+                "source": [
+                  {
+                    "key": "constant",
+                    "value": "Constant"
+                  },
+                  {
+                    "key": "propertyRef",
+                    "value": "Property Reference"
+                  }
+                ]
+              },
+              "cascadeElements": [
+                {
+                  "key": "altTextOfImage",
+                  "format": "TEXT",
+                  "name": "altTextOfImage",
+                  "label": "Alt Text Value",
+                  "defaultValue": "",
+                  "match": "constant"
+                },
+                {
+                  "key": "altTextOfImage",
+                  "format": "PROPERTY",
+                  "name": "propaltTextOfImage",
+                  "label": "Alt Text Value",
+                  "match": "propertyRef"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -107,6 +210,23 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "label": "@L $this.label"
+  }
 }

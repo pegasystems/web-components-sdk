@@ -1,0 +1,45 @@
+{
+  "name": "DefaultForm",
+  "label": "Default form",
+  "description": "DefaultForm Template",
+  "type": "Template",
+  "subtype": "FORM",
+  "icon": "DefaultForm.svg",
+  "properties": [
+    {
+      "format": "SELECT",
+      "name": "NumCols",
+      "label": "Layout",
+      "defaultValue": "1",
+      "helperText": "Multi-column layouts will be collapsed in narrow displays",
+      "helperTextVisibility": "$this.NumCols != '1'",
+      "source": [
+        { "key": "1", "value": "1 column" },
+        { "key": "2", "value": "2 column" },
+        { "key": "3", "value": "3 column" }
+      ]
+    },
+    {
+      "format": "INSTRUCTIONS"
+    },
+    {
+      "name": "Fields",
+      "label": "Fields",
+      "format": "CONTENTPICKER",
+      "allowCreatingGroup": true
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "properties": [
+        {
+          "name": "inheritParentLayout",
+          "label": "Embedded Views inherit parent View's column layout",
+          "format": "BOOLEAN"
+        }
+      ]
+    }
+  ]
+}

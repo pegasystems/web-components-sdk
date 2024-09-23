@@ -1,8 +1,9 @@
 {
   "name": "Checkbox",
+  "label": "Checkbox",
   "description": "Boolean",
   "type": "Field",
-  "subtype": "PICKERS",
+  "subtype": "Boolean",
   "icon": "images/pz-checkbox-active.svg",
   "properties": [
     {
@@ -21,6 +22,34 @@
       "format": "READONLY"
     },
     {
+      "label": "Column settings",
+      "format": "GROUP",
+      "visibility": "@VIEWTYPE == 'MultiRecordDisplayAsTable'",
+      "properties": [
+        {
+          "name": "columnWidth",
+          "label": "Column width",
+          "format": "SELECT",
+          "source": [
+            {
+              "key": "auto",
+              "value": "Auto"
+            },
+            {
+              "key": "custom",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "label": "Width (px)",
+          "format": "NUMBER",
+          "visibility": "$this.columnWidth == 'custom'"
+        }
+      ]
+    },
+    {
       "label": "Input settings",
       "format": "GROUP",
       "visibility": "(!readOnly = true)",
@@ -28,12 +57,40 @@
         {
           "name": "caption",
           "label": "Caption",
-          "format": "TEXT"
+          "format": "TEXT",
+          "useAsAuthoringLabel": true
         },
         {
           "name": "helperText",
           "label": "Helper text",
           "format": "TEXT"
+        }
+      ]
+    },
+    {
+      "label": "Read-only settings",
+      "format": "GROUP",
+      "properties": [
+        {
+          "format": "SELECT",
+          "name": "displayValue",
+          "label": "Display Value",
+          "defaultValue": "Yes/No",
+          "localize": true,
+          "splitValues": {
+            "token": "/",
+            "propertyNames": ["trueLabel", "falseLabel"]
+          },
+          "source": [
+            {
+              "key": "Yes/No",
+              "value": "Yes/No"
+            },
+            {
+              "key": "True/False",
+              "value": "True/False"
+            }
+          ]
         }
       ]
     },
@@ -59,6 +116,25 @@
           "format": "VISIBILITY"
         }
       ]
+    },
+    {
+      "label": "Advanced",
+      "format": "GROUP",
+      "collapsible": true,
+      "properties": [
+        {
+          "name": "testId",
+          "label": "Test ID",
+          "format": "TEXT",
+          "ignorePattern": "[^-_\\p{N}\\p{L}]",
+          "includeAnnotations": false
+        }
+      ]
     }
-  ]
+  ],
+  "defaultConfig": {
+    "caption": "@L $this.label",
+    "trueLabel": "@L Yes",
+    "falseLabel": "@L No"
+  }
 }
