@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 const { test, expect } = require('@playwright/test');
-const config = require('../../config');
-const common = require('../../common');
+const config = require('../../../config');
+const common = require('../../../common');
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3501/portal');
+  await page.goto(config.config.portalUrl, { waitUntil: 'networkidle' });
 });
 
 test.describe('E2E test', () => {

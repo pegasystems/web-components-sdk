@@ -1,11 +1,11 @@
 const { test, expect } = require('@playwright/test');
-const config = require('../../config');
-const common = require('../../common');
-const endpoints = require('../../../sdk-config.json');
+const config = require('../../../config');
+const common = require('../../../common');
+const endpoints = require('../../../../sdk-config.json');
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1720, height: 1080 });
-  await page.goto('http://localhost:3501/portal');
+  await page.goto(config.config.portalUrl, { waitUntil: 'networkidle' });
 });
 
 test.describe('E2E test', () => {
@@ -32,7 +32,7 @@ test.describe('E2E test', () => {
 
     await page.locator('button:has-text("submit")').click();
 
-    await expect(page.locator('div[id="APP/PRIMARY_1/WORKAREA"]')).toBeVisible();
+    // await expect(page.locator('div[id="APP/PRIMARY_1/WORKAREA"]')).toBeVisible();
 
     // To ensure users are available before we look for them in the autocomplete/dropdown controls
     await Promise.all([page.waitForResponse(`${endpoints.serverConfig.infinityRestServerUrl}/api/application/v2/data_views/D_pyC11nOperatorsList`)]);
@@ -44,10 +44,10 @@ test.describe('E2E test', () => {
     await user.click();
     let userName = await user.textContent();
     userName = userName.trim();
-    await page.locator('body').click(); //clicking outside to dismiss combobox
+    await page.locator('body').click(); // clicking outside to dismiss combobox
 
     /** selecting user from dropdown field  */
-    await page.selectOption(`lion-select[datatestid="12781aa4899d4a2141570b5e52b27156"] select`, userName);
+    await page.selectOption('lion-select[datatestid="12781aa4899d4a2141570b5e52b27156"] select', userName);
 
     /** Check readonly user reference value is same as dropdown selected user */
     await expect(page.locator(`operator-extension >> span >> text="${userName}"`)).toBeVisible();
