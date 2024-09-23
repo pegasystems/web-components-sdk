@@ -1,112 +1,112 @@
 {
-    "name": "Todo",
-    "label": "Todo",
-    "description": "My worklist widget",
-    "type": "Widget",
-    "subtype": "PAGE",
-    "properties": [
-      {
-        "name": "headerText",
-        "label": "Header text",
-        "format": "TEXT",
-        "defaultValue": "@L Tasks"
-      },
-      {
-        "label": "Include work from",
-        "format": "GROUP",
-        "properties": [
-          {
-            "name": "isMyWorklistChecked",
-            "label": "My worklist",
-            "format": "BOOLEAN",
-            "defaultValue": true
-          },
-          {
-            "name": "isReporteesWorklistChecked",
-            "label": "Worklist of Team Members",
-            "format": "BOOLEAN",
-            "defaultValue": false
-          },
-          {
-            "name": "isWorkQueueslistChecked",
-            "label": "Work Queues",
-            "format": "BOOLEAN",
-            "defaultValue": false
-          }
-        ]
-      }
-    ],
-    "defaultConfig": {
-      "target": "primary",
-      "myWorkList": {
-        "source": "@DATASOURCE D_pyMyWorkList.pxResults",
-        "fields": {
-          "operator": "@P .pxAssignedOperatorID",
-          "id": "@P .pzInsKey",
-          "name": "@P .pyLabel",
-          "value": "@P .pxRefObjectKey",
-          "priority": "@P .pxUrgencyAssign",
-          "classname": "@P .pxRefObjectClass",
-          "status": "@P .pyAssignmentStatus",
-          "stepName": "@P .pxTaskLabel",
-          "processName": "@P .pxProcessName",
-          "isMultiStep": "@P .pxIsMultiStep",
-          "businessID": "@P .pxRefObjectInsName"
+  "name": "Todo",
+  "label": "Todo",
+  "description": "My worklist widget",
+  "type": "Widget",
+  "subtype": "PAGE",
+  "properties": [
+    {
+      "name": "headerText",
+      "label": "Header text",
+      "format": "TEXT",
+      "defaultValue": "@L Tasks"
+    },
+    {
+      "label": "Include work from",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "isMyWorklistChecked",
+          "label": "My worklist",
+          "format": "BOOLEAN",
+          "defaultValue": true
+        },
+        {
+          "name": "isReporteesWorklistChecked",
+          "label": "Worklist of Team Members",
+          "format": "BOOLEAN",
+          "defaultValue": false
+        },
+        {
+          "name": "isWorkQueueslistChecked",
+          "label": "Work Queues",
+          "format": "BOOLEAN",
+          "defaultValue": false
         }
-      },
-      "reporteesList": {
-        "source": "@DATASOURCE D_pyReporteesInMyWorkGroup.pxResults",
-        "fields": {
-          "id": "@P .pzInsKey",
-          "workgroup": "@P .pyWorkGroup",
-          "name": "@P .pyLabel",
-          "classname": "@P .pxObjClass",
-          "fullName": "@P .pyUserName",
-          "userIdentifier": "@P .pyUserIdentifier",
-          "summaryCount": "@P .pyDecimalValue(1)"
-        }
-      },
-      "workbasketsList": {
-        "source": "@DATASOURCE D_pyWorkBasketsInDefaultWorkGroup.pxResults",
-        "fields": {
-          "workgroup": "@P .pyWorkGroup",
-          "name": "@P .pyLabel",
-          "classname": "@P .pxObjClass",
-          "summaryCount": "@P .pySummaryCount(1)",
-          "workbasket": "@P .pyWorkBasket"
-        }
+      ]
+    }
+  ],
+  "defaultConfig": {
+    "target": "primary",
+    "myWorkList": {
+      "source": "@DATASOURCE D_pyMyWorkList.pxResults",
+      "fields": {
+        "operator": "@P .pxAssignedOperatorID",
+        "id": "@P .pzInsKey",
+        "name": "@P .pyLabel",
+        "value": "@P .pxRefObjectKey",
+        "priority": "@P .pxUrgencyAssign",
+        "classname": "@P .pxRefObjectClass",
+        "status": "@P .pyAssignmentStatus",
+        "stepName": "@P .pxTaskLabel",
+        "processName": "@P .pxProcessName",
+        "isMultiStep": "@P .pxIsMultiStep",
+        "businessID": "@P .pxRefObjectInsName"
       }
     },
-    "overrides": {
-      "@PLATFORMNAME == 'launchpad'": {
-        "defaultConfig": {
-          "target": "primary",
-          "myWorkList": {
-            "source": "@DATASOURCE MyWorkList.pxResults",
-            "fields": {
-              "operator": "@P .UserAssigneeID",
-              "id": "@P .ID",
-              "name": "@P .Name",
-              "value": "@P .ContextID",
-              "priority": "@P .Urgency",
-              "classname": "@P .ContextClass",
-              "status": "@P .Status",
-              "stepName": "@P .TaskName",
-              "processName": "@P .ProcessName",
-              "businessID": "@P .BusinessID"
-            }
-          },
-          "workbasketsList": {
-            "source": "@DATASOURCE D_pyWorkBasketsInDefaultWorkGroup.pxResults",
-            "fields": {
-              "workgroup": "@P .pyWorkGroup",
-              "name": "@P .pyLabel",
-              "classname": "@P .pxObjClass",
-              "summaryCount": "@P .pySummaryCount(1)",
-              "workbasket": "@P .pyWorkBasket"
-            }
+    "reporteesList": {
+      "source": "@DATASOURCE D_pyReporteesInMyWorkGroup.pxResults",
+      "fields": {
+        "id": "@P .pzInsKey",
+        "workgroup": "@P .pyWorkGroup",
+        "name": "@P .pyLabel",
+        "classname": "@P .pxObjClass",
+        "fullName": "@P .pyUserName",
+        "userIdentifier": "@P .pyUserIdentifier",
+        "summaryCount": "@P .pyDecimalValue(1)"
+      }
+    },
+    "workbasketsList": {
+      "source": "@DATASOURCE D_pyWorkBasketsInDefaultWorkGroup.pxResults",
+      "fields": {
+        "workgroup": "@P .pyWorkGroup",
+        "name": "@P .pyLabel",
+        "classname": "@P .pxObjClass",
+        "summaryCount": "@P .pySummaryCount(1)",
+        "workbasket": "@P .pyWorkBasket"
+      }
+    }
+  },
+  "overrides": {
+    "@PLATFORMNAME == 'launchpad'": {
+      "defaultConfig": {
+        "target": "primary",
+        "myWorkList": {
+          "source": "@DATASOURCE MyWorkList.pxResults",
+          "fields": {
+            "operator": "@P .UserAssigneeID",
+            "id": "@P .ID",
+            "name": "@P .Name",
+            "value": "@P .ContextID",
+            "priority": "@P .Urgency",
+            "classname": "@P .ContextClass",
+            "status": "@P .Status",
+            "stepName": "@P .TaskName",
+            "processName": "@P .ProcessName",
+            "businessID": "@P .BusinessID"
+          }
+        },
+        "workbasketsList": {
+          "source": "@DATASOURCE D_pyWorkBasketsInDefaultWorkGroup.pxResults",
+          "fields": {
+            "workgroup": "@P .pyWorkGroup",
+            "name": "@P .pyLabel",
+            "classname": "@P .pxObjClass",
+            "summaryCount": "@P .pySummaryCount(1)",
+            "workbasket": "@P .pyWorkBasket"
           }
         }
       }
     }
-  }  
+  }
+}
