@@ -47,7 +47,8 @@ test.describe('E2E test', () => {
 
     await page.locator('h2:has-text("Service Date")').click();
 
-    const futureDate = common.getNextDay();
+    // getNextDay isn't working with the latest Playwright browsers.
+    const futureDate = common.getFutureDate();
     console.log('Date is: ', futureDate);
     await page.type('lion-input-dateonly[datatestid="1321FA74451B96BC02663B0EF96CCBB9"] input', futureDate);
 
