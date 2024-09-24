@@ -29,7 +29,6 @@ export const caseSummaryFieldsStyles = html`
       font-size: 0.8125rem;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.8);
-      font-family: 'Open Sans';
     }
 
     .psdk-csf-primary-field-data {
@@ -60,7 +59,6 @@ export const caseSummaryFieldsStyles = html`
       font-size: 0.8125rem;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.8);
-      font-family: 'Open Sans';
     }
 
     .psdk-csf-secondary-field-data {
@@ -72,7 +70,6 @@ export const caseSummaryFieldsStyles = html`
     span.psdk-csf-text-style {
       font-size: 1.125rem;
       font-weight: 600;
-      font-family: 'Open Sans';
     }
 
     span.psdk-csf-status-style {

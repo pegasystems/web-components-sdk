@@ -125,9 +125,7 @@ class DeferLoad extends BridgeBase {
         this.thePConn
           .getActionsApi()
           .showData(this.name, dataContext, dataContextParameters, {
-            // @ts-ignore - skipSemanticUrl should be boolean type
             skipSemanticUrl: true,
-            // @ts-ignore
             isDeferLoaded: true
           })
           .then(data => {
@@ -273,7 +271,6 @@ class DeferLoad extends BridgeBase {
     for (const key of changedProperties.keys()) {
       // check for property changes, if so, normalize and render
       if (key == 'loadData') {
-        // @ts-ignore - second parameter pageReference for getValue method should be optional
         this.loadViewCaseID = this.thePConn.getValue(this.constants.PZINSKEY) || this.thePConn.getValue(this.constants.CASE_INFO.CASE_INFO_ID);
         let containerItemData;
         const targetName = this.thePConn.getTarget();
