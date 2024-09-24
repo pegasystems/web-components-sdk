@@ -4,7 +4,7 @@ import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
 loadDefaultFeedbackMessages();
 
-const toIsoDate = d => d.toISOString().split('T')[0];
+const toIsoDate = d => d && d.toISOString().split('T')[0];
 
 @customElement('lion-input-dateonly')
 class LionInputDateOnly extends LionInputDate {
