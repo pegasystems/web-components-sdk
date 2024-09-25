@@ -162,7 +162,7 @@ export class FormComponentBase extends BridgeBase {
 
     // Always push a ValidateMessageValidator to the set of validators. This is how
     //  we get messages from "validatemessage" into the Lion validation process.
-    this.lionValidatorsArray.push(new ValidateMessageValidator());
+    this.lionValidatorsArray.push(new ValidateMessageValidator(this));
 
     if (theConfigProps.visibility != null) {
       this.bVisible = Utils.getBooleanValue(theConfigProps.visibility);
