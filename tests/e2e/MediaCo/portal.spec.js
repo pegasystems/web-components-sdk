@@ -38,10 +38,11 @@ test.describe('E2E test', () => {
     await page.locator('lion-combobox[datatestid="56E6DDD1CB6CEC596B433440DFB21C17"] input').click();
     const lionOptions = page.locator('lion-options');
     await lionOptions.locator('lion-option:has-text("Jr")').click();
-    await page.locator('body').click(); //clicking outside to dismiss combobox
+    await page.locator('body').click(); // clicking outside to dismiss combobox
 
     await page.fill('lion-input-email[datatestid="CE8AE9DA5B7CD6C3DF2929543A9AF92D"] input', 'john@doe.com');
-    const futureDate = common.getNextDay();
+    // getNextDay isn't working with the latest Playwright browsers.
+    const futureDate = common.getFutureDate();
     await page.type('lion-input-dateonly[datatestid="E0BA356AE552ACD4326D51E61F4279AC"] input', futureDate);
     await page.locator('button:has-text("Submit")').click();
 
