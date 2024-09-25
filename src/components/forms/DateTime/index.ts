@@ -112,7 +112,6 @@ class DateTime extends FormComponentBase {
           .modelValue=${dateTimeValue}
           .validators=${this.lionValidatorsArray}
           .fieldName=${this.label}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           ?readonly=${this.bReadonly}
           ?disabled=${this.bDisabled}
           @click=${this.fieldOnChange}
@@ -120,6 +119,7 @@ class DateTime extends FormComponentBase {
           @change=${this.fieldOnChange}
         >
           <span slot="label">${this.annotatedLabel}</span>
+          <span slot="feedback">${this.errorMessage}</span>
         </lion-input-datetime>
       </div>
     </div>`;

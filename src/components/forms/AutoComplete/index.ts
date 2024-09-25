@@ -318,7 +318,6 @@ class AutoComplete extends FormComponentBase {
                 .modelValue=${this.value}
                 .fieldName=${this.label}
                 .validators=${this.lionValidatorsArray}
-                .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                 show-all-on-empty
                 @focus=${this.fieldOnFocus}
                 @click=${this.fieldOnChange}
@@ -328,6 +327,7 @@ class AutoComplete extends FormComponentBase {
                 ?disabled=${this.bDisabled}
               >
                 <span slot="label">${this.annotatedLabel}</span>
+                <span slot="feedback">${this.errorMessage}</span>
                 ${this.options?.map(option => {
                   const theOptDisplay = `${option.value}`;
                   return html` <lion-option value=${option.key} .choiceValue=${option.value}> ${theOptDisplay} </lion-option>`;

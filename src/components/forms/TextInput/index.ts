@@ -85,7 +85,6 @@ class TextInput extends FormComponentBase {
             .modelValue=${this.value}
             .fieldName=${this.label}
             .validators=${this.lionValidatorsArray}
-            .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
             ?readonly=${this.bReadonly}
             ?disabled=${this.bDisabled}
             @click=${this.fieldOnChange}
@@ -93,6 +92,7 @@ class TextInput extends FormComponentBase {
             @change=${this.fieldOnChange}
           >
             <span slot="label">${this.annotatedLabel}</span>
+            <span slot="feedback">${this.errorMessage}</span>
           </lion-input>
         </div>`
       : nothing}`;

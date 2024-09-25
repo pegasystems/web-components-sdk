@@ -217,6 +217,7 @@ class CheckBox extends FormComponentBase {
                     .model-value=${{ value: element.text ?? element.value, key: element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key) }}
                     @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
                     <span slot="label">${element.text ?? element.value}</span>
+                    <span slot="feedback">${this.errorMessage}</span>
                 </lion-checkbox>
               `
           : html`
@@ -226,6 +227,7 @@ class CheckBox extends FormComponentBase {
                     .model-value=${{ value: element.text ?? element.value, key: element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key) }}
                     @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
                     <span slot="label">${element.text ?? element.value}</span>
+                    <span slot="feedback">${this.errorMessage}</span>
                 </lion-checkbox>
               `;
         listOfCheckboxes.push(content);
@@ -244,7 +246,6 @@ class CheckBox extends FormComponentBase {
                   checked
                   .fieldName=${this.label}
                   .validators=${this.lionValidatorsArray}
-                  .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                   ?readonly=${this.bReadonly}
                   ?disabled=${this.bDisabled}
                   .model-value=${{ value: this.caption, checked: this.isChecked }}
@@ -253,6 +254,7 @@ class CheckBox extends FormComponentBase {
                   @change=${this.fieldOnChange}
                 >
                   <span slot="label">${this.caption}</span>
+                  <span slot="feedback">${this.errorMessage}</span>
                 </lion-checkbox>`
               : html`
                   <lion-checkbox
@@ -260,7 +262,6 @@ class CheckBox extends FormComponentBase {
                     dataTestId=${this.testId}
                     .fieldName=${this.label}
                     .validators=${this.lionValidatorsArray}
-                    .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                     ?readonly=${this.bReadonly}
                     ?disabled=${this.bDisabled}
                     .model-value=${{ value: this.caption, checked: this.isChecked }}
@@ -269,6 +270,7 @@ class CheckBox extends FormComponentBase {
                     @change=${this.fieldOnChange}
                   >
                     <span slot="label">${this.caption}</span>
+                    <span slot="feedback">${this.errorMessage}</span>
                   </lion-checkbox>
                 `}
           </div>`

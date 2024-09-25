@@ -57,6 +57,8 @@ export class FormComponentBase extends BridgeBase {
   @property({ attribute: false, type: String }) selectionKey = '';
   @property({ attribute: false, type: String }) referenceList = '';
 
+  @property({ attribute: false, type: Object }) errorMessage;
+
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -203,11 +205,23 @@ export class FormComponentBase extends BridgeBase {
         theLionComponent.classList.add('field-needs-attention');
         // Mark as touched to force underlying component feedbackCondition (validation) call
         theLionComponent.touched = true;
+
+        this.errorMessage = html`<div id="ErrorMsg" style="color:red;">${this.getComponentProp('validatemessage')}</div>`;
+        // theLionComponent.innerHTML += `<div id="ErrorMsg"> ${this.getComponentProp('validatemessage')} </div>`
+        // theLionComponent.dirty = true;
+        // theLionComponent.errorValidators = [
+        //   {
+        //     message: this.getComponentProp('validatemessage')
+        //   }
+        // ];
+        // theLionComponent.makeInvalid();
       } else {
         // Remove any styling that a previous validatemessage may have put on the Lion element
         theLionComponent.classList.remove('field-needs-attention');
         // Mark as untouched to prevent any unnecessary feedback (ex: first entering a control)
         theLionComponent.touched = false;
+        this.errorMessage = '';
+        // theLionComponent.makeValid();
       }
     } else if (this.bLogging) {
       // This isn't usually a problem. But can be helpful when debugging if you expect to find a shadowRoot
@@ -308,6 +322,8 @@ export class FormComponentBase extends BridgeBase {
         // The component has validation feedback, add styling and exit now.
         //  Don't run rest of the checks
         meta.el.classList.add('field-needs-attention');
+        // const theLionComponent: any = this.shadowRoot?.getElementById(this.theComponentId.toString());
+        // theLionComponent.validationStates.error.message = this.getComponentProp('validatemessage');
         bRet = true;
         return bRet;
       }

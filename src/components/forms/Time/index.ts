@@ -109,13 +109,13 @@ class Time extends FormComponentBase {
                         .modelValue=${timeValue}
                         .validators = ${this.lionValidatorsArray}
                         .fieldName=${this.label}
-                        .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                         ?readonly=${this.bReadonly}
                         ?disabled=${this.bDisabled}
                         @click=${this.fieldOnChange}
                         @blur=${this.fieldOnBlur}
                         @change=${this.fieldOnChange}>
                         <span slot="label">${this.annotatedLabel}</span>
+                        <span slot="feedback">${this.errorMessage}</span>
                     </lion-input-timeoonly>
                 </div>
             </div>`;

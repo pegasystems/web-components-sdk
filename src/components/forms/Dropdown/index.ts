@@ -202,11 +202,11 @@ class Dropdown extends FormComponentBase {
                   .fieldName=${this.label}
                   .modelValue=${this.value === '' && !this.bReadonly ? 'Select' : this.value}
                   .validators = ${this.lionValidatorsArray}
-                  .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                   ?readonly=${this.bReadonly}
                   ?disabled=${this.bDisabled}
                   /* @model-value-changed=${this.fieldOnChange} */ >
                   <span slot="label">${this.annotatedLabel}</span>
+                  <span slot="feedback">${this.errorMessage}</span>
                   <select slot="input">
                     ${this.options.map(option => {
                       return html`<option value=${option.key}>

@@ -187,12 +187,12 @@ class RadioButtons extends FormComponentBase {
                 .validators=${this.lionValidatorsArray}
                 ?readonly=${this.bReadonly}
                 ?disabled=${this.bDisabled}
-                .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                 @click=${this.fieldOnChange}
                 @blur=${this.fieldOnBlur}
                 @change=${this.fieldOnChange}
               >
                 <span slot="label" class="radio-group-label">${this.annotatedLabel}</span>
+                <span slot="feedback">${this.errorMessage}</span>
                 ${this.options.map((option: any) => {
                   const val = this.thePConn.getLocalizedValue(
                     option.value,

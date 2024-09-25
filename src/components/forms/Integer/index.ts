@@ -100,7 +100,6 @@ class Integer extends FormComponentBase {
           }}"
           .modelValue=${parseInt(this.value, 10)}
           .validators=${this.lionValidatorsArray}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           ?readonly=${this.bReadonly}
           ?disabled=${this.bDisabled}
           @click=${this.fieldOnChange}
@@ -108,6 +107,7 @@ class Integer extends FormComponentBase {
           @change=${this.fieldOnChange}
         >
           <span slot="label">${this.annotatedLabel}</span>
+          <span slot="feedback">${this.errorMessage}</span>
         </lion-input-amount>`
       : nothing}`;
 

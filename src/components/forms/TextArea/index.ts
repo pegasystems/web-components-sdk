@@ -88,7 +88,6 @@ class TextArea extends FormComponentBase {
             .modelValue=${this.value}
             .fieldName=${this.label}
             .validators=${this.lionValidatorsArray}
-            .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
             rows="5"
             ?readonly=${this.bReadonly}
             ?disabled=${this.bDisabled}
@@ -97,6 +96,7 @@ class TextArea extends FormComponentBase {
             @change=${this.fieldOnChange}
           >
             <span slot="label">${this.annotatedLabel}</span>
+            <span slot="feedback">${this.errorMessage}</span>
           </lion-textarea>
         </div>`
       : nothing}`;

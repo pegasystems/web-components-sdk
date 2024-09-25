@@ -131,7 +131,6 @@ class Currency extends FormComponentBase {
           .modelValue=${parseFloat(this.value)}
           .fieldName=${this.label}
           .validators=${this.lionValidatorsArray}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           currency=${this.currencyISOCode}
           ?readonly=${this.bReadonly}
           ?disabled=${this.bDisabled}
@@ -140,6 +139,7 @@ class Currency extends FormComponentBase {
           @change=${this.fieldOnChange}
         >
           <span slot="label">${this.annotatedLabel}</span>
+          <span slot="feedback">${this.errorMessage}</span>
         </lion-input-amount>`
       : nothing}`;
 
