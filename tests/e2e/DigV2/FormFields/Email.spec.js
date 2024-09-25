@@ -42,7 +42,8 @@ test.describe('E2E test', () => {
 
     /** Required tests */
     const requiredEmail = page.locator('lion-input-email[datatestid="96fa7548c363cdd5adb29c2c2749e436"] >> input');
-    requiredEmail.fill('John@doe.com');
+    await requiredEmail.pressSequentially('John@doe.com');
+    requiredEmail.blur();
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeHidden();
 
     attributes = await common.getAttributes(requiredEmail);

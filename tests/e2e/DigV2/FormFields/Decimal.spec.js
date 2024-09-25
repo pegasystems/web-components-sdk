@@ -46,7 +46,7 @@ test.describe('E2E test', () => {
     requiredDecimal.click();
     await requiredDecimal.clear();
     await requiredDecimal.pressSequentially('12345');
-    requiredDecimal.blur();
+    // await requiredDecimal.blur();
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeHidden();
 
     attributes = await common.getAttributes(requiredDecimal);
