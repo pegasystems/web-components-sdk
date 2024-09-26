@@ -186,10 +186,12 @@ class DataReference extends BridgeBase {
 
     const refreshOptions = { autoDetectRefresh: true };
     if (this.canBeChangedInReviewMode && this.thePConn.getValue('__currentPageTabViewName')) {
+      // @ts-ignore - second parameter pageReference for getValue method should be optional
       this.thePConn.getActionsApi().refreshCaseView(caseKey, this.thePConn.getValue('__currentPageTabViewName'), null, refreshOptions);
       PCore.getDeferLoadManager().refreshActiveComponents(this.thePConn.getContextName());
     } else {
       const pgRef = this.thePConn.getPageReference().replace('caseInfo.content', '');
+      // @ts-ignore
       this.thePConn.getActionsApi().refreshCaseView(caseKey, this.viewName, pgRef, refreshOptions);
     }
 

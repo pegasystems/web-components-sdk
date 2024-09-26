@@ -117,7 +117,7 @@ class SimpleTableManual extends BridgeBase {
     //  but getRawMetadata() has each child.config with datasource and value showing their unresolved values (ex: "@P thePropName")
     //  We need to use the prop name as the "glue" to tie the Angular Material table dataSource, displayColumns and data together.
     //  So, in the code below, we'll use the unresolved config.value (but replacing the space with an underscore to keep things happy)
-    const rawMetadata = this.thePConn.getRawMetadata();
+    const rawMetadata: any = this.thePConn.getRawMetadata(); // try to remove any when getInheritedProps typedefs are fixed;;
 
     // Adapted from Nebula
     const {

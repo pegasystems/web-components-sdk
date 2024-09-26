@@ -223,7 +223,7 @@ class FlowContainer extends BridgeBase {
 
     let loadingInfo: any;
     try {
-      loadingInfo = this.thePConn.getLoadingStatus();
+      loadingInfo = this.thePConn.getLoadingStatus(''); // 1st arg empty string until typedefs properly allow optional;
     } catch (ex) {
       console.error(`${this.theComponentName}: loadingInfo catch block`);
     }
