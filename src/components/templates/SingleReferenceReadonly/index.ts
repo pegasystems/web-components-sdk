@@ -4,7 +4,7 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
-import '../../../components/forms/SemanticLink';
+import '../../../components/fields/SemanticLink';
 
 // Declare that PCore will be defined when this code is run
 

@@ -11,7 +11,7 @@ This document is a guide to help you get started adding a new component to the W
     * **index.ts**: a TypeScript file for the component's code
     * **_component-name-styles.ts_**: a Typescript file that returns a lit-element construct for the \<style> block added into the component's rendering. (subject to change)
 
-* **components/forms**: this directory is used for components that are typically placed in the context of a form. For example: TextInput, Dropdown
+* **components/fields**: this directory is used for components that are typically placed in the context of a form. For example: TextInput, Dropdown
 
 * **components/templates**: this directory is used for components that represent templates used by Views and Pages in the application. For example: CaseView, OneColumn, TwoColumn
 
