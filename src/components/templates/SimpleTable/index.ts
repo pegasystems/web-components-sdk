@@ -5,7 +5,7 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 import '../PromotedFilters';
 import { Utils } from '../../../helpers/utils';
 import './SimpleTableManual';
-import '../FieldGroupTemplate';
+import '../FieldGroupTemplates';
 
 interface SimpleTableProps {
   // If any, enter additional props that only exist on this component
