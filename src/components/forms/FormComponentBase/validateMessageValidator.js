@@ -5,33 +5,37 @@ class ValidateMessageValidator extends Validator {
   //  where the value of getCompPropFn is the object being validated's
   //  getComponentProp() function. Can call param.getCompPropFn("validatemessage")
   //  to see if there's a validatemessage value defined...
-  execute(modelValue, param) {
-    let hasFeedback = false;
-    // what's the current value of "validatemessage"
-    const theValMsg = param?.getCompPropFn('validatemessage');
-    // console.log( `ValidateMessageValidator getCompPropFn("validatemessage"): ${theValMsg}`);
-    if (theValMsg !== undefined && theValMsg !== '') {
-      // Indicate that there's feedback to be shown if there's a validatemessage
-      hasFeedback = true;
-    }
-    return hasFeedback;
+  constructor(validateMessage) {
+    super(validateMessage);
+    this.validateMessage = validateMessage;
   }
 
+  /**
+   * Executes the validation and returns a boolean indicating whether there is feedback to be shown.
+   *
+   * @returns {boolean} True if there is a validatemessage, false otherwise.
+   */
+  execute() {
+    return Boolean(this.validateMessage);
+  }
+
+  /**
+   * Returns the name of the validator.
+   *
+   * @returns {string} The name of the validator.
+   */
   static get validatorName() {
     return 'ValidateMessageValidator';
   }
 
+  /**
+   * Retrieves the validation message from the data object.
+   *
+   * @param {Object} data - Contains information from the validator, including params.
+   * @returns {string} The validation message if available, otherwise an empty string.
+   */
   static getMessage(data) {
-    // data contains all of the information from the validator
-    //  including the params (that includes our getComponentProp function)
-    //  NOTE: trying to save validatemessage a class variable didn't work.
-    const theValMsg = data.params?.getCompPropFn('validatemessage');
-    let theRetMsg = '';
-    if (theValMsg !== undefined && theValMsg !== '') {
-      theRetMsg = theValMsg;
-    }
-
-    return theRetMsg;
+    return data.params ?? '';
   }
 }
 

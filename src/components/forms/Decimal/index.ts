@@ -92,7 +92,7 @@ class Decimal extends FormComponentBase {
             .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
             ?readonly=${this.bReadonly}
             ?disabled=${this.bDisabled}
-            @click=${this.fieldOnClick}
+            @click=${this.fieldOnChange}
             @blur=${this.fieldOnBlur}
             @change=${this.fieldOnChange}
           >

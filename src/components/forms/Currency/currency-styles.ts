@@ -8,5 +8,8 @@ export const currencyStyles = html`
       background-color: orange;
     }
 */
+    input {
+      text-align: left;
+    }
   </style>
 `;
