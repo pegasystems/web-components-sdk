@@ -27,7 +27,12 @@ const fetchMyWorkList = (datapage, fields, numberOfRecords, includeTotalCount, c
         pageSize: numberOfRecords
       },
       {
-        select: Object.keys(fields).map(key => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) }))
+        select: Object.keys(fields).map(key => ({ field: PCore.getAnnotationUtils().getPropertyName(fields[key]) })),
+        sortBy: [
+          { field: 'pxUrgencyAssign', type: 'DESC' },
+          { field: 'pxDeadlineTime', type: 'ASC' },
+          { field: 'pxCreateDateTime', type: 'DESC' }
+        ]
       },
       {
         invalidateCache: true,
