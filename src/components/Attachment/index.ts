@@ -174,10 +174,14 @@ class Attachment extends BridgeBase {
     this.att_valueRef = this.att_valueRef.indexOf('.') === 0 ? this.att_valueRef.substring(1) : this.att_valueRef;
     this.displayMode = displayMode;
 
+    const rawValue = this.thePConn.getComponentConfig().value;
+    const isAttachmentAnnotationPresent = typeof rawValue === 'object' ? false : rawValue?.includes('@ATTACHMENT');
+    const { attachments } = isAttachmentAnnotationPresent ? value : PCore.getAttachmentUtils().prepareAttachmentData(value);
+
     let fileTemp: any = {};
 
-    if (value && value.pxResults && +value.pyCount > 0) {
-      fileTemp = this.buildFilePropsFromResponse(value.pxResults[0]);
+    if (attachments && attachments.length > 0) {
+      fileTemp = attachments[0];
 
       if (fileTemp.responseProps) {
         if (!this.thePConn.attachmentsInfo) {
@@ -188,10 +192,11 @@ class Attachment extends BridgeBase {
           };
         }
 
-        if (fileTemp.responseProps.pzInsKey && !fileTemp.responseProps.pzInsKey.includes('temp')) {
-          fileTemp.props.type = fileTemp.responseProps.pyMimeFileExtension;
-          fileTemp.props.mimeType = fileTemp.responseProps.pyMimeFileExtension;
-          fileTemp.props.ID = fileTemp.responseProps.pzInsKey;
+        if (fileTemp.responseProps.ID && !fileTemp.responseProps.ID.includes('temp')) {
+          fileTemp.props.type = fileTemp.responseProps.mimeType;
+          fileTemp.props.mimeType = fileTemp.responseProps.mimeType;
+          fileTemp.props.ID = fileTemp.responseProps.ID;
+          fileTemp.props.meta = 'File uploaded successfully';
 
           // create the actions for the "more" menu on the attachment
           const arMenuList: any = [];
@@ -315,7 +320,9 @@ class Attachment extends BridgeBase {
     if (this.arFileList.length > 0 && this.displayMode !== 'DISPLAY_ONLY') {
       const currentAttachmentList = this.getCurrentAttachmentsList(this.getAttachmentKey(this.att_valueRef), this.thePConn.getContextName());
       // block duplicate files to redux store when added 1 after another to prevent multiple duplicates being added to the case on submit
-      const tempFiles = this.arFileList.filter(f => currentAttachmentList.findIndex(fr => fr.ID === f.ID) === -1 && !this.bLoading);
+      const tempFiles = this.arFileList.filter(
+        f => currentAttachmentList.findIndex(fr => fr.ID === f.ID) === -1 && !this.bLoading && f.responseProps
+      );
       const updatedAttList = [...currentAttachmentList, ...tempFiles];
       this.updateAttachmentState(this.thePConn, this.getAttachmentKey(this.att_valueRef), updatedAttList);
     }
