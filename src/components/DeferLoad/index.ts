@@ -102,6 +102,7 @@ class DeferLoad extends BridgeBase {
           .getActionsApi()
           .showData(this.name, dataContext, dataContextParameters, {
             skipSemanticUrl: true,
+            // @ts-ignore
             isDeferLoaded: true
           })
           .then(data => {
@@ -114,6 +115,7 @@ class DeferLoad extends BridgeBase {
       // Rendering defer loaded tabs in case/ page context
       this.thePConn
         .getActionsApi()
+        // @ts-ignore
         .loadView(encodeURI(this.loadViewCaseID), this.name, this.getViewOptions())
         .then(data => {
           this.onResponse(data);
@@ -121,6 +123,7 @@ class DeferLoad extends BridgeBase {
     } else {
       this.thePConn
         .getActionsApi()
+        // @ts-ignore argument null is not assignable to type string
         .refreshCaseView(encodeURI(this.loadViewCaseID), this.name, null)
         .then(data => {
           this.onResponse(data.root);

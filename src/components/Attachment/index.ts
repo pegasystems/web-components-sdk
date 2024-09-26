@@ -184,7 +184,9 @@ class Attachment extends BridgeBase {
       fileTemp = attachments[0];
 
       if (fileTemp.responseProps) {
+        // @ts-ignore - Property 'attachmentsInfo' does not exist on type 'C11nEnv'
         if (!this.thePConn.attachmentsInfo) {
+          // @ts-ignore - Property 'attachmentsInfo' does not exist on type 'C11nEnv'
           this.thePConn.attachmentsInfo = {
             type: 'File',
             attachmentFieldName: this.att_valueRef,
@@ -370,6 +372,7 @@ class Attachment extends BridgeBase {
     const fileIndex = this.arFileList.findIndex(element => element?.id === item?.id);
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       if (this.value && this.value.pxResults[0]) {
+        // @ts-ignore - Property 'attachmentsInfo' does not exist on type 'C11nEnv'
         this.thePConn.attachmentsInfo = {
           type: 'File',
           attachmentFieldName: this.att_valueRef,
@@ -442,6 +445,7 @@ class Attachment extends BridgeBase {
               category: this.att_categoryName,
               ID: fileRes.ID
             };
+            // @ts-ignore - Property 'attachmentsInfo' does not exist on type 'C11nEnv'
             this.thePConn.attachmentsInfo = reqObj;
           } else {
             reqObj = {

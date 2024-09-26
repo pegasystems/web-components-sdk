@@ -120,7 +120,7 @@ class View extends BridgeBase {
     }
     this.title = 'title' in configProps ? configProps.title : '';
 
-    const inheritedProps$ = this.thePConn.getInheritedProps();
+    const inheritedProps$: any = this.thePConn.getInheritedProps(); // try to remove any when getInheritedProps typedefs are fixed
 
     // We need to bind this component's additionalProps (defined on BridgeBase)
     //  to this implementation's computeAdditionalProps
