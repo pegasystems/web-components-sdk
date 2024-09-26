@@ -26,8 +26,8 @@ import '../forms/TextInput';
 import '../forms/Time';
 import '../forms/URL';
 import '../forms/UserReference';
-import '../templates/Details';
-import '../templates/DetailsTwoColumn';
+import '../templates/details/Details';
+import '../templates/details/DetailsTwoColumn';
 import '../Attachment';
 
 @customElement('region-component')
