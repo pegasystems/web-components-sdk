@@ -67,22 +67,6 @@ class DeferLoad extends BridgeBase {
 
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
-
-    PCore.getPubSubUtils().subscribe(
-      PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL,
-      () => {
-        this.loadActiveTab();
-      },
-      'loadActiveTab'
-    );
-
-    PCore.getPubSubUtils().subscribe(
-      PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
-      () => {
-        this.loadActiveTab();
-      },
-      'loadActiveTab'
-    );
   }
 
   disconnectedCallback() {
@@ -91,28 +75,20 @@ class DeferLoad extends BridgeBase {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: disconnectedCallback`);
     }
-    if (this.bDebug) {
-      debugger;
-    }
-
-    PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.EVENT_CANCEL, 'loadActiveTab');
-
-    PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, 'loadActiveTab');
   }
 
   /**
-   * updateSelf
+   * The `onStateChange()` method will be called when the state is updated.
+   *  Override this method in each class that extends BridgeBase.
+   *  This implementation can be used for common code that should be done for
+   *  all components that are derived from BridgeBase
    */
-  updateSelf() {
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: updateSelf`);
+  onStateChange() {
+    const theRequestedAssignment = this.thePConn.getValue(PCore.getConstants().CASE_INFO.ASSIGNMENT_LABEL);
+    if (theRequestedAssignment !== this.currentLoadedAssignment) {
+      this.currentLoadedAssignment = theRequestedAssignment;
+      this.loadActiveTab();
     }
-    if (this.bDebug) {
-      debugger;
-    }
-
-    //  JA - Already handled by the check in "updated" callback. Calling again seems to cause race condition
-    // this.loadActiveTab();
   }
 
   loadActiveTab() {
@@ -196,27 +172,6 @@ class DeferLoad extends BridgeBase {
     this.requestUpdate();
   }
 
-  /**
-   * The `onStateChange()` method will be called when the state is updated.
-   *  Override this method in each class that extends BridgeBase.
-   *  This implementation can be used for common code that should be done for
-   *  all components that are derived from BridgeBase
-   */
-  onStateChange() {
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: onStateChange`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
-
-    const bShouldUpdate = super.shouldComponentUpdate();
-
-    if (bShouldUpdate) {
-      this.updateSelf();
-    }
-  }
-
   getDeferLoadHtml(): any {
     const arComponent: any[] = [];
 
@@ -268,31 +223,29 @@ class DeferLoad extends BridgeBase {
   }
 
   willUpdate(changedProperties) {
-    for (const key of changedProperties.keys()) {
-      // check for property changes, if so, normalize and render
-      if (key == 'loadData') {
-        this.loadViewCaseID = this.thePConn.getValue(this.constants.PZINSKEY) || this.thePConn.getValue(this.constants.CASE_INFO.CASE_INFO_ID);
-        let containerItemData;
-        const targetName = this.thePConn.getTarget();
-        if (targetName) {
-          this.containerName = PCore.getContainerUtils().getActiveContainerItemName(targetName);
-          containerItemData = PCore.getContainerUtils().getContainerItemData(targetName, this.containerName);
-        }
-        const { CASE, PAGE, DATA } = this.constants.RESOURCE_TYPES;
-        this.CASE = CASE;
-        this.PAGE = PAGE;
-        this.DATA = DATA;
-
-        const { resourceType = this.CASE } = containerItemData || { resourceType: this.loadViewCaseID ? this.CASE : this.PAGE };
-        this.resourceType = resourceType;
-        this.isContainerPreview = /preview_[0-9]*/g.test(this.thePConn.getContextName());
-
-        const theConfigProps: any = this.thePConn.getConfigProps();
-        this.deferLoadId = theConfigProps.deferLoadId;
-        this.name = this.name || theConfigProps.name;
-
-        this.loadActiveTab();
+    if (changedProperties.has('loadData')) {
+      // @ts-ignore - second parameter pageReference for getValue method should be optional
+      this.loadViewCaseID = this.thePConn.getValue(this.constants.PZINSKEY) || this.thePConn.getValue(this.constants.CASE_INFO.CASE_INFO_ID);
+      let containerItemData;
+      const targetName = this.thePConn.getTarget();
+      if (targetName) {
+        this.containerName = PCore.getContainerUtils().getActiveContainerItemName(targetName);
+        containerItemData = PCore.getContainerUtils().getContainerItemData(targetName, this.containerName);
       }
+      const { CASE, PAGE, DATA } = this.constants.RESOURCE_TYPES;
+      this.CASE = CASE;
+      this.PAGE = PAGE;
+      this.DATA = DATA;
+
+      const { resourceType = this.CASE } = containerItemData || { resourceType: this.loadViewCaseID ? this.CASE : this.PAGE };
+      this.resourceType = resourceType;
+      this.isContainerPreview = /preview_[0-9]*/g.test(this.thePConn.getContextName());
+
+      const theConfigProps: any = this.thePConn.getConfigProps();
+      this.deferLoadId = theConfigProps.deferLoadId;
+      this.name = this.name || theConfigProps.name;
+
+      this.loadActiveTab();
     }
   }
 }
