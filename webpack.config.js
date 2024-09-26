@@ -150,6 +150,12 @@ module.exports = (env, argv) => {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist')
     },
+    experiments: {
+      asyncWebAssembly: true,
+      syncWebAssembly: true,
+      layers: true,
+      topLevelAwait: true
+    },
     module: {
       rules: [
         {
