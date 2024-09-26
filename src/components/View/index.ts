@@ -6,14 +6,14 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 import '../templates/AppShell';
 import '../templates/TwoColumnPage';
 import '../FlowContainer';
-import '../templates/Forms/OneColumn';
+import '../templates/forms/OneColumn';
 import '../templates/OneColumnTab';
 import '../templates/WideNarrowPage';
 import '../Stages';
 import '../Boilerplate';
 import '../templates/CaseSummary';
 import '../DeferLoad';
-import '../templates/Forms/DefaultForm';
+import '../templates/forms/DefaultForm';
 import '../templates/DataReference';
 import '../templates/SimpleTable';
 
