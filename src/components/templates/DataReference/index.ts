@@ -3,10 +3,10 @@ import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../SimpleTableSelect';
-import '../../forms/Dropdown';
+import '../../fields/Dropdown';
 import '../MultiReferenceReadonly';
 import '../SingleReferenceReadonly';
-import '../../forms/SemanticLink';
+import '../../fields/SemanticLink';
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
