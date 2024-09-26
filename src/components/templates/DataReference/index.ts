@@ -29,7 +29,7 @@ class DataReference extends BridgeBase {
   isDisplayModeEnabled: Boolean = false;
   propsToUse: any = {};
   rawViewMetadata: any = {};
-  viewName: String = '';
+  viewName = '';
   firstChildMeta: any = {};
   refList: any;
   canBeChangedInReviewMode: Boolean = false;
@@ -191,7 +191,6 @@ class DataReference extends BridgeBase {
       PCore.getDeferLoadManager().refreshActiveComponents(this.thePConn.getContextName());
     } else {
       const pgRef = this.thePConn.getPageReference().replace('caseInfo.content', '');
-      // @ts-ignore
       this.thePConn.getActionsApi().refreshCaseView(caseKey, this.viewName, pgRef, refreshOptions);
     }
 

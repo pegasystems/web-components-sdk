@@ -126,7 +126,7 @@ class DeferLoad extends BridgeBase {
           .getActionsApi()
           .showData(this.name, dataContext, dataContextParameters, {
             skipSemanticUrl: true,
-            // @ts-ignore
+            // @ts-ignore required because isDeferLoaded property is not available
             isDeferLoaded: true
           })
           .then(data => {
@@ -139,7 +139,6 @@ class DeferLoad extends BridgeBase {
       // Rendering defer loaded tabs in case/ page context
       this.thePConn
         .getActionsApi()
-        // @ts-ignore
         .loadView(encodeURI(this.loadViewCaseID), this.name, this.getViewOptions())
         .then(data => {
           this.onResponse(data);
@@ -162,8 +161,8 @@ class DeferLoad extends BridgeBase {
     viewContext: this.resourceType,
     // @ts-ignore - parameter “contextName” for getDataObject method should be optional
     pageClass: this.loadViewCaseID ? '' : this.pConn$.getDataObject().pyPortal.classID,
-    container: this.isContainerPreview ? 'preview' : null,
-    containerName: this.isContainerPreview ? 'preview' : null,
+    container: this.isContainerPreview ? 'preview' : undefined,
+    containerName: this.isContainerPreview ? 'preview' : undefined,
     updateData: this.isContainerPreview
   });
 

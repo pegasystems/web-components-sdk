@@ -120,8 +120,7 @@ class ListView extends BridgeBase {
     const theConfigProps = this.thePConn?.getConfigProps();
     if (theConfigProps) {
       this.selectionMode = theConfigProps.selectionMode;
-      // @ts-ignore
-      const componentConfig: any = this.thePConn.getRawMetadata().config; // try to remove any when getInheritedProps typedefs are fixed;
+      const componentConfig: any = this.thePConn.getRawMetadata()?.config; // try to remove any when getInheritedProps typedefs are fixed;
       const refList = theConfigProps.referenceList;
       const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
       workListData.then((workListJSON: any) => {
