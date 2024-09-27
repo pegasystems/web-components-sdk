@@ -62,7 +62,7 @@ class UserReference extends FormComponentBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

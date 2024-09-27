@@ -22,7 +22,7 @@ class WideNarrowPage extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

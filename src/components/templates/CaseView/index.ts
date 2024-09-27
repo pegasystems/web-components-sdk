@@ -67,7 +67,7 @@ class CaseView extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {
@@ -87,9 +87,9 @@ class CaseView extends BridgeBase {
 
     // Initialize this.mainData, tabData,caseTabs etc. on initialization ONLY
     if (!this.displayOnlyFA) {
-      for (const child of this.children) {
+      for (const child of this.theChildren) {
         const childPConn = child.getPConnect();
-        if (childPConn.getRawMetadata().name === 'Tabs') {
+        if (childPConn?.getRawMetadata()?.name === 'Tabs') {
           this.mainTabs = child;
           this.mainTabData = this.mainTabs.getPConnect().getChildren();
         }
@@ -98,13 +98,13 @@ class CaseView extends BridgeBase {
       this.mainTabs
         .getPConnect()
         .getChildren()
-        ?.forEach((child, i) => {
+        ?.forEach((child: { getPConnect: () => typeof PConnect }, i: number) => {
           const config = child.getPConnect().resolveConfigProps(child.getPConnect().getRawMetadata()).config;
           // eslint-disable-next-line prefer-const
           let { label, inheritedProps, visibility } = config;
 
           if (!label) {
-            inheritedProps.forEach(inProp => {
+            inheritedProps.forEach((inProp: { prop: string; value: string }) => {
               if (inProp.prop === 'label') {
                 label = inProp.value;
               }
@@ -115,7 +115,7 @@ class CaseView extends BridgeBase {
             this.caseTabs.push({ name: label, id: i });
             // To make first visible tab display at the beginning
             if (!this.tabData) {
-              this.tabData = { type: 'DeferLoad', config: child.getPConnect().getRawMetadata().config };
+              this.tabData = { type: 'DeferLoad', config: child.getPConnect().getRawMetadata()?.config };
             }
           }
         });
@@ -200,7 +200,7 @@ class CaseView extends BridgeBase {
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
-  getChildRegionArray(inName: String): Object[] {
+  getChildRegionArray(inName: string): Object[] {
     if (this.bDebug) {
       debugger;
     }
@@ -208,26 +208,28 @@ class CaseView extends BridgeBase {
     let iFound = 0;
 
     // if no children, return theRetArray since nothing will be added...
-    if (!this.children) {
+    if (!this.theChildren) {
       return theRetArray;
     }
 
-    for (const child of this.children) {
-      const theMetadataType: string = child.getPConnect().getRawMetadata().type.toLowerCase();
+    for (const child of this.theChildren) {
+      if (child.getPConnect) {
+        const theMetadataType: string | undefined = child.getPConnect().getRawMetadata()?.type?.toLowerCase();
 
-      // Addition of Reference component results in 2 possible components to render...
-      if (theMetadataType === 'region') {
-        // If the type is a Reference, there will not be a 'name'
-        const theMetadataName: string = child.getPConnect().getRawMetadata().name.toLowerCase();
+        // Addition of Reference component results in 2 possible components to render...
+        if (theMetadataType && theMetadataType === 'region') {
+          // If the type is a Reference, there will not be a 'name'
+          const theMetadataName: string | undefined = child.getPConnect().getRawMetadata()?.name?.toLowerCase();
 
-        if (theMetadataName === inName) {
-          iFound++;
-          theRetArray.push(html`<region-component .pConn=${child.getPConnect()}></region-component>`);
+          if (theMetadataName && theMetadataName === inName) {
+            iFound++;
+            theRetArray.push(html`<region-component .pConn=${child.getPConnect()}></region-component>`);
+          }
+        } else if (theMetadataType === 'reference') {
+          theRetArray.push(html`<reference-component .pConn=${child.getPConnect()}></reference-component>`);
+        } else {
+          console.error(`${this.theComponentName}: getChildRegionArray got unexpected: ${theMetadataType}`);
         }
-      } else if (theMetadataType === 'reference') {
-        theRetArray.push(html`<reference-component .pConn=${child.getPConnect()}></reference-component>`);
-      } else {
-        console.error(`${this.theComponentName}: getChildRegionArray got unexpected: ${theMetadataType}`);
       }
     }
 

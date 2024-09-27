@@ -7,13 +7,14 @@ import '../../fields/Dropdown';
 import '../MultiReferenceReadonly';
 import '../SingleReferenceReadonly';
 import '../../fields/SemanticLink';
+import { BrowserEvent } from '@pega/pcore-pconnect-typedefs/globals';
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
 @customElement('data-reference-component')
 class DataReference extends BridgeBase {
-  @property({ attribute: false, type: String }) label = undefined;
-  @property({ attribute: false, type: String }) showLabel = undefined;
+  @property({ attribute: false, type: String }) label!: string;
+  @property({ attribute: false, type: String }) showLabel!: string;
   @property({ attribute: false, type: String }) displayMode = '';
   @property({ attribute: false, type: Boolean }) allowAndPersistChangesInReviewMode = false;
   @property({ attribute: false, type: String }) referenceType = '';
@@ -25,15 +26,15 @@ class DataReference extends BridgeBase {
 
   // Vars from Cosmos React DX Component implementation
   childrenToRender: any[] = [];
-  dropDownDataSource: String = '';
-  isDisplayModeEnabled: Boolean = false;
+  dropDownDataSource = '';
+  isDisplayModeEnabled = false;
   propsToUse: any = {};
   rawViewMetadata: any = {};
-  viewName: String = '';
+  viewName = '';
   firstChildMeta: any = {};
   refList: any;
-  canBeChangedInReviewMode: Boolean = false;
-  propName: String = '';
+  canBeChangedInReviewMode = false;
+  propName = '';
   displaySingleRef = false;
   displayMultiref = false;
   firstChildPConnect: any;
@@ -50,7 +51,7 @@ class DataReference extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {
@@ -79,7 +80,7 @@ class DataReference extends BridgeBase {
     this.parameters = theConfigProps.parameters;
     this.hideLabel = theConfigProps.hideLabel;
 
-    this.childrenToRender = this.children;
+    this.childrenToRender = this.theChildren;
     this.isDisplayModeEnabled = ['LABELS_LEFT', 'STACKED_LARGE_VAL'].includes(this.displayMode);
 
     this.propsToUse = { label: this.label, showLabel: this.showLabel, ...this.thePConn.getInheritedProps() };
@@ -174,19 +175,19 @@ class DataReference extends BridgeBase {
       // Only include the views region for rendering when it has content
       const viewsRegion = this.rawViewMetadata.children[1];
       if (viewsRegion?.name === 'Views' && viewsRegion.children.length) {
-        this.childrenToRender = [theRecreatedFirstChild, ...this.children.slice(1)];
+        this.childrenToRender = [theRecreatedFirstChild, ...this.theChildren.slice(1)];
       } else {
         this.childrenToRender = [theRecreatedFirstChild];
       }
     }
   }
 
-  handleSelection = event => {
+  handleSelection = (event: unknown) => {
     const caseKey = this.thePConn.getCaseInfo().getKey();
 
     const refreshOptions = { autoDetectRefresh: true };
     if (this.canBeChangedInReviewMode && this.thePConn.getValue('__currentPageTabViewName')) {
-      this.thePConn.getActionsApi().refreshCaseView(caseKey, this.thePConn.getValue('__currentPageTabViewName'), null, refreshOptions);
+      this.thePConn.getActionsApi().refreshCaseView(caseKey, this.thePConn.getValue('__currentPageTabViewName'), '', refreshOptions);
       PCore.getDeferLoadManager().refreshActiveComponents(this.thePConn.getContextName());
     } else {
       const pgRef = this.thePConn.getPageReference().replace('caseInfo.content', '');

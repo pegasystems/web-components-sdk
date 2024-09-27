@@ -55,7 +55,7 @@ class DefaultForm extends FormTemplateBase {
     }
 
     // repoint children before getting templateArray
-    this.children = this.children[0].getPConnect().getChildren();
+    this.theChildren = this.theChildren[0].getPConnect().getChildren();
 
     return html` <div class="${divClass}">${this.getChildTemplateArray()}</div> `;
   }

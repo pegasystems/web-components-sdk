@@ -17,7 +17,7 @@ class NotSupported extends BridgeBase {
     }
 
     this.strToDisplay = `${this.theComponentName}`;
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   // Define standard LitElement property getters here. This sets up the

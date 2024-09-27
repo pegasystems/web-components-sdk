@@ -97,7 +97,7 @@ class ToDo extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

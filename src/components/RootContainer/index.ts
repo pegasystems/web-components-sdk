@@ -39,7 +39,7 @@ class RootContainer extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
     this.createdPConnect = null;
   }
 
@@ -163,7 +163,7 @@ class RootContainer extends BridgeBase {
       // flow container when to init
       window.sessionStorage.setItem('okToInitFlowContainer', 'true');
 
-      const theChildren = this.children;
+      const theChildren = this.theChildren;
       if (theChildren && theChildren.length == 1) {
         // this.createdPConnect =  theChildren[0];
         // this.createdPConnect = null;
@@ -264,14 +264,14 @@ class RootContainer extends BridgeBase {
     this.prepareForRender(this.displayOnlyFA);
 
     if (this.createdPConnect !== null) {
-      if (this.children === null) {
+      if (this.theChildren === null) {
         // initialize if necessary
-        this.children = [];
+        this.theChildren = [];
       }
 
       // push the created PConnect onto this.children
-      this.children.push(this.createdPConnect);
-    } else if (this.children === null) {
+      this.theChildren.push(this.createdPConnect);
+    } else if (this.theChildren === null) {
       if (this.bLogging) {
         console.log(`${this.theComponentName}: nothing to render`);
       }

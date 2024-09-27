@@ -62,7 +62,7 @@ class Details extends DetailsTemplateBase {
     }
 
     // get primary and secodary fields
-    for (const kid of this.children) {
+    for (const kid of this.theChildren) {
       this.arFields = [];
       const pKid = kid.getPConnect();
       const fields = pKid.getChildren();

@@ -69,7 +69,7 @@ class ListView extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
     this.fields = [];
     this.displayedColumns = [];
     this.columnHeaders = [];

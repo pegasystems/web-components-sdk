@@ -54,10 +54,10 @@ class DetailsTwoColumn extends DetailsTemplateBase {
       }
     }
 
-    for (const kid of this.children) {
+    for (const kid of this.theChildren) {
       const pKid = kid.getPConnect();
       const pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
-      if (this.children.indexOf(kid) == 0) {
+      if (this.theChildren.indexOf(kid) == 0) {
         this.arFields = pKidData.children;
       } else {
         this.arFields2 = pKidData.children;

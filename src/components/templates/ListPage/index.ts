@@ -27,7 +27,7 @@ class ListPage extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

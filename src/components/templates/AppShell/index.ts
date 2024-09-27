@@ -47,7 +47,7 @@ class AppShell extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
     this.appName = PCore.getEnvironmentInfo().getApplicationName();
   }
 
@@ -76,14 +76,14 @@ class AppShell extends BridgeBase {
     // @ts-ignore - Property 'pyCaseTypesAvailableToCreateDP' does not exist on type pxApplication
     const caseTypesAvailableToCreateDP = PCore.getEnvironmentInfo().environmentInfoObject?.pxApplication?.pyCaseTypesAvailableToCreateDP;
     if (caseTypesAvailableToCreateDP) {
-      const portalID = this.pConn.getPConnect().getValue('.pyOwner');
+      const portalID = this.thePConn.getValue('.pyOwner');
       PCore.getDataPageUtils()
-        .getPageDataAsync(caseTypesAvailableToCreateDP, this.pConn.getPConnect().getContextName(), {
+        .getPageDataAsync(caseTypesAvailableToCreateDP, this.thePConn.getContextName(), {
           PortalName: portalID
         })
         .then((response: any) => {
           if (response?.pyCaseTypesAvailableToCreate) {
-            this.pConn.getPConnect().replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
+            this.thePConn.replaceState('.pyCaseTypesAvailableToCreate', response.pyCaseTypesAvailableToCreate, {
               skipDirtyValidation: true
             });
           }
@@ -124,7 +124,7 @@ class AppShell extends BridgeBase {
     }
 
     this.caseTypes = this.configProps.caseTypes;
-    this.children = this.thePConn.getChildren();
+    this.theChildren = this.thePConn.getChildren();
   }
 
   /**

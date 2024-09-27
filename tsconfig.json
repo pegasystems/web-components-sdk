@@ -33,7 +33,7 @@
         "strict": true
       }
     ],
-    "types": ["@pega/pcore-pconnect-typedefs", "lit", "lit-html", "dayjs"]
+    "types": ["@pega/pcore-pconnect-typedefs", "lit", "lit-html", "dayjs","@lit/reactive-element", "@lit-labs/ssr-dom-shim", "lit-element"]
   },
   "include": ["src/*.ts", "src/**/*.js", "src/**/*.ts"]
 }

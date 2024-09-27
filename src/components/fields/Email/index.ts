@@ -23,7 +23,7 @@ class Email extends FormComponentBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

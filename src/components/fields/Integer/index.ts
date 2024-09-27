@@ -26,7 +26,7 @@ class Integer extends FormComponentBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

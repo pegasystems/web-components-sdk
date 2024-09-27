@@ -31,7 +31,7 @@ class CaseHistory extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
     this.fields = [];
 
     this.rowData = [];

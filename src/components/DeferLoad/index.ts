@@ -48,7 +48,7 @@ class DeferLoad extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
     this.constants = PCore.getConstants();
     this.isContainerPreview = false;
   }

@@ -28,7 +28,7 @@ class PreviewViewContainer extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {
@@ -119,7 +119,7 @@ class PreviewViewContainer extends BridgeBase {
 
     // No point in showing loading indicator if there are no children since nothing is really loading
     //  and there's no "container" div to center the indicator.
-    if (this.children !== null && showLoadingIndicator) {
+    if (this.theChildren !== null && showLoadingIndicator) {
       this.renderTemplates.push(html`<progress-extension id="${this.theComponentId}"></progress-extension>`);
     }
 

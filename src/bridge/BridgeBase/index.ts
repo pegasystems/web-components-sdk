@@ -1,15 +1,16 @@
 /* eslint-disable sonarjs/max-switch-cases */
 // Lion doc - https://lion-web.netlify.app/docs/systems/core/overview/ - says
 //  best practice to ensure compatible versions is to import LitElement from lit
-import { LitElement, html, nothing } from 'lit';
+import { LitElement, PropertyValues, TemplateResult, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import * as isEqual from 'fast-deep-equal';
-import Utils from '../../helpers/utils';
+// import Utils from '../../helpers/utils';
 import { bootstrapStyles } from './bootstrap-styles';
+// import { Component } from '@pega/pcore-pconnect-typedefs/globals';
 
 export class BridgeBase extends LitElement {
   // bootstrapStyles is a (very slightly modified) version of a minified Bootstrap CSS file
-  static styles = [bootstrapStyles];
+  static readonly styles = [bootstrapStyles];
 
   @property({ attribute: false, type: Boolean }) bDebug = false; // can override at the component level to turn on debugger statements
   @property({ attribute: false, type: Boolean }) bLogging = false; // can override at the component level to turn on logging statements
@@ -20,26 +21,33 @@ export class BridgeBase extends LitElement {
   @property({ attribute: false, type: String }) baseComponentName = 'BridgeBase'; // Name of this particular component
 
   @property({ attribute: false }) theComponentId: number = Date.now(); // in case we need a unique ID for this component
-  @property({ attribute: false, type: Function }) storeUnsubscribe: Function;
-  @property({ attribute: false, type: String }) validateMessage;
-  @property({ attribute: false, type: Object }) theComponentStyleTemplate: any = nothing; // Any styling lit-html template that should be added to renderTemplates
+  @property({ attribute: false, type: Object }) storeUnsubscribe: Function;
+  @property({ attribute: false, type: String }) validateMessage = '';
+  @property({ attribute: false, type: Object }) theComponentStyleTemplate!: TemplateResult; // Any styling lit-html template that should be added to renderTemplates
 
-  @property({ attribute: false, type: Object }) thePConn; // Normalize incoming pConn to a PConnect object
-  @property({ attribute: false, type: Object }) children;
-  @property({ attribute: false, type: Object }) renderTemplates; // Array of lit-html templates to be rendered
+  @property({ attribute: false, type: Object }) thePConn!: typeof PConnect; // Normalize incoming pConn to a PConnect object
+  @property({ attribute: false, type: Array }) theChildren: {
+    getPConnect: () => typeof PConnect;
+  }[] = [];
 
-  @property({ attribute: false, type: Object }) additionalProps; // optionally added by derived component as Object or Function
+  @property({ attribute: false, type: Array }) renderTemplates: (TemplateResult | typeof nothing)[]; // Array of lit-html templates to be rendered
 
-  @property({ attribute: false, type: Object }) actions; // populated with actions object for this component (PConnect.getActions())
+  @property({ attribute: false, type: Object }) additionalProps!: Object | Function; // optionally added by derived component as Object or Function
+
+  @property({ attribute: false, type: Object }) actions!: any; // populated with actions object for this component (PConnect.getActions())
 
   // Common PConnect object (coming in as a LitElement property attribute - .pConn) for all components derived from BridgeBase
   @property({
     attribute: true,
     type: Object /* , hasChanged: BridgeBase.hasPropsChanged */
   })
-  pConn; // will either be a PConnect object or have a getPConnect() function
+  pConn!: typeof PConnect | { getPConnect: () => typeof PConnect }; // will either be a PConnect object or have a getPConnect() function
 
   localCallback: Function = () => {};
+
+  isGetPConnect(pConn: typeof PConnect | { getPConnect: () => typeof PConnect }): pConn is { getPConnect: () => typeof PConnect } {
+    return (pConn as { getPConnect: () => typeof PConnect }).getPConnect !== undefined;
+  }
 
   //  Note: BridgeBase constructor has 2 optional args:
   //  1st: inDebug - sets this.bLogging: false if not provided
@@ -148,7 +156,7 @@ export class BridgeBase extends LitElement {
    *
    * @param changedProperties
    */
-  willUpdate(changedProperties) {
+  willUpdate(changedProperties: PropertyValues) {
     for (const key of changedProperties.keys()) {
       // check if pConn property has changed, if so, normalize and render
       if (key === 'pConn' && this.pConn) {
@@ -180,23 +188,31 @@ export class BridgeBase extends LitElement {
     //  If the incoming pConn doesn't meet the criteria, we set this.thePConn to null
     //    and later on in this function, we don't try to get its children (since there aren't any)
     //  in every component derived from BridgeBase
-    if (this.pConn?.getPConnect !== undefined && typeof this.pConn.getPConnect === 'function') {
+
+    if (this.pConn && this.isGetPConnect(this.pConn)) {
       this.thePConn = this.pConn.getPConnect();
-    } else if (this.pConn?.getChildren && typeof this.pConn.getChildren === 'function') {
-      this.thePConn = this.pConn;
     } else {
-      // NOT a PConn -
-      console.error(`--> ${this.theComponentName} is NOT a PConnect object! Expected for Boilerplate example`);
-      this.thePConn = null;
+      this.thePConn = this.pConn;
+      this.theChildren = this.thePConn?.getChildren() || [];
     }
 
-    // Initialize this.children (if available)
-    if (this.thePConn) {
-      this.children = this.thePConn.getChildren();
-    } else {
-      // when it's not a PConnect, set children to empty array
-      this.children = [];
-    }
+    // if (this.pConn?.getPConnect !== undefined && typeof this.pConn.getPConnect === 'function') {
+    //   this.thePConn = this.pConn.getPConnect();
+    // } else if (this.pConn?.getChildren && typeof this.pConn.getChildren === 'function') {
+    //   this.thePConn = this.pConn;
+    // } else {
+    //   // NOT a PConn -
+    //   console.error(`--> ${this.theComponentName} is NOT a PConnect object! Expected for Boilerplate example`);
+    //   this.thePConn = null;
+    // }
+    //
+    // // Initialize this.children (if available)
+    // if (this.thePConn) {
+    //   this.children = this.thePConn.getChildren();
+    // } else {
+    //   // when it's not a PConnect, set children to empty array
+    //   this.children = [];
+    // }
   }
 
   /**
@@ -366,16 +382,16 @@ export class BridgeBase extends LitElement {
    * This is the full set of properties that are tracked in Redux for this component.
    *
    */
-  getComponentProps(): Object {
-    let compProps: any = {};
-    let addProps = {};
+  getComponentProps(): unknown {
+    let compProps: { validatemessage?: string } | undefined = {};
+    let addProps: {} | undefined = {};
 
     if (this.additionalProps !== undefined) {
       if (typeof this.additionalProps === 'object') {
-        addProps = this.thePConn.resolveConfigProps(this.additionalProps);
+        addProps = this.thePConn?.resolveConfigProps(this.additionalProps);
       } else if (typeof this.additionalProps === 'function') {
         const propsToAdd = this.additionalProps(this.getState(), this.thePConn);
-        addProps = this.thePConn.resolveConfigProps(propsToAdd);
+        addProps = this.thePConn?.resolveConfigProps(propsToAdd);
       }
     }
 
@@ -393,7 +409,7 @@ export class BridgeBase extends LitElement {
     this.thePConn.populateAdditionalProps(compProps);
 
     // eslint-disable-next-line sonarjs/no-collapsible-if
-    if (compProps && undefined !== compProps.validatemessage && compProps.validatemessage != '') {
+    if (compProps?.validatemessage?.length) {
       if (this.bLogging) {
         console.log(`   validatemessage for ${this.theComponentName} ${this.theComponentId}: ${compProps.validatemessage}`);
       }
@@ -415,7 +431,7 @@ export class BridgeBase extends LitElement {
   getComponentProp(inProp = '') {
     // Look up property in the component's entry in componentPropArray (which should have the most recent value)
     // propVal = this.theComponentProps[inProp];
-    const propVal = this.getComponentProps()[inProp];
+    const propVal = (this.getComponentProps() as any)[inProp];
 
     if (this.bLogging) {
       console.log(`--> ${this.theComponentName} getComponentProp(${inProp}): ${JSON.stringify(propVal)}`);
@@ -441,18 +457,19 @@ export class BridgeBase extends LitElement {
    * @param inComp The component calling the event
    * @param event The event
    */
-  changeHandler(inComp, event) {
+  changeHandler(inComp: unknown, event: Event) {
     if (this.bLogging) {
       console.log(`${this.baseComponentName}.changeHandler`);
     }
 
-    const pConnect = inComp;
+    // forcing cast to typeof PConnect - but really this broken.
+    const pConnect = inComp as typeof PConnect;
     if (undefined === pConnect) {
       console.error(`${this.baseComponentName}: bad call to changeHandler: inComp.pConn$: ${pConnect}`);
       return;
     }
-
-    pConnect.getActionsApi().changeHandler(pConnect, event);
+    // @ts-ignore - changeHandler is expecting a type of Component not a typeof PConnect
+    pConnect.getActionsApi().changeHandler(inComp, event);
   }
 
   /**
@@ -462,14 +479,14 @@ export class BridgeBase extends LitElement {
    * @param inComp The component calling the event
    * @param event The event
    */
-  eventHandler(inComp, event) {
+  eventHandler(inComp: typeof PConnect, event: Event) {
     if (this.bLogging) {
       console.log(`${this.baseComponentName}.eventHandler`);
     }
 
     // converting lion form elements tagName value to native html elements tagNames. example: LION-INPUT to INPUT
     // because constellation-core js is expecting target tagNames as native html form elements
-    Object.defineProperty(event.target, 'tagName', { value: Utils.getTagName(event.target.tagName) });
+    // Object.defineProperty(event.target, 'tagName', { value: Utils.getTagName(event.target.tagName) });
 
     const pConnect = inComp;
     if (undefined === pConnect) {
@@ -541,7 +558,7 @@ export class BridgeBase extends LitElement {
    */
   addChildTemplates() {
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
-    if (this.children === null) {
+    if (this.theChildren === null) {
       if (this.bLogging) {
         // Typically, this is expected for some use cases (PreviewViewContainer, Region, etc.) but this
         //  message can be useful during debugging if your component is expecting to have children.
@@ -551,7 +568,7 @@ export class BridgeBase extends LitElement {
       return;
     }
 
-    for (const child of this.children) {
+    for (const child of this.theChildren) {
       const childPConn = child.getPConnect();
       const childType = childPConn.getComponentName();
       if (this.bLogging) {
@@ -756,7 +773,7 @@ export class BridgeBase extends LitElement {
     const theChildTemplates: Object[] = [];
 
     // iterate over the children, pushing appropriate templates onto the renderTemplates array
-    if (this.children === null) {
+    if (this.theChildren === null) {
       if (this.bLogging) {
         // Typically, this is expected for some use cases (DefaultForm, etc.) but this
         //  message can be useful during debugging if your component is expecting to have children.
@@ -766,7 +783,7 @@ export class BridgeBase extends LitElement {
       return theChildTemplates;
     }
 
-    for (const child of this.children) {
+    for (const child of this.theChildren) {
       const childPConn = child.getPConnect();
       const childType = childPConn.getComponentName();
       if (this.bLogging) {
@@ -1173,15 +1190,15 @@ export class BridgeBase extends LitElement {
 
   // Writes a console.log of the current component's children types
   logChildren() {
-    const childTypes: String[] = [];
+    const childTypes: string[] = [];
     let theChildrenAsString = '';
 
-    if (!this.children) {
+    if (!this.theChildren) {
       theChildrenAsString = 'none';
     } else {
-      for (const child of this.children) {
+      for (const child of this.theChildren) {
         const childPConn = child.getPConnect();
-        const childType = childPConn.getComponentName();
+        const childType = childPConn.getComponentName() ?? '';
 
         childTypes.push(childType);
       }

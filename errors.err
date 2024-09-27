@@ -1,0 +1,64 @@
+src/components/Attachment/index.ts(185,28): error TS2339: Property 'attachmentsInfo' does not exist on type 'C11nEnv'.
+src/components/Attachment/index.ts(186,25): error TS2339: Property 'attachmentsInfo' does not exist on type 'C11nEnv'.
+src/components/Attachment/index.ts(371,23): error TS2339: Property 'attachmentsInfo' does not exist on type 'C11nEnv'.
+src/components/Attachment/index.ts(443,27): error TS2339: Property 'attachmentsInfo' does not exist on type 'C11nEnv'.
+src/components/DeferLoad/index.ts(105,13): error TS2353: Object literal may only specify known properties, and 'isDeferLoaded' does not exist in type '{ container?: string | undefined; context?: string | undefined; containerName?: string | undefined; skipSemanticUrl?: boolean | undefined; }'.
+src/components/DeferLoad/index.ts(117,62): error TS2345: Argument of type '{ viewContext: any; pageClass: any; container: string | null; containerName: string | null; updateData: boolean; }' is not assignable to parameter of type 'LoadViewConfig'.
+  Types of property 'containerName' are incompatible.
+    Type 'string | null' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+src/components/DeferLoad/index.ts(124,69): error TS2345: Argument of type 'null' is not assignable to parameter of type 'string'.
+src/components/fields/AutoComplete/index.ts(263,20): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/fields/AutoComplete/index.ts(271,20): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/fields/Checkbox/index.ts(158,18): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/fields/DateTime/index.ts(71,18): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/fields/FormComponentBase/index.ts(254,20): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/fields/FormComponentBase/index.ts(256,20): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/fields/FormComponentBase/index.ts(282,20): error TS2339: Property 'onBlur' does not exist on type 'Object'.
+src/components/fields/Time/index.ts(67,18): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/fields/URL/index.ts(71,18): error TS2339: Property 'onChange' does not exist on type 'Object'.
+src/components/FlowContainer/index.ts(226,35): error TS2554: Expected 1 arguments, but got 0.
+src/components/ModalViewContainer/index.ts(131,39): error TS2554: Expected 1 arguments, but got 0.
+src/components/RootContainer/index.ts(173,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/components/templates/AppShell/index.ts(79,35): error TS2339: Property 'getPConnect' does not exist on type 'C11nEnv | { getPConnect: () => C11nEnv; }'.
+  Property 'getPConnect' does not exist on type 'C11nEnv'.
+src/components/templates/AppShell/index.ts(81,68): error TS2339: Property 'getPConnect' does not exist on type 'C11nEnv | { getPConnect: () => C11nEnv; }'.
+  Property 'getPConnect' does not exist on type 'C11nEnv'.
+src/components/templates/AppShell/index.ts(86,24): error TS2339: Property 'getPConnect' does not exist on type 'C11nEnv | { getPConnect: () => C11nEnv; }'.
+  Property 'getPConnect' does not exist on type 'C11nEnv'.
+src/components/templates/CaseSummary/index.ts(212,39): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseSummary/index.ts(212,39): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseSummary/index.ts(213,39): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseSummary/index.ts(213,39): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseView/index.ts(92,13): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseView/index.ts(216,39): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseView/index.ts(216,39): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseView/index.ts(221,41): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseView/index.ts(221,41): error TS2532: Object is possibly 'undefined'.
+src/components/templates/CaseView/index.ts(373,21): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/components/templates/DataReference/index.ts(189,114): error TS2345: Argument of type 'null' is not assignable to parameter of type 'string'.
+src/components/templates/DataReference/index.ts(193,62): error TS2345: Argument of type 'String' is not assignable to parameter of type 'string'.
+  'string' is a primitive, but 'String' is a wrapper object. Prefer using 'string' when possible.
+src/components/templates/details/Details/index.ts(71,29): error TS2532: Object is possibly 'undefined'.
+src/components/templates/details/Details/index.ts(74,11): error TS18048: 'configObj' is possibly 'undefined'.
+src/components/templates/details/Details/index.ts(74,11): error TS18048: 'configObj.config' is possibly 'undefined'.
+src/components/templates/details/Details/index.ts(75,11): error TS18048: 'configObj' is possibly 'undefined'.
+src/components/templates/details/Details/index.ts(75,11): error TS18048: 'configObj.config' is possibly 'undefined'.
+src/components/templates/details/Details/index.ts(77,11): error TS18048: 'configObj' is possibly 'undefined'.
+src/components/templates/details/Details/index.ts(77,11): error TS18048: 'configObj.config' is possibly 'undefined'.
+src/components/templates/details/Details/index.ts(77,47): error TS2339: Property 'label' does not exist on type '{}'.
+src/components/templates/ListView/index.ts(123,31): error TS2532: Object is possibly 'undefined'.
+src/components/templates/ListView/index.ts(134,30): error TS18048: 'componentConfig' is possibly 'undefined'.
+src/components/templates/ListView/index.ts(134,46): error TS2339: Property 'presets' does not exist on type 'ComponentMetadataConfig'.
+src/components/templates/SimpleTable/SimpleTableManual.ts(155,72): error TS2339: Property 'presets' does not exist on type 'ComponentMetadataConfig'.
+src/components/templates/SimpleTableSelect/index.ts(130,7): error TS2322: Type 'string' is not assignable to type 'null'.
+src/components/templates/SimpleTableSelect/index.ts(186,21): error TS2532: Object is possibly 'undefined'.
+src/components/templates/SimpleTableSelect/index.ts(186,21): error TS2532: Object is possibly 'undefined'.
+src/components/templates/SimpleTableSelect/index.ts(186,59): error TS2339: Property 'promotedFilters' does not exist on type 'ComponentMetadataConfig'.
+src/components/templates/TwoColumn/index.ts(114,13): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/components/templates/TwoColumn/index.ts(114,39): error TS2532: Object is possibly 'undefined'.
+src/components/View/index.ts(132,34): error TS2339: Property 'label' does not exist on type '{}'.
+src/components/View/index.ts(133,38): error TS2339: Property 'showLabel' does not exist on type '{}'.

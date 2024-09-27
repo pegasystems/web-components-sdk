@@ -24,7 +24,7 @@ class Decimal extends FormComponentBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

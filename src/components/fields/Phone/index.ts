@@ -23,7 +23,7 @@ class Phone extends FormComponentBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

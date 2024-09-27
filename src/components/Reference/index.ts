@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit';
+import { html, nothing, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
@@ -9,7 +9,7 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 class Reference extends BridgeBase {
   @property({ attribute: true, type: Boolean }) displayOnlyFA = false;
   @property({ attribute: false, type: Object }) resolvedConfigProps: any = {};
-  @property({ attribute: false, type: Function }) referencedViewComponent = null;
+  @property({ attribute: false, type: Object }) referencedViewComponent = null;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -24,7 +24,7 @@ class Reference extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // // this.pConn = {};
   }
 
   connectedCallback() {
@@ -62,27 +62,27 @@ class Reference extends BridgeBase {
       debugger;
     }
 
-    if (!this.pConn.getConfigProps) {
-      if (this.pConn.getPConnect()) {
-        this.pConn = this.pConn.getPConnect();
-      } else {
-        console.error(`Reference component: bad pConn: ${JSON.stringify(this.pConn)}`);
-      }
-    }
+    // if (!this.thePConn.getConfigProps) {
+    //   if (this.pConn.getPConnect()) {
+    //     this.pConn = this.pConn.getPConnect();
+    //   } else {
+    //     console.error(`Reference component: bad pConn: ${JSON.stringify(this.pConn)}`);
+    //   }
+    // }
 
-    this.resolvedConfigProps = this.pConn.resolveConfigProps(this.pConn.getConfigProps());
+    this.resolvedConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
-    const referenceConfig = { ...this.pConn.getComponentConfig() };
+    const referenceConfig = { ...this.thePConn.getComponentConfig() };
 
     delete referenceConfig?.name;
     delete referenceConfig?.type;
     delete referenceConfig?.visibility;
 
-    const viewMetadata = this.pConn.getReferencedView();
+    const viewMetadata = this.thePConn.getReferencedView();
 
     if (!viewMetadata) {
       // This happens rarely during some transitions but doesn't seem to have an impact.
-      console.warn(`View not found. getComponentConfig(): ${JSON.stringify(this.pConn.getComponentConfig())}`);
+      console.warn(`View not found. getComponentConfig(): ${JSON.stringify(this.thePConn.getComponentConfig())}`);
       return null;
     }
 
@@ -98,7 +98,7 @@ class Reference extends BridgeBase {
       console.log(`Reference: about to call createComponent with pageReference: context: ${this.resolvedConfigProps.context}`);
     }
 
-    const viewComponent = this.pConn.createComponent(viewObject, null, null, {
+    const viewComponent = this.thePConn.createComponent(viewObject, '', -1, {
       pageReference: this.resolvedConfigProps.context
     });
 
@@ -150,7 +150,7 @@ class Reference extends BridgeBase {
     }
   }
 
-  getComponentToRender() {
+  getComponentToRender(): TemplateResult | typeof nothing {
     if (this.bLogging) {
       console.log(`Reference: getComponentToRender: displayOnlyFA: ${this.displayOnlyFA}`);
     }

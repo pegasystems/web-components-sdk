@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, ifDefined } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
@@ -45,7 +45,7 @@ class CaseSummary extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {
@@ -64,7 +64,7 @@ class CaseSummary extends BridgeBase {
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
     // store off old metadata
-    const primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
+    const primaryMeta = this.theChildren[0].getPConnect().resolveConfigProps(this.theChildren[0].getPConnect().getRawMetadata());
     // const secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
     this.sOldPrimaryMeta = JSON.stringify(primaryMeta);
     this.sOldSecondaryMeta = JSON.stringify(primaryMeta);
@@ -97,7 +97,7 @@ class CaseSummary extends BridgeBase {
     this.showStatus = configProps.showStatus;
 
     // get primary and secodary fields
-    for (const kid of this.children) {
+    for (const kid of this.theChildren) {
       const pKid = kid.getPConnect();
       const pKidData = pKid.resolveConfigProps(pKid.getRawMetadata());
       if (pKidData.name.toLowerCase() == 'primary fields') {
@@ -154,8 +154,8 @@ class CaseSummary extends BridgeBase {
     let bHasChanged = false;
 
     // going to check
-    const primaryMeta = this.children[0].getPConnect().resolveConfigProps(this.children[0].getPConnect().getRawMetadata());
-    const secondaryMeta = this.children[1].getPConnect().resolveConfigProps(this.children[1].getPConnect().getRawMetadata());
+    const primaryMeta = this.theChildren[0].getPConnect().resolveConfigProps(this.theChildren[0].getPConnect().getRawMetadata());
+    const secondaryMeta = this.theChildren[1].getPConnect().resolveConfigProps(this.theChildren[1].getPConnect().getRawMetadata());
 
     bHasChanged = !(JSON.stringify(primaryMeta) == this.sOldPrimaryMeta);
     if (!bHasChanged) {
@@ -189,11 +189,10 @@ class CaseSummary extends BridgeBase {
     const bShouldUpdate = super.shouldComponentUpdate();
 
     // standard bShouldUpdate, but if no changes, then check the raw meta data of the children (primary and secondary fields)
-    if (bShouldUpdate) {
+    if (bShouldUpdate || this.rawMetaChanged()) {
       this.updateSelf();
-      // eslint-disable-next-line sonarjs/no-duplicated-branches
-    } else if (this.rawMetaChanged()) {
-      this.updateSelf();
+      // } else if () {
+      //   this.updateSelf();
     }
   }
 
@@ -201,20 +200,22 @@ class CaseSummary extends BridgeBase {
    *
    * @param inName the metadata <em>name</em> that will cause a region to be returned
    */
-  getChildRegionArray(inName: String): Object[] {
+  getChildRegionArray(inName: string): Object[] {
     if (this.bDebug) {
       debugger;
     }
     const theRetArray: Object[] = [];
     let iFound = 0;
 
-    for (const child of this.children) {
-      const theMetadataType: string = child.getPConnect().getRawMetadata().type.toLowerCase();
-      const theMetadataName: string = child.getPConnect().getRawMetadata().name.toLowerCase();
+    for (const child of this.theChildren) {
+      if (child.getPConnect) {
+        const theMetadataType: string | undefined = child.getPConnect().getRawMetadata()?.type?.toLowerCase();
+        const theMetadataName: string | undefined = child.getPConnect().getRawMetadata()?.name?.toLowerCase();
 
-      if (theMetadataType === 'region' && theMetadataName === inName) {
-        iFound++;
-        theRetArray.push(html`<region-component .pConn=${child.getPConnect()}></region-component>`);
+        if (theMetadataType === 'region' && theMetadataName === inName) {
+          iFound++;
+          theRetArray.push(html`<region-component .pConn=${child.getPConnect()}></region-component>`);
+        }
       }
     }
 
@@ -238,7 +239,7 @@ class CaseSummary extends BridgeBase {
 
     const theContent = html`
       <case-summary-fields-extension
-        status="${this.status}"
+        status="${ifDefined(this.status)}"
         ?bShowStatus="${this.showStatus}"
         .arPrimaryFields="${this.arPrimaryFields}"
         .arSecondaryFields="${this.arSecondaryFields}"

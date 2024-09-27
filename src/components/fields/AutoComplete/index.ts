@@ -265,7 +265,7 @@ class AutoComplete extends FormComponentBase {
       let key = '';
       if (event?.target?.value) {
         const index = this.options?.findIndex(element => element.value === event.target.value);
-        key = index > -1 ? (key = this.options[index].key) : event.target.value;
+        key = index > -1 ? this.options[index].key : event.target.value;
       }
       event.target.value = key;
       this.actions.onChange(this.thePConn, event);

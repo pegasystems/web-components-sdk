@@ -14,7 +14,7 @@ export class DetailsTemplateBase extends BridgeBase {
       console.log(`${this.theComponentName}: constructor`);
     }
 
-    this.pConn = {};
+    // this.pConn = {};
     this.childrenMetadataOld = [];
   }
 
@@ -71,6 +71,6 @@ export class DetailsTemplateBase extends BridgeBase {
   }
 
   getChildrenMetadata() {
-    return this.children.map(child => child.getPConnect().resolveConfigProps(child.getPConnect().getRawMetadata()));
+    return this.theChildren.map(child => child.getPConnect().resolveConfigProps(child.getPConnect().getRawMetadata()));
   }
 }

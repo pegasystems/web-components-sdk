@@ -108,7 +108,7 @@ class FieldGroupTemplate extends BridgeBase {
         if (this.referenceList?.length === 0) {
           this.addFieldGroupItem();
         }
-        this.children = this.referenceList?.map((item, index) => ({
+        this.theChildren = this.referenceList?.map((item, index) => ({
           id: index,
           name: `${this.heading} ${index + 1}`,
           children: FieldGroupUtils.buildView(this.thePConn, index, lookForChildInConfig)
@@ -144,7 +144,7 @@ class FieldGroupTemplate extends BridgeBase {
 
   getEditableFieldGroup() {
     return html`
-      <field-group-list .items=${this.children} @onAdd=${this.addFieldGroupItem} @onDelete=${this.deleteFieldGroupItem}></field-group-list>
+      <field-group-list .items=${this.theChildren} @onAdd=${this.addFieldGroupItem} @onDelete=${this.deleteFieldGroupItem}></field-group-list>
     `;
   }
 

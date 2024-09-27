@@ -45,7 +45,7 @@ class Region extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {
@@ -118,9 +118,9 @@ class Region extends BridgeBase {
     this.prepareForRender();
 
     // eslint-disable-next-line sonarjs/no-collapsible-if
-    if (!this.children) {
+    if (!this.theChildren) {
       if (this.bLogging) {
-        console.log(`${this.theComponentName}: render with NO children: ${this.children}`);
+        console.log(`${this.theComponentName}: render with NO children: ${this.theChildren}`);
       }
     }
 

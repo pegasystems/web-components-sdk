@@ -23,7 +23,7 @@ class MultiReferenceReadonly extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

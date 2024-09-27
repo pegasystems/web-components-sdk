@@ -70,7 +70,7 @@ export class FormComponentBase extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {

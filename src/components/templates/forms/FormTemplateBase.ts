@@ -12,7 +12,7 @@ export class FormTemplateBase extends BridgeBase {
       console.log(`${this.theComponentName}: constructor`);
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback(): void {

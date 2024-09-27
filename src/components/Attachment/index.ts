@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import download from 'downloadjs';
@@ -35,6 +35,14 @@ class Attachment extends BridgeBase {
   @property({ attribute: false, type: Boolean }) bShowSelector = true;
   @property({ attribute: false, type: Boolean }) bShowJustDelete = false;
 
+  @state() attachmentsInfo!: {
+    type: string;
+    attachmentFieldName: string;
+    category: string;
+    ID?: string;
+    delete?: boolean;
+  };
+
   annotatedLabel: Object = {};
 
   arFiles: any[] = [];
@@ -61,7 +69,7 @@ class Attachment extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {
@@ -182,8 +190,8 @@ class Attachment extends BridgeBase {
       fileTemp = attachments[0];
 
       if (fileTemp.responseProps) {
-        if (!this.thePConn.attachmentsInfo) {
-          this.thePConn.attachmentsInfo = {
+        if (!this.attachmentsInfo) {
+          this.attachmentsInfo = {
             type: 'File',
             attachmentFieldName: this.att_valueRef,
             category: this.att_categoryName

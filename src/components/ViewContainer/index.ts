@@ -61,7 +61,7 @@ class ViewContainer extends BridgeBase {
       debugger;
     }
 
-    this.pConn = {};
+    // this.pConn = {};
   }
 
   connectedCallback() {
@@ -173,8 +173,8 @@ class ViewContainer extends BridgeBase {
     //   this.routingInfo = JSON.stringify(routingInfo);
     // }
 
-    if (this.children == null) {
-      this.children = this.thePConn.getChildren();
+    if (this.theChildren == null) {
+      this.theChildren = this.thePConn.getChildren();
     }
 
     const routingInfo = this.getComponentProp('routingInfo');
@@ -237,7 +237,7 @@ class ViewContainer extends BridgeBase {
           // JA experiment. Only replace if the newComp has children!
           //  The new Reference component does NOT have children!
           if (newComp.getChildren() && newComp.getChildren().length > 0) {
-            this.children = newComp.getChildren();
+            this.theChildren = newComp.getChildren();
           }
 
           // debugger;     // NOW a reference component!!!
@@ -251,7 +251,7 @@ class ViewContainer extends BridgeBase {
    */
   prepareDispatchObject(): Object {
     const baseContext = this.thePConn.getContextName();
-    const { acName = 'primary' } = this.thePConn.getContainerName();
+    const acName = this.thePConn.getContainerName() || 'primary';
 
     return {
       semanticURL: '',
