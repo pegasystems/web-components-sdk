@@ -95,6 +95,7 @@ class Attachment extends BridgeBase {
     if (this.bDebug) {
       debugger;
     }
+    PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, this.caseID);
   }
 
   getAttachments() {
@@ -111,9 +112,6 @@ class Attachment extends BridgeBase {
       this.resetAttachmentStoredState.bind(this),
       this.caseID
     );
-    return () => {
-      PCore.getPubSubUtils().unsubscribe(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION, this.caseID);
-    };
   }
 
   /**
