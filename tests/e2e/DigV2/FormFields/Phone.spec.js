@@ -42,6 +42,7 @@ test.describe('E2E test', () => {
 
     /** Required tests */
     const requiredPhone = page.locator('lion-input[datatestid="af983eaa1b85b015a7654702abd0b249"] >> input');
+    requiredPhone.click();
     await requiredPhone.pressSequentially('6175551212');
     requiredPhone.blur();
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeHidden();
