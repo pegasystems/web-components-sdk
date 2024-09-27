@@ -84,6 +84,12 @@ class Attachment extends BridgeBase {
     // let configProps: any = this.pConn$.resolveConfigProps(this.pConn$.getConfigProps());
     this.updateSelf();
     this.getAttachments();
+
+    PCore.getPubSubUtils().subscribe(
+      PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
+      this.resetAttachmentStoredState.bind(this),
+      this.caseID
+    );
   }
 
   disconnectedCallback() {
@@ -106,12 +112,6 @@ class Attachment extends BridgeBase {
       this.bShowJustDelete = true;
       this.bShowSelector = false;
     }
-
-    PCore.getPubSubUtils().subscribe(
-      PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.ASSIGNMENT_SUBMISSION,
-      this.resetAttachmentStoredState.bind(this),
-      this.caseID
-    );
   }
 
   /**
