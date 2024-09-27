@@ -183,7 +183,8 @@ class SimpleTableSelect extends BridgeBase {
       parameters: this.parameters
     };
 
-    const filters = (this.thePConn.getRawMetadata() as any).config.promotedFilters ?? [];
+    // @ts-ignore - promotedFilters missing from types
+    const filters = this.thePConn.getRawMetadata().config.promotedFilters ?? [];
 
     const isSearchable = filters.length > 0;
 
