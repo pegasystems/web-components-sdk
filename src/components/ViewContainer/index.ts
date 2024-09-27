@@ -251,7 +251,11 @@ class ViewContainer extends BridgeBase {
    */
   prepareDispatchObject(): Object {
     const baseContext = this.thePConn.getContextName();
-    const { acName = 'primary' } = this.thePConn.getContainerName();
+
+    let acName = this.thePConn.getContainerName();
+    if (!acName) {
+      acName = 'primary';
+    }
 
     return {
       semanticURL: '',
