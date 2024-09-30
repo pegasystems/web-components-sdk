@@ -6,6 +6,7 @@ import '../designSystemExtension/ProgressIndicator';
 
 // import the component's styles as HTML with <style>
 import { deferLoadStyles } from './defer-load-styles';
+import { LoadViewConfig } from '@pega/pcore-pconnect-typedefs/actions/types';
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -101,8 +102,8 @@ class DeferLoad extends BridgeBase {
         this.thePConn
           .getActionsApi()
           .showData(this.name, dataContext, dataContextParameters, {
-            skipSemanticUrl: true,
-            isDeferLoaded: true
+            skipSemanticUrl: true
+            // isDeferLoaded: true
           })
           .then(data => {
             this.onResponse(data);
@@ -121,7 +122,7 @@ class DeferLoad extends BridgeBase {
     } else {
       this.thePConn
         .getActionsApi()
-        .refreshCaseView(encodeURI(this.loadViewCaseID), this.name, null)
+        .refreshCaseView(encodeURI(this.loadViewCaseID), this.name, this.thePConn.getPageReference())
         .then(data => {
           this.onResponse(data.root);
         })
@@ -131,12 +132,12 @@ class DeferLoad extends BridgeBase {
     }
   }
 
-  getViewOptions = () => ({
+  getViewOptions = (): LoadViewConfig & { viewContext: string } => ({
     viewContext: this.resourceType,
     // @ts-ignore - parameter “contextName” for getDataObject method should be optional
     pageClass: this.loadViewCaseID ? '' : this.pConn$.getDataObject().pyPortal.classID,
-    container: this.isContainerPreview ? 'preview' : null,
-    containerName: this.isContainerPreview ? 'preview' : null,
+    container: this.isContainerPreview ? 'preview' : undefined,
+    containerName: this.isContainerPreview ? 'preview' : undefined,
     updateData: this.isContainerPreview
   });
 

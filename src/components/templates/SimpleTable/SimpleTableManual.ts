@@ -152,6 +152,8 @@ class SimpleTableManual extends BridgeBase {
     //    config.datasource (ex: "@ASSOCIATED .DeclarantChoice")
     //  Neither of these appear in the resolved (this.configProps)
     const rawConfig = rawMetadata?.config;
+    //  TODO: Fix when typdefs include presets
+    //  @ts-ignore : presets are not part of ComponentMetadataConfig
     const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
     this.rawFields = rawFields;
     // At this point, fields has resolvedFields and rawFields we can use

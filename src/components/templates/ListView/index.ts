@@ -13,6 +13,7 @@ import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 
 // import the component's styles as HTML with <style>
 import { listViewStyles } from './list-view-styles';
+import { ComponentMetadataConfig } from '@pega/pcore-pconnect-typedefs/interpreter/types';
 
 interface ListViewProps {
   // If any, enter additional props that only exist on this component
@@ -120,7 +121,7 @@ class ListView extends BridgeBase {
     const theConfigProps = this.thePConn?.getConfigProps();
     if (theConfigProps) {
       this.selectionMode = theConfigProps.selectionMode;
-      const componentConfig = this.thePConn.getRawMetadata().config;
+      const componentConfig = this.thePConn.getRawMetadata()?.config;
       const refList = theConfigProps.referenceList;
       const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
       workListData.then((workListJSON: any) => {
@@ -131,7 +132,7 @@ class ListView extends BridgeBase {
         // don't update these fields until we return from promise
         this.fields = theConfigProps.presets[0].children[0].children;
         // this is an unresolved version of this.fields, need unresolved, so can get the property reference
-        const columnFields = componentConfig.presets[0].children[0].children;
+        const columnFields = (componentConfig as ComponentMetadataConfig & { presets: any[] }).presets[0].children[0].children;
 
         const tableDataResults = workListJSON.data.data;
 

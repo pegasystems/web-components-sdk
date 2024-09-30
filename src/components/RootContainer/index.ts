@@ -170,7 +170,7 @@ class RootContainer extends BridgeBase {
         const localPConn = theChildren[0].getPConnect();
         this.newPConn = this.thePConn;
 
-        this.componentName = localPConn.getComponentName();
+        this.componentName = localPConn.getComponentName() ?? '';
 
         // if (this.bLogging) { console.log(`${this.theComponentName}: has child ${this.createdPConnect.getPConnect().getComponentName()}`); }
       }

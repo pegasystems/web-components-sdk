@@ -1,5 +1,7 @@
 import { html } from 'lit';
-import { customElement, property, ifDefined } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
+
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 

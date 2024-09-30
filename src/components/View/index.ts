@@ -129,7 +129,11 @@ class View extends BridgeBase {
     this.label = configProps.label || '';
     this.showLabel = configProps.showLabel || this.showLabel;
     // label & showLabel within inheritedProps takes precedence over configProps
+    // TODO: fix typdefs
+    // @ts-ignore : getInheritedProps typdefs needs to incldue label
     this.label = inheritedProps$.label || this.label;
+    // TODO: fix typdefs
+    // @ts-ignore : getInheritedProps typdefs needs to incldue showLabel
     this.showLabel = inheritedProps$.showLabel || this.showLabel;
 
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.

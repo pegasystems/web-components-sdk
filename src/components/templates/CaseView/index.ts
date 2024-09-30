@@ -372,7 +372,7 @@ class CaseView extends BridgeBase {
     const actionsAPI = this.thePConn.getActionsApi();
     const openLocalAction = actionsAPI.openLocalAction.bind(actionsAPI);
 
-    openLocalAction(this.editAction?.ID, { ...this.editAction, containerName: 'modal', type: 'express' });
+    openLocalAction(this.editAction?.ID ?? '', { ...this.editAction, containerName: 'modal', type: 'express' });
   }
 
   _actionMenuActionsClick(data) {

@@ -111,8 +111,8 @@ class TwoColumn extends BridgeBase {
     }
 
     for (const child of this.theChildren) {
-      const theMetadataName: string = child.getPConnect().getRawMetadata().name?.toLowerCase();
-      let theClassName: String = '';
+      const theMetadataName: string | undefined = child.getPConnect().getRawMetadata()?.name?.toLowerCase();
+      let theClassName = '';
 
       switch (theMetadataName) {
         case 'left':

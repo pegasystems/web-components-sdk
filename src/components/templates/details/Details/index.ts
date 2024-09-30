@@ -8,6 +8,7 @@ import '../../../Region';
 import { detailsStyles } from './details-styles';
 
 import '../../../designSystemExtension/DetailsFields';
+import C11nEnv from '@pega/pcore-pconnect-typedefs/interpreter/c11n-env';
 
 interface DetailsProps {
   // If any, enter additional props that only exist on this component
@@ -66,20 +67,25 @@ class Details extends DetailsTemplateBase {
       this.arFields = [];
       const pKid = kid.getPConnect();
       const fields = pKid.getChildren();
-      fields?.forEach(field => {
+      fields?.forEach((field: { getPConnect: () => C11nEnv }) => {
         const thePConn = field.getPConnect();
-        const theCompType = thePConn.getComponentName().toLowerCase();
-        if (theCompType === 'reference') {
+        const theCompType = thePConn.getComponentName()?.toLowerCase();
+        if (theCompType && theCompType === 'reference') {
           const configObj = thePConn.getReferencedView();
-          configObj.config.readOnly = true;
-          configObj.config.displayMode = 'LABELS_LEFT';
           const propToUse = { ...thePConn.getInheritedProps() };
-          configObj.config.label = propToUse?.label;
+          if (configObj?.config) {
+            configObj.config.readOnly = true;
+            configObj.config.displayMode = 'LABELS_LEFT';
+            // TODO: Fix this
+            // @ts-ignore Incorrect typedef for getInheritedProps
+            configObj.config.label = propToUse?.label;
+          }
           const loadedPConn = thePConn.getReferencedViewPConnect(true).getPConnect();
           const data = {
             type: theCompType,
             pConn: loadedPConn
           };
+
           this.arFields.push(data);
         } else {
           const data = {

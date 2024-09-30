@@ -128,7 +128,7 @@ class ModalViewContainer extends BridgeBase {
     // routingInfo was added as component prop in populateAdditionalProps
     const routingInfo = this.getComponentProp('routingInfo');
 
-    const loadingInfo = this.thePConn.getLoadingStatus();
+    const loadingInfo = this.thePConn.getLoadingStatus(this.thePConn.getContextName());
     // const configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
 
     if (!loadingInfo) {

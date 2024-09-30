@@ -12,6 +12,7 @@ import '../designSystemExtension/ProgressIndicator';
 
 // import the component's styles as HTML with <style>
 import { attachmentStyles } from './attachment-styles';
+import { BrowserEvent } from '@pega/pcore-pconnect-typedefs/globals';
 
 interface AttachmentProps extends Omit<PConnFieldProps, 'value'> {
   // If any, enter additional props that only exist on this component
@@ -38,7 +39,7 @@ class Attachment extends BridgeBase {
   @state() attachmentsInfo!: {
     type: string;
     attachmentFieldName: string;
-    category: string;
+    category?: string;
     ID?: string;
     delete?: boolean;
   };
@@ -376,7 +377,7 @@ class Attachment extends BridgeBase {
     const fileIndex = this.arFileList.findIndex(element => element?.id === item?.id);
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       if (this.value && this.value.pxResults[0]) {
-        this.thePConn.attachmentsInfo = {
+        this.attachmentsInfo = {
           type: 'File',
           attachmentFieldName: this.att_valueRef,
           delete: true
@@ -424,11 +425,11 @@ class Attachment extends BridgeBase {
         this.arFileList.splice(fileIndex, 1);
       }
     }
-    this.bShowSelector = !(this.arFileList?.length > 0);
+    this.bShowSelector = this.arFileList?.length <= 0;
     this.requestUpdate();
   }
 
-  uploadMyFiles($event) {
+  uploadMyFiles($event: BrowserEvent) {
     this.arFiles = this.getFiles($event.target.files);
 
     // convert FileList to an array
@@ -440,7 +441,7 @@ class Attachment extends BridgeBase {
       PCore.getAttachmentUtils()
         .uploadAttachment(myFiles[0], this.onUploadProgress.bind(this), this.errorHandler, this.thePConn.getContextName())
         .then((fileRes: any) => {
-          let reqObj;
+          let reqObj: typeof this.attachmentsInfo | { label: string; handle: string; meta: string; mimeType: string; icon: string; name: string };
           if (PCore.getPCoreVersion()?.includes('8.7')) {
             reqObj = {
               type: 'File',
@@ -448,7 +449,7 @@ class Attachment extends BridgeBase {
               category: this.att_categoryName,
               ID: fileRes.ID
             };
-            this.thePConn.attachmentsInfo = reqObj;
+            this.attachmentsInfo = reqObj;
           } else {
             reqObj = {
               type: 'File',

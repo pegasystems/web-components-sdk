@@ -195,7 +195,7 @@ class DataReference extends BridgeBase {
     }
 
     // AutoComplete sets value on event.id whereas Dropdown sets it on event.target.value
-    const propValue = event?.id || event?.target.value;
+    const propValue = (event as Event & { id: string })?.id || (event as BrowserEvent)?.target.value;
     if (propValue && this.canBeChangedInReviewMode && this.isDisplayModeEnabled) {
       PCore.getDataApiUtils()
         .getCaseEditLock(caseKey, '')
