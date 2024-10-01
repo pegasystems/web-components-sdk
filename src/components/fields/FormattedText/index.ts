@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
-import { format } from '../../../helpers/formatters/';
+import { format } from '../../../helpers/formatters';
 
 // NOTE: you need to import ANY component you may render.
 

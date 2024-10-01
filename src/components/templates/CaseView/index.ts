@@ -52,7 +52,13 @@ class CaseView extends BridgeBase {
   localeCategory = 'CaseView';
   localeKey = '';
   bHasNewAttachments = false;
-  editAction: editActionType | undefined;
+
+  editAction: editActionType = {
+    ID: '',
+    links: {},
+    name: '',
+    type: ''
+  };
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:

@@ -124,7 +124,7 @@ class SimpleTableSelect extends BridgeBase {
     const pageReference = this.thePConn.getPageReference();
     let referenceProp = isMultiSelectMode ? selectionList.substring(1) : pageReference.substring(pageReference.lastIndexOf('.') + 1);
     // Replace here to use the context name instead
-    let contextPageReference = null;
+    let contextPageReference;
     if (this.dataRelationshipContext !== null && selectionMode === 'single') {
       referenceProp = this.dataRelationshipContext;
       contextPageReference = pageReference.concat('.').concat(referenceProp);
@@ -183,6 +183,7 @@ class SimpleTableSelect extends BridgeBase {
       parameters: this.parameters
     };
 
+    // @ts-ignore - promotedFilters missing from types
     const filters = this.thePConn.getRawMetadata().config.promotedFilters ?? [];
 
     const isSearchable = filters.length > 0;

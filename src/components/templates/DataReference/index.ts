@@ -3,10 +3,10 @@ import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../SimpleTableSelect';
-import '../../forms/Dropdown';
+import '../../fields/Dropdown';
 import '../MultiReferenceReadonly';
 import '../SingleReferenceReadonly';
-import '../../forms/SemanticLink';
+import '../../fields/SemanticLink';
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
@@ -29,7 +29,7 @@ class DataReference extends BridgeBase {
   isDisplayModeEnabled: Boolean = false;
   propsToUse: any = {};
   rawViewMetadata: any = {};
-  viewName: String = '';
+  viewName = '';
   firstChildMeta: any = {};
   refList: any;
   canBeChangedInReviewMode: Boolean = false;
@@ -186,10 +186,12 @@ class DataReference extends BridgeBase {
 
     const refreshOptions = { autoDetectRefresh: true };
     if (this.canBeChangedInReviewMode && this.thePConn.getValue('__currentPageTabViewName')) {
+      // @ts-ignore - second parameter pageReference for getValue method should be optional
       this.thePConn.getActionsApi().refreshCaseView(caseKey, this.thePConn.getValue('__currentPageTabViewName'), null, refreshOptions);
       PCore.getDeferLoadManager().refreshActiveComponents(this.thePConn.getContextName());
     } else {
       const pgRef = this.thePConn.getPageReference().replace('caseInfo.content', '');
+      // @ts-ignore
       this.thePConn.getActionsApi().refreshCaseView(caseKey, this.viewName, pgRef, refreshOptions);
     }
 
