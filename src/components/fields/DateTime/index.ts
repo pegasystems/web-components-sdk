@@ -109,7 +109,6 @@ class DateTime extends FormComponentBase {
           id=${this.theComponentId}
           name="DateTime"
           dataTestId=${this.testId}
-          .value=${dateTimeValue}
           .modelValue=${dateTimeValue}
           .validators=${this.lionValidatorsArray}
           .fieldName=${this.label}
