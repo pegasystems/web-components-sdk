@@ -104,6 +104,7 @@ class DateComponent extends FormComponentBase {
           id=${this.theComponentId}
           name="DateOnly"
           dataTestId=${this.testId}
+          .value=${dateValue}
           .modelValue=${dateValue}
           .validators=${this.lionValidatorsArray}
           .fieldName=${this.label}

@@ -165,7 +165,7 @@ class AppShell extends BridgeBase {
     const theTemplate = this.bShowAppShell
       ? html`
           <div class="appshell-top">
-            <nav-bar .pConn=${this.thePConn} appName=${this.appName} .pages=${this.pages} .caseTypes=${this.caseTypes}></nav-bar>
+            <nav-bar class="nav-bar" .pConn=${this.thePConn} appName=${this.appName} .pages=${this.pages} .caseTypes=${this.caseTypes}></nav-bar>
             <div class="appshell-main">${this.thePConn.getChildren().map(child => html`<view-container .pConn=${child}></view-container>`)}</div>
           </div>
         `

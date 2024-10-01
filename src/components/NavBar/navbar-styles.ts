@@ -56,7 +56,6 @@ export const navbarStyles = html`
       flex-direction: column;
       justify-content: flex-start;
       background: var(--app-nav-bg);
-      width: var(--app-nav-width);
       height: 100%;
       color: var(--app-nav-color);
       overflow: hidden;

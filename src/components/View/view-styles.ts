@@ -9,6 +9,7 @@ export const viewStyles = html`
 
     .psdk-view-top {
       padding: 0;
+      overflow-x: hidden;
     }
 
     .template-title-container {
