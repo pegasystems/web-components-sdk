@@ -171,12 +171,7 @@ class MultiStep extends BridgeBase {
   }
 
   _showHLine(index: number): boolean {
-    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-    if (index < this.arNavigationSteps.length - 1) {
-      return true;
-    }
-
-    return false;
+    return index < this.arNavigationSteps.length - 1;
   }
 
   getStepMarkerStyle(step: any, bSubStep: boolean = false): string {
