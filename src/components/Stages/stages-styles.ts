@@ -22,6 +22,7 @@ export const stagesStyles = html`
       border: 0.0625rem solid var(--app-neutral-light-color);
       overflow: hidden;
       display: flex;
+      flex-wrap: wrap;
     }
 
     .psdk-stages-chevron {

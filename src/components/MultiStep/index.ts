@@ -147,35 +147,31 @@ class MultiStep extends BridgeBase {
     return sStyle;
   }
 
-  getStepHorizontallMarkerStyle(step: any, bSubStep: boolean = false): string {
+  getStepHorizontallMarkerStyle(step: any, type): string {
     let sStyle = '';
-    switch (step.visited_status) {
-      case 'success':
-        if (bSubStep) {
-          sStyle = 'psdk-horizontal-marker h-success h-sub';
+    switch (type) {
+      case 'label':
+        if (step.visited_status === 'current') {
+          sStyle = 'psdk-horizontal-step-label-selected';
         } else {
-          sStyle = 'psdk-horizontal-marker h-success';
+          sStyle = 'psdk-horizontal-step-label';
         }
         break;
-      case 'current':
-        if (bSubStep) {
-          sStyle = 'psdk-horizontal-marker h-current h-sub';
+      case 'icon':
+        if (step.visited_status === 'current') {
+          sStyle = 'psdk-horizontal-step-icon-selected';
         } else {
-          sStyle = 'psdk-horizontal-marker h-current';
-        }
-        break;
-      case 'future':
-        if (bSubStep) {
-          sStyle = 'psdk-horizontal-marker h-future h-sub';
-        } else {
-          sStyle = 'psdk-horizontal-marker h-future';
+          sStyle = 'psdk-horizontal-step-icon';
         }
         break;
       default:
         break;
     }
-
     return sStyle;
+  }
+
+  _showHLine(index: number): boolean {
+    return index < this.arNavigationSteps.length - 1;
   }
 
   getStepMarkerStyle(step: any, bSubStep: boolean = false): string {
@@ -228,29 +224,35 @@ class MultiStep extends BridgeBase {
 
     let count = 0;
     for (const step of this.arNavigationSteps) {
-      let stepStyle = 'psdk-horizontal-header-step';
-      if (count == 0) {
-        stepStyle = 'psdk-horizontal-header-step-first';
-      } else if (count + 1 == this.arNavigationSteps.length) {
-        stepStyle = 'psdk-horizontal-header-step-last';
-      }
       if (step.steps) {
         for (const sStep of step.steps) {
-          const stepMarkerStyle = this.getStepMarkerStyle(sStep, true);
           arHorizontalSteps.push(html`
-            <div class="psdk-horizontal-header-step">
-              <div class="psdk-horizontal-step-name">${sStep.name}</div>
-              <div class="${stepMarkerStyle}"></div>
+            <div class="psdk-horizontal-step-header">
+              <div class="${this.getStepHorizontallMarkerStyle(sStep, 'icon')}">
+                <div class="psdk-horizontal-step-icon-content">
+                  <span>${count + 1}</span>
+                </div>
+              </div>
+              <div class="${this.getStepHorizontallMarkerStyle(sStep, 'label')}">
+                <div class="psdk-horizontal-step-text-label" id="selected-label">${sStep.name}</div>
+              </div>
             </div>
+            ${this._showHLine(count) ? html`<div class="psdk-horizontal-step-line" /> ` : html``}
           `);
         }
       } else {
-        const stepMarkerStyle = this.getStepMarkerStyle(step, false);
         arHorizontalSteps.push(html`
-          <div class="${stepStyle}">
-            <div class="psdk-horizontal-step-name">${step.name}</div>
-            <div class="${stepMarkerStyle}"></div>
+          <div class="psdk-horizontal-step-header">
+            <div class="${this.getStepHorizontallMarkerStyle(step, 'icon')}">
+              <div class="psdk-horizontal-step-icon-content">
+                <span>${count + 1}</span>
+              </div>
+            </div>
+            <div class="${this.getStepHorizontallMarkerStyle(step, 'label')}">
+              <div class="psdk-horizontal-step-text-label" id="selected-label">${step.name}</div>
+            </div>
           </div>
+          ${this._showHLine(count) ? html`<div class="psdk-horizontal-step-line" /> ` : html``}
         `);
       }
       count++;
@@ -259,7 +261,6 @@ class MultiStep extends BridgeBase {
     return html`
       <div class="psdk-horizontal-progress">
         <div class="psdk-horizontal-steps">${arHorizontalSteps}</div>
-        <div class="psdk-horizontal-bar"></div>
       </div>
       <div>${this.assignmentCardHtml()}</div>
     `;

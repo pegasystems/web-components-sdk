@@ -15,6 +15,10 @@ class LionInputDatetime extends LionInputDate {
     this.parser = viewValue => new Date(viewValue);
     this.serializer = toIsoDatetime;
     this.formatter = toIsoDatetime;
+
+    if (this.modelValue) {
+      this.value = this.serializer(this.modelValue);
+    }
   }
 }
 export default LionInputDatetime;
