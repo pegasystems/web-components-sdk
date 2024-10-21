@@ -1,9 +1,9 @@
-import './components/hello-world/hello-world';
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-textarea.js';
+
 import './samples/FullPortal/FullPortal';
 import './samples/SimplePortal/SimplePortal';
-import './samples/Mashup/MashupPortal';
+import './samples/Embedded';
 
 import { Router } from '@vaadin/router';
 
@@ -18,10 +18,10 @@ router.setRoutes([
       window.location.pathname = ctx.pathname;
     }
   },
-  { path: '/', component: 'mashup-portal-component' },
-  { path: '/index.html', component: 'mashup-portal-component' },
-  { path: '/embedded', component: 'mashup-portal-component' },
-  { path: '/embedded.html', component: 'mashup-portal-component' },
+  { path: '/', component: 'embedded-component' },
+  { path: '/index.html', component: 'embedded-component' },
+  { path: '/embedded', component: 'embedded-component' },
+  { path: '/embedded.html', component: 'embedded-component' },
   { path: '/portal', component: 'full-portal-component' },
   { path: '/portal.html', component: 'full-portal-component' },
   { path: '/fullportal', component: 'full-portal-component' },
