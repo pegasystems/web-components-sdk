@@ -193,7 +193,14 @@ class CheckBox extends FormComponentBase {
     // Handle and return if read only rendering
     if (this.bReadonly && this.bVisible) {
       return html`
-        <lion-checkbox .pConn=${this.thePConn} ?disabled=${this.bReadonly} label=${this.caption} value=${this.value} testId=${this.testId}>
+        <lion-checkbox
+          .pConn=${this.thePConn}
+          ?disabled=${this.bReadonly}
+          label=${this.caption}
+          value=${this.value}
+          ?checked=${this.isChecked}
+          testId=${this.testId}
+        >
         </lion-checkbox>
       `;
     }
@@ -204,7 +211,7 @@ class CheckBox extends FormComponentBase {
       const listOfCheckboxes: any = [];
       const listSourceItems = this.theConfigProps.datasource?.source ?? [];
       const dataField: any = this.theConfigProps.selectionKey?.split?.('.')[1];
-      const label = html`<div class="check-box-form">${bHideLabel ? nothing : this.label}}</div>`;
+      const label = html`<div class="check-box-form">${bHideLabel ? nothing : this.label}</div>`;
       listOfCheckboxes.push(label);
       listSourceItems.forEach((element, index) => {
         const multiChecked = this.selectedvalues?.some?.(data => data[dataField] === element.key);
