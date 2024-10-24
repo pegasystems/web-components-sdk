@@ -111,6 +111,7 @@ class ListView extends BridgeBase {
     this.compositeKeys = theConfigProps?.compositeKeys;
     this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
 
+    this.selectedValue = theConfigProps.value;
     this.selectedValues = theConfigProps.readonlyContextList;
 
     // const componentConfig = this.thePConn.getRawMetadata().config;
@@ -356,8 +357,9 @@ class ListView extends BridgeBase {
   }
 
   private radioRender: GridColumnBodyLitRenderer<any> = row => {
-    const rowID = row[this.rowID];
-    return html`<input name="radio-buttons" type="radio" .value="${rowID}" @change="${this.onRadioChange}" />`;
+    const rowValue = row[this.rowID];
+    const isRowSelected = rowValue === this.selectedValue;
+    return html`<input name="radio-buttons" type="radio" .value="${rowValue}" ?checked=${isRowSelected} @change="${this.onRadioChange}" />`;
   };
 
   private checkboxRender: GridColumnBodyLitRenderer<any> = row => {
