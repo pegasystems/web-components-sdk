@@ -197,8 +197,8 @@ class CheckBox extends FormComponentBase {
           .pConn=${this.thePConn}
           ?disabled=${this.bReadonly}
           label=${this.caption}
-          value=${this.value}
           ?checked=${this.isChecked}
+          value=${this.value}
           testId=${this.testId}
         >
         </lion-checkbox>
@@ -215,26 +215,22 @@ class CheckBox extends FormComponentBase {
       listOfCheckboxes.push(label);
       listSourceItems.forEach((element, index) => {
         const multiChecked = this.selectedvalues?.some?.(data => data[dataField] === element.key);
-        const content = multiChecked
-          ? html`
-                <lion-checkbox
-                    id=${index}
-                    dataTestId=${this.testId}+':'+${element.value}
-                    checked
-                    .model-value=${{ value: element.text ?? element.value, key: element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key) }}
-                    @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
-                    <span slot="label">${element.text ?? element.value}</span>
-                </lion-checkbox>
-              `
-          : html`
-                <lion-checkbox
-                    id=${index}
-                    dataTestId=${this.testId}+':'+${element.value}
-                    .model-value=${{ value: element.text ?? element.value, key: element.key, checked: this.selectedvalues?.some?.(data => data[dataField] === element.key) }}
-                    @blur=${this.fieldOnBlur} @change=${this.handleChangeMultiMode}>
-                    <span slot="label">${element.text ?? element.value}</span>
-                </lion-checkbox>
-              `;
+        const content = html`
+          <lion-checkbox
+            id=${index}
+            ?checked=${multiChecked}
+            dataTestId=${this.testId || element.value}
+            .model-value=${{
+              value: element.text ?? element.value,
+              key: element.key,
+              checked: this.selectedvalues?.some?.(data => data[dataField] === element.key)
+            }}
+            @blur=${this.fieldOnBlur}
+            @change=${this.handleChangeMultiMode}
+          >
+            <span slot="label">${element.text ?? element.value}</span>
+          </lion-checkbox>
+        `;
         listOfCheckboxes.push(content);
       });
       const labelEnd = html`</div>`;
@@ -244,40 +240,21 @@ class CheckBox extends FormComponentBase {
       const theContent = html` ${this.bVisible
         ? html` <div class="check-box-form">
             ${bHideLabel === true ? nothing : html`${this.label}`}
-            ${this.isChecked
-              ? html` <lion-checkbox
-                  id=${this.theComponentId}
-                  dataTestId=${this.testId}
-                  checked
-                  .fieldName=${this.label}
-                  .validators=${this.lionValidatorsArray}
-                  .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                  ?readonly=${this.bReadonly}
-                  ?disabled=${this.bDisabled}
-                  .model-value=${{ value: this.caption, checked: this.isChecked }}
-                  @click=${this.fieldOnChange}
-                  @blur=${this.fieldOnBlur}
-                  @change=${this.fieldOnChange}
-                >
-                  <span slot="label">${this.caption}</span>
-                </lion-checkbox>`
-              : html`
-                  <lion-checkbox
-                    id=${this.theComponentId}
-                    dataTestId=${this.testId}
-                    .fieldName=${this.label}
-                    .validators=${this.lionValidatorsArray}
-                    .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                    ?readonly=${this.bReadonly}
-                    ?disabled=${this.bDisabled}
-                    .model-value=${{ value: this.caption, checked: this.isChecked }}
-                    @click=${this.fieldOnChange}
-                    @blur=${this.fieldOnBlur}
-                    @change=${this.fieldOnChange}
-                  >
-                    <span slot="label">${this.caption}</span>
-                  </lion-checkbox>
-                `}
+            ${html` <lion-checkbox
+              id=${this.theComponentId}
+              ?checked=${this.isChecked}
+              dataTestId=${this.testId}
+              .fieldName=${this.label}
+              .validators=${this.lionValidatorsArray}
+              .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+              ?readonly=${this.bReadonly}
+              ?disabled=${this.bDisabled}
+              .model-value=${{ value: this.caption, checked: this.isChecked }}
+              @blur=${this.fieldOnBlur}
+              @change=${this.fieldOnChange}
+            >
+              <span slot="label">${this.caption}</span>
+            </lion-checkbox>`}
           </div>`
         : nothing}`;
       this.renderTemplates.push(theContent);
