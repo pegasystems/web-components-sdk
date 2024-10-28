@@ -39,9 +39,6 @@ class Percentage extends FormComponentBase {
 
     // setup this component's styling...
     this.theComponentStyleTemplate = percentageStyles;
-
-    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
-    this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
   disconnectedCallback() {
@@ -63,6 +60,11 @@ class Percentage extends FormComponentBase {
     // const theConfigProps = this.thePConn.getConfigProps();
   }
 
+  fieldOnChange(event: any) {
+    event.target.value = event.target.value.replace('%', '');
+    super.fieldOnChange(event);
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -70,7 +72,7 @@ class Percentage extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
-
+    this.value = (parseFloat(this.value) / 100).toString();
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
@@ -96,9 +98,9 @@ class Percentage extends FormComponentBase {
       ? html` <lion-input-amount
           id=${this.theComponentId}
           dataTestId=${this.testId}
-          .modelValue=${parseFloat(this.value)}
           .fieldName=${this.label}
           .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
+          .modelValue=${parseFloat(this.value)}
           .validators=${this.lionValidatorsArray}
           .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           ?readonly=${this.bReadonly}
