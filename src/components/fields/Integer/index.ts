@@ -40,9 +40,6 @@ class Integer extends FormComponentBase {
 
     // setup this component's styling...
     this.theComponentStyleTemplate = integerStyles;
-
-    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
-    this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
   disconnectedCallback() {
