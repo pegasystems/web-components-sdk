@@ -201,11 +201,9 @@ class RadioButtons extends FormComponentBase {
                       this.localePath,
                       this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
                     );
-                    return html`
-                      ${option.key === this.value
-                        ? html` <lion-radio class="psdk-radio-button" checked label=${val} .choiceValue=${option.key}></lion-radio>`
-                        : html` <lion-radio class="psdk-radio-button" label=${val} .choiceValue=${option.key}></lion-radio>`}
-                    `;
+                    return option.key === this.value
+                      ? html` <lion-radio class="psdk-radio-button" checked label=${val} .choiceValue=${option.key}></lion-radio>`
+                      : html` <lion-radio class="psdk-radio-button" label=${val} .choiceValue=${option.key}></lion-radio>`;
                   })}
                 </div>
               </lion-radio-group>
