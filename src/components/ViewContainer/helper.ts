@@ -11,7 +11,7 @@ export const configureBrowserBookmark = pConnect => {
   const context = pConnect.getContextName();
   const containerName = pConnect.getContainerName();
   const navPages = pConnect.getValue('pyPortal.pyPrimaryNavPages');
-  const defaultViewLabel = Array.isArray(navPages) && navPages[0] ? navPages[0].pyLabel : '';
+  const defaultViewLabel = Array.isArray(navPages) && navPages[0] ? (navPages[0] as any).pyLabel : '';
   PCore.configureForBrowserBookmark({
     context,
     containerName,
