@@ -105,18 +105,21 @@ class Currency extends FormComponentBase {
     this.prepareForRender();
 
     // Handle and return if read only rendering
-    if (this.bReadonly) {
-      return html`
-        <text-form
-          .pConn=${this.thePConn}
-          ?disabled=${this.bDisabled}
+    if (this.bReadonly && this.bVisible) {
+      const theContent = html`
+        <lion-input-amount
+          ?readonly=${this.bReadonly}
           ?visible=${this.bVisible}
           label=${this.label}
-          value=${this.value}
-          testId=${this.testId}
+          .modelValue=${parseFloat(this.value)}
+          dataTestId=${this.testId}
+          currency=${this.currencyISOCode}
         >
-        </text-form>
+        </lion-input-amount>
       `;
+      this.renderTemplates.push(theContent);
+
+      return this.renderTemplates;
     }
 
     // lion-input-amount options as based on Intl.NumberFormat standard

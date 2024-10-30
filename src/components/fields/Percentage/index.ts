@@ -78,18 +78,22 @@ class Percentage extends FormComponentBase {
     this.prepareForRender();
 
     // Handle and return if read only rendering
-    if (this.bReadonly) {
-      return html`
-        <text-form
-          .pConn=${this.thePConn}
-          ?disabled=${this.bDisabled}
+    if (this.bReadonly && this.bVisible) {
+      const theContent = html`
+        <lion-input-amount
+          id=${this.theComponentId}
+          ?readonly=${this.bReadonly}
           ?visible=${this.bVisible}
           label=${this.label}
-          value=${this.value}
-          testId=${this.testId}
+          .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
+          .modelValue=${parseFloat(this.value)}
+          dataTestId=${this.testId}
         >
-        </text-form>
+        </lion-input-amount>
       `;
+      this.renderTemplates.push(theContent);
+
+      return this.renderTemplates;
     }
 
     // lion-input-amount options as based on Intl.NumberFormat standard
@@ -105,7 +109,6 @@ class Percentage extends FormComponentBase {
           .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           ?readonly=${this.bReadonly}
           ?disabled=${this.bDisabled}
-          @click=${this.fieldOnChange}
           @blur=${this.fieldOnBlur}
           @change=${this.fieldOnChange}
         >

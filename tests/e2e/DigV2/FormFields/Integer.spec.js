@@ -80,7 +80,7 @@ test.describe('E2E test', () => {
     /** Selecting Update from the Sub Category dropdown */
     await page.selectOption('lion-select[datatestid="9463d5f18a8924b3200b56efaad63bda"] select', 'Update');
 
-    const readonlyInteger = page.locator('lion-input[datatestid="c6f04035ab4212992a31968bf190875b"]  >> input');
+    const readonlyInteger = page.locator('lion-input-amount[datatestid="c6f04035ab4212992a31968bf190875b"]');
     attributes = await common.getAttributes(readonlyInteger);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
