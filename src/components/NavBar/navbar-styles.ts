@@ -60,11 +60,6 @@ export const navbarStyles = html`
       color: var(--app-nav-color);
       overflow: hidden;
       white-space: nowrap;
-      transition: width var(--transition-medium) var(--natural-ease);
-      will-change: width;
-    }
-
-    .psdk-appshell-nav:hover {
       width: var(--app-nav-width-expanded);
     }
 

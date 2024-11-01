@@ -72,7 +72,7 @@ class Details extends DetailsTemplateBase {
         if (theCompType === 'reference') {
           const configObj = thePConn.getReferencedView();
           configObj.config.readOnly = true;
-          configObj.config.displayMode = 'LABELS_LEFT';
+          configObj.config.displayMode = 'DISPLAY_ONLY';
           const propToUse = { ...thePConn.getInheritedProps() };
           configObj.config.label = propToUse?.label;
           const loadedPConn = thePConn.getReferencedViewPConnect(true).getPConnect();

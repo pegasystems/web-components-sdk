@@ -80,7 +80,7 @@ class DataReference extends BridgeBase {
     this.hideLabel = theConfigProps.hideLabel;
 
     this.childrenToRender = this.children;
-    this.isDisplayModeEnabled = ['LABELS_LEFT', 'STACKED_LARGE_VAL'].includes(this.displayMode);
+    this.isDisplayModeEnabled = ['DISPLAY_ONLY', 'STACKED_LARGE_VAL'].includes(this.displayMode);
 
     this.propsToUse = { label: this.label, showLabel: this.showLabel, ...this.thePConn.getInheritedProps() };
     if (this.propsToUse.showLabel === false) {
