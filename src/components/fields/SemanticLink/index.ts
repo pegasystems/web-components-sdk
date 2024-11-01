@@ -97,7 +97,7 @@ class SemanticLink extends BridgeBase {
   }
 
   getSingleReferenceHtml(): any {
-    if (this.displayMode === 'LABELS_LEFT' || (!this.displayMode && this.label !== undefined)) {
+    if (this.displayMode === 'DISPLAY_ONLY' || (!this.displayMode && this.label !== undefined)) {
       return html`<div>
         <div class="psdk-grid-filter" id="semantic-link-grid">
           <div class="psdk-field-label">${this.label}</div>
