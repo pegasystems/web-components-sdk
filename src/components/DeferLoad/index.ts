@@ -163,7 +163,7 @@ class DeferLoad extends BridgeBase {
         }
       };
       const configObject = PCore.createPConnect(config);
-      configObject.getPConnect().setInheritedProp('displayMode', 'LABELS_LEFT');
+      configObject.getPConnect().setInheritedProp('displayMode', 'DISPLAY_ONLY');
       this.loadedPConn = configObject.getPConnect();
       this.componentName = this.loadedPConn.getComponentName();
       // ${BridgeBase.getComponentFromConfigObj(config)}
