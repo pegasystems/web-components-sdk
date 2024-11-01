@@ -66,29 +66,7 @@ class Details extends DetailsTemplateBase {
       this.arFields = [];
       const pKid = kid.getPConnect();
       const fields = pKid.getChildren();
-      fields?.forEach(field => {
-        const thePConn = field.getPConnect();
-        const theCompType = thePConn.getComponentName().toLowerCase();
-        if (theCompType === 'reference') {
-          const configObj = thePConn.getReferencedView();
-          configObj.config.readOnly = true;
-          configObj.config.displayMode = 'LABELS_LEFT';
-          const propToUse = { ...thePConn.getInheritedProps() };
-          configObj.config.label = propToUse?.label;
-          const loadedPConn = thePConn.getReferencedViewPConnect(true).getPConnect();
-          const data = {
-            type: theCompType,
-            pConn: loadedPConn
-          };
-          this.arFields.push(data);
-        } else {
-          const data = {
-            type: theCompType,
-            config: thePConn.getConfigProps()
-          };
-          this.arFields.push(data);
-        }
-      });
+      this.arFields.push(...fields);
     }
 
     this.requestUpdate();

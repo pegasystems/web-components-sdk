@@ -73,8 +73,32 @@ class DetailsFields extends LitElement {
 
   getFieldsHtml(arFields): any {
     const arFHtml: any[] = [];
+    const fields: any[] = [];
+    arFields?.forEach(field => {
+      const thePConn = field.getPConnect();
+      const theCompType = thePConn.getComponentName().toLowerCase();
+      if (theCompType === 'reference') {
+        const configObj = thePConn.getReferencedView();
+        configObj.config.readOnly = true;
+        configObj.config.displayMode = 'DISPLAY_ONLY';
+        const propToUse = { ...thePConn.getInheritedProps() };
+        configObj.config.label = propToUse?.label;
+        const loadedPConn = thePConn.getReferencedViewPConnect(true).getPConnect();
+        const data = {
+          type: theCompType,
+          pConn: loadedPConn
+        };
+        fields.push(data);
+      } else {
+        const data = {
+          type: theCompType,
+          config: thePConn.getConfigProps()
+        };
+        fields.push(data);
+      }
+    });
 
-    for (const field of arFields) {
+    for (const field of fields) {
       if (field?.type === 'reference') {
         arFHtml.push(html`
           <div>
