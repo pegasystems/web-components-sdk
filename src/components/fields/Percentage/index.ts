@@ -77,8 +77,13 @@ class Percentage extends FormComponentBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
+    // return if not visible
+    if (!this.bVisible) {
+      return nothing;
+    }
+
     // Handle and return if read only rendering
-    if (this.bReadonly && this.bVisible) {
+    if (this.bReadonly) {
       const theContent = html`
         <lion-input-amount
           id=${this.theComponentId}
@@ -98,23 +103,21 @@ class Percentage extends FormComponentBase {
 
     // lion-input-amount options as based on Intl.NumberFormat standard
     //  NOTE: we set modelValue to parseFloat(this.value). This helps validation.
-    const theContent = html`${this.bVisible
-      ? html` <lion-input-amount
-          id=${this.theComponentId}
-          dataTestId=${this.testId}
-          .fieldName=${this.label}
-          .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
-          .modelValue=${parseFloat(this.value)}
-          .validators=${this.lionValidatorsArray}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-          ?readonly=${this.bReadonly}
-          ?disabled=${this.bDisabled}
-          @blur=${this.fieldOnBlur}
-          @change=${this.fieldOnChange}
-        >
-          <span slot="label">${this.annotatedLabel}</span>
-        </lion-input-amount>`
-      : nothing}`;
+    const theContent = html` <lion-input-amount
+      id=${this.theComponentId}
+      dataTestId=${this.testId}
+      .fieldName=${this.label}
+      .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
+      .modelValue=${parseFloat(this.value)}
+      .validators=${this.lionValidatorsArray}
+      .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+      ?readonly=${this.bReadonly}
+      ?disabled=${this.bDisabled}
+      @blur=${this.fieldOnBlur}
+      @change=${this.fieldOnChange}
+    >
+      <span slot="label">${this.annotatedLabel}</span>
+    </lion-input-amount>`;
 
     this.renderTemplates.push(theContent);
 

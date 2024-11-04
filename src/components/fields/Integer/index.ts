@@ -69,8 +69,13 @@ class Integer extends FormComponentBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
+    // return if not visible
+    if (!this.bVisible) {
+      return nothing;
+    }
+
     // Handle and return if read only rendering
-    if (this.bReadonly && this.bVisible) {
+    if (this.bReadonly) {
       const theContent = html`
         <lion-input-amount
           id=${this.theComponentId}
@@ -94,27 +99,25 @@ class Integer extends FormComponentBase {
 
     // lion-input-amount options as based on Intl.NumberFormat standard
     //  NOTE: we set modelValue to parseInt(this.value) to trim any decimal. This helps validation.
-    const theContent = html`${this.bVisible
-      ? html` <lion-input-amount
-          id=${this.theComponentId}
-          dataTestId=${this.testId}
-          .fieldName=${this.label}
-          .formatOptions="${{
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-          }}"
-          .modelValue=${parseInt(this.value, 10)}
-          .validators=${this.lionValidatorsArray}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-          ?readonly=${this.bReadonly}
-          ?disabled=${this.bDisabled}
-          @click=${this.fieldOnChange}
-          @blur=${this.fieldOnBlur}
-          @change=${this.fieldOnChange}
-        >
-          <span slot="label">${this.annotatedLabel}</span>
-        </lion-input-amount>`
-      : nothing}`;
+    const theContent = html` <lion-input-amount
+      id=${this.theComponentId}
+      dataTestId=${this.testId}
+      .fieldName=${this.label}
+      .formatOptions="${{
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }}"
+      .modelValue=${parseInt(this.value, 10)}
+      .validators=${this.lionValidatorsArray}
+      .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+      ?readonly=${this.bReadonly}
+      ?disabled=${this.bDisabled}
+      @click=${this.fieldOnChange}
+      @blur=${this.fieldOnBlur}
+      @change=${this.fieldOnChange}
+    >
+      <span slot="label">${this.annotatedLabel}</span>
+    </lion-input-amount>`;
 
     this.renderTemplates.push(theContent);
 
