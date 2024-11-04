@@ -256,12 +256,14 @@ class SimpleTableManual extends BridgeBase {
     const context = this.thePConn.getContextName();
     // if dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (dataPageName) {
-      getDataPage(dataPageName, parameters, context).then(response => {
-        const data = this.formatRowsData(response);
-        this.rowData = data;
-      }).catch(e => {
-        console.log(e);
-      });
+      getDataPage(dataPageName, parameters, context)
+        .then(response => {
+          const data = this.formatRowsData(response);
+          this.rowData = data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     } else {
       // The referenceList prop has the JSON data for each row to be displayed
       //  in the table. So, iterate over referenceList to create the dataRows that
