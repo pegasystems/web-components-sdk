@@ -7,6 +7,7 @@ import '../PromotedFilters';
 import { Utils } from '../../../helpers/utils';
 import { buildFieldsForTable } from './helpers';
 import { FieldGroupUtils } from '../../../helpers/field-group-utils';
+import { getDataPage } from '../../../helpers/data_page';
 
 // import the component's styles as HTML with <style>
 import { simpleTableManualStyles } from './simple-table-manual-styles';
@@ -255,12 +256,12 @@ class SimpleTableManual extends BridgeBase {
     const context = this.thePConn.getContextName();
     // if dataPageName property value exists then make a datapage fetch call and get the list of data.
     if (dataPageName) {
-      PCore.getDataApiUtils()
-        .getData(dataPageName, parameters, context)
-        .then(response => {
-          const data = this.formatRowsData(response.data.data);
-          this.rowData = data;
-        });
+      getDataPage(dataPageName, parameters, context).then(response => {
+        const data = this.formatRowsData(response);
+        this.rowData = data;
+      }).catch(e => {
+        console.log(e);
+      });
     } else {
       // The referenceList prop has the JSON data for each row to be displayed
       //  in the table. So, iterate over referenceList to create the dataRows that
