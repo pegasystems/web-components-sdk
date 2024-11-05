@@ -86,7 +86,7 @@ class MultiReferenceReadonly extends BridgeBase {
   getMultiReferenceHtml(): any {
     const configObj = this.pConn.getReferencedView();
     configObj.config.label = this.label;
-    this.pConn = this.pConn.getReferencedViewPConnect(true).getPConnect();
+    // this.pConn = this.pConn.getReferencedViewPConnect(true).getPConnect();
     return html`<simple-table-manual .pConn=${this.pConn}></simple-table-manual>`;
   }
 

@@ -8,6 +8,7 @@ import '../../../Region';
 import { detailsStyles } from './details-styles';
 
 import '../../../designSystemExtension/DetailsFields';
+import { getDetailsFieldArray } from '../../../../helpers/details-utils';
 
 interface DetailsProps {
   // If any, enter additional props that only exist on this component
@@ -66,29 +67,7 @@ class Details extends DetailsTemplateBase {
       this.arFields = [];
       const pKid = kid.getPConnect();
       const fields = pKid.getChildren();
-      fields?.forEach(field => {
-        const thePConn = field.getPConnect();
-        const theCompType = thePConn.getComponentName().toLowerCase();
-        if (theCompType === 'reference') {
-          const configObj = thePConn.getReferencedView();
-          configObj.config.readOnly = true;
-          configObj.config.displayMode = 'DISPLAY_ONLY';
-          const propToUse = { ...thePConn.getInheritedProps() };
-          configObj.config.label = propToUse?.label;
-          const loadedPConn = thePConn.getReferencedViewPConnect(true).getPConnect();
-          const data = {
-            type: theCompType,
-            pConn: loadedPConn
-          };
-          this.arFields.push(data);
-        } else {
-          const data = {
-            type: theCompType,
-            config: thePConn.getConfigProps()
-          };
-          this.arFields.push(data);
-        }
-      });
+      this.arFields = getDetailsFieldArray(fields);
     }
 
     this.requestUpdate();
