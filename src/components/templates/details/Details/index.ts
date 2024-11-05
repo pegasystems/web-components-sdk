@@ -8,6 +8,7 @@ import '../../../Region';
 import { detailsStyles } from './details-styles';
 
 import '../../../designSystemExtension/DetailsFields';
+import { getDetailsFieldArray } from '../../../../helpers/details-utils';
 
 interface DetailsProps {
   // If any, enter additional props that only exist on this component
@@ -66,7 +67,7 @@ class Details extends DetailsTemplateBase {
       this.arFields = [];
       const pKid = kid.getPConnect();
       const fields = pKid.getChildren();
-      this.arFields.push(...fields);
+      this.arFields = getDetailsFieldArray(fields);
     }
 
     this.requestUpdate();

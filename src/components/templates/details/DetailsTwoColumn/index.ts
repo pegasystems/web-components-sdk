@@ -8,6 +8,7 @@ import '../../../Region';
 import { detailsTwoColumnStyles } from './details-two-column-styles';
 
 import '../../../designSystemExtension/DetailsFields';
+import { getDetailsFieldArray } from '../../../../helpers/details-utils';
 
 @customElement('details-two-column-component')
 class DetailsTwoColumn extends DetailsTemplateBase {
@@ -58,9 +59,9 @@ class DetailsTwoColumn extends DetailsTemplateBase {
       const pKid = kid.getPConnect();
       const fields = pKid.getChildren();
       if (this.children.indexOf(kid) == 0) {
-        this.arFields = fields;
+        this.arFields = getDetailsFieldArray(fields);
       } else {
-        this.arFields2 = fields;
+        this.arFields2 = getDetailsFieldArray(fields);
       }
     }
 
