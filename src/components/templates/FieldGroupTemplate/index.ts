@@ -94,7 +94,7 @@ class FieldGroupTemplate extends BridgeBase {
     this.configProps = this.thePConn.getConfigProps() as FieldGroupTemplateProps;
     const renderMode = this.configProps.renderMode;
     const displayMode = this.configProps.displayMode;
-    this.readonlyMode = renderMode === 'ReadOnly' || displayMode === 'LABELS_LEFT';
+    this.readonlyMode = renderMode === 'ReadOnly' || displayMode === 'DISPLAY_ONLY';
     this.contextClass = this.configProps.contextClass;
     const lookForChildInConfig = this.configProps.lookForChildInConfig;
     this.heading = this.configProps.heading ?? 'Row';

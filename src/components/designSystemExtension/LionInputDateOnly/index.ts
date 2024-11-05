@@ -15,6 +15,10 @@ class LionInputDateOnly extends LionInputDate {
     this.parser = viewValue => new Date(viewValue);
     this.serializer = toIsoDate;
     this.formatter = toIsoDate;
+
+    if (this.modelValue) {
+      this.value = this.serializer(this.modelValue);
+    }
   }
 }
 export default LionInputDateOnly;

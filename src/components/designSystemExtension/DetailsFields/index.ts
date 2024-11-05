@@ -73,7 +73,6 @@ class DetailsFields extends LitElement {
 
   getFieldsHtml(arFields): any {
     const arFHtml: any[] = [];
-
     for (const field of arFields) {
       if (field?.type === 'reference') {
         arFHtml.push(html`

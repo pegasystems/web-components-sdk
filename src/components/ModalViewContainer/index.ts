@@ -5,7 +5,6 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 
 // import the component's styles as HTML with <style>
 import { modalViewContainerStyles } from './modal-view-container-styles';
-import * as isEqual from 'fast-deep-equal';
 
 import '../CancelAlert';
 
@@ -386,9 +385,8 @@ class ModalViewContainer extends BridgeBase {
   compareCaseInfoIsDifferent(oCurrentCaseInfo: Object): boolean {
     let bRet = false;
 
-    // fast-deep-equal version
-    if (isEqual !== undefined) {
-      bRet = !isEqual(this.oCaseInfo, oCurrentCaseInfo);
+    if (PCore.isDeepEqual !== undefined) {
+      bRet = !PCore.isDeepEqual(this.oCaseInfo, oCurrentCaseInfo);
     } else {
       const sCurrnentCaseInfo = JSON.stringify(oCurrentCaseInfo);
       const sOldCaseInfo = JSON.stringify(this.oCaseInfo);

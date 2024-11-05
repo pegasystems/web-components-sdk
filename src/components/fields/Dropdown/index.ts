@@ -116,7 +116,9 @@ class Dropdown extends FormComponentBase {
     const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
     this.fieldMetadata = theConfigProps.fieldMetadata;
-    const metaData = Array.isArray(this.fieldMetadata) ? this.fieldMetadata.filter(field => field?.classID === className)[0] : this.fieldMetadata;
+    const metaData = Array.isArray(this.fieldMetadata)
+      ? this.fieldMetadata.filter((field: any) => field?.classID === className)[0]
+      : this.fieldMetadata;
 
     let displayName = metaData?.datasource?.propertyForDisplayText;
     displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);

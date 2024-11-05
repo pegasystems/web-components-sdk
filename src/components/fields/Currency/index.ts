@@ -52,9 +52,6 @@ class Currency extends FormComponentBase {
 
     // setup this component's styling...
     this.theComponentStyleTemplate = currencyStyles;
-
-    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
-    this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
   disconnectedCallback() {
@@ -107,41 +104,46 @@ class Currency extends FormComponentBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
+    // return if not visible
+    if (!this.bVisible) {
+      return nothing;
+    }
     // Handle and return if read only rendering
     if (this.bReadonly) {
-      return html`
-        <text-form
-          .pConn=${this.thePConn}
-          ?disabled=${this.bDisabled}
+      const theContent = html`
+        <lion-input-amount
+          ?readonly=${this.bReadonly}
           ?visible=${this.bVisible}
           label=${this.label}
-          value=${this.value}
-          testId=${this.testId}
+          .modelValue=${parseFloat(this.value)}
+          dataTestId=${this.testId}
+          currency=${this.currencyISOCode}
         >
-        </text-form>
+        </lion-input-amount>
       `;
+      this.renderTemplates.push(theContent);
+
+      return this.renderTemplates;
     }
 
     // lion-input-amount options as based on Intl.NumberFormat standard
     //  NOTE: we set modelValue to parseFloat(this.value). This helps validation.
-    const theContent = html`${this.bVisible
-      ? html` <lion-input-amount
-          id=${this.theComponentId}
-          dataTestId=${this.testId}
-          .modelValue=${parseFloat(this.value)}
-          .fieldName=${this.label}
-          .validators=${this.lionValidatorsArray}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-          currency=${this.currencyISOCode}
-          ?readonly=${this.bReadonly}
-          ?disabled=${this.bDisabled}
-          @click=${this.fieldOnChange}
-          @blur=${this.fieldOnBlur}
-          @change=${this.fieldOnChange}
-        >
-          <span slot="label">${this.annotatedLabel}</span>
-        </lion-input-amount>`
-      : nothing}`;
+    const theContent = html` <lion-input-amount
+      id=${this.theComponentId}
+      dataTestId=${this.testId}
+      .modelValue=${parseFloat(this.value)}
+      .fieldName=${this.label}
+      .validators=${this.lionValidatorsArray}
+      .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+      currency=${this.currencyISOCode}
+      ?readonly=${this.bReadonly}
+      ?disabled=${this.bDisabled}
+      @click=${this.fieldOnChange}
+      @blur=${this.fieldOnBlur}
+      @change=${this.fieldOnChange}
+    >
+      <span slot="label">${this.annotatedLabel}</span>
+    </lion-input-amount>`;
 
     this.renderTemplates.push(theContent);
 

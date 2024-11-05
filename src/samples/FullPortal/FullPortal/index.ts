@@ -7,6 +7,7 @@ import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-textarea.js';
 
 // NOTE: you need to import ANY component you may render.
+import '../../../components/AppEntry';
 
 // import the component's styles as HTML with <style>
 import { fullPortalStyles } from './full-portal-styles';

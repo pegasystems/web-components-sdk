@@ -83,50 +83,14 @@ export const multiStepStyles = html`
     }
 
     .psdk-horizontal-steps {
+      white-space: nowrap;
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      width: 100%;
+      align-items: center;
+      text-align: left;
     }
 
     .psdk-horizontal-assignment {
       padding-left: 2rem;
-    }
-
-    .psdk-horizontal-header-step {
-      padding: 0.5rem;
-      height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      flex-basis: 0;
-      max-width: 100%;
-      min-width: 0;
-    }
-
-    .psdk-horizontal-header-step-first {
-      padding: 0.5rem;
-      height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      flex-basis: 0;
-      max-width: 100%;
-      min-width: 0;
-    }
-
-    .psdk-horizontal-header-step-last {
-      padding: 0.5rem;
-      height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-end;
-      flex-basis: 0;
-      max-width: 100%;
-      min-width: 0;
     }
 
     .psdk-horizontal-step-name {
@@ -158,6 +122,95 @@ export const multiStepStyles = html`
       background: #cfcfcf;
       left: 2rem;
       right: calc(2% + 0.8rem);
+    }
+
+    .psdk-horizontal-stepper {
+      background-color: transparent;
+      display: block;
+    }
+
+    .psdk-horizontal-stepper-header-container {
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      text-align: left;
+    }
+
+    .psdk-horizontal-step-header {
+      overflow: hidden;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+      box-sizing: content-box;
+      display: flex;
+      height: 72px;
+      overflow: hidden;
+      align-items: center;
+      padding: 0 24px;
+    }
+
+    .psdk-horizontal-step-icon {
+      background-color: var(--app-neutral-color);
+      color: #fff;
+      border-radius: 50%;
+      height: 24px;
+      width: 24px;
+      flex-shrink: 0;
+      position: relative;
+      display: block;
+      margin-right: 8px;
+      flex: none;
+    }
+
+    .psdk-horizontal-step-icon-content {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .psdk-horizontal-step-icon-selected {
+      background-color: var(--app-primary-color);
+      color: #fff;
+      border-radius: 50%;
+      height: 24px;
+      width: 24px;
+      flex-shrink: 0;
+      position: relative;
+      display: block;
+      margin-right: 8px;
+      flex: none;
+    }
+
+    .psdk-horizontal-step-label {
+      color: rgba(0, 0, 0, 0.54);
+      display: inline-block;
+      min-width: 50px;
+      vertical-align: middle;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: initial;
+    }
+
+    .psdk-horizontal-step-label-selected {
+      color: rgba(0, 0, 0, 0.87);
+      display: inline-block;
+      min-width: 50px;
+      vertical-align: middle;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: initial;
+    }
+
+    .psdk-horizontal-step-line {
+      border-top-color: rgba(0, 0, 0, 0.12);
+      border-top-width: 1px;
+      border-top-style: solid;
+      flex: auto;
+      height: 0;
+      margin: 0 -16px;
+      min-width: 32px;
     }
 
     .h-success {

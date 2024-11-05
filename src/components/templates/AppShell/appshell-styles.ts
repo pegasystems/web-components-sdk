@@ -11,7 +11,7 @@ export const appShellStyles = html`
       position: relative;
       min-height: 100vh;
       display: block;
-      width: 100%;
+      width: 90%;
     }
 
     .psdk-icon {

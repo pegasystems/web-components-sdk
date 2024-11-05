@@ -36,6 +36,7 @@ class RadioButtons extends FormComponentBase {
   localeName = '';
   localePath = '';
   localizedValue = '';
+  inline = false;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -99,7 +100,9 @@ class RadioButtons extends FormComponentBase {
     const refName = propName?.slice(propName.lastIndexOf('.') + 1);
 
     this.fieldMetadata = theConfigProps.fieldMetadata;
-    const metaData = Array.isArray(this.fieldMetadata) ? this.fieldMetadata.filter(field => field?.classID === className)[0] : this.fieldMetadata;
+    const metaData = Array.isArray(this.fieldMetadata)
+      ? this.fieldMetadata.filter((field: any) => field?.classID === className)[0]
+      : this.fieldMetadata;
 
     let displayName = metaData?.datasource?.propertyForDisplayText;
     displayName = displayName?.slice(displayName.lastIndexOf('.') + 1);
@@ -113,6 +116,7 @@ class RadioButtons extends FormComponentBase {
       this.localePath,
       this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
     );
+    this.inline = theConfigProps.inline;
   }
 
   // The original implementation of fieldOnChange before we switched to using the super class implementation
@@ -180,7 +184,6 @@ class RadioButtons extends FormComponentBase {
             <div class="mat-form-field-infix radio-group-form">
               <lion-radio-group
                 id=${this.theComponentId}
-                class="psdk-radio-vertical"
                 dataTestId=${this.testId}
                 .fieldName=${this.label}
                 .modelValue=${this.value}
@@ -193,18 +196,18 @@ class RadioButtons extends FormComponentBase {
                 @change=${this.fieldOnChange}
               >
                 <span slot="label" class="radio-group-label">${this.annotatedLabel}</span>
-                ${this.options.map((option: any) => {
-                  const val = this.thePConn.getLocalizedValue(
-                    option.value,
-                    this.localePath,
-                    this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
-                  );
-                  return html`
-                    ${option.key === this.value
+                <div class=${this.inline ? 'psdk-radio-horizontal' : 'psdk-radio-vertical'}>
+                  ${this.options.map((option: any) => {
+                    const val = this.thePConn.getLocalizedValue(
+                      option.value,
+                      this.localePath,
+                      this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
+                    );
+                    return option.key === this.value
                       ? html` <lion-radio class="psdk-radio-button" checked label=${val} .choiceValue=${option.key}></lion-radio>`
-                      : html` <lion-radio class="psdk-radio-button" label=${val} .choiceValue=${option.key}></lion-radio>`}
-                  `;
-                })}
+                      : html` <lion-radio class="psdk-radio-button" label=${val} .choiceValue=${option.key}></lion-radio>`;
+                  })}
+                </div>
               </lion-radio-group>
             </div>
           `

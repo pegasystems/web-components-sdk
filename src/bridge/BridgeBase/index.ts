@@ -3,7 +3,6 @@
 //  best practice to ensure compatible versions is to import LitElement from lit
 import { LitElement, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import * as isEqual from 'fast-deep-equal';
 import Utils from '../../helpers/utils';
 import { bootstrapStyles } from './bootstrap-styles';
 
@@ -72,15 +71,6 @@ export class BridgeBase extends LitElement {
     this.theStore = PCore.getStore();
     this.theComponentProps = {};
     this.renderTemplates = [];
-
-    // Always best to use deep object compare when it's available
-    if (isEqual !== undefined) {
-      if (this.bLogging) {
-        console.log(`${this.theComponentName}: [${this.theComponentId}] using deep object compare`);
-      }
-    } else if (this.bLogging) {
-      console.log(`${this.theComponentName}: [${this.theComponentId}] using JSON.stringify compare`);
-    }
   }
 
   /**
@@ -326,9 +316,8 @@ export class BridgeBase extends LitElement {
     const currentProps: any = currentComponentProps;
 
     // compare to current to prior props. If different, update stored props and return true
-    // fast-deep-equal version
-    if (isEqual !== undefined) {
-      bRet = !isEqual(priorProps, currentProps);
+    if (PCore.isDeepEqual !== undefined) {
+      bRet = !PCore.isDeepEqual(priorProps, currentProps);
     } else {
       // stringify compare version
       const priorPropsAsStr: string = JSON.stringify(priorProps);

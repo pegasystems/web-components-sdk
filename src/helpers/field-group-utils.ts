@@ -46,8 +46,8 @@ export class FieldGroupUtils {
     };
 
     const view = PCore.createPConnect(config);
-    if (pConn.getConfigProps()?.displayMode === 'LABELS_LEFT') {
-      view.getPConnect()?.setInheritedProp('displayMode', 'LABELS_LEFT');
+    if (pConn.getConfigProps()?.displayMode === 'DISPLAY_ONLY') {
+      view.getPConnect()?.setInheritedProp('displayMode', 'DISPLAY_ONLY');
     }
     return view;
   }

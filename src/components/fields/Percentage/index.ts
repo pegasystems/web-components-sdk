@@ -39,9 +39,6 @@ class Percentage extends FormComponentBase {
 
     // setup this component's styling...
     this.theComponentStyleTemplate = percentageStyles;
-
-    // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
-    this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
   disconnectedCallback() {
@@ -63,6 +60,11 @@ class Percentage extends FormComponentBase {
     // const theConfigProps = this.thePConn.getConfigProps();
   }
 
+  fieldOnChange(event: any) {
+    event.target.value = event.target.value.replace('%', '');
+    super.fieldOnChange(event);
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -70,46 +72,52 @@ class Percentage extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
-
+    this.value = (parseFloat(this.value) / 100).toString();
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
+    // return if not visible
+    if (!this.bVisible) {
+      return nothing;
+    }
+
     // Handle and return if read only rendering
     if (this.bReadonly) {
-      return html`
-        <text-form
-          .pConn=${this.thePConn}
-          ?disabled=${this.bDisabled}
+      const theContent = html`
+        <lion-input-amount
+          id=${this.theComponentId}
+          ?readonly=${this.bReadonly}
           ?visible=${this.bVisible}
           label=${this.label}
-          value=${this.value}
-          testId=${this.testId}
+          .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
+          .modelValue=${parseFloat(this.value)}
+          dataTestId=${this.testId}
         >
-        </text-form>
+        </lion-input-amount>
       `;
+      this.renderTemplates.push(theContent);
+
+      return this.renderTemplates;
     }
 
     // lion-input-amount options as based on Intl.NumberFormat standard
     //  NOTE: we set modelValue to parseFloat(this.value). This helps validation.
-    const theContent = html`${this.bVisible
-      ? html` <lion-input-amount
-          id=${this.theComponentId}
-          dataTestId=${this.testId}
-          .modelValue=${parseFloat(this.value)}
-          .fieldName=${this.label}
-          .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
-          .validators=${this.lionValidatorsArray}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-          ?readonly=${this.bReadonly}
-          ?disabled=${this.bDisabled}
-          @click=${this.fieldOnChange}
-          @blur=${this.fieldOnBlur}
-          @change=${this.fieldOnChange}
-        >
-          <span slot="label">${this.annotatedLabel}</span>
-        </lion-input-amount>`
-      : nothing}`;
+    const theContent = html` <lion-input-amount
+      id=${this.theComponentId}
+      dataTestId=${this.testId}
+      .fieldName=${this.label}
+      .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
+      .modelValue=${parseFloat(this.value)}
+      .validators=${this.lionValidatorsArray}
+      .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+      ?readonly=${this.bReadonly}
+      ?disabled=${this.bDisabled}
+      @blur=${this.fieldOnBlur}
+      @change=${this.fieldOnChange}
+    >
+      <span slot="label">${this.annotatedLabel}</span>
+    </lion-input-amount>`;
 
     this.renderTemplates.push(theContent);
 

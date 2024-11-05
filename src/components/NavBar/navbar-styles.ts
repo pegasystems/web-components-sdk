@@ -56,16 +56,10 @@ export const navbarStyles = html`
       flex-direction: column;
       justify-content: flex-start;
       background: var(--app-nav-bg);
-      width: var(--app-nav-width);
       height: 100%;
       color: var(--app-nav-color);
       overflow: hidden;
       white-space: nowrap;
-      transition: width var(--transition-medium) var(--natural-ease);
-      will-change: width;
-    }
-
-    .psdk-appshell-nav:hover {
       width: var(--app-nav-width-expanded);
     }
 

@@ -66,11 +66,11 @@ export const caseViewStyles = html`
 
     .psdk-case-view-info {
       flex: 0 0 auto;
-      width: 25rem;
       float: left;
       padding: 0rem 0.3125rem 0rem 0rem;
       height: 100%; /* Should be removed. Only for demonstration */
       background-color: var (--app-form-color);
+      width: 25%;
     }
 
     .psdk-case-view-main {
@@ -78,6 +78,7 @@ export const caseViewStyles = html`
       float: left;
       padding: 0rem 0.3125rem;
       height: 100%; /* Should be removed. Only for demonstration */
+      width: 50%;
     }
 
     .psdk-case-view-buttons {
@@ -88,10 +89,10 @@ export const caseViewStyles = html`
 
     .psdk-case-view-utilities {
       margin: 0.625rem 0rem;
-      width: 21.875rem;
       float: left;
       padding: 0rem 0.3125rem;
       height: 100%; /* Should be removed. Only for demonstration */
+      width: 25%;
     }
 
     .psdk-case-view-divider {

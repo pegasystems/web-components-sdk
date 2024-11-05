@@ -56,6 +56,7 @@ class ListView extends BridgeBase {
   rowID: any;
   response: any;
   compositeKeys: any;
+  selectedValues: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -109,6 +110,9 @@ class ListView extends BridgeBase {
     /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
     this.compositeKeys = theConfigProps?.compositeKeys;
     this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
+
+    this.selectedValue = theConfigProps.value;
+    this.selectedValues = theConfigProps.readonlyContextList;
 
     // const componentConfig = this.thePConn.getRawMetadata().config;
     // const refList = theConfigProps.referenceList;
@@ -353,13 +357,15 @@ class ListView extends BridgeBase {
   }
 
   private radioRender: GridColumnBodyLitRenderer<any> = row => {
-    const rowID = row[this.rowID];
-    return html`<input name="radio-buttons" type="radio" .value="${rowID}" @change="${this.onRadioChange}" />`;
+    const rowValue = row[this.rowID];
+    const isRowSelected = rowValue === this.selectedValue;
+    return html`<input name="radio-buttons" type="radio" .value="${rowValue}" ?checked=${isRowSelected} @change="${this.onRadioChange}" />`;
   };
 
   private checkboxRender: GridColumnBodyLitRenderer<any> = row => {
-    const rowID = row[this.rowID];
-    return html`<input name="checkbox" type="checkbox" .value="${rowID}" @change="${this.onCheckboxClick}" />`;
+    const rowValue = row[this.rowID];
+    const isRowSelected = this.selectedValues.some(selectedValue => selectedValue[this.rowID] === rowValue);
+    return html`<input name="checkbox" type="checkbox" .value="${rowValue}" ?checked=${isRowSelected} @change="${this.onCheckboxClick}" />`;
   };
 
   onRadioChange(event) {
