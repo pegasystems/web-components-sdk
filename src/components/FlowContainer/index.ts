@@ -268,7 +268,9 @@ class FlowContainer extends BridgeBase {
     this.caseMessages = this.thePConn.getValue('caseMessages');
     this.caseMessages = this.localizedVal(this.thePConn.getValue('caseMessages'), this.localeCategory);
 
-    if (this.caseMessages || !this.hasAssignments()) {
+    // caseMessages's behavior has changed in 24.2, and hence it doesn't let Optional Action work.
+    // Changing the below condition for now. Was: (theCaseMessages || !hasAssignments())
+    if (!this.hasAssignments()) {
       this.bHasCaseMessages = true;
 
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
