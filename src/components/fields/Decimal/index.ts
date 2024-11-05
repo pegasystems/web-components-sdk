@@ -63,43 +63,49 @@ class Decimal extends FormComponentBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
+    // return if not visible
+    if (!this.bVisible) {
+      return nothing;
+    }
+
     // Handle and return if read only rendering
     if (this.bReadonly) {
-      return html`
-        <text-form
-          .pConn=${this.thePConn}
-          ?disabled=${this.bDisabled}
+      const theContent = html`
+        <lion-input-amount
+          id=${this.theComponentId}
+          ?readonly=${this.bReadonly}
           ?visible=${this.bVisible}
           label=${this.label}
-          value=${this.value}
-          testId=${this.testId}
+          .modelValue=${this.value}
+          dataTestId=${this.testId}
         >
-        </text-form>
+        </lion-input-amount>
       `;
+      this.renderTemplates.push(theContent);
+
+      return this.renderTemplates;
     }
 
     loadDefaultFeedbackMessages();
 
-    const theContent = html`${this.bVisible
-      ? html` <div class="form-group">
-          <lion-input-amount
-            id=${this.theComponentId}
-            name="Amount"
-            dataTestId=${this.testId}
-            .modelValue=${this.value}
-            .fieldName=${this.label}
-            .validators=${this.lionValidatorsArray}
-            .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-            ?readonly=${this.bReadonly}
-            ?disabled=${this.bDisabled}
-            @click=${this.fieldOnChange}
-            @blur=${this.fieldOnBlur}
-            @change=${this.fieldOnChange}
-          >
-            <span slot="label">${this.annotatedLabel}</span>
-          </lion-input-amount>
-        </div>`
-      : nothing}`;
+    const theContent = html` <div class="form-group">
+      <lion-input-amount
+        id=${this.theComponentId}
+        name="Amount"
+        dataTestId=${this.testId}
+        .modelValue=${this.value}
+        .fieldName=${this.label}
+        .validators=${this.lionValidatorsArray}
+        .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+        ?readonly=${this.bReadonly}
+        ?disabled=${this.bDisabled}
+        @click=${this.fieldOnChange}
+        @blur=${this.fieldOnBlur}
+        @change=${this.fieldOnChange}
+      >
+        <span slot="label">${this.annotatedLabel}</span>
+      </lion-input-amount>
+    </div>`;
 
     this.renderTemplates.push(theContent);
 
