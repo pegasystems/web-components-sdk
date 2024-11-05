@@ -48,7 +48,8 @@ test.describe('E2E test', () => {
 
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('text-form[value="Basic Product"]')).toBeVisible();
-    await expect(assignment.locator('text-form[value="75"]')).toBeVisible();
+    await expect(assignment.locator('currency-form >> lion-input-amount')).toBeVisible();
+    await expect(await assignment.locator('currency-form >> lion-input-amount >> input').inputValue()).toBe('75.00');
     await expect(assignment.locator('text-form[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
@@ -64,7 +65,8 @@ test.describe('E2E test', () => {
 
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('text-form[value="Basic Product"]')).toBeVisible();
-    await expect(assignment.locator('text-form[value="75"]')).toBeVisible();
+    await expect(assignment.locator('currency-form >> lion-input-amount')).toBeVisible();
+    await expect(await assignment.locator('currency-form >> lion-input-amount >> input').inputValue()).toBe('75.00');
     await expect(assignment.locator('text-form[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
@@ -84,7 +86,8 @@ test.describe('E2E test', () => {
 
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('text-form[value="Luxury Product"]')).toBeVisible();
-    await expect(assignment.locator('text-form[value="200"]')).toBeVisible();
+    await expect(assignment.locator('currency-form >> lion-input-amount')).toBeVisible();
+    await expect(await assignment.locator('currency-form >> lion-input-amount >> input').inputValue()).toBe('200.00');
     await expect(assignment.locator('text-form[value="d63e2d8a-bd39-47b6-8dab-dce78a8bf91d"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
@@ -105,7 +108,8 @@ test.describe('E2E test', () => {
 
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('text-form[value="Basic Product"]')).toBeVisible();
-    await expect(assignment.locator('text-form[value="75"]')).toBeVisible();
+    await expect(assignment.locator('currency-form >> lion-input-amount')).toBeVisible();
+    await expect(await assignment.locator('currency-form >> lion-input-amount >> input').inputValue()).toBe('75.00');
     await expect(assignment.locator('text-form[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
@@ -150,7 +154,8 @@ test.describe('E2E test', () => {
 
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('text-form[value="Basic Product"]')).toBeVisible();
-    await expect(assignment.locator('text-form[value="75"]')).toBeVisible();
+    await expect(assignment.locator('currency-form >> lion-input-amount')).toBeVisible();
+    await expect(await assignment.locator('currency-form >> lion-input-amount >> input').inputValue()).toBe('75.00');
     await expect(assignment.locator('text-form[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();
@@ -187,7 +192,8 @@ test.describe('E2E test', () => {
 
     /** Testing the values present on Confirm screen */
     await expect(assignment.locator('text-form[value="Basic Product"]')).toBeVisible();
-    await expect(assignment.locator('text-form[value="75"]')).toBeVisible();
+    await expect(assignment.locator('currency-form >> lion-input-amount')).toBeVisible();
+    await expect(await assignment.locator('currency-form >> lion-input-amount >> input').inputValue()).toBe('75.00');
     await expect(assignment.locator('text-form[value="9f2584c2-5cb4-4abe-a261-d68050ee0f66"]')).toBeVisible();
 
     await page.locator('button:has-text("Previous")').click();

@@ -69,44 +69,55 @@ class Integer extends FormComponentBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    // Handle and return if read only rendering
-    if (this.bReadonly) {
-      return html`
-        <text-form
-          .pConn=${this.thePConn}
-          ?disabled=${this.bDisabled}
-          ?visible=${this.bVisible}
-          label=${this.label}
-          value=${this.value}
-          testId=${this.testId}
-        >
-        </text-form>
-      `;
+    // return if not visible
+    if (!this.bVisible) {
+      return nothing;
     }
 
-    // lion-input-amount options as based on Intl.NumberFormat standard
-    //  NOTE: we set modelValue to parseInt(this.value) to trim any decimal. This helps validation.
-    const theContent = html`${this.bVisible
-      ? html` <lion-input-amount
+    // Handle and return if read only rendering
+    if (this.bReadonly) {
+      const theContent = html`
+        <lion-input-amount
           id=${this.theComponentId}
-          dataTestId=${this.testId}
-          .fieldName=${this.label}
+          ?readonly=${this.bReadonly}
+          ?visible=${this.bVisible}
+          label=${this.label}
           .formatOptions="${{
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
           }}"
-          .modelValue=${parseInt(this.value, 10)}
-          .validators=${this.lionValidatorsArray}
-          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-          ?readonly=${this.bReadonly}
-          ?disabled=${this.bDisabled}
-          @click=${this.fieldOnChange}
-          @blur=${this.fieldOnBlur}
-          @change=${this.fieldOnChange}
+          .modelValue=${this.value}
+          dataTestId=${this.testId}
         >
-          <span slot="label">${this.annotatedLabel}</span>
-        </lion-input-amount>`
-      : nothing}`;
+        </lion-input-amount>
+      `;
+
+      this.renderTemplates.push(theContent);
+
+      return this.renderTemplates;
+    }
+
+    // lion-input-amount options as based on Intl.NumberFormat standard
+    //  NOTE: we set modelValue to parseInt(this.value) to trim any decimal. This helps validation.
+    const theContent = html` <lion-input-amount
+      id=${this.theComponentId}
+      dataTestId=${this.testId}
+      .fieldName=${this.label}
+      .formatOptions="${{
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }}"
+      .modelValue=${parseInt(this.value, 10)}
+      .validators=${this.lionValidatorsArray}
+      .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+      ?readonly=${this.bReadonly}
+      ?disabled=${this.bDisabled}
+      @click=${this.fieldOnChange}
+      @blur=${this.fieldOnBlur}
+      @change=${this.fieldOnChange}
+    >
+      <span slot="label">${this.annotatedLabel}</span>
+    </lion-input-amount>`;
 
     this.renderTemplates.push(theContent);
 

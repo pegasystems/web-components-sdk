@@ -78,7 +78,7 @@ test.describe('E2E test', () => {
     /** Selecting Update from the Sub Category dropdown */
     await page.selectOption('lion-select[datatestid="9463d5f18a8924b3200b56efaad63bda"] select', 'Update');
 
-    const readonlyDecimal = page.locator('lion-input[datatestid="acdcc5f01c940f07cf14373612721a0c"]  >> input');
+    const readonlyDecimal = page.locator('lion-input-amount[datatestid="acdcc5f01c940f07cf14373612721a0c"]');
     attributes = await common.getAttributes(readonlyDecimal);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
