@@ -12,8 +12,8 @@ const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
 
 @customElement('data-reference-component')
 class DataReference extends BridgeBase {
-  @property({ attribute: false, type: String }) label = undefined;
-  @property({ attribute: false, type: String }) showLabel = undefined;
+  @property({ attribute: false, type: String }) label = '';
+  @property({ attribute: false, type: Boolean }) showLabel;
   @property({ attribute: false, type: String }) displayMode = '';
   @property({ attribute: false, type: Boolean }) allowAndPersistChangesInReviewMode = false;
   @property({ attribute: false, type: String }) referenceType = '';
@@ -186,12 +186,10 @@ class DataReference extends BridgeBase {
 
     const refreshOptions = { autoDetectRefresh: true };
     if (this.canBeChangedInReviewMode && this.thePConn.getValue('__currentPageTabViewName')) {
-      // @ts-ignore - second parameter pageReference for getValue method should be optional
-      this.thePConn.getActionsApi().refreshCaseView(caseKey, this.thePConn.getValue('__currentPageTabViewName'), null, refreshOptions);
+      this.thePConn.getActionsApi().refreshCaseView(caseKey, this.thePConn.getValue('__currentPageTabViewName'), '', refreshOptions);
       PCore.getDeferLoadManager().refreshActiveComponents(this.thePConn.getContextName());
     } else {
       const pgRef = this.thePConn.getPageReference().replace('caseInfo.content', '');
-      // @ts-ignore
       this.thePConn.getActionsApi().refreshCaseView(caseKey, this.viewName, pgRef, refreshOptions);
     }
 

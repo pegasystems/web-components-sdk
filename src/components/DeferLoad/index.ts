@@ -122,8 +122,7 @@ class DeferLoad extends BridgeBase {
     } else {
       this.thePConn
         .getActionsApi()
-        // @ts-ignore argument null is not assignable to type string
-        .refreshCaseView(encodeURI(this.loadViewCaseID), this.name, null)
+        .refreshCaseView(encodeURI(this.loadViewCaseID), this.name, '')
         .then(data => {
           this.onResponse(data.root);
         })
@@ -135,8 +134,7 @@ class DeferLoad extends BridgeBase {
 
   getViewOptions = () => ({
     viewContext: this.resourceType,
-    // @ts-ignore - parameter “contextName” for getDataObject method should be optional
-    pageClass: this.loadViewCaseID ? '' : this.pConn$.getDataObject().pyPortal.classID,
+    pageClass: this.loadViewCaseID ? '' : this.thePConn.getDataObject().pyPortal.classID,
     container: this.isContainerPreview ? 'preview' : undefined,
     containerName: this.isContainerPreview ? 'preview' : undefined,
     updateData: this.isContainerPreview
