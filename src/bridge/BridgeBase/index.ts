@@ -23,8 +23,7 @@ export class BridgeBase extends LitElement {
   @property({ attribute: false, type: String }) validateMessage;
   @property({ attribute: false, type: Object }) theComponentStyleTemplate: any = nothing; // Any styling lit-html template that should be added to renderTemplates
 
-  // @ts-ignore
-  @property({ attribute: false }) thePConn: typeof PConnect; // Normalize incoming pConn to a PConnect object
+  @property({ attribute: false }) thePConn!: typeof PConnect; // Normalize incoming pConn to a PConnect object
   @property({ attribute: false, type: Object }) children;
   @property({ attribute: false, type: Object }) renderTemplates; // Array of lit-html templates to be rendered
 
@@ -178,8 +177,6 @@ export class BridgeBase extends LitElement {
     } else {
       // NOT a PConn -
       console.error(`--> ${this.theComponentName} is NOT a PConnect object! Expected for Boilerplate example`);
-      // @ts-ignore
-      this.thePConn = null;
     }
 
     // Initialize this.children (if available)
