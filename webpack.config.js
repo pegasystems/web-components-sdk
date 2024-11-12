@@ -1,9 +1,7 @@
 /* eslint-disable strict */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const LiveReloadPlugin = require('@kooneko/livereload-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const zlib = require('zlib');
 
@@ -11,13 +9,6 @@ module.exports = (env, argv) => {
   const pluginsToAdd = [];
   const mode = argv.mode;
 
-  pluginsToAdd.push(
-    new CleanWebpackPlugin({
-      dry: true,
-      verbose: false,
-      dangerouslyAllowCleanPatternsOutsideProject: true
-    })
-  );
   pluginsToAdd.push(
     new HtmlWebpackPlugin({
       template: './src/index.html',
@@ -47,16 +38,9 @@ module.exports = (env, argv) => {
           from: './node_modules/@pega/auth/lib/oauth-client/authDone.js',
           to: './'
         },
-        // {
-        //   from: './node_modules/@pega/constellationjs/dist/bootstrap-shell.js',
-        //   to: './constellation'
-        // },
         {
           from: './node_modules/@pega/constellationjs/dist/bootstrap-shell*',
           to: './constellation/[name][ext]'
-          // to() {
-          //   return Promise.resolve('constellation/[name][ext]');
-          // }
         },
         {
           from: './node_modules/@pega/constellationjs/dist/lib_asset.json',
@@ -65,17 +49,10 @@ module.exports = (env, argv) => {
         {
           from: './node_modules/@pega/constellationjs/dist/constellation-core*',
           to: './constellation/prerequisite/[name][ext]'
-          // to() {
-          //   return Promise.resolve('constellation/prerequisite');
-          //   // return Promise.resolve('constellation/prerequisite/[name].[ext]');
-          // }
         },
         {
           from: './assets/icons/*',
           to: './constellation/icons/[name][ext]'
-          // to() {
-          //   return Promise.resolve('constellation/icons/[name][ext]');
-          // }
         },
         {
           from: './node_modules/@pega/constellationjs/dist/js',
@@ -86,8 +63,8 @@ module.exports = (env, argv) => {
   );
 
   // Enable gzip and brotli compression
-  //  Exclude constellation-core and bootstrap-shell files since
-  //    client receives these files in gzip and brotli format
+  // Exclude constellation-core and bootstrap-shell files since
+  // client receives these files in gzip and brotli format
   if (mode === 'production') {
     pluginsToAdd.push(
       new CompressionPlugin({
@@ -116,23 +93,10 @@ module.exports = (env, argv) => {
     );
   }
 
-  if (mode === 'development') {
-    // In development mode, add LiveReload plug
-    //  When run in conjunction with build-with-watch,
-    //  This will reload the browser when code is changed/re-compiled
-    const liveReloadOptions = {
-      protocol: 'http',
-      appendScriptTag: true,
-      delay: 1000,
-      hostname: 'localhost'
-    };
-    pluginsToAdd.push(new LiveReloadPlugin(liveReloadOptions));
-  }
-
   // need to set mode to 'development' to get LiveReload to work
-  //  and for debugger statements to not be stripped out of the bundle
+  // and for debugger statements to not be stripped out of the bundle
   return {
-    mode: argv.mode,
+    mode,
     entry: {
       app: './src/index.ts'
     },
@@ -143,12 +107,13 @@ module.exports = (env, argv) => {
       port: 3501,
       open: false
     },
-    devtool: 'inline-source-map',
-    // devtool: argv.mode === 'production' ? false : 'inline-source-map',
+    devtool: mode === 'production' ? false : 'inline-source-map',
     plugins: pluginsToAdd,
     output: {
       filename: '[name].bundle.js',
-      path: path.resolve(__dirname, 'dist')
+      path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
+      clean: true
     },
     module: {
       rules: [
