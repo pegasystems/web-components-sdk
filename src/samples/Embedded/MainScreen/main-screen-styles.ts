@@ -8,6 +8,14 @@ export const mainScreenStyles = css`
     padding: 20px;
   }
 
+  .uplus-banner {
+    font-size: 20px;
+    // text-align: center;
+    width: 100%;
+    padding: 20px;
+    color: var(--app-form-color);
+  }
+
   .cc-main-screen {
     display: flex;
     flex-direction: column;
@@ -64,5 +72,20 @@ export const mainScreenStyles = css`
   .cc-info-image {
     width: 100%;
     border-radius: 10px;
+  }
+
+  .uplus-info {
+    display:flex; 
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 5rem;
+  }
+
+  .uplus-info-pega {
+      min-width: 40rem;
+      // width: 50%; 
+      // display: flex; 
+      // flex-direction: column; 
+      // margin-left: 25%;
   }
 `;

@@ -186,7 +186,7 @@ class DeferLoad extends BridgeBase {
         break;
 
       default:
-        arComponent.push(html`<div>Defer load missing: ${this.componentName}</div>`);
+        arComponent.push(html`<div style="display: none;">Defer load missing: ${this.componentName}</div>`);
         break;
     }
 

@@ -1048,6 +1048,10 @@ export class BridgeBase extends LitElement {
         this.renderTemplates.push(html`<wide-narrow-page .pConn=${inPConnToUse}></wide-narrow-page>`);
         break;
 
+      case "Pega_Extensions_wsscaseview":
+        theTemplateForTemplate = html`<case-view .pConn=${inPConnToUse} ?displayOnlyFA="${displayOnlyFA}"></case-view>`;
+        break;
+
       default:
         theTemplateForTemplate = html`<boilerplate-component
           value="${this.baseComponentName}: getTemplateForTemplate doesn't know how to handle ${inTemplate}"

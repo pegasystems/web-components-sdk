@@ -276,7 +276,13 @@ class FlowContainer extends BridgeBase {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
       if (!this.caseMessages) {
-        this.caseMessages = this.localizedVal('Thank you! The next step in this case has been routed appropriately.', this.localeCategory);
+        if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+          console.log('in flowcontainer if uplus');
+          this.caseMessages = "Congratulations! Your appointment has been scheduled";
+        }else{
+          this.caseMessages = "Thank you! The next step in this case has been routed appropriately.";
+          console.log('in flowcontainer else no uplus');
+        }  
       }
 
       // publish this "assignmentFinished" for mashup, need to get approved as a standard
@@ -389,8 +395,8 @@ class FlowContainer extends BridgeBase {
     const oWorkData = oWorkItem.getDataObject();
 
     if (bLoadChildren && oWorkData) {
-      this.containerName = oWorkData.caseInfo.assignments[0].name;
-      this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
+      this.containerName = oWorkData.caseInfo.assignments?.[0].name;
+      this.instructionText = oWorkData.caseInfo.assignments?.[0].instructions;
     }
 
     this.buildName = this.getBuildName();
@@ -433,9 +439,9 @@ class FlowContainer extends BridgeBase {
         ${
           !this.todo_showTodo
             ? html`
-                <h2>${this.containerName}</h2>
+                <h4>${this.containerName}</h4>
                 ${this.instructionText !== '' ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
-                <div>
+                <div style="margin-top: 2rem">
                   <assignment-component .pConn=${this.thePConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
                 </div>
               `
@@ -459,8 +465,8 @@ class FlowContainer extends BridgeBase {
         : html`
             <div class="psdk-message-card">
               <div style="display: flex; flex-direction: row;">
-                <div><img class="psdk-icon" src="${this.checkSvg}" /></div>
-                <div class="psdk-message">${this.caseMessages}</div>
+                <!-- <div><img class="psdk-icon" src="${this.checkSvg}" /></div> -->
+                <div class="psdk-message">Congratulations! Your appointment has been scheduled</div>
               </div>
             </div>
           `}

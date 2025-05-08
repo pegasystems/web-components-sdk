@@ -5,6 +5,7 @@ import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 // NOTE: you need to import ANY component you may render.
 import '../ShoppingOptionsCard';
 import '../EmbeddedResolutionScreen';
+import '../MashupUplusUconnect';
 
 // import the component's styles
 import { mainScreenStyles } from './main-screen-styles';
@@ -24,6 +25,8 @@ class MainScreen extends LitElement {
 
   @state()
   showResolution = false;
+
+  @state() showUConnect = true;
 
   constructor() {
     super();
@@ -54,6 +57,7 @@ class MainScreen extends LitElement {
   }
 
   cancelAssignment() {
+    this.showUConnect = true;
     this.showTriplePlayOptions = true;
     this.showPega = false;
   }
@@ -61,6 +65,97 @@ class MainScreen extends LitElement {
   assignmentFinished() {
     this.showResolution = true;
     this.showPega = false;
+  }
+
+  getMashupMainScreenHtml() : any {
+    return html` <div class="cc-main-div">
+      ${this.showTriplePlayOptions
+        ? html`
+            <div class="cc-main-screen">
+              <div class="cc-banner">Combine TV, Internet, and Voice for the best deal</div>
+
+              <div style="display: flex; justify-content: space-evenly;">${this.getShoppingOptionCardsHTML()}</div>
+            </div>
+          `
+        : html``}
+      ${this.showPega
+        ? html`
+            <div>
+              <div class="cc-info">
+                <div class="cc-info-pega">
+                  <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}"></root-container>
+                  <br />
+                  <div style="padding-left: 50px;">* - required fields</div>
+                </div>
+                <div class="cc-info-banner">
+                  <div class="cc-info-banner-text">We need to gather a little information about you.</div>
+                  <div>
+                    <img src="assets/img/cableinfo.png" class="cc-info-image" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+        : html``}
+      ${this.showResolution
+        ? html`
+            <div>
+              <embedded-resolution-screen-component></embedded-resolution-screen-component>
+            </div>
+          `
+        : html``}
+    </div>`;
+  }
+
+  getUplusMashupMainScreenHtml() : any {
+
+    const mMSHtml = html `
+
+    <div class="cc-main-div">
+    ${this.showUConnect?
+      html`
+      <div class="cc-main-screen">
+        <div class="uplus-banner">
+            <h1>Hi Ava,</h1>
+            How can we help you today?
+        </div>
+
+        <div>
+            <mashup-uplus-uconnect-component  @ScheduleService="${this._scheduleService}"></mashup-uplus-uconnect-component>
+        </div>
+
+      </div>
+      `
+    :
+    html``}
+
+    ${this.showPega?
+    html`
+      <div>
+        <div class="uplus-info">
+            <div class="uplus-info-pega">
+                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
+            </div>
+        </div>
+
+      </div>
+    `
+    :
+    html``}
+
+    ${this.showResolution?
+    html`
+      <div>
+        <embedded-resolution-screen-component></embedded-resolution-screen-component>
+      </div>
+      `
+    :
+    html``
+    }
+  </div>
+  `;
+
+    return mMSHtml;
   }
 
   /**
@@ -112,43 +207,36 @@ class MainScreen extends LitElement {
   }
 
   protected render() {
-    return html` <div class="cc-main-div">
-      ${this.showTriplePlayOptions
-        ? html`
-            <div class="cc-main-screen">
-              <div class="cc-banner">Combine TV, Internet, and Voice for the best deal</div>
+    let sContent;
+    if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+      sContent = this.getUplusMashupMainScreenHtml();
+    }else{
+      sContent = this.getMashupMainScreenHtml();
+    }
+    return sContent;
+  }
 
-              <div style="display: flex; justify-content: space-evenly;">${this.getShoppingOptionCardsHTML()}</div>
-            </div>
-          `
-        : html``}
-      ${this.showPega
-        ? html`
-            <div>
-              <div class="cc-info">
-                <div class="cc-info-pega">
-                  <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}"></root-container>
-                  <br />
-                  <div style="padding-left: 50px;">* - required fields</div>
-                </div>
-                <div class="cc-info-banner">
-                  <div class="cc-info-banner-text">We need to gather a little information about you.</div>
-                  <div>
-                    <img src="assets/img/cableinfo.png" class="cc-info-image" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          `
-        : html``}
-      ${this.showResolution
-        ? html`
-            <div>
-              <embedded-resolution-screen-component></embedded-resolution-screen-component>
-            </div>
-          `
-        : html``}
-    </div>`;
+  _scheduleService() {
+
+    this.showUConnect = false;
+    this.showPega = true;
+
+    let actionInfo;
+
+    switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
+        case "UplusAuto" :
+
+          actionInfo = {
+            pageName: 'pyEmbedAssignment'
+          };
+
+          PCore.getMashupApi().createCase("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit",this.pConn.getContextName()).then(
+            ()=>{console.log('case created');}
+          );
+          break;
+    }
+
+
   }
 }
 

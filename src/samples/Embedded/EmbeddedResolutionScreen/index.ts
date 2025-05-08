@@ -15,7 +15,20 @@ class EmbeddedResolutionScreen extends LitElement {
   static styles?: CSSResultGroup = embeddedResolutionScreenStyles;
 
   getResolutionScreenHtml(): any {
-    return html`
+    let rSHtml;
+
+    if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+      rSHtml = html `
+      <div class="cc-resolution">
+        <div class="cc-body-uplus">
+          <div style="font-size: 22px;">Congratulations! Your appointment has been scheduled.</div>
+          <div style="font-size: 18px;
+          margin-top: 16px;">You will receive an email confirmation with instructions should you need to cancel.</div>
+        </div>
+      </div>
+      `;
+    }else{
+      rSHtml =  html`
       <div class="cc-resolution">
         <div class="cc-card">
           <div class="cc-header">Welcome!</div>
@@ -31,6 +44,8 @@ class EmbeddedResolutionScreen extends LitElement {
         </div>
       </div>
     `;
+    }
+    return rSHtml;
   }
 
   render() {

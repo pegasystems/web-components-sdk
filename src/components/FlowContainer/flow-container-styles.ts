@@ -18,7 +18,8 @@ export const flowContainerStyles = html`
 
     .psdk-flow-container-top {
       background-color: var(--app-form-color);
-      padding: 0rem 0.625rem 0.625rem 0.625rem;
+      //padding: 0rem 0.625rem 0.625rem 0.625rem;
+      padding: 2rem;
       border-radius: 0.3125rem;
     }
     .psdk-flow-container {
@@ -26,12 +27,15 @@ export const flowContainerStyles = html`
     }
 
     .psdk-message-card {
+      display: flex;
+      justify-content:center;
       margin: 10px;
       padding: 16px;
     }
 
     .psdk-message {
       margin-top: 0.2rem;
+      font-size: 18px;
     }
 
     .psdk-icon {

@@ -4,6 +4,8 @@ export const embeddedResolutionScreenStyles = css`
   .cc-resolution {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    margin-top: 5rem;
   }
 
   .cc-card {
@@ -43,5 +45,15 @@ export const embeddedResolutionScreenStyles = css`
     border: 0px;
     margin: 20px;
     padding: 10px 30px;
+  }
+
+  .cc-body-uplus {
+    font-size: 18px;
+    padding: 30px;
+    margin: 0% 25% 0% 25%;;
+    min-width: 40rem;
+    background-color: #fafafa;
+    text-align:center;
+    border-radius: 0.3125rem;
   }
 `;
