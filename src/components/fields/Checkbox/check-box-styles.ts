@@ -30,13 +30,13 @@ export const checkboxStyles = html`
       margin-bottom: 0.5rem;
     }
 
-    lion-checkbox input{
+    lion-checkbox input {
       height: 18px;
       width: 18px;
       cursor: pointer;
     }
-      
-    lion-checkbox{
+
+    lion-checkbox {
       line-height: 30px;
       align-items: center;
       gap: 0.5rem;

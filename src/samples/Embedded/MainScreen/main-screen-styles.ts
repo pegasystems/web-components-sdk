@@ -75,17 +75,17 @@ export const mainScreenStyles = css`
   }
 
   .uplus-info {
-    display:flex; 
+    display: flex;
     flex-direction: row;
     justify-content: center;
     margin-top: 5rem;
   }
 
   .uplus-info-pega {
-      min-width: 40rem;
-      // width: 50%; 
-      // display: flex; 
-      // flex-direction: column; 
-      // margin-left: 25%;
+    min-width: 40rem;
+    // width: 50%;
+    // display: flex;
+    // flex-direction: column;
+    // margin-left: 25%;
   }
 `;

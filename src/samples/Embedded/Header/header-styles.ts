@@ -55,14 +55,14 @@ export const headerStyles = css`
     font-size: larger;
   }
 
-  .margin{
+  .margin {
     width: calc(100% - 100px);
     margin-left: 50px;
     margin-right: 50px;
   }
 
-  button{
-    background-color:inherit;
+  button {
+    background-color: inherit;
     color: #fafafa;
     border: 0;
   }

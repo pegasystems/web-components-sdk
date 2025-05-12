@@ -67,7 +67,7 @@ class MainScreen extends LitElement {
     this.showPega = false;
   }
 
-  getMashupMainScreenHtml() : any {
+  getMashupMainScreenHtml(): any {
     return html` <div class="cc-main-div">
       ${this.showTriplePlayOptions
         ? html`
@@ -107,55 +107,43 @@ class MainScreen extends LitElement {
     </div>`;
   }
 
-  getUplusMashupMainScreenHtml() : any {
+  getUplusMashupMainScreenHtml(): any {
+    return html`
+      <div class="cc-main-div">
+        ${this.showUConnect
+          ? html`
+              <div class="cc-main-screen">
+                <div class="uplus-banner">
+                  <h1>Hi Ava,</h1>
+                  How can we help you today?
+                </div>
 
-    const mMSHtml = html `
-
-    <div class="cc-main-div">
-    ${this.showUConnect?
-      html`
-      <div class="cc-main-screen">
-        <div class="uplus-banner">
-            <h1>Hi Ava,</h1>
-            How can we help you today?
-        </div>
-
-        <div>
-            <mashup-uplus-uconnect-component  @ScheduleService="${this._scheduleService}"></mashup-uplus-uconnect-component>
-        </div>
-
+                <div>
+                  <mashup-uplus-uconnect-component @ScheduleService="${this._scheduleService}"></mashup-uplus-uconnect-component>
+                </div>
+              </div>
+            `
+          : html``}
+        ${this.showPega
+          ? html`
+              <div>
+                <div class="uplus-info">
+                  <div class="uplus-info-pega">
+                    <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
+                  </div>
+                </div>
+              </div>
+            `
+          : html``}
+        ${this.showResolution
+          ? html`
+              <div>
+                <embedded-resolution-screen-component></embedded-resolution-screen-component>
+              </div>
+            `
+          : html``}
       </div>
-      `
-    :
-    html``}
-
-    ${this.showPega?
-    html`
-      <div>
-        <div class="uplus-info">
-            <div class="uplus-info-pega">
-                <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}" ?isMashup="${true}"></root-container>
-            </div>
-        </div>
-
-      </div>
-    `
-    :
-    html``}
-
-    ${this.showResolution?
-    html`
-      <div>
-        <embedded-resolution-screen-component></embedded-resolution-screen-component>
-      </div>
-      `
-    :
-    html``
-    }
-  </div>
-  `;
-
-    return mMSHtml;
+    `;
   }
 
   /**
@@ -208,35 +196,34 @@ class MainScreen extends LitElement {
 
   protected render() {
     let sContent;
-    if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+    if (PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto') {
       sContent = this.getUplusMashupMainScreenHtml();
-    }else{
+    } else {
       sContent = this.getMashupMainScreenHtml();
     }
     return sContent;
   }
 
   _scheduleService() {
-
     this.showUConnect = false;
     this.showPega = true;
 
     let actionInfo;
 
-    switch (PCore.getEnvironmentInfo().getApplicationLabel()) {
-        case "UplusAuto" :
+    if (PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto') {
+      // case "UplusAuto" :
 
-          actionInfo = {
-            pageName: 'pyEmbedAssignment'
-          };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      actionInfo = {
+        pageName: 'pyEmbedAssignment'
+      };
 
-          PCore.getMashupApi().createCase("O533RU-UplusAuto-Work-ScheduleMaintenanceVisit",this.pConn.getContextName()).then(
-            ()=>{console.log('case created');}
-          );
-          break;
+      PCore.getMashupApi()
+        .createCase('O533RU-UplusAuto-Work-ScheduleMaintenanceVisit', this.pConn.getContextName())
+        .then(() => {
+          console.log('case created');
+        });
     }
-
-
   }
 }
 

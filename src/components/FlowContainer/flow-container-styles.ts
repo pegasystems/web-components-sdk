@@ -28,7 +28,7 @@ export const flowContainerStyles = html`
 
     .psdk-message-card {
       display: flex;
-      justify-content:center;
+      justify-content: center;
       margin: 10px;
       padding: 16px;
     }

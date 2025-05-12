@@ -50,10 +50,10 @@ export const embeddedResolutionScreenStyles = css`
   .cc-body-uplus {
     font-size: 18px;
     padding: 30px;
-    margin: 0% 25% 0% 25%;;
+    margin: 0% 25% 0% 25%;
     min-width: 40rem;
     background-color: #fafafa;
-    text-align:center;
+    text-align: center;
     border-radius: 0.3125rem;
   }
 `;

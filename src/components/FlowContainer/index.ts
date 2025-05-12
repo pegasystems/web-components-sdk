@@ -276,13 +276,13 @@ class FlowContainer extends BridgeBase {
       // Temp fix for 8.7 change: confirmationNote no longer coming through in caseMessages$.
       // So, if we get here and caseMessages$ is empty, use default value in DX API response
       if (!this.caseMessages) {
-        if(PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto'){
+        if (PCore.getEnvironmentInfo().getApplicationLabel() === 'UplusAuto') {
           console.log('in flowcontainer if uplus');
-          this.caseMessages = "Congratulations! Your appointment has been scheduled";
-        }else{
-          this.caseMessages = "Thank you! The next step in this case has been routed appropriately.";
+          this.caseMessages = 'Congratulations! Your appointment has been scheduled';
+        } else {
+          this.caseMessages = 'Thank you! The next step in this case has been routed appropriately.';
           console.log('in flowcontainer else no uplus');
-        }  
+        }
       }
 
       // publish this "assignmentFinished" for mashup, need to get approved as a standard

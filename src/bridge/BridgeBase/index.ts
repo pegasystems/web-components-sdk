@@ -1048,7 +1048,7 @@ export class BridgeBase extends LitElement {
         this.renderTemplates.push(html`<wide-narrow-page .pConn=${inPConnToUse}></wide-narrow-page>`);
         break;
 
-      case "Pega_Extensions_wsscaseview":
+      case 'Pega_Extensions_wsscaseview':
         theTemplateForTemplate = html`<case-view .pConn=${inPConnToUse} ?displayOnlyFA="${displayOnlyFA}"></case-view>`;
         break;
 

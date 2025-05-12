@@ -10,20 +10,20 @@ export const actionButtonsStyles = html`
 
     .btn-secondary {
       border-radius: 25px !important;
-      border: 1px solid #CE2525 !important;
-      color: #CE2525 !important;
+      border: 1px solid #ce2525 !important;
+      color: #ce2525 !important;
       min-width: 6rem !important;
       background: none !important;
     }
-    
+
     .btn-primary {
       border-radius: 25px !important;
-      border: 1px solid #CE2525 !important;
+      border: 1px solid #ce2525 !important;
       color: white !important;
       min-width: 6rem !important;
-      background: #CE2525 !important;
+      background: #ce2525 !important;
     }
-      
+
     button:focus {
       outline: none;
       box-shadow: none !important;
