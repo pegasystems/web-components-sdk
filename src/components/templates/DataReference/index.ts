@@ -322,6 +322,10 @@ class DataReference extends BridgeBase {
         convertedComponent = html`<check-box-form .pConn=${childPConn}></check-box-form>`;
         break;
 
+      case 'RadioButtons':
+        convertedComponent = html`<radio-buttons-form .pConn=${childPConn}></radio-buttons-form>`;
+        break;
+
       default:
         console.error(`----> ${this.theComponentName} convertChildToComponent unknown childType: ${childType}`);
         convertedComponent = html`${this.theComponentName} convertChildToComponent unknown childType: ${childType}`;

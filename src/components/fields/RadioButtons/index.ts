@@ -13,6 +13,8 @@ import '@lion/ui/define/lion-radio.js';
 import { radioButtonStyles } from './radio-buttons-styles';
 
 interface RadioButtonsProps extends PConnFieldProps {
+  variant: string;
+  datasource: any;
   // If any, enter additional props that only exist on RadioButtons here
   inline: boolean;
   fieldMetadata?: any;
@@ -89,11 +91,26 @@ class RadioButtons extends FormComponentBase {
     }
 
     super.updateSelf();
+    this.options = [];
 
     // Some additional processing
     const theConfigProps = this.thePConn.getConfigProps() as RadioButtonsProps;
 
-    this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
+    if(theConfigProps.variant !== 'card'){
+      this.options = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
+    }else{
+      const stateProps = this.thePConn.getStateProps();
+      // eslint-disable-next-line sonarjs/no-unused-collection
+      // const result : any[]  = [];
+      theConfigProps?.datasource?.source.forEach((item) => {
+        const optionItem : any = {};
+        optionItem.key = item[stateProps.value?.split('.').pop()];
+        optionItem.value = item[stateProps.primaryField?.split('.').pop()];
+        this.options.push(optionItem);
+      });
+    }
+
+    
 
     const propName = this.thePConn.getStateProps().value;
     const className = this.thePConn.getCaseInfo().getClassName();

@@ -209,7 +209,16 @@ class CheckBox extends FormComponentBase {
 
     if (this.theConfigProps.selectionMode === 'multi') {
       const listOfCheckboxes: any = [];
-      const listSourceItems = this.theConfigProps.datasource?.source ?? [];
+      let listSourceItems = this.theConfigProps.datasource?.source ?? [];
+      if(this.theConfigProps.variant === 'card'){
+        const stateProps = this.thePConn.getStateProps();
+        listSourceItems = listSourceItems.map((item) => {
+          const newItem = {key:'',value:''};
+          newItem.key = item[stateProps?.datasource?.fields?.key.substring(1)];
+          newItem.value = item[stateProps?.datasource?.fields?.text.substring(1)];
+          return newItem;
+        });
+      }
       const dataField: any = this.theConfigProps.selectionKey?.split?.('.')[1];
       const label = html`<div class="check-box-form">${bHideLabel ? nothing : this.label}</div>`;
       listOfCheckboxes.push(label);
