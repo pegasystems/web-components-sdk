@@ -88,4 +88,25 @@ export const mainScreenStyles = css`
     // flex-direction: column;
     // margin-left: 25%;
   }
+
+  .card {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    background-color: #fafafa;
+    padding: 20px;
+    /* height: 10rem; */
+    margin: 1rem;
+  }
+
+  button{
+    margin-top: 1rem;
+    font-size: medium;
+    text-align: start;
+    width: fit-content;
+    background-color: brown;
+    color: var(--app-form-color);
+    border-radius: 10px;
+    padding: 0.5rem;
+    border: none;
+  }
 `;

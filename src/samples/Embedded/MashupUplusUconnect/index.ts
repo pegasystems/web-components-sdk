@@ -45,7 +45,7 @@ class MashupUplusUconnect extends LitElement {
               <div style="color: grey;font-size: 12px;">
                 Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.
               </div>
-              <button class="get-started-button" mat-raised-button color="primary" jsAction="delete" @click="${this._schedule}">Get started</button>
+              <button class="get-started-button" mat-raised-button color="primary" jsAction="delete" style="padding-left: unset;" @click="${this._schedule}">Get started</button>
             </div>
           </div>
 
@@ -56,7 +56,7 @@ class MashupUplusUconnect extends LitElement {
             <div style="justify-content: center; flex-direction: column; display: flex;">
               <h5>Download User's Manual</h5>
               <div style="color: grey;font-size: 12px;">Find your user manual, and other documents, available for download.</div>
-              <button class="get-started-button" mat-raised-button color="primary" jsAction="delete">Get started</button>
+              <button class="get-started-button" mat-raised-button color="primary" jsAction="delete" style="padding-left: unset;">Get started</button>
             </div>
           </div>
 
@@ -69,7 +69,7 @@ class MashupUplusUconnect extends LitElement {
               <div style="color: grey;font-size: 12px;">
                 Whether you need to get a simple oil change or need to repair extensive damages, we've got you covered.
               </div>
-              <button class="get-started-button" mat-raised-button color="primary" jsAction="delete">Get started</button>
+              <button class="get-started-button" mat-raised-button color="primary" jsAction="delete" style="padding-left: unset;">Get started</button>
             </div>
           </div>
         </div>

@@ -117,6 +117,17 @@ class MainScreen extends LitElement {
                   <h1>Hi Ava,</h1>
                   How can we help you today?
                 </div>
+                <div class="card">
+                  <div style="justify-content: center; flex-direction: column; display: flex;">
+                    <h2 style="margin-block-start: 0.5rem;margin-block-end: 0.5rem;">Welcome to the U+ Auto Customer Portal!</h2>
+                    <div style="color: grey;">
+                      Your U+ Auto customer portal is where you can manage your vehicle's service, access important document, trouble shoot issues, and much more!
+                    </div>
+                    <button>
+                      <a href="https://www.pega.com" target="_blank" style="color: var(--app-background-color);text-decoration: none;">Learn more about our services</a>
+                    </button>
+                  </div>
+                </div>
 
                 <div>
                   <mashup-uplus-uconnect-component @ScheduleService="${this._scheduleService}"></mashup-uplus-uconnect-component>

@@ -230,9 +230,11 @@ class CaseView extends BridgeBase {
           iFound++;
           theRetArray.push(html`<region-component .pConn=${child.getPConnect()}></region-component>`);
         }
-      } else if (theMetadataType === 'reference') {
-        theRetArray.push(html`<reference-component .pConn=${child.getPConnect()}></reference-component>`);
-      } else {
+      } 
+      // else if (theMetadataType === 'reference') {
+      //   theRetArray.push(html`<reference-component .pConn=${child.getPConnect()}></reference-component>`);
+      // } 
+      else {
         console.error(`${this.theComponentName}: getChildRegionArray got unexpected: ${theMetadataType}`);
       }
     }

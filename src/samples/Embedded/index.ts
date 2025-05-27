@@ -23,12 +23,13 @@ class Embedded extends LitElement {
       background-repeat: no-repeat;
       background-position: center;
       width: 100%;
-      height: 100vh;
+      min-height: 100vh;
+      /* height: 100%; */
     }
 
     .trade-div {
       width: 100%;
-      height: 100vh;
+      min-height: 100vh;
       background: url(./assets/img/trade.jpeg);
     }
 

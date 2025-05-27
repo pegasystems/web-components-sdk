@@ -177,6 +177,32 @@ class CheckBox extends FormComponentBase {
     });
   }
 
+  listOfCheckboxes(listSourceItems){
+    const listOfCheckboxes: any = [];
+    const dataField: any = this.theConfigProps.selectionKey?.split?.('.')[1];
+    listSourceItems.forEach((element, index) => {
+      const multiChecked = this.selectedvalues?.some?.(data => data[dataField] === element.key);
+      const content = html`
+        <lion-checkbox
+          id=${index}
+          ?checked=${multiChecked}
+          dataTestId=${this.testId || element.value}
+          .model-value=${{
+            value: element.text ?? element.value,
+            key: element.key,
+            checked: this.selectedvalues?.some?.(data => data[dataField] === element.key)
+          }}
+          @blur=${this.fieldOnBlur}
+          @change=${this.handleChangeMultiMode}
+        >
+          <span slot="label">${element.text ?? element.value}</span>
+        </lion-checkbox>
+      `;
+      listOfCheckboxes.push(content);
+    });
+    return listOfCheckboxes;
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -208,7 +234,7 @@ class CheckBox extends FormComponentBase {
     const bHideLabel: Boolean = this.getComponentProp('hideLabel');
 
     if (this.theConfigProps.selectionMode === 'multi') {
-      const listOfCheckboxes: any = [];
+      // const listOfCheckboxes: any = [];
       let listSourceItems = this.theConfigProps.datasource?.source ?? [];
       if(this.theConfigProps.variant === 'card'){
         const stateProps = this.thePConn.getStateProps();
@@ -219,36 +245,51 @@ class CheckBox extends FormComponentBase {
           return newItem;
         });
       }
-      const dataField: any = this.theConfigProps.selectionKey?.split?.('.')[1];
-      const label = html`<div class="check-box-form">${bHideLabel ? nothing : this.label}</div>`;
-      listOfCheckboxes.push(label);
-      listSourceItems.forEach((element, index) => {
-        const multiChecked = this.selectedvalues?.some?.(data => data[dataField] === element.key);
-        const content = html`
-          <lion-checkbox
-            id=${index}
-            ?checked=${multiChecked}
-            dataTestId=${this.testId || element.value}
-            .model-value=${{
-              value: element.text ?? element.value,
-              key: element.key,
-              checked: this.selectedvalues?.some?.(data => data[dataField] === element.key)
-            }}
-            @blur=${this.fieldOnBlur}
-            @change=${this.handleChangeMultiMode}
+      // this.annotatedLabel = bHideLabel === true ? nothing : this.annotatedLabel;
+      // this.annotatedLabel = 'asddc';
+      const theContent = html ` 
+          <lion-checkbox-group class="check-box-form"
+          id=${this.theComponentId}
+          .fieldName=${this.label}
+          .validators=${this.lionValidatorsArray}
+          .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           >
-            <span slot="label">${element.text ?? element.value}</span>
-          </lion-checkbox>
-        `;
-        listOfCheckboxes.push(content);
-      });
-      const labelEnd = html`</div>`;
-      listOfCheckboxes.push(labelEnd);
-      this.renderTemplates.push(listOfCheckboxes);
+            ${bHideLabel === true ? nothing : html`${this.annotatedLabel}`}
+            ${this.listOfCheckboxes(listSourceItems)}
+          </lion-checkbox-group>`;
+      // const dataField: any = this.theConfigProps.selectionKey?.split?.('.')[1];
+      // const label = html`<div class="check-box-form">${bHideLabel ? nothing : this.annotatedLabel}</div>`;
+      // listOfCheckboxes.push(label);
+      // listSourceItems.forEach((element, index) => {
+      //   const multiChecked = this.selectedvalues?.some?.(data => data[dataField] === element.key);
+      //   const content = html`
+      //     <lion-checkbox
+      //       id=${index}
+      //       ?checked=${multiChecked}
+      //       dataTestId=${this.testId || element.value}
+      //       .validators=${this.lionValidatorsArray}
+      //       .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+      //       .model-value=${{
+      //         value: element.text ?? element.value,
+      //         key: element.key,
+      //         checked: this.selectedvalues?.some?.(data => data[dataField] === element.key)
+      //       }}
+      //       @blur=${this.fieldOnBlur}
+      //       @change=${this.handleChangeMultiMode}
+      //     >
+      //       <span slot="label">${element.text ?? element.value}</span>
+      //     </lion-checkbox>
+      //   `;
+      //   listOfCheckboxes.push(content);
+      // });
+      // const labelEnd = html`</div>`;
+      // listOfCheckboxes.push(labelEnd);
+      // this.renderTemplates.push(listOfCheckboxes);
+      this.renderTemplates.push(theContent);
     } else {
       const theContent = html` ${this.bVisible
-        ? html` <div class="check-box-form">
-            ${bHideLabel === true ? nothing : html`${this.label}`}
+        ? html` <lion-checkbox-group class="check-box-form">
+            ${bHideLabel === true ? nothing : html`${this.annotatedLabel}`}
             ${html` <lion-checkbox
               id=${this.theComponentId}
               ?checked=${this.isChecked}
@@ -264,7 +305,7 @@ class CheckBox extends FormComponentBase {
             >
               <span slot="label">${this.caption}</span>
             </lion-checkbox>`}
-          </div>`
+          </lion-checkbox-group>`
         : nothing}`;
       this.renderTemplates.push(theContent);
     }

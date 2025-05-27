@@ -67,6 +67,7 @@ class View extends BridgeBase {
 
   connectedCallback() {
     super.connectedCallback();
+    // this.registerAndSubscribeComponent(this.onStateChange.bind(this));
     if (this.bLogging) {
       console.log(`${this.theComponentName}: connectedCallback`);
     }
@@ -78,6 +79,8 @@ class View extends BridgeBase {
     this.theComponentStyleTemplate = viewStyles;
 
     this.buildView();
+    // Calling removeContextTreeNode method to remove previous form fields from ContextTreeNode
+    PCore.getContextTreeManager().removeContextTreeNode(this.thePConn.getContextName());
   }
 
   disconnectedCallback() {
@@ -154,6 +157,7 @@ class View extends BridgeBase {
 
     if (bShouldUpdate) {
       this.updateSelf();
+      // this.buildView();
     }
   }
 
@@ -230,9 +234,9 @@ class View extends BridgeBase {
 
     const theOuterTemplate = html`
       <div class="psdk-view-top">
-        ${this.showLabel && this.label && this.templateName !== 'SimpleTable' && this.templateName !== 'DefaultForm'
+        <!-- ${this.showLabel && this.label && this.templateName !== 'SimpleTable' && this.templateName !== 'DefaultForm'
           ? html`<div class="template-title-container"><span>${this.label}</span></div>`
-          : nothing}
+          : nothing} -->
         ${theInnerTemplate}
       </div>
     `;
