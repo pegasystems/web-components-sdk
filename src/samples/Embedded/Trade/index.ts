@@ -123,7 +123,7 @@ class Trade extends LitElement {
                   <div style="justify-content: center; flex-direction: column; display: flex;">
                     <h5>Get started with your trade in</h5>
                     <div style="color: grey;font-size: 12px;">Ready to get going with your trade in? The process only takes a few minutes.</div>
-                    <button class="get-started-button" mat-raised-button color="primary" jsAction="delete" @click="${this.getStarted}">
+                    <button class="get-started-button" mat-raised-button color="primary" jsAction="delete" style="padding-left: unset;" @click="${this.getStarted}">
                       Get started
                     </button>
                   </div>
