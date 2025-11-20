@@ -299,6 +299,18 @@ export class FormComponentBase extends BridgeBase {
       debugger;
     }
 
+    // For only RadioButton component we need to handle the not required case differently
+    if (this.theComponentName === 'RadioButtons') {
+      // If the field is not required, never show a validation error for RadioButtons.
+      if (!this.bRequired) {
+        return false;
+      }
+      // If the field is required but has a value/is filled/touched, it's valid.
+      if (meta.modelValue !== '' || meta.filled || meta.touched) {
+        return false;
+      }
+    }
+
     let bRet = false;
 
     // Special treatment for presence of "validatemessage" which indicates a validation
