@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
-import { addContainerItem, getToDoAssignments } from './helpers';
+import { addContainerItem, getPConnectOfActiveContainerItem, getToDoAssignments } from './helpers';
 import '../Assignment';
 import '../ToDo';
 
@@ -57,6 +57,7 @@ class FlowContainer extends BridgeBase {
   localizedVal: Function = () => {};
   localeCategory = 'Messages';
   localeReference: any;
+  pConnectOfActiveContainerItem: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -216,6 +217,8 @@ class FlowContainer extends BridgeBase {
     // const { getPConnect } = this.arNewChildren[0].getPConnect();
     const localPConn = this.arNewChildren[0].getPConnect();
 
+    this.pConnectOfActiveContainerItem = this.getPConnectOfActiveContainerItem(this.thePConn) || this.thePConn;
+
     this.buildName = this.getBuildName();
 
     // routingInfo was added as component prop in populateAdditionalProps
@@ -235,7 +238,7 @@ class FlowContainer extends BridgeBase {
       // this.psService.sendMessage(false);
     }
 
-    const caseViewMode = this.thePConn.getValue('context_data.caseViewMode');
+    const caseViewMode = this.pConnectOfActiveContainerItem.getValue('context_data.caseViewMode');
 
     const { CASE_INFO: CASE_CONSTS } = PCore.getConstants();
 
@@ -436,13 +439,17 @@ class FlowContainer extends BridgeBase {
                 <h2>${this.containerName}</h2>
                 ${this.instructionText !== '' ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
                 <div>
-                  <assignment-component .pConn=${this.thePConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
+                  <assignment-component
+                    .pConn=${this.pConnectOfActiveContainerItem}
+                    .arChildren=${this.arNewChildren}
+                    itemKey=${this.itemKey}
+                  ></assignment-component>
                 </div>
               `
             : html`
                 <div>
                   <todo-component
-                    .pConn=${this.thePConn}
+                    .pConn=${this.pConnectOfActiveContainerItem}
                     caseInfoID=${this.todo_caseInfoID}
                     .datasource=${this.todo_datasource}
                     .showTodoList=${this.todo_showTodoList}
@@ -484,6 +491,15 @@ class FlowContainer extends BridgeBase {
     this.renderTemplates.push(sContent);
 
     return this.renderTemplates;
+  }
+
+  getPConnectOfActiveContainerItem(parentPConnect) {
+    const routingInfo = this.getComponentProp('routingInfo');
+    const isAssignmentView = this.getComponentProp('isAssignmentView');
+    return getPConnectOfActiveContainerItem(routingInfo, {
+      isAssignmentView,
+      parentPConnect
+    });
   }
 }
 
