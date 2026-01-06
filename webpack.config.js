@@ -71,7 +71,7 @@ module.exports = (env, argv) => {
         filename: '[path][base].gz',
         algorithm: 'gzip',
         test: /\.js$|\.ts$|\.css$|\.html$/,
-        exclude: /constellation-core*|bootstrap-shell*|531.*.js/,
+        exclude: /constellation-core*|bootstrap-shell*|libphonenumber.*.js/,
         threshold: 10240,
         minRatio: 0.8
       })
@@ -81,7 +81,7 @@ module.exports = (env, argv) => {
         filename: '[path][base].br',
         algorithm: 'brotliCompress',
         test: /\.(js|ts|css|html|svg)$/,
-        exclude: /constellation-core*|bootstrap-shell*|531.*.js/,
+        exclude: /constellation-core*|bootstrap-shell*|libphonenumber.*.js/,
         compressionOptions: {
           params: {
             [zlib.constants.BROTLI_PARAM_QUALITY]: 11
