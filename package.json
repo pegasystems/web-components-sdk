@@ -44,7 +44,7 @@
     "@custom-elements-manifest/analyzer": "^0.6.3",
     "@pega/configs": "^0.14.0",
     "@pega/constellationjs": "~24.2.0",
-    "@pega/pcore-pconnect-typedefs": "~3.2.1",
+    "@pega/pcore-pconnect-typedefs": "~3.2.2",
     "@playwright/test": "^1.22.1",
     "@types/debug": "^4.1.12",
     "@types/json-schema": "^7.0.15",
