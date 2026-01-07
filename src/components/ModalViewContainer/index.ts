@@ -7,6 +7,7 @@ import { BridgeBase } from '../../bridge/BridgeBase';
 import { modalViewContainerStyles } from './modal-view-container-styles';
 
 import '../CancelAlert';
+import '../ListViewActionButtons';
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
@@ -38,6 +39,8 @@ class ModalViewContainer extends BridgeBase {
   bAlertState = false;
   localizedVal: Function = () => {};
   localeCategory = 'Data Object';
+  isMultiRecord: any;
+  actionsDialog = false;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -175,32 +178,14 @@ class ModalViewContainer extends BridgeBase {
             );
           }
 
-          const configObject = PCore.createPConnect(config);
+          const configObject = this.getConfigObject(currentItem, null);
 
           // THIS is where the ViewContainer creates a View
           //    The config has meta.config.type = "view"
-          const newComp = configObject.getPConnect();
-          const newCompName = newComp.getComponentName();
+          const newComp = configObject?.getPConnect();
+          const newCompName = newComp?.getComponentName();
           const caseInfo = newComp && newComp.getDataObject() && newComp.getDataObject().caseInfo ? newComp.getDataObject().caseInfo : null;
-          // The metadata for pyDetails changed such that the "template": "CaseView"
-          //  is no longer a child of the created View but is in the created View's
-          //  config. So, we DON'T want to replace this.pConn$ since the created
-          //  component is a View (and not a ViewContainer). We now look for the
-          //  "template" type directly in the created component (newComp) and NOT
-          //  as a child of the newly created component.
-          // console.log(`---> ModalViewContainer created new ${newCompName}`);
-
-          // Use the newly created component (View) info but DO NOT replace
-          //  this ModalViewContainer's pConn$, etc.
-          //  Note that we're now using the newly created View's PConnect in the
-          //  ViewContainer HTML template to guide what's rendered similar to what
-          //  the React return of React.Fragment does
-
-          // right now need to check caseInfo for changes, to trigger redraw, not getting
-          // changes from angularPconnect except for first draw
           if (newComp && caseInfo && this.compareCaseInfoIsDifferent(caseInfo)) {
-            // this.psService.sendMessage(false);
-
             this.createdViewPConn = newComp;
             const newConfigProps = newComp.getConfigProps();
             this.templateName = 'template' in newConfigProps ? newConfigProps.template : '';
@@ -208,10 +193,22 @@ class ModalViewContainer extends BridgeBase {
             const { actionName } = latestItem;
             // eslint-disable-next-line @typescript-eslint/no-shadow
             const caseInfo = newComp.getCaseInfo();
-            const caseName = caseInfo.getName();
             const ID = caseInfo.getID();
 
-            this.title = actionName || `${this.localizedVal('New', this.localeCategory)} ${caseName} (${ID})`;
+            const caseTypeName = caseInfo.getCaseTypeName();
+            const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
+            const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
+            this.isMultiRecord = routingInfo.items[latestItem.context].isMultiRecordData;
+            this.context = latestItem.context;
+            this.title =
+              isDataObject || this.isMultiRecord
+                ? this.getModalHeading(dataObjectAction)
+                : this.determineModalHeaderByAction(
+                    actionName,
+                    caseTypeName,
+                    ID,
+                    `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase()
+                  );
             // // update children with new view's children
 
             // With 8.7, the newly created component can be a Reference to a View
@@ -295,6 +292,18 @@ class ModalViewContainer extends BridgeBase {
                   .arChildren=${this.arNewChildren}
                   itemKey=${this.itemKey}
                 ></assignment-component>
+                ${this.isMultiRecord
+                  ? html`
+                      <div>
+                        <listview-action-buttons-component
+                          .pConn=${this.createdViewPConn}
+                          .context=${this.context}
+                          @DismissModalContainer=${this._dismissModalContainer}
+                        >
+                        </listview-action-buttons-component>
+                      </div>
+                    `
+                  : html``}
               </div>
             </div>
           `
@@ -304,6 +313,12 @@ class ModalViewContainer extends BridgeBase {
       <cancel-alert-component .bShowAlert=${this.bShowCancelAlert} @AlertState=${this._onAlertState}" .pConn=${this.cancelPConn}></app-cancel-alert>`
         : html``}
     `;
+  }
+
+  _dismissModalContainer() {
+    this.bShowModal = false;
+    this.actionsDialog = true;
+    this.oCaseInfo = {};
   }
 
   render() {
@@ -325,15 +340,31 @@ class ModalViewContainer extends BridgeBase {
     return this.renderTemplates;
   }
 
+  getModalHeading(dataObjectAction) {
+    return dataObjectAction === PCore.getConstants().RESOURCE_STATUS.CREATE
+      ? this.localizedVal('Add Record', this.localeCategory)
+      : this.localizedVal('Edit Record', this.localeCategory);
+  }
+
+  determineModalHeaderByAction(actionName, caseTypeName, ID, caseLocaleRef) {
+    if (actionName) {
+      return this.localizedVal(actionName, this.localeCategory);
+    }
+    return `${this.localizedVal('Create', this.localeCategory)} ${this.localizedVal(caseTypeName, undefined, caseLocaleRef)} (${ID})`;
+  }
+
   getConfigObject(item, pConnect) {
     if (item) {
       const { context, view } = item;
+      const target = PCore.getContainerUtils().getTargetFromContainerItemID(context);
       const config = {
         meta: view,
         options: {
           context,
           pageReference: view.config.context || pConnect.getPageReference(),
-          hasForm: true
+          hasForm: true,
+          containerName: pConnect?.getContainerName() || PCore.getConstants().MODAL,
+          target
         }
       };
       return PCore.createPConnect(config);
@@ -356,11 +387,10 @@ class ModalViewContainer extends BridgeBase {
       If we are in create stage full page mode, created a new case and trying to click on cancel button
       it will show two alert dialogs which is not expected. Hence isModalAction flag to avoid that.
     */
-    if (latestItem && isModalAction) {
+    if (latestItem && isModalAction && !this.actionsDialog) {
       const configObject: any = this.getConfigObject(latestItem, this.thePConn);
       this.cancelPConn = configObject.getPConnect();
       this.bShowCancelAlert = true;
-      // this.showCancelAlert(configObject.getPConnect, create);
     }
   }
 
