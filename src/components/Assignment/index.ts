@@ -44,6 +44,7 @@ class Assignment extends BridgeBase {
   actionsAPI: any;
   finishAssignment: any;
   navigateToStep: any;
+  saveAssignment: any;
   cancelAssignment: any;
   showPage: any;
   bCancelPressed = false;
@@ -276,6 +277,7 @@ class Assignment extends BridgeBase {
     // store off bound functions to above pointers
     this.finishAssignment = actionsAPI.finishAssignment.bind(actionsAPI);
     this.navigateToStep = actionsAPI.navigateToStep.bind(actionsAPI);
+    this.saveAssignment = actionsAPI.saveAssignment.bind(actionsAPI);
     this.cancelAssignment = actionsAPI.cancelAssignment.bind(actionsAPI);
     this.showPage = actionsAPI.showPage.bind(actionsAPI);
     this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
@@ -408,6 +410,23 @@ class Assignment extends BridgeBase {
               });
           }
           break;
+        case 'saveAssignment': {
+          const caseID = this.pConn.getCaseInfo().getKey();
+          const assignmentID = this.pConn.getCaseInfo().getAssignmentID();
+          const savePromise = this.saveAssignment(this.itemKey);
+
+          savePromise
+            .then(() => {
+              const caseType = this.pConn.getCaseInfo().c11nEnv.getValue(PCore.getConstants().CASE_INFO.CASE_TYPE_ID);
+              PCore.getPubSubUtils().publish('cancelPressed');
+              this.onSaveActionSuccess({ caseType, caseID, assignmentID });
+            })
+            .catch(() => {
+              this.showToast(`${this.localizedVal('Save failed', this.localeCategory)}`);
+            });
+
+          break;
+        }
         case 'cancelAssignment':
           this.bReInit = true;
           this.bCancelPressed = true;
@@ -471,6 +490,12 @@ class Assignment extends BridgeBase {
   showToast(message: String) {
     this.notificationOpened = true;
     this.toastMessage = message;
+  }
+
+  onSaveActionSuccess(data) {
+    this.actionsAPI.cancelAssignment(this.itemKey).then(() => {
+      PCore.getPubSubUtils().publish(PCore.getConstants().PUB_SUB_EVENTS.CASE_EVENTS.CREATE_STAGE_SAVED, data);
+    });
   }
 }
 
