@@ -1,4 +1,5 @@
 import { html, nothing } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
@@ -21,13 +22,19 @@ interface AutoCompleteProps extends PConnFieldProps {
   datasource: any;
   columns: any[];
 }
+interface ComboOption {
+  key: string;
+  label: string;
+}
 
 // NOTE: this is just a boilerplate component definition intended
 //  to be used as a starting point for any new components as they're built out
 @customElement('autocomplete-form')
 class AutoComplete extends FormComponentBase {
-  @property({ attribute: false, type: Array }) options;
+  @property({ attribute: false, type: Array }) options: ComboOption[];
   @property({ attribute: true, type: String }) datasource = '';
+  // Keep an unfiltered copy of all options so we can filter while typing.
+  allOptions: ComboOption[] = [];
 
   theConfigProps: AutoCompleteProps = {
     listType: '',
@@ -63,6 +70,7 @@ class AutoComplete extends FormComponentBase {
     }
 
     this.options = [];
+    this.allOptions = [];
   }
 
   connectedCallback() {
@@ -122,7 +130,9 @@ class AutoComplete extends FormComponentBase {
     }
 
     if (this.listType === 'associated') {
-      this.options = Utils.getOptionList(this.theConfigProps, this.thePConn.getDataObject());
+      const associatedOptions = Utils.getOptionList(this.theConfigProps, this.thePConn.getDataObject());
+      this.options = associatedOptions?.map(opt => ({ key: String(opt.key), label: String(opt.value) ?? '' })) ?? [];
+      this.allOptions = Array.isArray(this.options) ? [...this.options] : [];
     }
     if (!displayMode && this.listType !== undefined && this.listType !== 'associated') {
       getDataPage(datasource, this.parameters, context).then((results: any) => {
@@ -131,11 +141,12 @@ class AutoComplete extends FormComponentBase {
         results?.forEach(element => {
           const obj = {
             key: element[displayColumn.key] || element.pyGUID,
-            value: element[displayColumn.primary]?.toString()
+            label: element[displayColumn.primary]?.toString()
           };
           optionsData.push(obj);
         });
-        this.options = optionsData;
+        this.options = optionsData.map(o => ({ key: String(o.key), label: String(o.label) }));
+        this.allOptions = [...optionsData];
       });
     }
   }
@@ -145,7 +156,9 @@ class AutoComplete extends FormComponentBase {
     if (name === 'datasource') {
       if (newValue && oldValue !== newValue) {
         this.dataList = JSON.parse(newValue);
-        this.options = JSON.parse(newValue);
+        const parsed = JSON.parse(newValue);
+        this.options = parsed?.map(opt => ({ key: String(opt.key), label: String(opt.value ?? opt.label ?? '') })) ?? [];
+        this.allOptions = Array.isArray(this.options) ? [...this.options] : [];
         this.updateSelf();
       }
     }
@@ -257,19 +270,11 @@ class AutoComplete extends FormComponentBase {
     return errMessage;
   }
 
-  fieldOnChange(event: any) {
-    if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
-      const value = '';
-      this.actions.onChange(this.thePConn, { value });
-    } else {
-      let key = '';
-      if (event?.target?.value) {
-        const index = this.options?.findIndex(element => element.value === event.target.value);
-        key = index > -1 ? (key = this.options[index].key) : event.target.value;
-      }
-      event.target.value = key;
-      this.actions.onChange(this.thePConn, event);
-    }
+  fieldOnModelValueChanged(event: any) {
+    if (!event.detail?.isTriggeredByUser) return;
+    const selected = event.target.modelValue;
+    this.value = selected != null ? String(selected) : '';
+    this.actions.onChange(this.thePConn, { value: this.value });
   }
 
   render() {
@@ -313,25 +318,25 @@ class AutoComplete extends FormComponentBase {
               <lion-combobox
                 id=${this.theComponentId}
                 class=""
-                autocomplete="inline"
+                autocomplete="list"
                 dataTestId=${this.testId}
-                .modelValue=${this.value}
+                .modelValue=${this.value != null ? String(this.value) : ''}
                 .fieldName=${this.label}
                 .validators=${this.lionValidatorsArray}
                 .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                 show-all-on-empty
                 @focus=${this.fieldOnFocus}
-                @click=${this.fieldOnChange}
+                @model-value-changed=${this.fieldOnModelValueChanged}
                 @blur=${this.fieldOnBlur}
-                @change=${this.fieldOnChange}
                 ?readonly=${this.bReadonly}
                 ?disabled=${this.bDisabled}
               >
                 <span slot="label">${this.annotatedLabel}</span>
-                ${this.options?.map(option => {
-                  const theOptDisplay = `${option.value}`;
-                  return option.value && html` <lion-option value=${option.key} .choiceValue=${option.value}> ${theOptDisplay} </lion-option>`;
-                })}
+                ${repeat(
+                  this.options ?? [],
+                  o => String(o.key), // stable identity
+                  option => html` <lion-option .choiceValue=${String(option.key)}>${option.label}</lion-option> `
+                )}
               </lion-combobox>
             </div>
           `
