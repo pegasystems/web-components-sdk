@@ -107,12 +107,18 @@ class AutoComplete extends FormComponentBase {
 
     // AutoComplete does some additional work
     this.theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as AutoCompleteProps;
+
     if (this.dataList.length > 0) {
       this.theConfigProps.datasource = this.dataList;
       this.theConfigProps.listType = 'associated';
     }
+    const { displayMode, readOnly, disabled } = this.theConfigProps;
+    this.bReadonly = Utils.getBooleanValue(readOnly) || displayMode === 'DISPLAY_ONLY' || displayMode === 'STACKED_LARGE_VAL';
 
-    const { displayMode } = this.theConfigProps;
+    if (disabled !== undefined) {
+      this.bDisabled = Utils.getBooleanValue(disabled);
+    }
+
     this.listType = this.theConfigProps.listType;
     const context = this.thePConn.getContextName();
     const { columns, datasource } = this.generateColumnsAndDataSource();
