@@ -392,8 +392,9 @@ class FlowContainer extends BridgeBase {
     const oWorkData = oWorkItem.getDataObject();
 
     if (bLoadChildren && oWorkData) {
-      this.containerName = oWorkData.caseInfo.assignments[0].name;
-      this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
+      const assignments = oWorkData.caseInfo.assignments;
+      this.containerName = assignments ? assignments[0].name : '';
+      this.instructionText = assignments ? assignments[0].instructions : '';
     }
 
     this.buildName = this.getBuildName();
