@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import '../View';
@@ -8,7 +9,6 @@ import '../PreviewViewContainer';
 import '../ModalViewContainer';
 import '../ReAuthenticationModal';
 import '../Reference';
-import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 
 //
 // WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
