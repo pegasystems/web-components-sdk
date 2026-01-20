@@ -274,12 +274,14 @@ class SimpleTableManual extends BridgeBase {
   }
 
   formatRowsData(data) {
-    return data?.map(item => {
-      return this.displayedColumns.reduce((dataForRow: any, colKey) => {
-        dataForRow[colKey] = this.getRowValue(item, colKey);
-        return dataForRow;
-      }, {});
-    });
+    return data
+      ? data.map(item => {
+          return this.displayedColumns.reduce((dataForRow: any, colKey) => {
+            dataForRow[colKey] = this.getRowValue(item, colKey);
+            return dataForRow;
+          }, {});
+        })
+      : [];
   }
 
   buildElementsForTable() {
