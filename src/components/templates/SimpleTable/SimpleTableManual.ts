@@ -5,7 +5,7 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../PromotedFilters';
 import { Utils } from '../../../helpers/utils';
-import { buildFieldsForTable } from './helpers';
+import { buildFieldsForTable, getContext } from './helpers';
 import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
 
@@ -56,6 +56,10 @@ class SimpleTableManual extends BridgeBase {
   displayedColumns: any[] = [];
   processedFields: any[] = [];
   prevRefLength: number | undefined;
+  defaultView: any;
+  targetClassLabel = '';
+  allowEditingInModal = false;
+  referenceListStr: any;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -128,10 +132,17 @@ class SimpleTableManual extends BridgeBase {
       presets,
       allowTableEdit,
       label: labelProp,
-      propertyLabel
+      propertyLabel,
+      editModeConfig,
+      viewForAddAndEditModal,
+      targetClassLabel,
+      editMode,
+      addAndEditRowsWithin,
+      displayMode
     } = this.configProps;
 
     this.label = labelProp || propertyLabel;
+    this.targetClassLabel = targetClassLabel;
 
     const hideAddRow = allowTableEdit === false;
     const hideDeleteRow = allowTableEdit === false;
@@ -173,6 +184,11 @@ class SimpleTableManual extends BridgeBase {
     this.editableMode = renderMode === 'Editable';
     this.showAddRowButton = !this.readOnlyMode && !hideAddRow;
     const showDeleteButton = !this.readOnlyMode && !hideDeleteRow;
+    const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
+    this.allowEditingInModal =
+      (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
+
+    this.referenceListStr = getContext(this.thePConn).referenceListStr;
 
     // Nebula has other handling for isReadOnlyMode but has Cosmos-specific code
     //  so ignoring that for now...
@@ -213,6 +229,7 @@ class SimpleTableManual extends BridgeBase {
     }
 
     this.prevRefLength = this.referenceList?.length;
+    this.defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
 
     // These are the data structures referred to in the html file.
     //  These are the relationships that make the table work
@@ -374,7 +391,18 @@ class SimpleTableManual extends BridgeBase {
   }
 
   addRecord() {
-    if (PCore.getPCoreVersion()?.includes('8.7')) {
+    if (this.allowEditingInModal && this.defaultView) {
+      this.thePConn
+        .getActionsApi()
+        .openEmbeddedDataModal(
+          this.defaultView,
+          this.thePConn as any,
+          this.referenceListStr,
+          this.referenceList.length,
+          PCore.getConstants().RESOURCE_STATUS.CREATE,
+          this.targetClassLabel
+        );
+    } else if (PCore.getPCoreVersion()?.includes('8.7')) {
       this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
     } else {
       this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);
