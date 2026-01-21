@@ -187,16 +187,6 @@ class SimpleTableManual extends BridgeBase {
     let configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
     this.rawFields = configFields;
 
-    // Nebula has other handling for isReadOnlyMode but has Cosmos-specific code
-    //  so ignoring that for now...
-    // fieldDefs will be an array where each entry will have a "name" which will be the
-    //  "resolved" property name (that we can use as the colId) though it's not really
-    //  resolved. The buildFieldsForTable helper just removes the "@P " (which is what
-    //  Nebula does). It will also have the "label", and "meta" contains the original,
-    //  unchanged config info. For now, much of the info here is carried over from
-    //  Nebula and we may not end up using it all.
-    // this.fieldDefs = buildFieldsForTable(configFields, resolvedFields, showDeleteButton);
-
     this.fieldDefs = buildFieldsForTable(configFields, this.pConn, showDeleteButton, {
       primaryFieldsViewIndex,
       fields: resolvedFields
