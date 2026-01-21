@@ -5,7 +5,7 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../PromotedFilters';
 import { Utils } from '../../../helpers/utils';
-import { buildFieldsForTable, getContext } from './helpers';
+import { buildFieldsForTable, getContext, PRIMARY_FIELDS, getConfigFields } from './helpers';
 import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
 
@@ -165,13 +165,7 @@ class SimpleTableManual extends BridgeBase {
     //  Neither of these appear in the resolved (this.configProps)
     const rawConfig = rawMetadata?.config;
     const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
-    this.rawFields = rawFields;
-    // At this point, fields has resolvedFields and rawFields we can use
-
-    // start of from Nebula
-    // get context name and referenceList which will be used to prepare config of PConnect
-    // const { contextName, referenceListStr, pageReferenceForRows } = getContext(this.thePConn);
-
+   
     const resolvedList = FieldGroupUtils.getReferenceList(this.thePConn);
     this.pageReference = `${this.thePConn.getPageReference()}${resolvedList}`;
     this.thePConn.setReferenceList(resolvedList);
@@ -189,6 +183,9 @@ class SimpleTableManual extends BridgeBase {
       (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
 
     this.referenceListStr = getContext(this.thePConn).referenceListStr;
+    const primaryFieldsViewIndex = resolvedFields.findIndex((field) => field.config.value === PRIMARY_FIELDS);
+    let configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
+    this.rawFields = configFields;
 
     // Nebula has other handling for isReadOnlyMode but has Cosmos-specific code
     //  so ignoring that for now...
@@ -198,7 +195,12 @@ class SimpleTableManual extends BridgeBase {
     //  Nebula does). It will also have the "label", and "meta" contains the original,
     //  unchanged config info. For now, much of the info here is carried over from
     //  Nebula and we may not end up using it all.
-    this.fieldDefs = buildFieldsForTable(rawFields, resolvedFields, showDeleteButton);
+    // this.fieldDefs = buildFieldsForTable(configFields, resolvedFields, showDeleteButton);
+
+    this.fieldDefs = buildFieldsForTable(configFields, this.pConn, showDeleteButton, {
+      primaryFieldsViewIndex,
+      fields: resolvedFields
+    });
 
     // end of from Nebula
 
