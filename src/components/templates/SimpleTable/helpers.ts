@@ -204,13 +204,7 @@ export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex)
     }
   }
 
-  configFields = [
-    ...rawFields.slice(0, primaryFieldsViewIndex),
-    ...primaryFields,
-    ...rawFields.slice(primaryFieldsViewIndex + 1)
-  ];
+  configFields = [...rawFields.slice(0, primaryFieldsViewIndex), ...primaryFields, ...rawFields.slice(primaryFieldsViewIndex + 1)];
   // filter duplicate fields after combining raw fields and primary fields
-  return configFields.filter(
-    (field: any, index) => configFields.findIndex((_field: any) => field.config?.value === _field.config?.value) === index
-  );
+  return configFields.filter((field: any, index) => configFields.findIndex((_field: any) => field.config?.value === _field.config?.value) === index);
 };

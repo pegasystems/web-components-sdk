@@ -165,7 +165,7 @@ class SimpleTableManual extends BridgeBase {
     //  Neither of these appear in the resolved (this.configProps)
     const rawConfig = rawMetadata?.config;
     const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
-   
+
     const resolvedList = FieldGroupUtils.getReferenceList(this.thePConn);
     this.pageReference = `${this.thePConn.getPageReference()}${resolvedList}`;
     this.thePConn.setReferenceList(resolvedList);
@@ -183,8 +183,8 @@ class SimpleTableManual extends BridgeBase {
       (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
 
     this.referenceListStr = getContext(this.thePConn).referenceListStr;
-    const primaryFieldsViewIndex = resolvedFields.findIndex((field) => field.config.value === PRIMARY_FIELDS);
-    let configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
+    const primaryFieldsViewIndex = resolvedFields.findIndex(field => field.config.value === PRIMARY_FIELDS);
+    const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
     this.rawFields = configFields;
 
     this.fieldDefs = buildFieldsForTable(configFields, this.pConn, showDeleteButton, {
