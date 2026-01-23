@@ -336,7 +336,7 @@ class SimpleTableManual extends BridgeBase {
       <thead class="thead-light">
         <tr>
           ${this.fieldDefs.map(field => {
-            return html`<th scope="col">${field.label}</th>`;
+            return html`<th scope="col">${field.label || field.name}</th>`;
           })}
         </tr>
       </thead>
@@ -365,7 +365,7 @@ class SimpleTableManual extends BridgeBase {
       <thead class="thead-light">
         <tr>
           ${this.fieldDefs.map(field => {
-            return html`<th scope="col">${field.label}</th>`;
+            return html`<th scope="col">${field.label || field.name}</th>`;
           })}
         </tr>
       </thead>
