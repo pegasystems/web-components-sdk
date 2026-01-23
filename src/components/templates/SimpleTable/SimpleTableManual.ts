@@ -5,7 +5,7 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../PromotedFilters';
 import { Utils } from '../../../helpers/utils';
-import { buildFieldsForTable } from './helpers';
+import { buildFieldsForTable, getContext, PRIMARY_FIELDS, getConfigFields } from './helpers';
 import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
 
@@ -56,6 +56,10 @@ class SimpleTableManual extends BridgeBase {
   displayedColumns: any[] = [];
   processedFields: any[] = [];
   prevRefLength: number | undefined;
+  defaultView: any;
+  targetClassLabel = '';
+  allowEditingInModal = false;
+  referenceListStr: any;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -128,10 +132,17 @@ class SimpleTableManual extends BridgeBase {
       presets,
       allowTableEdit,
       label: labelProp,
-      propertyLabel
+      propertyLabel,
+      editModeConfig,
+      viewForAddAndEditModal,
+      targetClassLabel,
+      editMode,
+      addAndEditRowsWithin,
+      displayMode
     } = this.configProps;
 
     this.label = labelProp || propertyLabel;
+    this.targetClassLabel = targetClassLabel;
 
     const hideAddRow = allowTableEdit === false;
     const hideDeleteRow = allowTableEdit === false;
@@ -154,12 +165,6 @@ class SimpleTableManual extends BridgeBase {
     //  Neither of these appear in the resolved (this.configProps)
     const rawConfig = rawMetadata?.config;
     const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
-    this.rawFields = rawFields;
-    // At this point, fields has resolvedFields and rawFields we can use
-
-    // start of from Nebula
-    // get context name and referenceList which will be used to prepare config of PConnect
-    // const { contextName, referenceListStr, pageReferenceForRows } = getContext(this.thePConn);
 
     const resolvedList = FieldGroupUtils.getReferenceList(this.thePConn);
     this.pageReference = `${this.thePConn.getPageReference()}${resolvedList}`;
@@ -173,16 +178,19 @@ class SimpleTableManual extends BridgeBase {
     this.editableMode = renderMode === 'Editable';
     this.showAddRowButton = !this.readOnlyMode && !hideAddRow;
     const showDeleteButton = !this.readOnlyMode && !hideDeleteRow;
+    const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
+    this.allowEditingInModal =
+      (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
 
-    // Nebula has other handling for isReadOnlyMode but has Cosmos-specific code
-    //  so ignoring that for now...
-    // fieldDefs will be an array where each entry will have a "name" which will be the
-    //  "resolved" property name (that we can use as the colId) though it's not really
-    //  resolved. The buildFieldsForTable helper just removes the "@P " (which is what
-    //  Nebula does). It will also have the "label", and "meta" contains the original,
-    //  unchanged config info. For now, much of the info here is carried over from
-    //  Nebula and we may not end up using it all.
-    this.fieldDefs = buildFieldsForTable(rawFields, resolvedFields, showDeleteButton);
+    this.referenceListStr = getContext(this.thePConn).referenceListStr;
+    const primaryFieldsViewIndex = resolvedFields.findIndex(field => field.config.value === PRIMARY_FIELDS);
+    const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
+    this.rawFields = configFields;
+
+    this.fieldDefs = buildFieldsForTable(configFields, this.pConn, showDeleteButton, {
+      primaryFieldsViewIndex,
+      fields: resolvedFields
+    });
 
     // end of from Nebula
 
@@ -213,6 +221,7 @@ class SimpleTableManual extends BridgeBase {
     }
 
     this.prevRefLength = this.referenceList?.length;
+    this.defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
 
     // These are the data structures referred to in the html file.
     //  These are the relationships that make the table work
@@ -374,7 +383,18 @@ class SimpleTableManual extends BridgeBase {
   }
 
   addRecord() {
-    if (PCore.getPCoreVersion()?.includes('8.7')) {
+    if (this.allowEditingInModal && this.defaultView) {
+      this.thePConn
+        .getActionsApi()
+        .openEmbeddedDataModal(
+          this.defaultView,
+          this.thePConn as any,
+          this.referenceListStr,
+          this.referenceList.length,
+          PCore.getConstants().RESOURCE_STATUS.CREATE,
+          this.targetClassLabel
+        );
+    } else if (PCore.getPCoreVersion()?.includes('8.7')) {
       this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length, this.pageReference);
     } else {
       this.thePConn.getListActions().insert({ classID: this.contextClass }, this.referenceList.length);

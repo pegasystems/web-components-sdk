@@ -89,6 +89,7 @@ class Text extends BridgeBase {
       debugger;
     }
     const theConfigProps = this.thePConn.getConfigProps() as TextProps;
+    this.label = theConfigProps.label;
 
     if (theConfigProps.visibility != null) {
       this.bVisible = Utils.getBooleanValue(theConfigProps.visibility);

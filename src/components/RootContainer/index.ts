@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { getSdkConfig } from '@pega/auth/lib/sdk-auth-manager';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import '../View';
@@ -43,7 +44,7 @@ class RootContainer extends BridgeBase {
     this.createdPConnect = null;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) {
       console.log(`${this.theComponentName}: connectedCallback`);
@@ -57,6 +58,8 @@ class RootContainer extends BridgeBase {
     const options = { context: 'app', target: this.thePConn.getTarget() };
 
     const { containers } = PCore.getStore().getState();
+    const { serverConfig } = await getSdkConfig();
+    const showModalsInEmbeddedMode = serverConfig.showModalsInEmbeddedMode;
     const items = Object.keys(containers).filter(item => item.includes('root'));
 
     PCore.getContainerUtils().getContainerAPI().addContainerItems(items);
@@ -71,9 +74,9 @@ class RootContainer extends BridgeBase {
         },
         options
       });
-
       this.previewViewContainerConn = configObjPreview.getPConnect();
-
+    }
+    if (!this.displayOnlyFA || showModalsInEmbeddedMode) {
       const configObjModal = PCore.createPConnect({
         meta: {
           type: 'ModalViewContainer',
@@ -83,7 +86,6 @@ class RootContainer extends BridgeBase {
         },
         options
       });
-
       this.modalViewContainerConn = configObjModal.getPConnect();
     }
 
