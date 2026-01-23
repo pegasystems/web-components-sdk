@@ -1,5 +1,6 @@
 export const TABLE_CELL = 'SdkRenderer';
 export const DELETE_ICON = 'DeleteIcon';
+export const ACTIONS_ICON = 'ActionsIcon';
 
 // BUG-615253: Workaround for autosize in table with lazy loading components
 /* istanbul ignore next */
@@ -57,7 +58,7 @@ export const getContext = thePConn => {
   };
 };
 
-export const buildFieldsForTable = (configFields, fields, showDeleteButton) => {
+export const buildFieldsForTable = (configFields, fields, showDeleteButton, showActionsColumn) => {
   const fieldDefs = configFields?.map((field, index) => {
     return {
       type: 'text',
@@ -91,7 +92,29 @@ export const buildFieldsForTable = (configFields, fields, showDeleteButton) => {
       // BUG-615253: Workaround for autosize in table with lazy loading components
       width: 46
     });
+  } else if (showActionsColumn) {
+    fieldDefs.push({
+      type: 'text',
+      label: '',
+      name: ACTIONS_ICON,
+      id: fieldDefs.length,
+      cellRenderer: ACTIONS_ICON,
+      sort: false,
+      noContextMenu: true,
+      showMenu: false,
+      width: 30
+    });
   }
 
   return fieldDefs;
+};
+
+export const evaluateAllowRowAction = (allowRowDelete, rowData) => {
+  if (allowRowDelete === undefined || allowRowDelete === true) return true;
+  if (allowRowDelete.startsWith?.('@E ')) {
+    const expression = allowRowDelete.replace('@E ', '');
+    // @ts-ignore - Expected 3 arguments, but got 2
+    return PCore.getExpressionEngine().evaluate(expression, rowData);
+  }
+  return false;
 };
