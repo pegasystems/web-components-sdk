@@ -300,7 +300,7 @@ export class FormComponentBase extends BridgeBase {
     }
 
     // For only RadioButton component we need to handle the not required case differently
-    if (this.theComponentName === 'RadioButtons') {
+    if (this.theComponentName === 'RadioButtons' || this.theComponentName === 'Dropdown' || this.theComponentName === 'AutoComplete') {
       // If the field is not required, never show a validation error for RadioButtons.
       if (!this.bRequired) {
         return false;
