@@ -299,9 +299,9 @@ export class FormComponentBase extends BridgeBase {
       debugger;
     }
 
-    // For only RadioButton component we need to handle the not required case differently
+    // For only Picker components we need to handle the not required case differently
     if (this.theComponentName === 'RadioButtons' || this.theComponentName === 'Dropdown' || this.theComponentName === 'AutoComplete') {
-      // If the field is not required, never show a validation error for RadioButtons.
+      // If the field is not required, never show a validation error for Pickers.
       if (!this.bRequired) {
         return false;
       }
