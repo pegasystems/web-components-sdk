@@ -37,6 +37,8 @@ class DataReference extends BridgeBase {
   displaySingleRef = false;
   displayMultiref = false;
   firstChildPConnect: any;
+  displayMultiRef = false;
+
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -64,8 +66,30 @@ class DataReference extends BridgeBase {
 
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
+  }
 
-    // Update properties based on configProps
+  disconnectedCallback() {
+    // The super call will call storeUnsubscribe...
+    super.disconnectedCallback();
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: disconnectedCallback`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
+  }
+
+  /**
+   * updateSelf
+   */
+  updateSelf() {
+    if (this.bLogging) {
+      console.log(`${this.theComponentName}: updateSelf`);
+    }
+    if (this.bDebug) {
+      debugger;
+    }
+
     const theConfigProps = this.thePConn.getConfigProps();
 
     this.label = theConfigProps.label;
@@ -93,31 +117,7 @@ class DataReference extends BridgeBase {
     this.refList = this.rawViewMetadata.config.referenceList;
     this.canBeChangedInReviewMode = this.allowAndPersistChangesInReviewMode && (this.displayAs === 'autocomplete' || this.displayAs === 'dropdown');
 
-    // Do the rest of the setup from the Cosmos React DX Component
     this.setupDataRefUI();
-  }
-
-  disconnectedCallback() {
-    // The super call will call storeUnsubscribe...
-    super.disconnectedCallback();
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: disconnectedCallback`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
-  }
-
-  /**
-   * updateSelf
-   */
-  updateSelf() {
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: updateSelf`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
   }
 
   /**
@@ -165,11 +165,15 @@ class DataReference extends BridgeBase {
         this.firstChildMeta.config.displayMode = this.displayMode;
       }
 
-      this.propName = PCore.getAnnotationUtils().getPropertyName(this.firstChildMeta.config.value);
+       if (this.firstChildMeta.type === 'SimpleTableSelect' && this.selectionMode === SELECTION_MODE.MULTI) {
+        this.propName = PCore.getAnnotationUtils().getPropertyName(this.firstChildMeta.config.selectionList);
+      } else {
+        this.propName = PCore.getAnnotationUtils().getPropertyName(this.firstChildMeta.config.value);
+      }
 
       // In Cosmos React DX Component, the implementation of handleSelection was here!
 
-      const theRecreatedFirstChild = this.recreatedFirstChild(this.firstChildPConnect);
+      const theRecreatedFirstChild = this.recreatedFirstChild();
 
       // Only include the views region for rendering when it has content
       const viewsRegion = this.rawViewMetadata.children[1];
@@ -237,42 +241,47 @@ class DataReference extends BridgeBase {
   };
 
   // // Re-create first child with overridden props
-  // // Memoized child in order to stop unmount and remount of the child component when data reference
-  // // rerenders without any actual change
-  recreatedFirstChild(inChildPConn): any /* = useMemo(() => */ {
+   recreatedFirstChild() {
     const { type, config } = this.firstChildMeta;
-    if (!this.canBeChangedInReviewMode && this.isDisplayModeEnabled && this.selectionMode === SELECTION_MODE.SINGLE) {
-      this.displaySingleRef = true;
-    }
-
-    if (this.isDisplayModeEnabled && this.selectionMode === SELECTION_MODE.MULTI) {
-      this.displayMultiref = true;
-    }
-
-    // In the case of a datasource with parameters you cannot load the dropdown before the parameters
-    if (type === 'Dropdown' && this.rawViewMetadata.config?.parameters && this.dropDownDataSource === null) {
-      return null;
-    }
-
-    return inChildPConn().createComponent({
-      type,
-      config: {
-        ...config,
-        required: this.propsToUse.required,
-        visibility: this.propsToUse.visibility,
-        disabled: this.propsToUse.disabled,
-        label: this.propsToUse.label,
-        viewName: this.thePConn.getCurrentView(),
-        parameters: this.rawViewMetadata.config.parameters,
-        readOnly: false,
-        localeReference: this.rawViewMetadata.config.localeReference,
-        ...(this.selectionMode === SELECTION_MODE.SINGLE ? { referenceType: this.referenceType } : ''),
-        dataRelationshipContext:
-          this.rawViewMetadata.config.contextClass && this.rawViewMetadata.config.name ? this.rawViewMetadata.config.name : null,
-        hideLabel: this.hideLabel,
-        onRecordChange: this.handleSelection
+    if (this.firstChildMeta?.type !== 'Region') {
+      this.pConn.clearErrorMessages({
+        property: this.propName,
+        category: '',
+        context: ''
+      });
+      if (!this.canBeChangedInReviewMode && this.isDisplayModeEnabled && this.selectionMode === SELECTION_MODE.SINGLE) {
+        this.displaySingleRef = true;
       }
-    });
+
+      if (this.isDisplayModeEnabled && this.selectionMode === SELECTION_MODE.MULTI) {
+        this.displayMultiRef = true;
+      }
+
+      // In the case of a datasource with parameters you cannot load the dropdown before the parameters
+      if (type === 'Dropdown' && this.rawViewMetadata.config?.parameters && this.dropDownDataSource === null) {
+        return null;
+      }
+
+      return this.firstChildPConnect().createComponent({
+        type,
+        config: {
+          ...config,
+          required: this.propsToUse.required,
+          visibility: this.propsToUse.visibility,
+          disabled: this.propsToUse.disabled,
+          label: this.propsToUse.label,
+          viewName: this.pConn.getCurrentView(),
+          parameters: this.rawViewMetadata.config.parameters,
+          readOnly: false,
+          localeReference: this.rawViewMetadata.config.localeReference,
+          ...(this.selectionMode === SELECTION_MODE.SINGLE ? { referenceType: this.referenceType } : ''),
+          dataRelationshipContext:
+            this.rawViewMetadata.config.contextClass && this.rawViewMetadata.config.name ? this.rawViewMetadata.config.name : null,
+          hideLabel: this.hideLabel,
+          onRecordChange: this.handleSelection.bind(this)
+        }
+      });
+    }
   }
 
   getDataReferenceHtml(): any {
