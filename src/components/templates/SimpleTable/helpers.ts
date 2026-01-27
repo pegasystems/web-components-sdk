@@ -1,5 +1,6 @@
 export const TABLE_CELL = 'SdkRenderer';
 export const DELETE_ICON = 'DeleteIcon';
+export const ACTIONS_ICON = 'ActionsIcon';
 export const PRIMARY_FIELDS = 'pyPrimaryFields';
 
 const SUPPORTED_FIELD_TYPES = [
@@ -141,7 +142,7 @@ export const updateFieldLabels = (fields, configFields, primaryFieldsViewIndex, 
   return labelsOfFields;
 };
 
-export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, options) => {
+export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, showActionsColumn, options) => {
   const { primaryFieldsViewIndex, fields } = options;
 
   const fieldsLabels = updateFieldLabels(fields, configFields, primaryFieldsViewIndex, pConnect, {
@@ -181,6 +182,18 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, op
       // BUG-615253: Workaround for autosize in table with lazy loading components
       width: 46
     });
+  } else if (showActionsColumn) {
+    fieldDefs.push({
+      type: 'text',
+      label: '',
+      name: '',
+      id: fieldDefs.length,
+      cellRenderer: ACTIONS_ICON,
+      sort: false,
+      noContextMenu: true,
+      showMenu: false,
+      width: 30
+    });
   }
 
   return fieldDefs;
@@ -207,4 +220,14 @@ export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex)
   configFields = [...rawFields.slice(0, primaryFieldsViewIndex), ...primaryFields, ...rawFields.slice(primaryFieldsViewIndex + 1)];
   // filter duplicate fields after combining raw fields and primary fields
   return configFields.filter((field: any, index) => configFields.findIndex((_field: any) => field.config?.value === _field.config?.value) === index);
+};
+
+export const evaluateAllowRowAction = (allowRowDelete, rowData) => {
+  if (allowRowDelete === undefined || allowRowDelete === true) return true;
+  if (allowRowDelete.startsWith?.('@E ')) {
+    const expression = allowRowDelete.replace('@E ', '');
+    // @ts-ignore - Expected 3 arguments, but got 2
+    return PCore.getExpressionEngine().evaluate(expression, rowData);
+  }
+  return false;
 };

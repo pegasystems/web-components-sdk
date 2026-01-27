@@ -5,9 +5,10 @@ import { BridgeBase } from '../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 import '../PromotedFilters';
 import { Utils } from '../../../helpers/utils';
-import { buildFieldsForTable, getContext, PRIMARY_FIELDS, getConfigFields } from './helpers';
+import { buildFieldsForTable, evaluateAllowRowAction, getContext, PRIMARY_FIELDS, getConfigFields } from './helpers';
 import { FieldGroupUtils } from '../../../helpers/field-group-utils';
 import { getDataPage } from '../../../helpers/data_page';
+import isEqual from 'fast-deep-equal';
 
 // import the component's styles as HTML with <style>
 import { simpleTableManualStyles } from './simple-table-manual-styles';
@@ -60,6 +61,12 @@ class SimpleTableManual extends BridgeBase {
   targetClassLabel = '';
   allowEditingInModal = false;
   referenceListStr: any;
+  parameters: any;
+  bUseSeparateViewForEdit: any;
+  editView: any;
+  isInitialized = false;
+  prevReferenceList: any[] = [];
+  elMenu: any = null;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -130,23 +137,38 @@ class SimpleTableManual extends BridgeBase {
       renderMode,
       children, // destructure children into an array var: "resolvedFields"
       presets,
+      allowActions,
       allowTableEdit,
+      allowRowDelete,
       label: labelProp,
       propertyLabel,
-      editModeConfig,
-      viewForAddAndEditModal,
-      targetClassLabel,
+      fieldMetadata,
       editMode,
       addAndEditRowsWithin,
-      displayMode
+      viewForAddAndEditModal,
+      editModeConfig,
+      displayMode,
+      useSeparateViewForEdit,
+      viewForEditModal,
+      targetClassLabel
     } = this.configProps;
 
+    const simpleTableManualProps: any = {};
+    if (this.checkIfAllowActionsOrRowEditingExist(allowActions) && editMode) {
+      simpleTableManualProps.hideAddRow = allowActions?.allowAdd === false;
+      simpleTableManualProps.hideDeleteRow = allowActions?.allowDelete === false;
+      simpleTableManualProps.hideEditRow = allowActions?.allowEdit === false;
+      simpleTableManualProps.disableDragDrop = allowActions?.allowDragDrop === false;
+    } else if (allowTableEdit === false) {
+      simpleTableManualProps.hideAddRow = true;
+      simpleTableManualProps.hideDeleteRow = true;
+      simpleTableManualProps.disableDragDrop = true;
+    }
+
+    this.referenceListStr = getContext(this.thePConn).referenceListStr;
     this.label = labelProp || propertyLabel;
+    this.parameters = fieldMetadata?.datasource?.parameters;
     this.targetClassLabel = targetClassLabel;
-
-    const hideAddRow = allowTableEdit === false;
-    const hideDeleteRow = allowTableEdit === false;
-
     let { contextClass } = this.configProps;
     this.referenceList = referenceList;
     if (!contextClass) {
@@ -162,8 +184,8 @@ class SimpleTableManual extends BridgeBase {
     //  NOTE: when config.listType == "associated", the property can be found in either
     //    config.value (ex: "@P .DeclarantChoice") or
     //    config.datasource (ex: "@ASSOCIATED .DeclarantChoice")
-    //  Neither of these appear in the resolved (this.configProps)
-    const rawConfig = rawMetadata?.config;
+    //  Neither of these appear in the resolved (this.configProps$)
+    const rawConfig: any = rawMetadata?.config;
     const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
     const resolvedList = FieldGroupUtils.getReferenceList(this.thePConn);
     this.pageReference = `${this.thePConn.getPageReference()}${resolvedList}`;
@@ -175,18 +197,25 @@ class SimpleTableManual extends BridgeBase {
     this.requestedReadOnlyMode = renderMode === 'ReadOnly';
     this.readOnlyMode = renderMode === 'ReadOnly';
     this.editableMode = renderMode === 'Editable';
-    this.showAddRowButton = !this.readOnlyMode && !hideAddRow;
-    const showDeleteButton = !this.readOnlyMode && !hideDeleteRow;
     const isDisplayModeEnabled = displayMode === 'DISPLAY_ONLY';
+    this.showAddRowButton = !this.readOnlyMode && !simpleTableManualProps.hideAddRow;
     this.allowEditingInModal =
       (editMode ? editMode === 'modal' : addAndEditRowsWithin === 'modal') && !(renderMode === 'ReadOnly' || isDisplayModeEnabled);
+    if (this.allowEditingInModal) {
+      this.menuIconOverride = Utils.getImageSrc('more', Utils.getSDKStaticContentUrl());
+    }
+    const showDeleteButton =
+      this.editableMode && !simpleTableManualProps.hideDeleteRow && evaluateAllowRowAction(allowRowDelete, this.rowData) && !this.allowEditingInModal;
+    this.defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
+    this.bUseSeparateViewForEdit = editModeConfig ? editModeConfig.useSeparateViewForEdit : useSeparateViewForEdit;
+    this.editView = editModeConfig ? editModeConfig.editView : viewForEditModal;
 
     this.referenceListStr = getContext(this.thePConn).referenceListStr;
     const primaryFieldsViewIndex = resolvedFields.findIndex(field => field.config.value === PRIMARY_FIELDS);
     const configFields = getConfigFields(rawFields, contextClass, primaryFieldsViewIndex);
     this.rawFields = configFields;
 
-    this.fieldDefs = buildFieldsForTable(configFields, this.pConn, showDeleteButton, {
+    this.fieldDefs = buildFieldsForTable(configFields, this.pConn, showDeleteButton, this.allowEditingInModal, {
       primaryFieldsViewIndex,
       fields: resolvedFields
     });
@@ -196,7 +225,7 @@ class SimpleTableManual extends BridgeBase {
     // Here, we use the "name" field in fieldDefs since that has the assoicated property
     //  (if one exists for the field). If no "name", use "cellRenderer" (typically get DELETE_ICON)
     //  for our columns.
-    this.displayedColumns = this.fieldDefs?.map((field: any) => {
+    this.displayedColumns = this.fieldDefs?.map(field => {
       return field.name ? field.name : field.cellRenderer;
     });
 
@@ -211,16 +240,19 @@ class SimpleTableManual extends BridgeBase {
       return field;
     });
 
-    if (this.prevRefLength !== this.referenceList?.length) {
-      if (this.editableMode) {
-        this.buildElementsForTable();
-      } else {
-        this.generateRowsData();
-      }
+    // for adding rows to table when editable and not modal view
+    if (this.prevReferenceList.length !== this.referenceList.length) {
+      this.buildElementsForTable();
     }
 
+    // for edit and adding rows in modal view and to generate readonly list
+    if (!isEqual(this.prevReferenceList, this.referenceList) && (this.readOnlyMode || this.allowEditingInModal)) {
+      this.generateRowsData();
+    }
+
+    this.prevReferenceList = this.referenceList;
+
     this.prevRefLength = this.referenceList?.length;
-    this.defaultView = editModeConfig ? editModeConfig.defaultView : viewForAddAndEditModal;
 
     // These are the data structures referred to in the html file.
     //  These are the relationships that make the table work
@@ -256,6 +288,33 @@ class SimpleTableManual extends BridgeBase {
       valBuilder = valBuilder[key];
     }
     return valBuilder;
+  }
+
+  initializeDefaultPageInstructions() {
+    if (this.isInitialized) {
+      this.isInitialized = false;
+      if (this.allowEditingInModal) {
+        this.thePConn.getListActions().initDefaultPageInstructions(
+          this.thePConn.getReferenceList(),
+          this.fieldDefs.filter(item => item.name).map(item => item.name)
+        );
+      } else {
+        // @ts-ignore - An argument for 'propertyNames' was not provided.
+        this.thePConn.getListActions().initDefaultPageInstructions(this.thePConn.getReferenceList());
+      }
+    }
+  }
+
+  onEditRow(index: number) {
+    this.editRecord(index);
+  }
+
+  onDeleteRow(index: number) {
+    this.deleteRecord(index);
+  }
+
+  checkIfAllowActionsOrRowEditingExist(newflagobject) {
+    return (newflagobject && Object.keys(newflagobject).length > 0) || this.thePConn.getComponentConfig().allowRowEdit;
   }
 
   generateRowsData() {
@@ -322,6 +381,56 @@ class SimpleTableManual extends BridgeBase {
     this.elementsData = eleData;
   }
 
+  _showActionMenu(event: any) {
+    let el = event.target;
+    while (el != null && el.className != 'psdk-table-actions') {
+      el = el.parentElement;
+    }
+
+    if (this.elMenu != null) {
+      // one is already up, toggle that one first
+      this.toggleActionMenu(this.elMenu);
+    }
+
+    this.toggleActionMenu(el);
+
+    // add clickAway listener
+    window.addEventListener('mouseup', this._clickAway.bind(this));
+  }
+
+  _clickAway(event: any) {
+    let bInMenu = false;
+
+    // run through list of elements in path, if menu not in th path, then want to
+    // hide (toggle) the menu
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i in event.path) {
+      if (event.path[i].className == 'psdk-table-actions') {
+        bInMenu = true;
+        break;
+      }
+    }
+    // eslint-disable-next-line sonarjs/no-collapsible-if
+    if (!bInMenu) {
+      if (this.elMenu != null) {
+        this.toggleActionMenu(this.elMenu);
+        this.elMenu = null;
+
+        window.removeEventListener('mouseup', this._clickAway.bind(this));
+      }
+    }
+  }
+
+  toggleActionMenu(el: any) {
+    if (el != null) {
+      this.elMenu = el;
+      const actionMenu = el.getElementsByClassName('psdk-action-menu-content')[0];
+      if (actionMenu != null) {
+        actionMenu.classList.toggle('show');
+      }
+    }
+  }
+
   getReadOnlyTable() {
     const theColumnHeaders = html`
       <thead class="thead-light">
@@ -335,12 +444,29 @@ class SimpleTableManual extends BridgeBase {
 
     const theDataRows = html`<tbody>
       ${this.rowData.map(
-        row =>
+        (row, rowIndex) =>
           html`<tr scope="row">
             ${this.displayedColumns.map(colKey => {
-              return html`<td>
-                ${typeof row[colKey] === 'boolean' && !row[colKey] ? 'False' : typeof row[colKey] === 'boolean' && row[colKey] ? 'True' : row[colKey]}
-              </td>`;
+              return colKey === 'ActionsIcon'
+                ? html`<td>
+                    <div class="psdk-table-actions">
+                      <button type="button" id="menu-actions-button" class="psdk-utility-button" @click=${this._showActionMenu}>
+                        <img class="psdk-utility-card-action-svg-icon" src=${this.menuIconOverride} />
+                      </button>
+                      <div id="action-menu" class="psdk-action-menu-content">
+                        <a @click=${() => this.onEditRow(rowIndex)}>Edit</a>
+                        <div class="psdk-action-menu-divider"></div>
+                        <a @click=${() => this.onDeleteRow(rowIndex)}>Delete</a>
+                      </div>
+                    </div>
+                  </td>`
+                : html`<td>
+                    ${typeof row[colKey] === 'boolean' && !row[colKey]
+                      ? 'False'
+                      : typeof row[colKey] === 'boolean' && row[colKey]
+                        ? 'True'
+                        : row[colKey]}
+                  </td>`;
             })}
           </tr>`
       )}
@@ -400,6 +526,28 @@ class SimpleTableManual extends BridgeBase {
     }
   }
 
+  editRecord(index: number) {
+    if (!this.allowEditingInModal) {
+      return;
+    }
+
+    const viewToOpen = this.editView || this.defaultView;
+    if (!viewToOpen) {
+      return;
+    }
+
+    this.thePConn
+      .getActionsApi()
+      .openEmbeddedDataModal(
+        viewToOpen,
+        this.thePConn as any,
+        this.referenceListStr,
+        index,
+        PCore.getConstants().RESOURCE_STATUS.UPDATE,
+        this.targetClassLabel
+      );
+  }
+
   deleteRecord(index) {
     if (PCore.getPCoreVersion()?.includes('8.7')) {
       this.thePConn.getListActions().deleteEntry(index, this.pageReference);
@@ -423,8 +571,9 @@ class SimpleTableManual extends BridgeBase {
 
     const theOuterTemplate = html`
       <div class="simple-table-wrapper">
-        ${this.label ? html`<h3 class="label">${this.label} ${this.results()}</h3>` : null} ${this.readOnlyMode ? this.getReadOnlyTable() : null}
-        ${this.editableMode ? this.getEditableTable() : null}
+        ${this.label ? html`<h3 class="label">${this.label} ${this.results()}</h3>` : null}
+        ${this.readOnlyMode || this.allowEditingInModal ? this.getReadOnlyTable() : null}
+        ${this.editableMode && !this.allowEditingInModal ? this.getEditableTable() : null}
         ${this.editableMode && this.referenceList?.length === 0 ? html`<div class="psdk-no-records" id="no-records">No Records Found.</div>` : null}
         ${this.readOnlyMode && this.rowData?.length === 0 ? html`<div class="psdk-no-records" id="no-records">No Records Found.</div>` : null}
       </div>
