@@ -278,7 +278,7 @@ class AutoComplete extends FormComponentBase {
     if (!event.detail?.isTriggeredByUser) return;
     const selected = event.target.modelValue;
     this.value = selected != null ? String(selected) : '';
-    this.actions.onChange(this.thePConn, { value: this.value });
+    handleEvent(this.actionsApi, 'change', this.propName, this.value);
   }
 
   render() {

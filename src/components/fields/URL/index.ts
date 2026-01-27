@@ -1,7 +1,6 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
-import handleEvent from '../../../helpers/event-utils';
 
 // NOTE: you need to import ANY component you may render.
 import '../../designSystemExtension/LionInputUrl';
