@@ -169,9 +169,7 @@ class Dropdown extends FormComponentBase {
 
   fieldOnChange(event: any) {
     const selectedValue = event.target.value;
-    const actionsApi = this.thePConn.getActionsApi();
-    const propName = (this.thePConn.getStateProps() as any).value;
-    handleEvent(actionsApi, 'changeNblur', propName, selectedValue);
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, selectedValue);
   }
 
   render() {

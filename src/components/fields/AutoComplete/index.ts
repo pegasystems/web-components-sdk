@@ -262,11 +262,9 @@ class AutoComplete extends FormComponentBase {
   }
 
   fieldOnChange(event: any) {
-    const actionsApi = this.thePConn.getActionsApi();
-    const propName = (this.thePConn.getStateProps() as any).value;
     if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
       const value = '';
-      handleEvent(actionsApi, 'change', propName, value);
+      handleEvent(this.actionsApi, 'change', this.propName, value);
     } else {
       let key = '';
       if (event?.target?.value) {
@@ -274,7 +272,7 @@ class AutoComplete extends FormComponentBase {
         key = index > -1 ? (key = this.options[index].key) : event.target.value;
       }
       event.target.value = key;
-      handleEvent(actionsApi, 'change', propName, event.target.value);
+      handleEvent(this.actionsApi, 'change', this.propName, event.target.value);
     }
   }
 

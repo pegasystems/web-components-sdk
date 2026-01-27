@@ -57,6 +57,8 @@ export class FormComponentBase extends BridgeBase {
   @property({ attribute: false, type: String }) primaryField = '';
   @property({ attribute: false, type: String }) selectionKey = '';
   @property({ attribute: false, type: String }) referenceList = '';
+  actionsApi: any;
+  propName: any;
 
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -134,6 +136,8 @@ export class FormComponentBase extends BridgeBase {
     this.annotatedLabel = this.label;
 
     const theConfigProps = this.thePConn.getConfigProps() as FormComponentBaseProps;
+    this.actionsApi = this.thePConn.getActionsApi();
+    this.propName = (this.thePConn.getStateProps() as any).value;
 
     // Clear out validators so they don't accumulate (since we're going to add them back below)
     this.lionValidatorsArray.length = 0;
@@ -249,15 +253,13 @@ export class FormComponentBase extends BridgeBase {
     if (this.bLogging) {
       console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
-    const actionsApi = this.thePConn.getActionsApi();
-    const propName = (this.thePConn.getStateProps() as any).value;
 
     if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
       const value = '';
-      handleEvent(actionsApi, 'change', propName, value);
+      handleEvent(this.actionsApi, 'change', this.propName, value);
     } else {
       const value = event?.target?.value;
-      handleEvent(actionsApi, 'change', propName, value);
+      handleEvent(this.actionsApi, 'change', this.propName, value);
     }
   }
 
@@ -283,7 +285,7 @@ export class FormComponentBase extends BridgeBase {
     if (this.selectionMode === 'multi') {
       this.thePConn.getValidationApi().validate(this.selectedvalues, this.selectionList);
     } else {
-      this.actions.onBlur(this.thePConn, event);
+      handleEvent(this.actionsApi, 'changeNblur', this.propName, event.target.value);
     }
   }
 

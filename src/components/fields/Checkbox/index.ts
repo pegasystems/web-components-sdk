@@ -155,9 +155,7 @@ class CheckBox extends FormComponentBase {
       return;
     }
     const value = event.target.checked;
-    const actionsApi = this.thePConn.getActionsApi();
-    const propName = (this.thePConn.getStateProps() as any).value;
-    handleEvent(actionsApi, 'change', propName, value);
+    handleEvent(this.actionsApi, 'change', this.propName, value);
   }
 
   handleChangeMultiMode(event) {

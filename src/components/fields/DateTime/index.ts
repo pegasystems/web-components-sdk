@@ -68,10 +68,7 @@ class DateTime extends FormComponentBase {
       value = new Date(value).toISOString();
     }
 
-    // NOTE: For DateTime we send along the value, NOT event.value
-    const actionsApi = this.thePConn.getActionsApi();
-    const propName = (this.thePConn.getStateProps() as any).value;
-    handleEvent(actionsApi, 'change', propName, value);
+    handleEvent(this.actionsApi, 'change', this.propName, value);
   }
 
   render() {

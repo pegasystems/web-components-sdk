@@ -51,23 +51,14 @@ class Time extends FormComponentBase {
     }
   }
 
-  // NOTE: Special logic to handle value. Do nothing is the value is the same as current value.
-  //  When different, bypass super class version and call onChange directly with new value
-  fieldOnChange(event: any) {
-    if (this.bDebug) {
-      debugger;
+  fieldOnBlur(event: any) {
+    let value = event?.target?.value;
+    const hhmmPattern = /^\d{2}:\d{2}$/;
+    if (hhmmPattern.test(value)) {
+      value = `${value}:00`; // append ":00"
     }
-    const value = event.target.value;
 
-    if (this.value === value) return;
-    // if (value) {
-    //     value = new Date(value).toISOString();
-    // }
-
-    // NOTE: For DateTime we send along the value, NOT event.value
-    const actionsApi = this.thePConn.getActionsApi();
-    const propName = (this.thePConn.getStateProps() as any).value;
-    handleEvent(actionsApi, 'change', propName, value);
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, value);
   }
 
   render() {
