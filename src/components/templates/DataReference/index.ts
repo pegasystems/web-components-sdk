@@ -165,7 +165,7 @@ class DataReference extends BridgeBase {
         this.firstChildMeta.config.displayMode = this.displayMode;
       }
 
-       if (this.firstChildMeta.type === 'SimpleTableSelect' && this.selectionMode === SELECTION_MODE.MULTI) {
+      if (this.firstChildMeta.type === 'SimpleTableSelect' && this.selectionMode === SELECTION_MODE.MULTI) {
         this.propName = PCore.getAnnotationUtils().getPropertyName(this.firstChildMeta.config.selectionList);
       } else {
         this.propName = PCore.getAnnotationUtils().getPropertyName(this.firstChildMeta.config.value);
@@ -241,7 +241,7 @@ class DataReference extends BridgeBase {
   };
 
   // // Re-create first child with overridden props
-   recreatedFirstChild() {
+  recreatedFirstChild() {
     const { type, config } = this.firstChildMeta;
     if (this.firstChildMeta?.type !== 'Region') {
       this.pConn.clearErrorMessages({
