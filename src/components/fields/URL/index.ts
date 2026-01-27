@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
+import handleEvent from '../../../helpers/event-utils';
 
 // NOTE: you need to import ANY component you may render.
 import '../../designSystemExtension/LionInputUrl';
@@ -68,7 +69,9 @@ class URL extends FormComponentBase {
     // }
 
     // NOTE: For URL we send along the value, NOT event.value
-    this.actions.onChange(this.thePConn, { value });
+    const actionsApi = this.thePConn.getActionsApi();
+    const propName = (this.thePConn.getStateProps() as any).value;
+    handleEvent(actionsApi, 'change', propName, value);
   }
 
   render() {

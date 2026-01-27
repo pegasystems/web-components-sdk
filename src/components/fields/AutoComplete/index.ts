@@ -4,6 +4,8 @@ import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 import { getDataPage } from '../../../helpers/data_page';
+import handleEvent from '../../../helpers/event-utils';
+
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
@@ -260,9 +262,11 @@ class AutoComplete extends FormComponentBase {
   }
 
   fieldOnChange(event: any) {
+    const actionsApi = this.thePConn.getActionsApi();
+    const propName = (this.thePConn.getStateProps() as any).value;
     if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
       const value = '';
-      this.actions.onChange(this.thePConn, { value });
+      handleEvent(actionsApi, 'change', propName, value);
     } else {
       let key = '';
       if (event?.target?.value) {
@@ -270,7 +274,7 @@ class AutoComplete extends FormComponentBase {
         key = index > -1 ? (key = this.options[index].key) : event.target.value;
       }
       event.target.value = key;
-      this.actions.onChange(this.thePConn, event);
+      handleEvent(actionsApi, 'change', propName, event.target.value);
     }
   }
 

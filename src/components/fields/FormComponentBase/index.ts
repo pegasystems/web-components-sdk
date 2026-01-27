@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
+import handleEvent from '../../../helpers/event-utils';
 // FormComponentBase needs to add some styling to the BridgeBase default styles
 //  so we import both and combine them in our override for static styles
 import { bootstrapStyles } from '../../../bridge/BridgeBase/bootstrap-styles';
@@ -248,12 +249,15 @@ export class FormComponentBase extends BridgeBase {
     if (this.bLogging) {
       console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
+    const actionsApi = this.thePConn.getActionsApi();
+    const propName = (this.thePConn.getStateProps() as any).value;
 
     if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
       const value = '';
-      this.actions.onChange(this.thePConn, { value });
+      handleEvent(actionsApi, 'change', propName, value);
     } else {
-      this.actions.onChange(this.thePConn, event);
+      const value = event?.target?.value;
+      handleEvent(actionsApi, 'change', propName, value);
     }
   }
 
