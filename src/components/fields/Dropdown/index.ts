@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
+import handleEvent from '../../../helpers/event-utils';
 import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
@@ -166,6 +167,11 @@ class Dropdown extends FormComponentBase {
     return errMessage;
   }
 
+  fieldOnChange(event: any) {
+    const selectedValue = event.target.value;
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, selectedValue);
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -197,32 +203,33 @@ class Dropdown extends FormComponentBase {
       ? html` <div>
           ${this.bVisible
             ? html`
-              <div class="form-group">
-                <lion-select
-                  id=${this.theComponentId}
-                  dataTestId=${this.testId}
-                  .fieldName=${this.label}
-                  .modelValue=${this.value === '' && !this.bReadonly ? 'Select' : this.value}
-                  .validators = ${this.lionValidatorsArray}
-                  .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                  ?readonly=${this.bReadonly}
-                  ?disabled=${this.bDisabled}
-                  /* @model-value-changed=${this.fieldOnChange} */ >
-                  <span slot="label">${this.annotatedLabel}</span>
-                  <select slot="input">
-                    ${this.options.map(option => {
-                      return html`<option value=${option.key}>
-                        ${this.thePConn.getLocalizedValue(
-                          option.value,
-                          this.localePath,
-                          this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
-                        )}
-                      </option>`;
-                    })}
-                  </select>
-                </lion-radio-group>
-              </div>
-            `
+                <div class="form-group">
+                  <lion-select
+                    id=${this.theComponentId}
+                    dataTestId=${this.testId}
+                    .fieldName=${this.label}
+                    .modelValue=${this.value === '' && !this.bReadonly ? 'Select' : this.value}
+                    .validators=${this.lionValidatorsArray}
+                    .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+                    ?readonly=${this.bReadonly}
+                    ?disabled=${this.bDisabled}
+                    @model-value-changed=${this.fieldOnChange}
+                  >
+                    <span slot="label">${this.annotatedLabel}</span>
+                    <select slot="input">
+                      ${this.options.map(option => {
+                        return html`<option value=${option.key}>
+                          ${this.thePConn.getLocalizedValue(
+                            option.value,
+                            this.localePath,
+                            this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
+                          )}
+                        </option>`;
+                      })}
+                    </select>
+                  </lion-select>
+                </div>
+              `
             : nothing}
         </div>`
       : nothing}`;

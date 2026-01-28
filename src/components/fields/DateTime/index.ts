@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
+import handleEvent from '../../../helpers/event-utils';
 
 // NOTE: you need to import ANY component you may render.
 import '../../designSystemExtension/LionInputDateTime';
@@ -67,8 +68,7 @@ class DateTime extends FormComponentBase {
       value = new Date(value).toISOString();
     }
 
-    // NOTE: For DateTime we send along the value, NOT event.value
-    this.actions.onChange(this.thePConn, { value });
+    handleEvent(this.actionsApi, 'change', this.propName, value);
   }
 
   render() {
