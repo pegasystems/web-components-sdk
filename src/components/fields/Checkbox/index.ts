@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 import { formComponentStyles } from '../FormComponentBase/form-component-styles';
+import handleEvent from '../../../helpers/event-utils';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-checkbox-group.js';
@@ -119,7 +120,7 @@ class CheckBox extends FormComponentBase {
 
   handleChecked() {
     // For unknown reasons, the "value" is toggling between "" and false. So test for "" until we figure out why
-    if (this.value === 'true' || this.value === 'on' || this.value === '') {
+    if (this.value === 'true' || this.value === 'on') {
       this.isChecked = true;
     } else if (typeof this.value === 'boolean' && this.value === true) {
       this.isChecked = true;
@@ -154,8 +155,7 @@ class CheckBox extends FormComponentBase {
       return;
     }
     const value = event.target.checked;
-
-    this.actions.onChange(this.thePConn, { value });
+    handleEvent(this.actionsApi, 'change', this.propName, value);
   }
 
   handleChangeMultiMode(event) {

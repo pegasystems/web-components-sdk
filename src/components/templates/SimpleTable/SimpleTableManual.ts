@@ -187,7 +187,6 @@ class SimpleTableManual extends BridgeBase {
     //  Neither of these appear in the resolved (this.configProps$)
     const rawConfig: any = rawMetadata?.config;
     const rawFields = rawConfig?.children?.[0]?.children || rawConfig?.presets?.[0].children?.[0]?.children;
-
     const resolvedList = FieldGroupUtils.getReferenceList(this.thePConn);
     this.pageReference = `${this.thePConn.getPageReference()}${resolvedList}`;
     this.thePConn.setReferenceList(resolvedList);

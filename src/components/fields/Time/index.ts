@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
+import handleEvent from '../../../helpers/event-utils';
 
 // NOTE: you need to import ANY component you may render.
 import '../../designSystemExtension/LionInputTimeOnly';
@@ -50,21 +51,14 @@ class Time extends FormComponentBase {
     }
   }
 
-  // NOTE: Special logic to handle value. Do nothing is the value is the same as current value.
-  //  When different, bypass super class version and call onChange directly with new value
-  fieldOnChange(event: any) {
-    if (this.bDebug) {
-      debugger;
+  fieldOnBlur(event: any) {
+    let value = event?.target?.value;
+    const hhmmPattern = /^\d{2}:\d{2}$/;
+    if (hhmmPattern.test(value)) {
+      value = `${value}:00`; // append ":00"
     }
-    const value = event.target.value;
 
-    if (this.value === value) return;
-    // if (value) {
-    //     value = new Date(value).toISOString();
-    // }
-
-    // NOTE: For DateTime we send along the value, NOT event.value
-    this.actions.onChange(this.thePConn, { value });
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, value);
   }
 
   render() {
