@@ -480,7 +480,7 @@ class FlowContainer extends BridgeBase {
         `
         : html`
             <div class="psdk-message-card">
-              <div style="display: flex; flex-direction: row;">
+              <div style="display: flex; flex-direction: row; align-items: center;">
                 <div><img class="psdk-icon" src="${this.checkSvg}" /></div>
                 <div class="psdk-message">${this.caseMessages}</div>
               </div>

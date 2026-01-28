@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
+import handleEvent from '../../../helpers/event-utils';
 // FormComponentBase needs to add some styling to the BridgeBase default styles
 //  so we import both and combine them in our override for static styles
 import { bootstrapStyles } from '../../../bridge/BridgeBase/bootstrap-styles';
@@ -56,6 +57,8 @@ export class FormComponentBase extends BridgeBase {
   @property({ attribute: false, type: String }) primaryField = '';
   @property({ attribute: false, type: String }) selectionKey = '';
   @property({ attribute: false, type: String }) referenceList = '';
+  actionsApi: any;
+  propName: any;
 
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -133,6 +136,8 @@ export class FormComponentBase extends BridgeBase {
     this.annotatedLabel = this.label;
 
     const theConfigProps = this.thePConn.getConfigProps() as FormComponentBaseProps;
+    this.actionsApi = this.thePConn.getActionsApi();
+    this.propName = (this.thePConn.getStateProps() as any).value;
 
     // Clear out validators so they don't accumulate (since we're going to add them back below)
     this.lionValidatorsArray.length = 0;
@@ -251,9 +256,10 @@ export class FormComponentBase extends BridgeBase {
 
     if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
       const value = '';
-      this.actions.onChange(this.thePConn, { value });
+      handleEvent(this.actionsApi, 'change', this.propName, value);
     } else {
-      this.actions.onChange(this.thePConn, event);
+      const value = event?.target?.value;
+      handleEvent(this.actionsApi, 'change', this.propName, value);
     }
   }
 
@@ -279,7 +285,7 @@ export class FormComponentBase extends BridgeBase {
     if (this.selectionMode === 'multi') {
       this.thePConn.getValidationApi().validate(this.selectedvalues, this.selectionList);
     } else {
-      this.actions.onBlur(this.thePConn, event);
+      handleEvent(this.actionsApi, 'changeNblur', this.propName, event.target.value);
     }
   }
 

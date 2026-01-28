@@ -5,6 +5,8 @@ import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 import { getDataPage } from '../../../helpers/data_page';
+import handleEvent from '../../../helpers/event-utils';
+
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
@@ -276,7 +278,7 @@ class AutoComplete extends FormComponentBase {
     if (!event.detail?.isTriggeredByUser) return;
     const selected = event.target.modelValue;
     this.value = selected != null ? String(selected) : '';
-    this.actions.onChange(this.thePConn, { value: this.value });
+    handleEvent(this.actionsApi, 'change', this.propName, this.value);
   }
 
   render() {

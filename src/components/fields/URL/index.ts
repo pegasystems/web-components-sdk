@@ -54,23 +54,6 @@ class URL extends FormComponentBase {
     }
   }
 
-  // NOTE: Special logic to handle value. Do nothing if the value is the same as current value.
-  //  When different, bypass super class version and call onChange directly with new value
-  fieldOnChange(event: any) {
-    if (this.bDebug) {
-      debugger;
-    }
-    const value = event.target.value;
-
-    if (this.value === value) return;
-    // if (value) {
-    //     value = new Date(value).toISOString();
-    // }
-
-    // NOTE: For URL we send along the value, NOT event.value
-    this.actions.onChange(this.thePConn, { value });
-  }
-
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
