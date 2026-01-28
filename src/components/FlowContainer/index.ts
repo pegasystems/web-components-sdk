@@ -62,7 +62,7 @@ class FlowContainer extends BridgeBase {
   // In Web Components, component is not unmounted if the next view also contains the same component.
   // From performance POV it reuses the component and triggers state change. So Lifecycle methods will not be executed.
   // So maintaining a unique id (localComponentId) in flow container to be used in keyed, updated whenever flow containers pconn is updated.
-  localComponentId: number;
+  localComponentId?: number;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -78,7 +78,6 @@ class FlowContainer extends BridgeBase {
     }
 
     this.pConn = {};
-    this.localComponentId = 0;
   }
 
   connectedCallback() {
