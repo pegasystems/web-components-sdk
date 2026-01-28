@@ -11,8 +11,7 @@ export const listViewStyles = html`
     /* for vaadin-grid */
 
     vaadin-grid {
-      height: auto;
-      max-height: 400px;
+      height: 100vh;
     }
 
     /* based on this thread: https://github.com/vaadin/vaadin-grid/issues/786 */
