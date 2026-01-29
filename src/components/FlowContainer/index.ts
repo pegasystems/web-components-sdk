@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
 import { addContainerItem, getPConnectOfActiveContainerItem, getToDoAssignments } from './helpers';
@@ -58,6 +59,11 @@ class FlowContainer extends BridgeBase {
   localeCategory = 'Messages';
   localeReference: any;
   pConnectOfActiveContainerItem: any;
+  // In Web Components, component is not unmounted if the next view also contains the same component.
+  // From performance POV it reuses the component and triggers state change. So Lifecycle methods will not be executed.
+  // So maintaining a unique id (localComponentId) in flow container to be used in keyed, updated whenever flow containers pconn is updated.
+  localComponentId?: number;
+
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -94,6 +100,8 @@ class FlowContainer extends BridgeBase {
 
     // do init/add containers
     this.initContainer();
+    // local Id will be same as the componentId created in bridge base
+    this.localComponentId = this.theComponentId;
   }
 
   disconnectedCallback() {
@@ -426,9 +434,12 @@ class FlowContainer extends BridgeBase {
 
     if (bShouldUpdate) {
       this.updateSelf();
+      // Whenever pconn is modified and flowContainer needs to update self then localComponentId is updated with new unique id
+      this.localComponentId = Date.now();
     }
   }
 
+  // Unique key is assigned to assignment, If the key changes assignment will unmounted.
   flowContainerHtml(): any {
     return html` <div style="text-align: left;" id="${this.buildName}" class="psdk-flow-container-top">
       ${!this.bHasCaseMessages
@@ -436,17 +447,20 @@ class FlowContainer extends BridgeBase {
       </div>
         ${
           !this.todo_showTodo
-            ? html`
-                <h2>${this.containerName}</h2>
-                ${this.instructionText !== '' ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
-                <div>
-                  <assignment-component
-                    .pConn=${this.pConnectOfActiveContainerItem}
-                    .arChildren=${this.arNewChildren}
-                    itemKey=${this.itemKey}
-                  ></assignment-component>
-                </div>
-              `
+            ? keyed(
+                this.localComponentId,
+                html`
+                  <h2>${this.containerName}</h2>
+                  ${this.instructionText !== '' ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
+                  <div>
+                    <assignment-component
+                      .pConn=${this.pConnectOfActiveContainerItem}
+                      .arChildren=${this.arNewChildren}
+                      itemKey=${this.itemKey}
+                    ></assignment-component>
+                  </div>
+                `
+              )
             : html`
                 <div>
                   <todo-component
