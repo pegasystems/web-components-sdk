@@ -17,7 +17,7 @@ export const modalViewContainerStyles = html`
     }
 
     .psdk-modal-view-container-top {
-      display: table;
+      display: block;
       margin: auto;
       min-width: 650px;
       background-color: white;
@@ -25,6 +25,9 @@ export const modalViewContainerStyles = html`
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 0 10px 3px #777;
+      overflow-y: auto;
+      max-width: 700px;
+      max-height: 90vh;
     }
 
     .psdk-dialog-float {
