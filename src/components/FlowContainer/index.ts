@@ -45,6 +45,7 @@ class FlowContainer extends BridgeBase {
   @property({ attribute: false }) todo_headerText = 'To do';
   @property({ attribute: false }) todo_type = '';
   @property({ attribute: false }) todo_context = '';
+  @property({ attribute: false, type: Array }) banners: any[] = [];
 
   // messages
   caseMessages = '';
@@ -423,20 +424,57 @@ class FlowContainer extends BridgeBase {
    *  all components that are derived from BridgeBase
    */
   onStateChange() {
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: onStateChange`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
+    this.checkAndUpdate();
+  }
 
+  checkAndUpdate() {
+    // Should always check the bridge to see if the component should update itself (re-render)
     const bShouldUpdate = super.shouldComponentUpdate();
 
-    if (bShouldUpdate) {
-      this.updateSelf();
-      // Whenever pconn is modified and flowContainer needs to update self then localComponentId is updated with new unique id
-      this.localComponentId = Date.now();
+    const pConn = this.pConnectOfActiveContainerItem || this.pConn?.getPConnect();
+    const caseViewModeFromProps = this.getComponentProp('caseViewMode');
+    const caseViewModeFromRedux = pConn.getValue('context_data.caseViewMode', '');
+
+    const completeProps: any = this.getCurrentCompleteProps();
+
+    // ONLY call updateSelf when the component should update
+    // eslint-disable-next-line sonarjs/no-collapsible-if
+    if (bShouldUpdate || caseViewModeFromProps !== caseViewModeFromRedux) {
+      // don't want to redraw the flow container when there are page messages, because
+      // the redraw causes us to loose the errors on the elements
+      if (!completeProps.pageMessages || completeProps.pageMessages.length == 0) {
+        this.updateSelf();
+        // Whenever pconn is modified and flowContainer needs to update self then localComponentId is updated with new unique id
+        this.localComponentId = Date.now();
+      }
     }
+
+    this.showPageMessages(completeProps);
+  }
+
+  showPageMessages(completeProps: FlowContainerProps) {
+    const pageMessages = completeProps.pageMessages;
+    this.banners = [{ messages: pageMessages?.map(msg => this.localizedVal(msg.message, 'Messages')), variant: 'urgent' }];
+
+    console.log('FlowContainer page messages:', this.banners);
+  }
+
+  bannersHtml() {
+    return this.banners.map(banner => {
+      if (!banner.messages || banner.messages.length === 0) {
+        return nothing;
+      }
+
+      return html` <div class="psdk-alert psdk-alert-${banner.variant}">
+        ${banner.messages?.map(
+          (msg: string) =>
+            html` <div class="psdk-alert-message">
+              <span class="psdk-alert-icon">!</span>
+              <span>${msg}</span>
+            </div>`
+        )}
+      </div>`;
+    });
   }
 
   // Unique key is assigned to assignment, If the key changes assignment will unmounted.
@@ -452,6 +490,7 @@ class FlowContainer extends BridgeBase {
                 html`
                   <h2>${this.containerName}</h2>
                   ${this.instructionText !== '' ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
+                  ${this.bannersHtml()}
                   <div>
                     <assignment-component
                       .pConn=${this.pConnectOfActiveContainerItem}
