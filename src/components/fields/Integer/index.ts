@@ -5,6 +5,7 @@ import { FormComponentBase } from '../FormComponentBase';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-amount.js';
 // import { preprocessAmount } from '@lion/input-amount';
+import '../../designSystemExtension/FieldValueList';
 
 // import the component's styles as HTML with <style>
 import { integerStyles } from './integer-styles';
@@ -68,6 +69,10 @@ class Integer extends FormComponentBase {
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
+
+    if (this.displayMode) {
+      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+    }
 
     // return if not visible
     if (!this.bVisible) {

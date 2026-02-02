@@ -8,6 +8,7 @@ import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
+import '../../designSystemExtension/FieldValueList';
 
 // import the component's styles as HTML with <style>
 import { radioButtonStyles } from './radio-buttons-styles';
@@ -162,6 +163,10 @@ class RadioButtons extends FormComponentBase {
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
+
+    if (this.displayMode) {
+      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+    }
 
     // Handle and return if read only rendering
     if (this.bReadonly) {

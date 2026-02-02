@@ -39,6 +39,7 @@ export class FormComponentBase extends BridgeBase {
   @property({ attribute: false, type: Boolean }) bReadonly = false;
   @property({ attribute: false, type: Boolean }) bRequired = false;
   @property({ attribute: false, type: Boolean }) bVisible = true;
+  @property({ attribute: false, type: String }) displayMode = '';
 
   @property({ attribute: false, type: Array }) lionValidatorsArray: Object[] = [];
 
@@ -148,6 +149,7 @@ export class FormComponentBase extends BridgeBase {
 
     this.label = theConfigProps.label;
     this.testId = theConfigProps.testId;
+    this.displayMode = theConfigProps.displayMode ?? '';
 
     if (theConfigProps.required != null) {
       this.bRequired = Utils.getBooleanValue(theConfigProps.required);

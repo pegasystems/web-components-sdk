@@ -38,12 +38,12 @@ class DetailsFields extends LitElement {
 
   getFieldLabel(field: any) {
     if (field.type.toLowerCase()) {
-      return field.config.label;
+      return field.config?.label || '';
     }
   }
 
   getFieldValue(field: any): any {
-    if (field.config.value == null || field.config.value == '') {
+    if (field.config?.value == null || field.config?.value == '') {
       // eslint-disable-next-line sonarjs/no-small-switch
       switch (field.type.toLowerCase()) {
         case 'caseoperator':
@@ -77,7 +77,7 @@ class DetailsFields extends LitElement {
       if (field?.type === 'reference') {
         arFHtml.push(html`
           <div>
-            <view-component .pConn=${field.pConn}></view-component>
+            <reference-component .pConn=${field.pConn}></reference-component>
           </div>
         `);
       } else {

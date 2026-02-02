@@ -202,7 +202,7 @@ class View extends BridgeBase {
 
   render() {
     if (this.bLogging) {
-      console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
+      console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.thePConn)}`);
     }
     if (this.bDebug) {
       debugger;
@@ -230,7 +230,7 @@ class View extends BridgeBase {
 
     const theOuterTemplate = html`
       <div class="psdk-view-top">
-        ${this.showLabel && this.label && this.templateName !== 'SimpleTable' && this.templateName !== 'DefaultForm'
+        ${this.showLabel && this.label && this.templateName !== 'SimpleTable'
           ? html`<div class="template-title-container"><span>${this.label}</span></div>`
           : nothing}
         ${theInnerTemplate}
