@@ -1,15 +1,16 @@
 import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { BridgeBase } from '../../../bridge/BridgeBase';
+import { customElement } from 'lit/decorators.js';
+import { BridgeBase } from '../../../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
+import '../OneColumn';
 
 // import the component's styles as HTML with <style>
-import '../SimpleTable/SimpleTableManual';
+// NO styles for TwoColumnPage
 
-@customElement('multi-reference-readonly')
-class MultiReferenceReadonly extends BridgeBase {
-  @property({ attribute: false, type: Object }) pConn;
-  @property({ attribute: false, type: String }) label;
+// NOTE: this is just a boilerplate component definition intended
+//  to be used as a starting point for any new components as they're built out
+@customElement('one-column-page')
+class OneColumnPage extends BridgeBase {
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -83,34 +84,6 @@ class MultiReferenceReadonly extends BridgeBase {
     }
   }
 
-  getMultiReferenceHtml(): any {
-    const config = (this.pConn.getMetadata() as any)?.config;
-    const { referenceList, readonlyContextList } = config;
-    let readonlyContextObject;
-    if (!PCore.getAnnotationUtils().isProperty(referenceList)) {
-      readonlyContextObject = {
-        referenceList: readonlyContextList
-      };
-    }
-    const hideLabel = this.thePConn.getConfigProps().hideLabel ?? false;
-    const newPConn = this.pConn.createComponent(
-      {
-        type: 'SimpleTable',
-        config: {
-          ...config,
-          ...readonlyContextObject,
-          label: this.label,
-          hideLabel
-        }
-      },
-      '',
-      0,
-      {}
-    );
-
-    return html`<simple-table-component .pConn=${newPConn}></simple-table-component>`;
-  }
-
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -122,12 +95,13 @@ class MultiReferenceReadonly extends BridgeBase {
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
-    const sContent = html`${this.getMultiReferenceHtml()}`;
 
-    this.renderTemplates.push(sContent);
+    const theTemplate = html` <one-column .pConn=${this.thePConn}></one-column> `;
+
+    this.renderTemplates.push(theTemplate);
 
     return this.renderTemplates;
   }
 }
 
-export default MultiReferenceReadonly;
+export default OneColumnPage;

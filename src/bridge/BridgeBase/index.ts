@@ -1028,6 +1028,10 @@ export class BridgeBase extends LitElement {
         theTemplateForTemplate = html`<one-column .pConn=${inPConnToUse}></one-column>`;
         break;
 
+      case 'OneColumnPage':
+        theTemplateForTemplate = html`<one-column-page .pConn=${inPConnToUse}></one-column-page>`;
+        break;
+
       case 'OneColumnTab':
         theTemplateForTemplate = html`<one-column-tab-component .pConn=${inPConnToUse}></one-column-tab-component>`;
         break;
@@ -1142,6 +1146,11 @@ export class BridgeBase extends LitElement {
 
         case 'URL':
           theComp = html`<url-form .pConn=${thePConn}></url-form>`;
+          break;
+
+        case 'Reference':
+        case 'reference':
+          theComp = html`<reference-component .pConn=${thePConn}></reference-component>`;
           break;
 
         default:
