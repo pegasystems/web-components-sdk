@@ -1,9 +1,6 @@
 export const TABLE_CELL = 'SdkRenderer';
 export const DELETE_ICON = 'DeleteIcon';
-<<<<<<< HEAD
 export const ACTIONS_ICON = 'ActionsIcon';
-=======
->>>>>>> fe5c805 (Hiding primary fields in embedded data table)
 export const PRIMARY_FIELDS = 'pyPrimaryFields';
 
 const SUPPORTED_FIELD_TYPES = [
@@ -145,7 +142,7 @@ export const updateFieldLabels = (fields, configFields, primaryFieldsViewIndex, 
   return labelsOfFields;
 };
 
-export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, options) => {
+export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, showActionsColumn, options) => {
   const { primaryFieldsViewIndex, fields } = options;
 
   const fieldsLabels = updateFieldLabels(fields, configFields, primaryFieldsViewIndex, pConnect, {
@@ -220,7 +217,6 @@ export const getConfigFields = (rawFields, contextClass, primaryFieldsViewIndex)
     }
   }
 
-<<<<<<< HEAD
   configFields = [...rawFields.slice(0, primaryFieldsViewIndex), ...primaryFields, ...rawFields.slice(primaryFieldsViewIndex + 1)];
   // filter duplicate fields after combining raw fields and primary fields
   return configFields.filter((field: any, index) => configFields.findIndex((_field: any) => field.config?.value === _field.config?.value) === index);
@@ -235,15 +231,3 @@ export const evaluateAllowRowAction = (allowRowDelete, rowData) => {
   }
   return false;
 };
-=======
-  configFields = [
-    ...rawFields.slice(0, primaryFieldsViewIndex),
-    ...primaryFields,
-    ...rawFields.slice(primaryFieldsViewIndex + 1)
-  ];
-  // filter duplicate fields after combining raw fields and primary fields
-  return configFields.filter(
-    (field: any, index) => configFields.findIndex((_field: any) => field.config?.value === _field.config?.value) === index
-  );
-};
->>>>>>> fe5c805 (Hiding primary fields in embedded data table)
