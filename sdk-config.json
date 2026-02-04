@@ -28,6 +28,8 @@
     "appMashupCaseType_comment": "If specified, uses this case type for mashup.  Otherwise, uses the first case type found for the app",
     "appMashupCaseType": "",
     "excludePortals_comment": "Array of specific portals to avoid attempting to load with SDK",
-    "excludePortals": ["pxExpress", "Developer", "pxPredictionStudio", "pxAdminStudio", "pyCaseWorker", "pyCaseManager7"]
+    "excludePortals": ["pxExpress", "Developer", "pxPredictionStudio", "pxAdminStudio", "pyCaseWorker", "pyCaseManager7"],
+    "showModalsInEmbeddedMode_comment": "If true, modals will be shown in embedded mode",
+    "showModalsInEmbeddedMode": false
   }
 }

@@ -73,7 +73,7 @@ class SummaryItem extends LitElement {
 
   getFieldLabel(field: any) {
     const theLabel = field.config.label;
-    const theLowerCaseLabel = theLabel.toLowerCase();
+    const theLowerCaseLabel = theLabel?.toLowerCase();
     const displayLabel = field.config?.displayLabel?.toLowerCase();
 
     // eslint-disable-next-line sonarjs/no-small-switch

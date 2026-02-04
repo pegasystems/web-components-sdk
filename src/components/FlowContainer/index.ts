@@ -1,8 +1,9 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 import { Utils } from '../../helpers/utils';
-import { addContainerItem, getToDoAssignments } from './helpers';
+import { addContainerItem, getPConnectOfActiveContainerItem, getToDoAssignments } from './helpers';
 import '../Assignment';
 import '../ToDo';
 
@@ -57,6 +58,12 @@ class FlowContainer extends BridgeBase {
   localizedVal: Function = () => {};
   localeCategory = 'Messages';
   localeReference: any;
+  pConnectOfActiveContainerItem: any;
+  // In Web Components, component is not unmounted if the next view also contains the same component.
+  // From performance POV it reuses the component and triggers state change. So Lifecycle methods will not be executed.
+  // So maintaining a unique id (localComponentId) in flow container to be used in keyed, updated whenever flow containers pconn is updated.
+  localComponentId?: number;
+
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -93,6 +100,8 @@ class FlowContainer extends BridgeBase {
 
     // do init/add containers
     this.initContainer();
+    // local Id will be same as the componentId created in bridge base
+    this.localComponentId = this.theComponentId;
   }
 
   disconnectedCallback() {
@@ -216,6 +225,8 @@ class FlowContainer extends BridgeBase {
     // const { getPConnect } = this.arNewChildren[0].getPConnect();
     const localPConn = this.arNewChildren[0].getPConnect();
 
+    this.pConnectOfActiveContainerItem = this.getPConnectOfActiveContainerItem(this.thePConn) || this.thePConn;
+
     this.buildName = this.getBuildName();
 
     // routingInfo was added as component prop in populateAdditionalProps
@@ -235,7 +246,7 @@ class FlowContainer extends BridgeBase {
       // this.psService.sendMessage(false);
     }
 
-    const caseViewMode = this.thePConn.getValue('context_data.caseViewMode');
+    const caseViewMode = this.pConnectOfActiveContainerItem.getValue('context_data.caseViewMode');
 
     const { CASE_INFO: CASE_CONSTS } = PCore.getConstants();
 
@@ -389,8 +400,9 @@ class FlowContainer extends BridgeBase {
     const oWorkData = oWorkItem.getDataObject();
 
     if (bLoadChildren && oWorkData) {
-      this.containerName = oWorkData.caseInfo.assignments[0].name;
-      this.instructionText = oWorkData.caseInfo.assignments[0].instructions;
+      const assignments = oWorkData.caseInfo.assignments;
+      this.containerName = assignments ? assignments[0].name : '';
+      this.instructionText = assignments ? assignments[0].instructions : '';
     }
 
     this.buildName = this.getBuildName();
@@ -422,9 +434,12 @@ class FlowContainer extends BridgeBase {
 
     if (bShouldUpdate) {
       this.updateSelf();
+      // Whenever pconn is modified and flowContainer needs to update self then localComponentId is updated with new unique id
+      this.localComponentId = Date.now();
     }
   }
 
+  // Unique key is assigned to assignment, If the key changes assignment will unmounted.
   flowContainerHtml(): any {
     return html` <div style="text-align: left;" id="${this.buildName}" class="psdk-flow-container-top">
       ${!this.bHasCaseMessages
@@ -432,17 +447,24 @@ class FlowContainer extends BridgeBase {
       </div>
         ${
           !this.todo_showTodo
-            ? html`
-                <h2>${this.containerName}</h2>
-                ${this.instructionText !== '' ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
-                <div>
-                  <assignment-component .pConn=${this.thePConn} .arChildren=${this.arNewChildren} itemKey=${this.itemKey}></assignment-component>
-                </div>
-              `
+            ? keyed(
+                this.localComponentId,
+                html`
+                  <h2>${this.containerName}</h2>
+                  ${this.instructionText !== '' ? html`<div class="psdk-instruction-text">${this.instructionText}</div>` : nothing}
+                  <div>
+                    <assignment-component
+                      .pConn=${this.pConnectOfActiveContainerItem}
+                      .arChildren=${this.arNewChildren}
+                      itemKey=${this.itemKey}
+                    ></assignment-component>
+                  </div>
+                `
+              )
             : html`
                 <div>
                   <todo-component
-                    .pConn=${this.thePConn}
+                    .pConn=${this.pConnectOfActiveContainerItem}
                     caseInfoID=${this.todo_caseInfoID}
                     .datasource=${this.todo_datasource}
                     .showTodoList=${this.todo_showTodoList}
@@ -458,7 +480,7 @@ class FlowContainer extends BridgeBase {
         `
         : html`
             <div class="psdk-message-card">
-              <div style="display: flex; flex-direction: row;">
+              <div style="display: flex; flex-direction: row; align-items: center;">
                 <div><img class="psdk-icon" src="${this.checkSvg}" /></div>
                 <div class="psdk-message">${this.caseMessages}</div>
               </div>
@@ -484,6 +506,15 @@ class FlowContainer extends BridgeBase {
     this.renderTemplates.push(sContent);
 
     return this.renderTemplates;
+  }
+
+  getPConnectOfActiveContainerItem(parentPConnect) {
+    const routingInfo = this.getComponentProp('routingInfo');
+    const isAssignmentView = this.getComponentProp('isAssignmentView');
+    return getPConnectOfActiveContainerItem(routingInfo, {
+      isAssignmentView,
+      parentPConnect
+    });
   }
 }
 

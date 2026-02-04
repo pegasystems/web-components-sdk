@@ -87,6 +87,7 @@ export const multiStepStyles = html`
       display: flex;
       align-items: center;
       text-align: left;
+      flex-wrap: wrap;
     }
 
     .psdk-horizontal-assignment {

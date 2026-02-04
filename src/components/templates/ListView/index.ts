@@ -480,7 +480,7 @@ class ListView extends BridgeBase {
           if (this && this.shadowRoot && this.shadowRoot.getElementById(this.theComponentId.toString())) {
             theVaadinGrid = this.shadowRoot.getElementById(this.theComponentId.toString());
             if (theVaadinGrid) {
-              const theVaadinShadowDiv: any = theVaadinGrid.shadowRoot.getElementById('scroller');
+              const theVaadinShadowDiv: any = theVaadinGrid?.shadowRoot?.getElementById('scroller');
               if (theVaadinShadowDiv) {
                 theVaadinShadowDiv.style.position = 'relative';
               }
