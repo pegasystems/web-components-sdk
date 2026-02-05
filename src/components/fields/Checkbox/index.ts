@@ -155,7 +155,18 @@ class CheckBox extends FormComponentBase {
       return;
     }
     const value = event.target.checked;
-    handleEvent(this.actionsApi, 'change', this.propName, value);
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, value);
+    this.thePConn.clearErrorMessages({
+      property: this.propName
+    });
+  }
+
+  fieldOnBlur(event: any) {
+    if (this.selectionMode === 'multi') {
+      this.thePConn.getValidationApi().validate(this.selectedvalues, this.selectionList);
+    } else {
+      this.thePConn.getValidationApi().validate(event.target.checked);
+    }
   }
 
   handleChangeMultiMode(event) {

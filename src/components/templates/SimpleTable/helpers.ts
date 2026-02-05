@@ -68,10 +68,10 @@ export const getContext = thePConn => {
   // 8.7 change = referenceList may now be in top-level of state props,
   //  not always in config of state props
   let { referenceList } = thePConn.getStateProps()?.config || thePConn.getStateProps();
-  const pageReferenceForRows = referenceList.startsWith('.') ? `${pageReference}.${referenceList.substring(1)}` : referenceList;
+  const pageReferenceForRows = referenceList?.startsWith('.') ? `${pageReference}.${referenceList.substring(1)}` : referenceList;
 
   // removing "caseInfo.content" prefix to avoid setting it as a target while preparing pageInstructions
-  referenceList = pageReferenceForRows.replace(PCore.getConstants().CASE_INFO.CASE_INFO_CONTENT, '');
+  referenceList = pageReferenceForRows?.replace(PCore.getConstants().CASE_INFO.CASE_INFO_CONTENT, '');
 
   return {
     contextName,
