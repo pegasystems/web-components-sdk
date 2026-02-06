@@ -8,6 +8,7 @@ import handleEvent from '../../../helpers/event-utils';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox-indeterminate.js';
 import '@lion/ui/define/lion-checkbox.js';
+import '../../designSystemExtension/FieldValueList';
 
 // import the component's styles as HTML with <style>
 import { checkboxStyles } from './check-box-styles';
@@ -200,6 +201,9 @@ class CheckBox extends FormComponentBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
     this.handleChecked();
+    if (this.displayMode) {
+      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+    }
 
     // Handle and return if read only rendering
     if (this.bReadonly && this.bVisible) {

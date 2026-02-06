@@ -6,6 +6,7 @@ import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-amount.js';
+import '../../designSystemExtension/FieldValueList';
 
 // import the component's styles as HTML with <style>
 import { currencyStyles } from './currency-styles';
@@ -108,6 +109,9 @@ class Currency extends FormComponentBase {
     // return if not visible
     if (!this.bVisible) {
       return nothing;
+    }
+    if (this.displayMode) {
+      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
     }
     // Handle and return if read only rendering
     if (this.bReadonly) {

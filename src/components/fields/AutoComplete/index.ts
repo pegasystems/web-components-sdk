@@ -10,6 +10,7 @@ import handleEvent from '../../../helpers/event-utils';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
+import '../../designSystemExtension/FieldValueList';
 // import the component's styles as HTML with <style>
 import { autoCompleteStyles } from './autocomplete-styles';
 
@@ -292,6 +293,9 @@ class AutoComplete extends FormComponentBase {
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
+    if (this.displayMode) {
+      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+    }
 
     // Handle and return if read only rendering
     if (this.bReadonly) {

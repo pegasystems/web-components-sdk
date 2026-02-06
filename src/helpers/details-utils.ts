@@ -3,16 +3,29 @@ export function getDetailsFieldArray(arFields) {
   arFields?.forEach(field => {
     const thePConn = field.getPConnect();
     const theCompType = thePConn.getComponentName().toLowerCase();
-    if (theCompType === 'reference') {
-      const configObj = thePConn.getReferencedView();
-      configObj.config.readOnly = true;
-      configObj.config.displayMode = 'DISPLAY_ONLY';
+    if (theCompType === 'reference' || theCompType === 'group') {
+      const configProps = thePConn.getConfigProps();
+      configProps.readOnly = true;
+      configProps.displayMode = 'DISPLAY_ONLY';
       const propToUse = { ...thePConn.getInheritedProps() };
-      configObj.config.label = propToUse?.label;
-      const loadedPConn = thePConn.getReferencedViewPConnect(true).getPConnect();
+      configProps.label = propToUse?.label;
+      const options = {
+        context: thePConn.getContextName(),
+        pageReference: thePConn.getPageReference(),
+        referenceList: thePConn.getReferenceList()
+      };
+      const viewContConfig = {
+        meta: {
+          ...thePConn.getMetadata(),
+          type: theCompType,
+          config: configProps
+        },
+        options
+      };
+      const theViewCont = PCore.createPConnect(viewContConfig);
       const data = {
         type: theCompType,
-        pConn: loadedPConn
+        pConn: theViewCont?.getPConnect()
       };
       fields.push(data);
     } else {
