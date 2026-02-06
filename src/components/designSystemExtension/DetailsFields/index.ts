@@ -63,6 +63,7 @@ class DetailsFields extends LitElement {
       case 'email':
         return html`<a href="mailto: ${field.config.value}">${field.config.value}</a>`;
       case 'date':
+      case 'datetime':
         return html`<span class="psdk-details-text-style">${format(field.config.value, field.type)}</span>`;
       case 'caseoperator':
         return html``;

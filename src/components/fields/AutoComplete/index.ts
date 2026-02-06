@@ -326,7 +326,6 @@ class AutoComplete extends FormComponentBase {
               <lion-combobox
                 id=${this.theComponentId}
                 class=""
-                autocomplete="list"
                 dataTestId=${this.testId}
                 .modelValue=${this.value != null ? String(this.value) : ''}
                 .fieldName=${this.label}
@@ -343,7 +342,11 @@ class AutoComplete extends FormComponentBase {
                 ${repeat(
                   this.options ?? [],
                   o => String(o.key), // stable identity
-                  option => html` <lion-option .choiceValue=${String(option.key)}>${option.label}</lion-option> `
+                  option => html`
+                    <lion-option .choiceValue=${String(option.key)} .checked=${String(option.key) === String(this.value)}
+                      >${option.label}</lion-option
+                    >
+                  `
                 )}
               </lion-combobox>
             </div>
