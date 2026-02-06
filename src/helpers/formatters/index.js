@@ -106,7 +106,7 @@ export function format(value, type, options) {
 
     case 'datetime': {
       const defaultOptions = {
-        format: 'MMM DD, YYYY h:mm A',
+        format: 'DD MMM YYYY, h:mm A',
         timezone: getCurrentTimezone()
       };
       const params = { ...defaultOptions, ...options };

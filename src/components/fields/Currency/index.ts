@@ -105,6 +105,7 @@ class Currency extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
+    const value = this.value ? parseFloat(this.value) : '';
 
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
@@ -129,7 +130,7 @@ class Currency extends FormComponentBase {
           ?readonly=${this.bReadonly}
           ?visible=${this.bVisible}
           label=${this.label}
-          .modelValue=${parseFloat(this.value)}
+          .modelValue=${value}
           dataTestId=${this.testId}
           currency=${this.currencyISOCode}
         >

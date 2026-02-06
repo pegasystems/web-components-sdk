@@ -78,7 +78,8 @@ class Percentage extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
-    this.value = (parseFloat(this.value) / 100).toString();
+    const modelValue = parseFloat(this.value) ? (parseFloat(this.value) / 100).toString() : '';
+
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
@@ -101,7 +102,7 @@ class Percentage extends FormComponentBase {
           ?visible=${this.bVisible}
           label=${this.label}
           .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
-          .modelValue=${parseFloat(this.value)}
+          .modelValue=${modelValue}
           dataTestId=${this.testId}
         >
         </lion-input-amount>
@@ -118,7 +119,7 @@ class Percentage extends FormComponentBase {
       dataTestId=${this.testId}
       .fieldName=${this.label}
       .formatOptions=${{ style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 4 }}
-      .modelValue=${parseFloat(this.value)}
+      .modelValue=${modelValue}
       .validators=${this.lionValidatorsArray}
       .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
       ?readonly=${this.bReadonly}
