@@ -5,6 +5,8 @@ import { FormComponentBase } from '../FormComponentBase';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-amount.js';
 import '../../designSystemExtension/FieldValueList';
+import { format } from '../../../helpers/formatters';
+import { getCurrencyOptions } from '../../../helpers/currency-utils';
 
 // import the component's styles as HTML with <style>
 import { decimalStyles } from './decimal-styles';
@@ -12,6 +14,11 @@ import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
 @customElement('decimal-form')
 class Decimal extends FormComponentBase {
+  formatter: any;
+  currencyISOCode: any;
+  decimalPrecision: number | undefined;
+  formatOptions: { style: string; minimumFractionDigits: number | undefined; maximumFractionDigits: number | undefined } | undefined;
+  formattedValue: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -52,6 +59,36 @@ class Decimal extends FormComponentBase {
     }
   }
 
+  updateSelf() {
+    super.updateSelf();
+
+    const theConfigProps = this.thePConn.getConfigProps();
+
+    if (theConfigProps.formatter) {
+      this.formatter = theConfigProps.formatter;
+    }
+    if (theConfigProps.currencyISOCode) {
+      this.currencyISOCode = theConfigProps.currencyISOCode;
+    }
+    if (theConfigProps.decimalPrecision !== undefined) {
+      this.decimalPrecision = parseInt(theConfigProps.decimalPrecision, 10);
+    }
+    this.formatOptions = {
+      style: 'decimal',
+      minimumFractionDigits: this.decimalPrecision,
+      maximumFractionDigits: this.decimalPrecision
+    };
+    if (['DISPLAY_ONLY', 'STACKED_LARGE_VAL'].includes(this.displayMode)) {
+      const options = {
+        ...getCurrencyOptions(this.currencyISOCode),
+        decPlaces: this.decimalPrecision
+      };
+
+      const formatterType = this.formatter?.toLowerCase();
+      this.formattedValue = format(this.value, formatterType, options);
+    }
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -70,7 +107,7 @@ class Decimal extends FormComponentBase {
     }
 
     if (this.displayMode) {
-      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+      return html` <field-value-list .label="${this.label}" .value="${this.formattedValue}" .displayMode="${this.displayMode}"> </field-value-list> `;
     }
 
     // Handle and return if read only rendering

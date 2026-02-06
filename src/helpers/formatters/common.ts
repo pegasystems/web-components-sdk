@@ -1,4 +1,4 @@
-export function getLocale(locale) {
+export function getLocale(locale = '') {
   if (locale) return locale;
   return document.documentElement.lang;
 }
