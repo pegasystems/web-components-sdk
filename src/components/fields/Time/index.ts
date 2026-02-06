@@ -6,12 +6,14 @@ import handleEvent from '../../../helpers/event-utils';
 // NOTE: you need to import ANY component you may render.
 import '../../designSystemExtension/LionInputTimeOnly';
 import '../../designSystemExtension/FieldValueList';
+import { format } from '../.../../../../helpers/formatters';
 
 // import the component's styles as HTML with <style>
 import { timeStyles } from './time-styles';
 
 @customElement('time-form')
 class Time extends FormComponentBase {
+  formattedValue: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -52,6 +54,16 @@ class Time extends FormComponentBase {
     }
   }
 
+  updateSelf() {
+    super.updateSelf();
+
+    if (['DISPLAY_ONLY', 'STACKED_LARGE_VAL'].includes(this.displayMode)) {
+      this.formattedValue = format(this.value, 'timeonly', {
+        format: 'hh:mm A'
+      });
+    }
+  }
+
   fieldOnBlur(event: any) {
     let value = event?.target?.value;
     const hhmmPattern = /^\d{2}:\d{2}$/;
@@ -75,7 +87,7 @@ class Time extends FormComponentBase {
     this.prepareForRender();
 
     if (this.displayMode) {
-      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+      return html` <field-value-list .label="${this.label}" .value="${this.formattedValue}" .displayMode="${this.displayMode}"> </field-value-list> `;
     }
 
     // Handle and return if read only rendering
