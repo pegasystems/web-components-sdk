@@ -465,7 +465,7 @@ class SimpleTableManual extends BridgeBase {
                       ? 'False'
                       : typeof row[colKey] === 'boolean' && row[colKey]
                         ? 'True'
-                        : row[colKey]}
+                        : row[colKey] || '---'}
                   </td>`;
             })}
           </tr>`

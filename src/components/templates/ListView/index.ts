@@ -325,6 +325,7 @@ class ListView extends BridgeBase {
       const rowDisplayValues: any = [];
       this.displayedColumns.forEach((propKey: string, rowValIndex) => {
         rowDisplayValues[rowValIndex] = row[propKey];
+        row[propKey] = row[propKey] || '---';
       });
       this.rowData[rowIndex] = rowDisplayValues;
     });
@@ -459,7 +460,7 @@ class ListView extends BridgeBase {
           ${this.rowData.map(
             row =>
               html`<tr>
-                ${row.map(rowValue => html`<td>${rowValue}</td>`)}
+                ${row.map(rowValue => html`<td>${rowValue || '---'}</td>`)}
               </tr>`
           )}
         </tbody> `;
