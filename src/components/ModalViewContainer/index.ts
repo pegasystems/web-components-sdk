@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
 
@@ -40,6 +41,10 @@ class ModalViewContainer extends BridgeBase {
   localizedVal: Function = () => {};
   localeCategory = 'Data Object';
   isMultiRecord: any;
+  // In Web Components, component is not unmounted if the next view also contains the same component.
+  // From performance POV it reuses the component and triggers state change. So Lifecycle methods will not be executed.
+  // So maintaining a unique id (localComponentId) in modal view container to be used in keyed, updated whenever it's pconn is updated.
+  localComponentId?: number;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -86,6 +91,9 @@ class ModalViewContainer extends BridgeBase {
       type: 'multiple'
     });
     this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
+
+    // local Id will be same as the componentId created in bridge base
+    this.localComponentId = this.theComponentId;
     // const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
 
     // window.PCore.getPubSubUtils().subscribe(
@@ -273,39 +281,44 @@ class ModalViewContainer extends BridgeBase {
       this.updateSelf();
       // eslint-disable-next-line sonarjs/no-duplicated-branches
     } else if (this.bShowModal) {
-      // right now onlu get one updated when initial diaplay.  So, once modal is up
+      // right now only get one updated when initial display.  So, once modal is up
       // let fall through and do a check with "compareCaseInfoIsDifferent" until fixed
       this.updateSelf();
+      // Whenever pconn is modified and flowContainer needs to update self then localComponentId is updated with new unique id
+      this.localComponentId = Date.now();
     }
   }
 
   getModalViewContainerHtml(): any {
     return html`
       ${this.bShowModal
-        ? html`
-            <div id="dialog" class="psdk-dialog-background ">
-              <div class="psdk-modal-view-container-top" id="${this.buildName}">
-                ${this.title != '' ? html`<h3>${this.title}</h3>` : html``}
-                <assignment-component
-                  .pConn=${this.createdViewPConn}
-                  .arChildren=${this.arNewChildren}
-                  itemKey=${this.itemKey}
-                ></assignment-component>
-                ${this.isMultiRecord
-                  ? html`
-                      <div>
-                        <listview-action-buttons-component
-                          .pConn=${this.createdViewPConn}
-                          .context=${this.context}
-                          @DismissModalContainer=${this._dismissModalContainer}
-                        >
-                        </listview-action-buttons-component>
-                      </div>
-                    `
-                  : html``}
+        ? keyed(
+            this.localComponentId,
+            html`
+              <div id="dialog" class="psdk-dialog-background ">
+                <div class="psdk-modal-view-container-top" id="${this.buildName}">
+                  ${this.title != '' ? html`<h3>${this.title}</h3>` : html``}
+                  <assignment-component
+                    .pConn=${this.createdViewPConn}
+                    .arChildren=${this.arNewChildren}
+                    itemKey=${this.itemKey}
+                  ></assignment-component>
+                  ${this.isMultiRecord
+                    ? html`
+                        <div>
+                          <listview-action-buttons-component
+                            .pConn=${this.createdViewPConn}
+                            .context=${this.context}
+                            @DismissModalContainer=${this._dismissModalContainer}
+                          >
+                          </listview-action-buttons-component>
+                        </div>
+                      `
+                    : html``}
+                </div>
               </div>
-            </div>
-          `
+            `
+          )
         : html``}
       ${this.bShowCancelAlert
         ? html`
