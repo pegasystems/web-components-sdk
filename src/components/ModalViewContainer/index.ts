@@ -284,7 +284,7 @@ class ModalViewContainer extends BridgeBase {
       // right now only get one updated when initial display.  So, once modal is up
       // let fall through and do a check with "compareCaseInfoIsDifferent" until fixed
       this.updateSelf();
-      // Whenever pconn is modified and flowContainer needs to update self then localComponentId is updated with new unique id
+      // Whenever pconn is modified and modalviewcontainer needs to update self then localComponentId is updated with new unique id
       this.localComponentId = Date.now();
     }
   }
