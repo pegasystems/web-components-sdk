@@ -16,6 +16,8 @@ import '../Reference';
 // is totally at your own risk.
 //
 
+const options = { context: 'app' };
+
 @customElement('root-container')
 class RootContainer extends BridgeBase {
   @property({ attribute: false, type: Object }) previewViewContainerConn;
@@ -53,13 +55,7 @@ class RootContainer extends BridgeBase {
       debugger;
     }
 
-    // Adapted from Angular SDK
-
-    const options = { context: 'app', target: this.thePConn.getTarget() };
-
     const { containers } = PCore.getStore().getState();
-    const { serverConfig } = await getSdkConfig();
-    const showModalsInEmbeddedMode = serverConfig.showModalsInEmbeddedMode;
     const items = Object.keys(containers).filter(item => item.includes('root'));
 
     PCore.getContainerUtils().getContainerAPI().addContainerItems(items);
@@ -76,18 +72,8 @@ class RootContainer extends BridgeBase {
       });
       this.previewViewContainerConn = configObjPreview.getPConnect();
     }
-    if (!this.displayOnlyFA || showModalsInEmbeddedMode) {
-      const configObjModal = PCore.createPConnect({
-        meta: {
-          type: 'ModalViewContainer',
-          config: {
-            name: 'modal'
-          }
-        },
-        options
-      });
-      this.modalViewContainerConn = configObjModal.getPConnect();
-    }
+
+    this.configureModalContainer();
 
     // becasue of Web Component frame work not calling constructor when root container updates, need to tell
     // flow container when to init
@@ -207,6 +193,24 @@ class RootContainer extends BridgeBase {
     }
   }
 
+  async configureModalContainer() {
+    const { serverConfig } = await getSdkConfig();
+    const showModalsInEmbeddedMode = serverConfig.showModalsInEmbeddedMode;
+
+    if (!this.displayOnlyFA || showModalsInEmbeddedMode) {
+      const configObjModal = PCore.createPConnect({
+        meta: {
+          type: 'ModalViewContainer',
+          config: {
+            name: 'modal'
+          }
+        },
+        options
+      });
+      this.modalViewContainerConn = configObjModal.getPConnect();
+    }
+  }
+
   /**
    * The `onStateChange()` method will be called when the state is updated.
    *  Override this method in each class that extends BridgeBase.
@@ -236,9 +240,21 @@ class RootContainer extends BridgeBase {
         arKidHtml.push(html`<view-component .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></view-component>`);
         break;
 
-      case 'ViewContainer':
-        arKidHtml.push(html`<view-container .pConn=${this.newPConn} ?displayOnlyFA=${this.displayOnlyFA}></view-container>`);
+      case 'ViewContainer': {
+        const configProps = this.thePConn.getConfigProps();
+        const viewContConfig = {
+          meta: {
+            type: 'ViewContainer',
+            config: configProps
+          },
+          options
+        };
+
+        const viewContainerPConn = PCore.createPConnect(viewContConfig).getPConnect();
+
+        arKidHtml.push(html`<view-container .pConn=${viewContainerPConn} ?displayOnlyFA=${this.displayOnlyFA}></view-container>`);
         break;
+      }
 
       case 'Reference':
       case 'reference':

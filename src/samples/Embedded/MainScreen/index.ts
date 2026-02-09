@@ -99,7 +99,7 @@ class MainScreen extends LitElement {
 
     // Create a new case using the mashup API
     PCore.getMashupApi()
-      .createCase(mashupCaseType, PCore.getConstants().APP.ROOT, options)
+      .createCase(mashupCaseType, PCore.getConstants().APP.APP, options)
       .then(() => {
         console.log('createCase rendering is complete');
       });
