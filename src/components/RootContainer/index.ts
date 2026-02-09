@@ -46,7 +46,7 @@ class RootContainer extends BridgeBase {
     this.createdPConnect = null;
   }
 
-  async connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
     if (this.bLogging) {
       console.log(`${this.theComponentName}: connectedCallback`);
