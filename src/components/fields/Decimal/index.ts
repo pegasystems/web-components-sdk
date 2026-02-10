@@ -19,6 +19,7 @@ class Decimal extends FormComponentBase {
   decimalPrecision: number | undefined;
   formatOptions: { style: string; minimumFractionDigits: number | undefined; maximumFractionDigits: number | undefined } | undefined;
   formattedValue: any;
+  locale = '';
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -64,15 +65,13 @@ class Decimal extends FormComponentBase {
 
     const theConfigProps = this.thePConn.getConfigProps();
 
-    if (theConfigProps.formatter) {
-      this.formatter = theConfigProps.formatter;
-    }
-    if (theConfigProps.currencyISOCode) {
-      this.currencyISOCode = theConfigProps.currencyISOCode;
-    }
-    if (theConfigProps.decimalPrecision !== undefined) {
-      this.decimalPrecision = parseInt(theConfigProps.decimalPrecision, 10);
-    }
+    this.locale = PCore.getEnvironmentInfo().getUseLocale() || PCore.getEnvironmentInfo().getLocale() || 'en-US';
+
+    this.formatter = theConfigProps?.formatter;
+
+    this.currencyISOCode = theConfigProps?.currencyISOCode;
+    this.decimalPrecision = parseInt(theConfigProps.decimalPrecision, 10);
+
     this.formatOptions = {
       style: 'decimal',
       minimumFractionDigits: this.decimalPrecision,
@@ -139,6 +138,8 @@ class Decimal extends FormComponentBase {
         .fieldName=${this.label}
         .validators=${this.lionValidatorsArray}
         .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+        .formatOptions=${this.formatOptions}
+        .locale=${this.locale}
         ?readonly=${this.bReadonly}
         ?disabled=${this.bDisabled}
         @click=${this.fieldOnChange}
