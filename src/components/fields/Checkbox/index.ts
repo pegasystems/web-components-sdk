@@ -47,7 +47,7 @@ class CheckBox extends FormComponentBase {
   @property({ attribute: false }) caption = 'default caption';
 
   @property({ attribute: false }) theConfigProps: any = {};
-  @property({attribute: false}) hideLabel: Boolean = false;
+  @property({ attribute: false }) hideLabel: Boolean = false;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -200,7 +200,10 @@ class CheckBox extends FormComponentBase {
     this.prepareForRender();
     this.handleChecked();
     if (this.displayMode) {
-      return html` <field-value-list .label="${this.hideLabel ? '' : this.caption}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+      return html`
+        <field-value-list .label="${this.hideLabel ? '' : this.caption}" .value="${this.value}" .displayMode="${this.displayMode}">
+        </field-value-list>
+      `;
     }
 
     // Handle and return if read only rendering
