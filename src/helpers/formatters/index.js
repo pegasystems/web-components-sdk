@@ -87,6 +87,13 @@ export function format(value, type, options) {
       break;
     }
 
+    case 'percentage': {
+      const defaultOptions = { locale: getLocale(), decPlaces: 2 };
+      const params = { ...defaultOptions, ...options };
+      formattedValue = Currency.Percentage(value, params);
+      break;
+    }
+
     case 'date': {
       const defaultOptions = {
         format: 'MMM DD, YYYY',
@@ -103,6 +110,17 @@ export function format(value, type, options) {
         timezone: getCurrentTimezone()
       };
       const params = { ...defaultOptions, ...options };
+      formattedValue = DateFormatter.Date(parseDateInISO(value), params);
+      break;
+    }
+
+    case 'timeonly': {
+      const defaultOptions = {
+        format: 'hh:mm A', // Default format
+        timezone: getCurrentTimezone()
+      };
+      const params = { ...defaultOptions, ...options };
+      // Reuse the Date formatter, it handles time strings if parsed correctly
       formattedValue = DateFormatter.Date(parseDateInISO(value), params);
       break;
     }
