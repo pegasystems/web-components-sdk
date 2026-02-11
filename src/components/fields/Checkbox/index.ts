@@ -269,7 +269,7 @@ class CheckBox extends FormComponentBase {
               @blur=${this.fieldOnBlur}
               @change=${this.fieldOnChange}
             >
-              <span slot="label">${this.caption}</span>
+              <span slot="label">${this.annotatedLabel}</span>
             </lion-checkbox>`}
           </div>`
         : nothing}`;
