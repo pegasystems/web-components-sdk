@@ -71,6 +71,11 @@ class Percentage extends FormComponentBase {
     super.fieldOnChange(event);
   }
 
+  fieldOnBlur(event) {
+    event.target.value = event.target.value ? event.target.value.replace(/%/g, '') : '';
+    super.fieldOnBlur(event);
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
