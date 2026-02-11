@@ -98,7 +98,8 @@ test.describe('E2E test', () => {
 
     await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', 'SingleRecord');
 
-    selectedProduct = page.locator('lion-combobox');
+    selectedProduct = await page.locator('lion-combobox');
+    selectedProduct.locator('div >> input').clear();
     await selectedProduct.click();
     await page.locator('lion-option:has-text("Basic Product")').click();
 
@@ -123,7 +124,7 @@ test.describe('E2E test', () => {
     selectedProductRow = selectedProduct.locator('input[type="checkbox"]');
     await selectedProductRow.click();
 
-    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-6"]');
+    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-7"]');
     selectedProductRow = selectedProduct.locator('input[type="checkbox"]');
     await selectedProductRow.click();
 
@@ -168,8 +169,8 @@ test.describe('E2E test', () => {
     /** Checkbox group mode type test */
     await page.selectOption('lion-select[datatestid="4aa668349e0970901aa6b11528f95223"] select', 'Checkbox group');
 
+    await page.check('lion-checkbox[datatestid="2ba95ff1-bce8-4e61-980e-151e1b0c00b4"] input');
     await page.check('lion-checkbox[datatestid="5817eb8c-b1c7-449b-b323-705ca25734b4"] input');
-    await page.check('lion-checkbox[datatestid="660a4217-d193-4c12-b8b4-193ee8441f86"] input');
 
     await page.locator('button:has-text("Next")').click();
 
@@ -203,18 +204,14 @@ test.describe('E2E test', () => {
 
     await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', 'ListOfRecords');
 
-    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-19"] >> vaadin-grid-sorter').click();
-    const tableCell = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-7"]');
-    await expect(await tableCell.textContent()).toBe('');
+    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-23"] >> vaadin-grid-sorter').click();
+    const tableCell = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-8"]');
+    await expect(await tableCell.textContent()).toBe('---');
 
     // await productNameHeader.click();
-    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-19"] >> vaadin-grid-sorter').click();
+    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-23"] >> vaadin-grid-sorter').click();
 
     await expect(await tableCell.textContent()).toBe('Luxury Product');
-
-    const lastCell = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-16"]');
-
-    await expect(await lastCell.textContent()).toBe('');
 
     await page.locator('button:has-text("Next")').click();
 

@@ -41,13 +41,13 @@ class CheckBox extends FormComponentBase {
   //  But need to keep formComponentStyles...
   static styles = [formComponentStyles];
 
-  @property({ attribute: false, type: Boolean }) bShowLabel = false;
   @property({ attribute: false, type: Boolean }) isChecked = false;
 
   @property({ attribute: false }) checkboxLabelPos = 'after';
   @property({ attribute: false }) caption = 'default caption';
 
   @property({ attribute: false }) theConfigProps: any = {};
+  @property({ attribute: false }) hideLabel: Boolean = false;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -109,12 +109,10 @@ class CheckBox extends FormComponentBase {
 
     this.theConfigProps = this.thePConn.getConfigProps() as CheckboxProps;
 
+    this.hideLabel = this.theConfigProps.hideLabel ?? false;
+
     // Note: for Checkbox, the "caption" is the label...
     this.caption = this.theConfigProps.caption;
-
-    if (this.label !== '') {
-      this.bShowLabel = true;
-    }
 
     this.handleChecked();
   }
@@ -202,7 +200,10 @@ class CheckBox extends FormComponentBase {
     this.prepareForRender();
     this.handleChecked();
     if (this.displayMode) {
-      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+      return html`
+        <field-value-list .label="${this.hideLabel ? '' : this.caption}" .value="${this.value}" .displayMode="${this.displayMode}">
+        </field-value-list>
+      `;
     }
 
     // Handle and return if read only rendering
@@ -268,7 +269,7 @@ class CheckBox extends FormComponentBase {
               @blur=${this.fieldOnBlur}
               @change=${this.fieldOnChange}
             >
-              <span slot="label">${this.caption}</span>
+              <span slot="label">${this.annotatedLabel}</span>
             </lion-checkbox>`}
           </div>`
         : nothing}`;

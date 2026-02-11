@@ -5,6 +5,7 @@ import { FormComponentBase } from '../FormComponentBase';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-amount.js';
 import '../../designSystemExtension/FieldValueList';
+import { format } from '../../../helpers/formatters';
 
 // import the component's styles as HTML with <style>
 import { percentageStyles } from './percentage-styles';
@@ -13,6 +14,7 @@ import { percentageStyles } from './percentage-styles';
 //  to be used as a starting point for any new components as they're built out
 @customElement('percentage-form')
 class Percentage extends FormComponentBase {
+  formattedValue: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -59,11 +61,19 @@ class Percentage extends FormComponentBase {
     // Reset to defaults
 
     // const theConfigProps = this.thePConn.getConfigProps();
+    if (['DISPLAY_ONLY', 'STACKED_LARGE_VAL'].includes(this.displayMode)) {
+      this.formattedValue = this.value ? format(this.value, 'percentage') : '';
+    }
   }
 
   fieldOnChange(event: any) {
     event.target.value = event.target.value.replace('%', '');
     super.fieldOnChange(event);
+  }
+
+  fieldOnBlur(event) {
+    event.target.value = event.target.value ? event.target.value.replace(/%/g, '') : '';
+    super.fieldOnBlur(event);
   }
 
   render() {
@@ -85,7 +95,7 @@ class Percentage extends FormComponentBase {
     }
 
     if (this.displayMode) {
-      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+      return html` <field-value-list .label="${this.label}" .value="${this.formattedValue}" .displayMode="${this.displayMode}"> </field-value-list> `;
     }
 
     // Handle and return if read only rendering

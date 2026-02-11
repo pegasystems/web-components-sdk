@@ -48,6 +48,7 @@ export class FormComponentBase extends BridgeBase {
   //  which we put into the "label" slot for proper display in the Lion component "label", we then set
   //  a Lion component's .fieldName=${this.label} to get the plain, unannotated label in validation messages
   @property({ attribute: false, type: String }) label = '';
+  @property({ attribute: false, type: String }) caption = '';
   @property({ attribute: false }) value = '';
   @property({ attribute: false }) controlName = false;
   @property({ attribute: false, type: Object }) annotatedLabel; // is likely a lit-html CSS object
@@ -156,15 +157,17 @@ export class FormComponentBase extends BridgeBase {
     }
 
     // If field is required...
+    // 'caption' will be the label for Checkbox, so use that if this is a Checkbox; otherwise, use 'label' for the annotatedLabel
+    const theLabel = this.theComponentName !== 'CheckBox' ? this.label : this.caption;
     if (this.bRequired) {
       // Add asterisk to annotatedLabel
       this.annotatedLabel = html`<span
-        >${this.label} <super style="color: var(--app-warning-color-dark); font-weight: var(--font-weight-bold)">*</super></span
+        >${theLabel} <super style="color: var(--app-warning-color-dark); font-weight: var(--font-weight-bold)">*</super></span
       >`;
       // add Lion Required validator
       this.lionValidatorsArray.push(new Required());
     } else {
-      this.annotatedLabel = this.label;
+      this.annotatedLabel = theLabel;
     }
 
     // Always push a ValidateMessageValidator to the set of validators. This is how

@@ -7,6 +7,8 @@ import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-amount.js';
 import '../../designSystemExtension/FieldValueList';
+import { format } from '../../../helpers/formatters';
+import { getCurrencyOptions } from '../../../helpers/currency-utils';
 
 // import the component's styles as HTML with <style>
 import { currencyStyles } from './currency-styles';
@@ -15,6 +17,7 @@ interface CurrrencyProps extends PConnFieldProps {
   // If any, enter additional props that only exist on Currency here
   currencyISOCode?: string;
   allowDecimals: boolean;
+  formatter?: any;
 }
 
 // NOTE: this is just a boilerplate component definition intended
@@ -25,6 +28,8 @@ class Currency extends FormComponentBase {
   @property({ attribute: false, type: Boolean }) bAllowDecimals = true;
   // lion-input-amount options as based on Intl.NumberFormat standard
   @property({ attribute: false, type: Object }) numberOptions = {};
+  formattedValue: any;
+  formatter: any;
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -75,7 +80,7 @@ class Currency extends FormComponentBase {
     this.numberOptions = {};
 
     const theConfigProps = this.thePConn.getConfigProps() as CurrrencyProps;
-
+    this.formatter = theConfigProps.formatter;
     if (theConfigProps.currencyISOCode !== null && theConfigProps.currencyISOCode !== undefined) {
       this.currencyISOCode = theConfigProps.currencyISOCode;
     }
@@ -111,8 +116,13 @@ class Currency extends FormComponentBase {
       return nothing;
     }
     if (this.displayMode) {
-      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+      const formatterType = this.formatter ? this.formatter.toLowerCase() : 'currency';
+      const currencyOptions = getCurrencyOptions(this.currencyISOCode);
+      this.formattedValue = format(this.value, formatterType, currencyOptions);
+
+      return html` <field-value-list .label="${this.label}" .value="${this.formattedValue}" .displayMode="${this.displayMode}"> </field-value-list> `;
     }
+
     // Handle and return if read only rendering
     if (this.bReadonly) {
       const theContent = html`

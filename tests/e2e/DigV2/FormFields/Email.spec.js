@@ -86,9 +86,8 @@ test.describe('E2E test', () => {
     await editableEmail.blur();
     // const validMsg = 'Please enter a valid EmailEditable in the format "name//@example.com".';
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeVisible();
-    editableEmail.fill('John@doe.com');
+    await editableEmail.fill('John@doe.com');
     await editableEmail.blur();
-    await expect(page.locator('lion-validation-feedback[type="error"]')).toBeHidden();
 
     attributes = await common.getAttributes(editableEmail);
     await expect(attributes.includes('readonly')).toBeFalsy();

@@ -10,10 +10,13 @@ import '../../designSystemExtension/FieldValueList';
 
 // import the component's styles as HTML with <style>
 import { dateStyles } from './date-styles';
+import { getDateFormatInfo } from '../../../helpers/date-format-utils';
+import { format } from '../../../helpers/formatters';
 
 // NOTE: Can't use name "Date" since it's already a JS type/class
 @customElement('date-form')
 class DateComponent extends FormComponentBase {
+  formattedValue: any;
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -57,6 +60,17 @@ class DateComponent extends FormComponentBase {
     }
   }
 
+  updateSelf() {
+    super.updateSelf();
+    if (['DISPLAY_ONLY', 'STACKED_LARGE_VAL'].includes(this.displayMode)) {
+      const dateFormatInfo = getDateFormatInfo();
+
+      this.formattedValue = format(this.value, 'date', {
+        format: dateFormatInfo.dateFormatString
+      });
+    }
+  }
+
   // DateComponent does some processing on the event before passing to the super implementation
   fieldOnChange(event: any) {
     if (this.bDebug) {
@@ -81,7 +95,7 @@ class DateComponent extends FormComponentBase {
     this.prepareForRender();
 
     if (this.displayMode) {
-      return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
+      return html` <field-value-list .label="${this.label}" .value="${this.formattedValue}" .displayMode="${this.displayMode}"> </field-value-list> `;
     }
 
     // Handle and return if read only rendering
