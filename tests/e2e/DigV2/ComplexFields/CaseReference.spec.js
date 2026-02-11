@@ -32,7 +32,7 @@ test.describe('E2E test', () => {
     const name = 'John Doe';
 
     await modal.locator('lion-input input').type(name);
-    await modal.locator('button:has-text("submit")').click();
+    await modal.locator('button:has-text("Submit")').dblclick();
 
     // /** Storing case-id of the newly created Query case-type(s), will be used later */
     const caseID = [];
@@ -45,7 +45,7 @@ test.describe('E2E test', () => {
     modal = page.locator('div[id="dialog"]');
 
     await modal.locator('lion-input input').type(name);
-    await modal.locator('button:has-text("submit")').click();
+    await modal.locator('button:has-text("submit")').dblclick();
 
     /** Wait until modal closes */
     await expect(modal).not.toBeVisible();
