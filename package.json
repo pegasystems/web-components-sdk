@@ -1,6 +1,6 @@
 {
   "name": "web-components-sdk",
-  "version": "24.2.10",
+  "version": "24.2.11",
   "private": true,
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*.ts\"",
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@lion/ui": "^0.7.6",
-    "@pega/auth": "^0.2.15",
+    "@pega/auth": "^0.2.36",
     "@vaadin/grid": "^24.4.6",
     "@vaadin/notification": "^24.4.6",
     "@vaadin/router": "^2.0.0",
