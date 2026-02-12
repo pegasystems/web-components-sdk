@@ -279,7 +279,6 @@ class ModalViewContainer extends BridgeBase {
 
     if (bShouldUpdate) {
       this.updateSelf();
-      // eslint-disable-next-line sonarjs/no-duplicated-branches
     } else if (this.bShowModal) {
       // right now only get one updated when initial display.  So, once modal is up
       // let fall through and do a check with "compareCaseInfoIsDifferent" until fixed

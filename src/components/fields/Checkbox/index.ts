@@ -134,25 +134,6 @@ class CheckBox extends FormComponentBase {
     if (this.bDebug) {
       debugger;
     }
-
-    // NOTE: for lion-radio-group, the clicked checkbox will be in event.target.modelValue
-    //  that seems to get moved up to the value of event.target.checked
-    //  See https://lion-web-components.netlify.app/?path=/docs/forms-checkbox-group--main
-
-    // if (this.isChecked !== event.target.checked) {
-    //   this.isChecked = event.target.checked;
-    // }
-
-    // handle the caption, since users click on caption as well as checkbox
-    if (event.target.tagName === 'SPAN') {
-      if (event.target.parentElement.checked) {
-        event.target.parentElement.checked = false;
-      } else {
-        event.target.parentElement.checked = true;
-      }
-      event.target.parentElement.click();
-      return;
-    }
     const value = event.target.checked;
     handleEvent(this.actionsApi, 'changeNblur', this.propName, value);
     this.thePConn.clearErrorMessages({
@@ -269,7 +250,7 @@ class CheckBox extends FormComponentBase {
               @blur=${this.fieldOnBlur}
               @change=${this.fieldOnChange}
             >
-              <span slot="label">${this.annotatedLabel}</span>
+              <label slot="label">${this.annotatedLabel}</label>
             </lion-checkbox>`}
           </div>`
         : nothing}`;
