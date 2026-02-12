@@ -128,8 +128,6 @@ class MainScreen extends LitElement {
               <div class="cc-info">
                 <div class="cc-info-pega">
                   <root-container .pConn="${this.pConn}" ?displayOnlyFA="${true}"></root-container>
-                  <br />
-                  <div style="padding-left: 50px;">* - required fields</div>
                 </div>
                 <div class="cc-info-banner">
                   <div class="cc-info-banner-text">We need to gather a little information about you.</div>
