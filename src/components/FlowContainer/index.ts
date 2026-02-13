@@ -262,19 +262,15 @@ class FlowContainer extends BridgeBase {
 
       this.todo_showTodo = true;
       this.todo_showTodoList = false;
-
-      // in React, when cancel is called, somehow the constructor for flowContainer is called which
-      // does init/add of containers.  This mimics that
-      this.initContainer();
     } else if (caseViewMode && caseViewMode == 'perform') {
       // perform
       this.todo_showTodo = false;
-
-      // this is different than Angular SDK, as we need to initContainer if root container reloaded
-      if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true') {
-        this.initContainer();
-      }
     }
+
+    // in React, when cancel is called, somehow the constructor for flowContainer is called which
+    // does init/add of containers.  This mimics that
+    // In Embedded mode, on cancel and creating the case again the container and data is removed but not added after create case
+    this.initContainer();
 
     // if have caseMessage show message and end
     this.caseMessages = this.thePConn.getValue('caseMessages');
