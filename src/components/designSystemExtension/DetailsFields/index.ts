@@ -51,7 +51,7 @@ class DetailsFields extends LitElement {
     }
     return '---';
   }
-  
+
   getFieldValue(field: any): any {
     if (field.config?.value == null || field.config?.value == '') {
       // eslint-disable-next-line sonarjs/no-small-switch
