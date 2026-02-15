@@ -42,6 +42,16 @@ class DetailsFields extends LitElement {
     }
   }
 
+  getValue(configValue, field: any = {}) {
+    if (field?.type === 'userreference') {
+      return configValue.userName;
+    }
+    if (configValue && configValue != '') {
+      return configValue;
+    }
+    return '---';
+  }
+  
   getFieldValue(field: any): any {
     if (field.config?.value == null || field.config?.value == '') {
       // eslint-disable-next-line sonarjs/no-small-switch
@@ -68,7 +78,7 @@ class DetailsFields extends LitElement {
       case 'caseoperator':
         return html``;
       default:
-        return html`<span class="psdk-details-text-style">${field.config.value}</span>`;
+        return html`<span class="psdk-details-text-style">${this.getValue(field.config.value, field)}</span>`;
     }
   }
 
