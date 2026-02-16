@@ -266,19 +266,13 @@ class FlowContainer extends BridgeBase {
 
       this.todo_showTodo = true;
       this.todo_showTodoList = false;
-      this.initContainer();
     } else if (caseViewMode && caseViewMode == 'perform') {
       // perform
       this.todo_showTodo = false;
-      // in React, when cancel is called, somehow the constructor for flowContainer is called which
-      // does init/add of containers.  This mimics that
-      if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true') {
-        this.initContainer();
-      }
     }
 
     // in React, when cancel is called, somehow the constructor for flowContainer is called which
-      // does init/add of containers.  This mimics that
+    // does init/add of containers.  This mimics that
     this.initContainer();
 
     // if have caseMessage show message and end
