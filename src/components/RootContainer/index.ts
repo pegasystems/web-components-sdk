@@ -194,8 +194,7 @@ class RootContainer extends BridgeBase {
   }
 
   async configureModalContainer() {
-    const { serverConfig } = await getSdkConfig();
-    const showModalsInEmbeddedMode = serverConfig.showModalsInEmbeddedMode;
+    const { showModalsInEmbeddedMode } = await getSdkConfig();
 
     if (!this.displayOnlyFA || showModalsInEmbeddedMode) {
       const configObjModal = PCore.createPConnect({
