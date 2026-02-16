@@ -70,8 +70,8 @@ class Decimal extends FormComponentBase {
     this.formatter = theConfigProps?.formatter;
 
     this.currencyISOCode = theConfigProps?.currencyISOCode;
-    this.decimalPrecision = parseInt(theConfigProps.decimalPrecision, 10);
-
+    // this.decimalPrecision = parseInt(theConfigProps.decimalPrecision, 10);
+    this.decimalPrecision = theConfigProps.decimalPrecision ?? 2;
     this.formatOptions = {
       style: 'decimal',
       minimumFractionDigits: this.decimalPrecision,

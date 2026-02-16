@@ -164,7 +164,7 @@ export const buildFieldsForTable = (configFields, pConnect, showDeleteButton, sh
         ...field
       },
       // BUG-615253: Workaround for autosize in table with lazy loading components
-      width: getFiledWidth(field, fields[index].config.label)
+      width: getFiledWidth(field, fieldsLabels[index])
     };
   });
 
