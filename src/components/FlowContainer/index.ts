@@ -131,22 +131,20 @@ class FlowContainer extends BridgeBase {
     const containerName = this.thePConn.getContainerName();
     const containerType = 'single';
 
-    const flowContainerTarget = `${baseContext}/${containerName}`;
-    const isContainerItemAvailable = PCore.getContainerUtils().getActiveContainerItemName(flowContainerTarget);
-
     this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
     const caseInfo = this.thePConn.getCaseInfo();
     this.localeReference = `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase();
 
     window.sessionStorage.setItem('okToInitFlowContainer', 'false');
 
-    if (!isContainerItemAvailable) {
+    const isContainerInitialized = PCore.getContainerUtils().isContainerInitialized(baseContext, containerName);
+    if (!isContainerInitialized) {
       containerMgr.initializeContainers({
         type: containerType
       });
-
-      // updated for 8.7 - 31-Mar-2022
-      addContainerItem(this.thePConn);
+      if (!this.hasContainerItems(this.thePConn)) {
+        addContainerItem(this.thePConn);
+      }
     }
   }
 
@@ -212,6 +210,12 @@ class FlowContainer extends BridgeBase {
     return activeActionLabel;
   }
 
+  hasContainerItems(pConnect) {
+    const contextName = pConnect.getContextName();
+    const containerName = pConnect.getContainerName();
+    return PCore.getContainerUtils().hasContainerItems(`${contextName}/${containerName}`);
+  }
+
   /**
    * updateSelf
    */
@@ -262,16 +266,14 @@ class FlowContainer extends BridgeBase {
 
       this.todo_showTodo = true;
       this.todo_showTodoList = false;
-      this.initContainer();
     } else if (caseViewMode && caseViewMode == 'perform') {
       // perform
       this.todo_showTodo = false;
-      // in React, when cancel is called, somehow the constructor for flowContainer is called which
-      // does init/add of containers.  This mimics that
-      if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true') {
-        this.initContainer();
-      }
     }
+
+    // in React, when cancel is called, somehow the constructor for flowContainer is called which
+      // does init/add of containers.  This mimics that
+    this.initContainer();
 
     // if have caseMessage show message and end
     this.caseMessages = this.thePConn.getValue('caseMessages');
