@@ -45,12 +45,12 @@ class FlowContainer extends BridgeBase {
   @property({ attribute: false }) todo_headerText = 'To do';
   @property({ attribute: false }) todo_type = '';
   @property({ attribute: false }) todo_context = '';
-  @property({ attribute: false, type: Array }) banners: any[] = [];
 
   // messages
   caseMessages = '';
   bHasCaseMessages = false;
   checkSvg = '';
+  banners: any[] = [];
 
   svgCurrent = '';
   svgNotCurrent = '';
