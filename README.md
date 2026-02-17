@@ -6,7 +6,7 @@ The **SDK-WC v24.2.11** release is **only compatible with Pega Infinity '24.2**.
 
 **Note**: The main branch is the active development branch for future versions of Web Components SDK.
 
-The SDK-WC v24.2.11 release upgrades the deprecated @lion packages to the @lion/ui package. This release allows Web components SDK users to take advantage of the latest SDK enhancements and fixes. For more information, see
+This release allows Web components SDK users to take advantage of the latest SDK enhancements and fixes. For more information, see
 [What's new in SDK-WC v24.2.11](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/web-components-sdk-updates.html).
 
 This [Web Components SDK updates](https://docs.pega.com/bundle/constellation-sdk/page/constellation-sdks/sdks/web-components-sdk-updates.html) page provides details about all of the Web Components SDK releases.
