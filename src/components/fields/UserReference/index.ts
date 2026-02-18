@@ -115,7 +115,11 @@ class UserReference extends FormComponentBase {
     this.showAsFormattedText = showAsFormattedText;
     this.userID = value.userId;
     this.userName = value.userName;
-
+    if (value && typeof value === 'object') {
+      this.value = value.userName ? value.userName : '';
+    } else {
+      this.value = value || '';
+    }
     let { readOnly, required, disabled } = props;
     this.readOnly = readOnly;
     [readOnly, required, disabled] = [readOnly, required, disabled].map(prop => prop === true || (typeof prop === 'string' && prop === 'true'));
