@@ -3,7 +3,7 @@ import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/ui/define/lion-input.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '../../designSystemExtension/FieldValueList';
 
 // import the component's styles as HTML with <style>
@@ -63,18 +63,6 @@ class Phone extends FormComponentBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    if (this.lionValidatorsArray && this.lionValidatorsArray.length > 0) {
-      this.lionValidatorsArray.forEach((validator: any) => {
-        // If the validator has an empty message property, we inject our text.
-        // This ensures that IF this validator is failing, it shows this text.
-        if (validator.validateMessage === '') {
-          const fallbackMessage = 'Please enter a valid phone number';
-          validator.validateMessage = fallbackMessage;
-          validator.__param = fallbackMessage;
-        }
-      });
-    }
-
     if (this.displayMode) {
       return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
     }
@@ -93,25 +81,23 @@ class Phone extends FormComponentBase {
         </text-form>
       `;
     }
-
     const theContent = html`${this.bVisible
       ? html` <div class="form-group">
-          <lion-input
+          <lion-input-tel-dropdown
             id=${this.theComponentId}
-            type="tel"
             dataTestId=${this.testId}
-            .modelValue=${this.value}
-            .fieldName=${this.label}
+            .modelValue=${this.value || '+1'}
+            .preferredRegions="${['US']}"
+            .activeRegion="US"
             .validators=${this.lionValidatorsArray}
             .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
             ?readonly=${this.bReadonly}
             ?disabled=${this.bDisabled}
             @click=${this.fieldOnChange}
             @blur=${this.fieldOnBlur}
-            @change=${this.fieldOnChange}
           >
             <span slot="label">${this.annotatedLabel}</span>
-          </lion-input>
+          </lion-input-tel-dropdown>
         </div>`
       : nothing}`;
 
