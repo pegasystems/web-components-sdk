@@ -454,8 +454,6 @@ class FlowContainer extends BridgeBase {
   showPageMessages(completeProps: FlowContainerProps) {
     const pageMessages = completeProps.pageMessages;
     this.banners = [{ messages: pageMessages?.map(msg => this.localizedVal(msg.message, 'Messages')), variant: 'urgent' }];
-
-    console.log('FlowContainer page messages:', this.banners);
   }
 
   bannersHtml() {

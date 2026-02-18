@@ -272,6 +272,31 @@ export class BridgeBase extends LitElement {
     if (this.thePConn?.removeFormField) {
       this.thePConn?.removeFormField();
     }
+
+    const contextName = this.thePConn.getContextName();
+    const pageReference = this.thePConn.getPageReference();
+    const rawConfig = this.thePConn._rawConfig;
+    const index = this.thePConn.index;
+
+    // @ts-ignore
+    if (Object.hasOwn(rawConfig?.config ?? {}, 'value') && this.thePConn._type !== 'Address') {
+      PCore.getContextTreeManager().removeFieldNode(
+        contextName,
+        pageReference,
+        // @ts-ignore
+        this.thePConn.viewName || '',
+        this.thePConn._getPropertyName(),
+        index as number
+      );
+      // @ts-ignore
+    } else if (this.thePConn._type === 'Address' && rawConfig?.config?.associatedView) {
+      // remove address node and its children
+      PCore.getContextTreeManager().removeViewNode(contextName, pageReference, rawConfig.config.associatedView, index as number);
+    } else {
+      // remove view node and its children
+      const pageRef = rawConfig?.config?.context ? `${pageReference}${rawConfig?.config.context}` : pageReference;
+      PCore.getContextTreeManager().removeViewNode(contextName, pageRef, rawConfig?.config?.name || rawConfig?.config?.id || '', index);
+    }
   }
 
   /**
@@ -286,7 +311,18 @@ export class BridgeBase extends LitElement {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: subscribeToStore`);
     }
-    return this.getStore().subscribe(inCallback);
+
+    let bSubscribed = true;
+    const wrappedCallback = () => {
+      if (bSubscribed && inCallback) {
+        inCallback();
+      }
+    };
+    const storeUnsubscribe = this.getStore().subscribe(wrappedCallback);
+    return () => {
+      bSubscribed = false;
+      storeUnsubscribe();
+    };
   }
 
   /**
