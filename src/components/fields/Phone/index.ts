@@ -5,6 +5,7 @@ import { FormComponentBase } from '../FormComponentBase';
 // NOTE: you need to import ANY component you may render.
 import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '../../designSystemExtension/FieldValueList';
+import handleEvent from '../../../helpers/event-utils';
 
 // import the component's styles as HTML with <style>
 import { phoneStyles } from './phone-styles';
@@ -48,6 +49,48 @@ class Phone extends FormComponentBase {
     }
     if (this.bDebug) {
       debugger;
+    }
+  }
+
+  fieldOnChange(event: any) {
+    if (this.bDebug) {
+      debugger;
+    }
+
+    if (this.bLogging) {
+      console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
+    }
+
+    let newVal = event.target.value ?? '';
+    const phoneValue = event?.target?.value;
+    let phoneNumber = phoneValue.split(' ').slice(1).join();
+    phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
+    newVal = phoneNumber;
+    if (newVal) {
+      handleEvent(this.actionsApi, 'change', this.propName, newVal);
+    }
+  }
+
+  fieldOnBlur(event: any) {
+    if (this.bDebug) {
+      debugger;
+    } // PConnect wants to use eventHandler for onBlur
+
+    if (this.bLogging) {
+      console.log(`--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`);
+    }
+
+    const oldVal = this.value ?? '';
+    let newVal = event.target.value ?? '';
+    const phoneValue = event?.target?.value;
+    let phoneNumber = phoneValue.split(' ').slice(1).join();
+    phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
+    newVal = phoneNumber;
+
+    const isValueChanged = newVal?.toString() !== oldVal.toString();
+
+    if (isValueChanged && newVal) {
+      handleEvent(this.actionsApi, 'changeNblur', this.propName, newVal);
     }
   }
 
