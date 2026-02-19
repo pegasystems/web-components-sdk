@@ -287,6 +287,7 @@ export class FormComponentBase extends BridgeBase {
     if (this.bLogging) {
       console.log(`--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
+
     if (this.selectionMode === 'multi') {
       this.thePConn.getValidationApi().validate(this.selectedvalues, this.selectionList);
     } else {

@@ -3,8 +3,9 @@ import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
 
 // NOTE: you need to import ANY component you may render.
-import '@lion/ui/define/lion-input.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '../../designSystemExtension/FieldValueList';
+import handleEvent from '../../../helpers/event-utils';
 
 // import the component's styles as HTML with <style>
 import { phoneStyles } from './phone-styles';
@@ -51,6 +52,48 @@ class Phone extends FormComponentBase {
     }
   }
 
+  fieldOnChange(event: any) {
+    if (this.bDebug) {
+      debugger;
+    }
+
+    if (this.bLogging) {
+      console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
+    }
+
+    let newVal = event.target.value ?? '';
+    const phoneValue = event?.target?.value;
+    let phoneNumber = phoneValue.split(' ').slice(1).join();
+    phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
+    newVal = phoneNumber;
+    if (newVal) {
+      handleEvent(this.actionsApi, 'change', this.propName, newVal);
+    }
+  }
+
+  fieldOnBlur(event: any) {
+    if (this.bDebug) {
+      debugger;
+    } // PConnect wants to use eventHandler for onBlur
+
+    if (this.bLogging) {
+      console.log(`--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`);
+    }
+
+    const oldVal = this.value ?? '';
+    let newVal = event.target.value ?? '';
+    const phoneValue = event?.target?.value;
+    let phoneNumber = phoneValue.split(' ').slice(1).join();
+    phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
+    newVal = phoneNumber;
+
+    const isValueChanged = newVal?.toString() !== oldVal.toString();
+
+    if (isValueChanged && newVal) {
+      handleEvent(this.actionsApi, 'changeNblur', this.propName, newVal);
+    }
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -62,18 +105,6 @@ class Phone extends FormComponentBase {
     // To prevent accumulation (and extra rendering) of previous renders, begin each the render
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
-
-    if (this.lionValidatorsArray && this.lionValidatorsArray.length > 0) {
-      this.lionValidatorsArray.forEach((validator: any) => {
-        // If the validator has an empty message property, we inject our text.
-        // This ensures that IF this validator is failing, it shows this text.
-        if (validator.validateMessage === '') {
-          const fallbackMessage = 'Please enter a valid phone number';
-          validator.validateMessage = fallbackMessage;
-          validator.__param = fallbackMessage;
-        }
-      });
-    }
 
     if (this.displayMode) {
       return html` <field-value-list .label="${this.label}" .value="${this.value}" .displayMode="${this.displayMode}"> </field-value-list> `;
@@ -93,25 +124,23 @@ class Phone extends FormComponentBase {
         </text-form>
       `;
     }
-
     const theContent = html`${this.bVisible
       ? html` <div class="form-group">
-          <lion-input
+          <lion-input-tel-dropdown
             id=${this.theComponentId}
-            type="tel"
             dataTestId=${this.testId}
-            .modelValue=${this.value}
-            .fieldName=${this.label}
+            .modelValue=${this.value || '+1'}
+            .preferredRegions="${['US']}"
+            .activeRegion="US"
             .validators=${this.lionValidatorsArray}
             .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
             ?readonly=${this.bReadonly}
             ?disabled=${this.bDisabled}
             @click=${this.fieldOnChange}
             @blur=${this.fieldOnBlur}
-            @change=${this.fieldOnChange}
           >
             <span slot="label">${this.annotatedLabel}</span>
-          </lion-input>
+          </lion-input-tel-dropdown>
         </div>`
       : nothing}`;
 
