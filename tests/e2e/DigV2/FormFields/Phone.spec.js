@@ -41,10 +41,12 @@ test.describe('E2E test', () => {
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeVisible();
 
     /** Required tests */
-    const requiredPhone = page.locator('lion-input[datatestid="af983eaa1b85b015a7654702abd0b249"] >> input');
-    requiredPhone.click();
-    await requiredPhone.pressSequentially('6175551212');
-    requiredPhone.blur();
+    //const requiredPhone = page.locator('lion-input-tel-dropdown[datatestid="af983eaa1b85b015a7654702abd0b249"] >> input');
+    //requiredPhone.click();
+    await page.fill('lion-input-tel-dropdown[datatestid="af983eaa1b85b015a7654702abd0b249"] input', '6175551212');
+    
+    // await requiredPhone.pressSequentially('6175551212');
+    //requiredPhone.blur();
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeHidden();
 
     attributes = await common.getAttributes(requiredPhone);
@@ -103,7 +105,7 @@ test.describe('E2E test', () => {
     } else {
       await expect(conditionallyVisiblePhone).not.toBeVisible();
     }
-  }, 10000);
+  }, 4000);
 });
 
 test.afterEach(async ({ page }) => {
