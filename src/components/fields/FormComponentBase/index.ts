@@ -297,20 +297,7 @@ export class FormComponentBase extends BridgeBase {
       console.log(`--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
 
-    if (this.theComponentName.toLowerCase() === 'phone') {
-      const oldVal = this.value ?? '';
-      let newVal = event.target.value ?? '';
-      const phoneValue = event?.target?.value;
-      let phoneNumber = phoneValue.split(' ').slice(1).join();
-      phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
-      newVal = phoneNumber;
-
-      const isValueChanged = newVal?.toString() !== oldVal.toString();
-
-      if (isValueChanged && newVal) {
-        handleEvent(this.actionsApi, 'changeNblur', this.propName, newVal);
-      }
-    } else if (this.selectionMode === 'multi') {
+    if (this.selectionMode === 'multi') {
       this.thePConn.getValidationApi().validate(this.selectedvalues, this.selectionList);
     } else {
       handleEvent(this.actionsApi, 'changeNblur', this.propName, event.target.value);
