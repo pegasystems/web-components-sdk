@@ -41,7 +41,7 @@ test.describe('E2E test', () => {
     await page.fill('lion-input[datatestid="57D056ED0984166336B7879C2AF3657F"] input', 'Cambridge');
     await page.selectOption('lion-select[datatestid="46A2A41CC6E552044816A2D04634545D"] select', 'MA');
     await page.fill('lion-input[datatestid="572ED696F21038E6CC6C86BB272A3222"] input', '02142');
-    await page.fill('lion-input[datatestid="1F8261D17452A959E013666C5DF45E07"] input', '6175551212');
+    await page.fill('lion-input-tel-dropdown[datatestid="1F8261D17452A959E013666C5DF45E07"] input', '6175551212');
 
     await page.locator('button:has-text("next")').click();
 
