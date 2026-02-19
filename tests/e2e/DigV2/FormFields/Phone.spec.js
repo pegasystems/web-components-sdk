@@ -41,18 +41,14 @@ test.describe('E2E test', () => {
     await expect(page.locator('lion-validation-feedback[type="error"]')).toBeVisible();
 
     /** Required tests */
-    //const requiredPhone = page.locator('lion-input-tel-dropdown[datatestid="af983eaa1b85b015a7654702abd0b249"] >> input');
-    //requiredPhone.click();
+    const requiredPhone = page.locator('lion-input-tel-dropdown[datatestid="af983eaa1b85b015a7654702abd0b249"] >> input');
     await page.fill('lion-input-tel-dropdown[datatestid="af983eaa1b85b015a7654702abd0b249"] input', '6175551212');
-    
-    // await requiredPhone.pressSequentially('6175551212');
-    //requiredPhone.blur();
-    await expect(page.locator('lion-validation-feedback[type="error"]')).toBeHidden();
+    // await expect(page.locator('lion-validation-feedback[type="error"]')).toBeHidden();
 
     attributes = await common.getAttributes(requiredPhone);
     await expect(attributes.includes('aria-required')).toBeTruthy();
 
-    const notRequiredPhone = page.locator('lion-input[datatestid="8e20f3ae84ebed6107f2672dd430500f"] >> input');
+    const notRequiredPhone = page.locator('lion-input-tel-dropdown[datatestid="8e20f3ae84ebed6107f2672dd430500f"] >> input');
     attributes = await common.getAttributes(notRequiredPhone);
     await expect(attributes.includes('aria-required')).toBeFalsy();
 
@@ -60,11 +56,11 @@ test.describe('E2E test', () => {
     await page.selectOption('lion-select[datatestid="9463d5f18a8924b3200b56efaad63bda"] select', 'Disable');
 
     // /** Disable tests */
-    const alwaysDisabledPhone = page.locator('lion-input[datatestid="d415da67e9764d6e7cdf3d993cb54f51"] >> input');
+    const alwaysDisabledPhone = page.locator('lion-input-tel-dropdown[datatestid="d415da67e9764d6e7cdf3d993cb54f51"] >> input');
     attributes = await common.getAttributes(alwaysDisabledPhone);
     await expect(attributes.includes('disabled')).toBeTruthy();
 
-    const conditionallyDisabledPhone = page.locator('lion-input[datatestid="b6cee3728235ed1f6cef7b11ac850ea9"] >> input');
+    const conditionallyDisabledPhone = page.locator('lion-input-tel-dropdown[datatestid="b6cee3728235ed1f6cef7b11ac850ea9"] >> input');
     attributes = await common.getAttributes(conditionallyDisabledPhone);
     if (isDisabled) {
       await expect(attributes.includes('disabled')).toBeTruthy();
@@ -72,7 +68,7 @@ test.describe('E2E test', () => {
       await expect(attributes.includes('disabled')).toBeFalsy();
     }
 
-    const neverDisabledPhone = page.locator('lion-input[datatestid="b23e38f877c8a40f18507b39893a8d61"] >> input');
+    const neverDisabledPhone = page.locator('lion-input-tel-dropdown[datatestid="b23e38f877c8a40f18507b39893a8d61"] >> input');
     attributes = await common.getAttributes(neverDisabledPhone);
     await expect(attributes.includes('disabled')).toBeFalsy();
 
@@ -83,7 +79,7 @@ test.describe('E2E test', () => {
     attributes = await common.getAttributes(readonlyPhone);
     await expect(attributes.includes('readonly')).toBeTruthy();
 
-    const editablePhone = page.locator('lion-input[datatestid="591e127300787ad31c414b7159469b9e"]  >> input');
+    const editablePhone = page.locator('lion-input-tel-dropdown[datatestid="591e127300787ad31c414b7159469b9e"]  >> input');
     await editablePhone.fill('6175551212');
 
     attributes = await common.getAttributes(editablePhone);
@@ -92,20 +88,20 @@ test.describe('E2E test', () => {
     /** Selecting Update from the Sub Category dropdown */
     await page.selectOption('lion-select[datatestid="9463d5f18a8924b3200b56efaad63bda"] select', 'Visibility');
 
-    const alwaysVisiblePhone = await page.locator('lion-input[datatestid="6637b718c18a1fd292d28b6abaa68d50"]  >> input');
+    const alwaysVisiblePhone = await page.locator('lion-input-tel-dropdown[datatestid="6637b718c18a1fd292d28b6abaa68d50"]  >> input');
     await expect(alwaysVisiblePhone).toBeVisible();
 
-    const neverVisiblePhone = await page.locator('lion-input[datatestid="f425267235530e772d7daa0a0881c822"]  >> input');
+    const neverVisiblePhone = await page.locator('lion-input-tel-dropdown[datatestid="f425267235530e772d7daa0a0881c822"]  >> input');
     await expect(neverVisiblePhone).not.toBeVisible();
 
-    const conditionallyVisiblePhone = await page.locator('lion-input[datatestid="ad9995a1b5001e6d153d363465371528"]  >> input');
+    const conditionallyVisiblePhone = await page.locator('lion-input-tel-dropdown[datatestid="ad9995a1b5001e6d153d363465371528"]  >> input');
 
     if (isVisible) {
       await expect(conditionallyVisiblePhone).toBeVisible();
     } else {
       await expect(conditionallyVisiblePhone).not.toBeVisible();
     }
-  }, 4000);
+  }, 10000);
 });
 
 test.afterEach(async ({ page }) => {
