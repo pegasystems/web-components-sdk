@@ -169,6 +169,7 @@ class Dropdown extends FormComponentBase {
   }
 
   fieldOnChange(event: any) {
+    if (!event.detail?.isTriggeredByUser) return;
     const selectedValue = event.target.value;
     handleEvent(this.actionsApi, 'changeNblur', this.propName, selectedValue);
   }
