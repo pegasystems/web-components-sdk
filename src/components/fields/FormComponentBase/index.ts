@@ -259,7 +259,16 @@ export class FormComponentBase extends BridgeBase {
       console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
 
-    if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
+    if (this.theComponentName.toLowerCase() === 'phone') {
+      let newVal = event.target.value ?? '';
+      const phoneValue = event?.target?.value;
+      let phoneNumber = phoneValue.split(' ').slice(1).join();
+      phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
+      newVal = phoneNumber;
+      if (newVal) {
+        handleEvent(this.actionsApi, 'change', this.propName, newVal);
+      }
+    } else if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
       const value = '';
       handleEvent(this.actionsApi, 'change', this.propName, value);
     } else {
