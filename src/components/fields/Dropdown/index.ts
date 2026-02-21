@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import isEqual from 'fast-deep-equal';
 import { FormComponentBase } from '../FormComponentBase';
 import { Utils } from '../../../helpers/utils';
 import handleEvent from '../../../helpers/event-utils';
@@ -18,6 +19,48 @@ interface DropdownProps extends PConnFieldProps {
   onRecordChange?: any;
   fieldMetadata?: any;
   listType?: any;
+  columns?: any[];
+  deferDatasource?: boolean;
+  datasourceMetadata?: any;
+  parameters?: any;
+}
+
+function flattenParameters(params = {}) {
+  const flatParams = {};
+  Object.keys(params).forEach(key => {
+    const { name, value: theVal } = params[key];
+    flatParams[name] = theVal;
+  });
+
+  return flatParams;
+}
+
+function preProcessColumns(columnList) {
+  return columnList.map(col => {
+    const tempColObj = { ...col };
+    tempColObj.value = col.value && col.value.startsWith('.') ? col.value.substring(1) : col.value;
+    return tempColObj;
+  });
+}
+
+function getDisplayFieldsMetaData(columnList) {
+  const displayColumns = columnList.filter(col => col.display === 'true');
+  const metaDataObj: any = { key: '', primary: '', secondary: [] };
+  const keyCol = columnList.filter(col => col.key === 'true');
+  metaDataObj.key = keyCol.length > 0 ? keyCol[0].value : 'auto';
+  for (let index = 0; index < displayColumns.length; index += 1) {
+    if (displayColumns[index].primary === 'true') {
+      metaDataObj.primary = displayColumns[index].value;
+    } else {
+      metaDataObj.secondary.push(displayColumns[index].value);
+    }
+  }
+  return metaDataObj;
+}
+
+interface IOption {
+  key: string;
+  value: string;
 }
 
 // NOTE: this is just a boilerplate component definition intended
@@ -25,7 +68,6 @@ interface DropdownProps extends PConnFieldProps {
 @customElement('dropdown-form')
 class Dropdown extends FormComponentBase {
   @property({ attribute: false, type: Array }) options;
-  @property({ attribute: true, type: String }) datasource = '';
 
   dataList: any = [];
   fieldMetadata: any = [];
@@ -34,53 +76,33 @@ class Dropdown extends FormComponentBase {
   localeName = '';
   localePath = '';
   localizedValue = '';
+  theDatasource?: any[] | null;
+
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
     //  2nd: inLogging - sets this.bLogging: false if not provided.
     //  To get started, we set Debug to false and Logging to true here. Set to your preferred value during development.
     super(false, false);
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: constructor`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
-
-    this.options = [];
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: connectedCallback`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
 
     // setup this component's styling...
     this.theComponentStyleTemplate = dropdownStyles;
   }
 
-  disconnectedCallback() {
-    // The super call will call storeUnsubscribe...
-    super.disconnectedCallback();
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: disconnectedCallback`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
-  }
+  updateOptions(options: IOption[]) {
+    this.options = options;
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    // eslint-disable-next-line sonarjs/no-collapsible-if
-    if (name === 'datasource') {
-      if (newValue && oldValue !== newValue) {
-        this.dataList = JSON.parse(newValue);
-        this.updateSelf();
-      }
+    if (this.displayMode) {
+      this.value = this.options?.find(option => option.key === this.value)?.value || this.value;
+      this.localizedValue = this.thePConn.getLocalizedValue(
+        this.value === 'Select...' ? '' : this.value,
+        this.localePath,
+        this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
+      );
     }
   }
 
@@ -88,30 +110,26 @@ class Dropdown extends FormComponentBase {
    * updateSelf
    */
   updateSelf() {
-    if (this.bLogging) {
-      console.log(`${this.theComponentName}: updateSelf`);
-    }
-    if (this.bDebug) {
-      debugger;
-    }
-
     super.updateSelf();
 
     // Some additional processing
-
     const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as DropdownProps;
+    const datasource = theConfigProps.datasource;
 
-    if (this.dataList.length > 0) {
-      theConfigProps.datasource = this.dataList;
-      theConfigProps.listType = 'associated';
+    if (!isEqual(datasource, this.theDatasource)) {
+      // inbound datasource is different, so update theDatasource
+      this.theDatasource = datasource || null;
     }
 
-    const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
-    const index = optionsList?.findIndex(ele => ele.key === 'Select');
-    if (index < 0) {
+    if (this.value === '' && !this.bReadonly) {
+      this.value = 'Select';
+    }
+
+    if (this.theDatasource) {
+      const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
       optionsList?.unshift({ key: 'Select', value: this.thePConn.getLocalizedValue('Select...', '', '') });
+      this.updateOptions(optionsList);
     }
-    this.options = optionsList;
 
     const propName = this.thePConn.getStateProps().value;
     const className = this.thePConn.getCaseInfo().getClassName();
@@ -134,6 +152,76 @@ class Dropdown extends FormComponentBase {
       this.localePath,
       this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
     );
+
+    this.localizedValue = this.options?.find(opt => opt.key === this.value)?.value || this.localizedValue;
+    this.getDatapageData();
+  }
+
+  getDatapageData() {
+    const configProps = this.thePConn.getConfigProps() as DropdownProps;
+    let { listType, parameters, datasource = [], columns = [] } = configProps;
+    const { deferDatasource, datasourceMetadata } = configProps;
+    const context = this.thePConn.getContextName();
+    if (deferDatasource && datasourceMetadata?.datasource?.name) {
+      listType = 'datapage';
+      datasource = datasourceMetadata.datasource.name;
+      const { parameters: dataSourceParameters, propertyForDisplayText, propertyForValue } = datasourceMetadata.datasource;
+      parameters = flattenParameters(dataSourceParameters);
+      const displayProp = propertyForDisplayText?.startsWith('@P') ? propertyForDisplayText.substring(3) : propertyForDisplayText;
+      const valueProp = propertyForValue?.startsWith('@P') ? propertyForValue.substring(3) : propertyForValue;
+      columns = [
+        {
+          key: 'true',
+          setProperty: 'Associated property',
+          value: valueProp
+        },
+        {
+          display: 'true',
+          primary: 'true',
+          useForSearch: true,
+          value: displayProp
+        }
+      ];
+    }
+
+    columns = preProcessColumns(columns) || [];
+    if (listType !== 'associated' && typeof datasource === 'string') {
+      this.getData(datasource, parameters, columns, context, listType);
+    }
+  }
+
+  getData(dataSource, parameters, columns, context, listType) {
+    const dataConfig: any = {
+      columns,
+      dataSource,
+      deferDatasource: true,
+      listType,
+      parameters,
+      matchPosition: 'contains',
+      maxResultsDisplay: '5000',
+      cacheLifeSpan: 'form'
+    };
+    // @ts-ignore - PCore is a global
+    PCore.getDataApi()
+      .init(dataConfig, context)
+      .then((dataApiObj: any) => {
+        const optionsData: any[] = [];
+        const displayColumn = getDisplayFieldsMetaData(columns);
+        dataApiObj?.fetchData('').then(response => {
+          if (response.data) {
+            response.data.forEach(element => {
+              const val = element[displayColumn.primary]?.toString();
+              const obj = {
+                key: element[displayColumn.key] || element.pyGUID,
+                value: val
+              };
+              optionsData.push(obj);
+            });
+          }
+          optionsData?.unshift({ key: 'Select', value: this.thePConn.getLocalizedValue('Select...', '', '') });
+          this.updateOptions(optionsData);
+        });
+      });
   }
 
   // Comment that was in the original fieldOnChange before we started to use
@@ -145,32 +233,18 @@ class Dropdown extends FormComponentBase {
     return this.value === buttonValue;
   }
 
-  getErrorMessage() {
-    const tempError = `${this.theComponentName}: getErrorMessage needs to have a field control implemented.`;
-    const errMessage: string = tempError;
-
-    console.error(tempError);
-
-    // // look for validation messages for json, pre-defined or just an error pushed from workitem (400)
-    // if (this.fieldControl.hasError('message')) {
-    //   errMessage = this.validateMessage;
-    // }
-    // else if (this.fieldControl.hasError('required')) {
-
-    //   errMessage = 'You must enter a value';
-    // }
-    // else if (this.fieldControl.errors) {
-
-    //   errMessage = this.fieldControl.errors.toString();
-
-    // }
-
-    return errMessage;
-  }
-
   fieldOnChange(event: any) {
-    const selectedValue = event.target.value;
-    handleEvent(this.actionsApi, 'changeNblur', this.propName, selectedValue);
+    if (event?.target?.value === 'Select') {
+      event.target.value = '';
+    }
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, event.target.value);
+    const configProps = this.thePConn.getConfigProps() as DropdownProps;
+    if (configProps?.onRecordChange) {
+      configProps.onRecordChange(event);
+    }
+    this.thePConn.clearErrorMessages({
+      property: this.propName
+    });
   }
 
   render() {
