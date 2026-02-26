@@ -47,7 +47,6 @@ class Stages extends BridgeBase {
 
     this.imagePath = Utils.getIconPath(Utils.getSDKStaticContentUrl());
     this.checkSvgIcon = Utils.getImageSrc('check', Utils.getSDKStaticContentUrl());
-    console.log('this.pConn', this.pConn);
     this.key = `${this.thePConn.getCaseInfo().getClassName()}!CASE!${this.thePConn.getCaseInfo().getName()}`.toUpperCase();
   }
 
