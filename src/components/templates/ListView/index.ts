@@ -45,7 +45,8 @@ class ListView extends BridgeBase {
 
   @property({ attribute: false, type: Array }) vaadinGridColumns;
   @property({ attribute: false, type: Array }) vaadinRowData;
-  @property({ attribute: true, type: Object }) payload: any = {};
+  @property({ attribute: true, type: Object }) payload;
+  @property({ attribute: true, type: Object }) listViewProps: any = {};
   @property({ attribute: true, type: Boolean }) inForm = true;
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
@@ -117,18 +118,18 @@ class ListView extends BridgeBase {
   getListData() {
     const theConfigProps = this.thePConn?.getConfigProps();
     if (theConfigProps) {
-      this.preparePayload();
+      const query = this.preparePayload();
       const componentConfig: any = this.thePConn.getRawMetadata()?.config; // try to remove any when getInheritedProps typedefs are fixed;
       const refList = theConfigProps.referenceList;
-      const dataViewParameters = this.payload.parameters;
+      const dataViewParameters = this.listViewProps.parameters;
       const workListData = !this.inForm
         ? PCore.getDataApiUtils().getData(refList, this.payload)
         : PCore.getDataPageUtils().getDataAsync(
             refList,
             this.thePConn.getContextName(),
-            this.payload.dataViewParameters ? this.payload.dataViewParameters : dataViewParameters,
+            this.payload ? this.payload.dataViewParameters : dataViewParameters,
             this.paging,
-            this.query
+            query
           );
       workListData.then((workListJSON: any) => {
         if (this.bDebug) {
@@ -183,23 +184,25 @@ class ListView extends BridgeBase {
 
   preparePayload() {
     const { fieldDefs, itemKey, patchQueryFields } = this.listContext.meta;
+    let query = {};
     this.fieldDefs = fieldDefs;
-    let listFields = fieldDefs ? this.buildSelect(fieldDefs, undefined, patchQueryFields, this.payload?.compositeKeys) : [];
-    listFields = this.addItemKeyInSelect(fieldDefs, itemKey, listFields, this.payload?.compositeKeys);
-    if (this.payload.query) {
-      this.query = this.payload.query;
+    let listFields = fieldDefs ? this.buildSelect(fieldDefs, undefined, patchQueryFields, this.listViewProps?.compositeKeys) : [];
+    listFields = this.addItemKeyInSelect(fieldDefs, itemKey, listFields, this.listViewProps?.compositeKeys);
+    if (this.payload?.query) {
+      query = this.payload.query;
     } else if (listFields?.length && this.listContext.meta.isQueryable) {
       if (this.filterPayload) {
-        this.query = {
+        query = {
           select: listFields,
           filter: this.filterPayload?.query?.filter
         };
       } else {
-        this.query = { select: listFields };
+        query = { select: listFields };
       }
     } else if (this.filterPayload) {
-      this.query = this.filterPayload?.query;
+      query = this.filterPayload?.query;
     }
+    return query;
   }
 
   getField(fieldDefs, columnId) {
@@ -272,16 +275,6 @@ class ListView extends BridgeBase {
     return select;
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    // eslint-disable-next-line sonarjs/no-collapsible-if
-    if (name === 'payload') {
-      if (oldValue !== newValue) {
-        this.payload = newValue;
-        this.getListData();
-      }
-    }
-  }
-
   disconnectedCallback() {
     // The super call will call storeUnsubscribe...
     super.disconnectedCallback();
@@ -326,13 +319,13 @@ class ListView extends BridgeBase {
     this.searchIcon = Utils.getImageSrc('search', Utils.getSDKStaticContentUrl());
 
     if (theConfigProps) {
-      if (!this.payload) {
-        this.payload = { referenceList: theConfigProps.referenceList };
+      if (!this.listViewProps) {
+        this.listViewProps = { referenceList: theConfigProps.referenceList };
       }
       init({
         pConn$: this.thePConn,
         bInForm$: this.inForm,
-        ...this.payload,
+        ...this.listViewProps,
         listContext: this.listContext,
         ref: this.ref,
         showDynamicFields: this.showDynamicFields,
