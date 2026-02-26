@@ -13,6 +13,7 @@ import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 
 // import the component's styles as HTML with <style>
 import { listViewStyles } from './list-view-styles';
+import { init } from './listViewHelpers';
 
 interface ListViewProps {
   // If any, enter additional props that only exist on this component
@@ -51,13 +52,24 @@ class ListView extends BridgeBase {
   gridChoice = 'vaadin';
   bClickEventListenerAdded: Boolean = false;
   waitingForData: Boolean = true;
-  selectionMode = '';
+  selectionMode? = '';
   selectedValue: any;
   rowClickAction: any;
   rowID: any;
   response: any;
   compositeKeys: any;
   selectedValues: any;
+  listContext: any = {};
+  ref: any = {};
+  showDynamicFields: any;
+  xRayApis = PCore.getDebugger().getXRayRuntime();
+  xRayUid = this.xRayApis.startXRay();
+  cosmosTableRef: any;
+  fieldDefs: any;
+  query: any = null;
+  filterPayload: any;
+  paging: any;
+
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -105,7 +117,7 @@ class ListView extends BridgeBase {
   getListData() {
     const theConfigProps = this.thePConn?.getConfigProps();
     if (theConfigProps) {
-      this.selectionMode = theConfigProps.selectionMode;
+      this.preparePayload();
       const componentConfig: any = this.thePConn.getRawMetadata()?.config; // try to remove any when getInheritedProps typedefs are fixed;
       const refList = theConfigProps.referenceList;
       const dataViewParameters = this.payload.parameters;
@@ -114,7 +126,9 @@ class ListView extends BridgeBase {
         : PCore.getDataPageUtils().getDataAsync(
             refList,
             this.thePConn.getContextName(),
-            this.payload.dataViewParameters ? this.payload.dataViewParameters : dataViewParameters
+            this.payload.dataViewParameters ? this.payload.dataViewParameters : dataViewParameters,
+            this.paging,
+            this.query
           );
       workListData.then((workListJSON: any) => {
         if (this.bDebug) {
@@ -167,6 +181,97 @@ class ListView extends BridgeBase {
     }
   }
 
+  preparePayload() {
+    const { fieldDefs, itemKey, patchQueryFields } = this.listContext.meta;
+    this.fieldDefs = fieldDefs;
+    let listFields = fieldDefs ? this.buildSelect(fieldDefs, undefined, patchQueryFields, this.payload?.compositeKeys) : [];
+    listFields = this.addItemKeyInSelect(fieldDefs, itemKey, listFields, this.payload?.compositeKeys);
+    if (this.payload.query) {
+      this.query = this.payload.query;
+    } else if (listFields?.length && this.listContext.meta.isQueryable) {
+      if (this.filterPayload) {
+        this.query = {
+          select: listFields,
+          filter: this.filterPayload?.query?.filter
+        };
+      } else {
+        this.query = { select: listFields };
+      }
+    } else if (this.filterPayload) {
+      this.query = this.filterPayload?.query;
+    }
+  }
+
+  getField(fieldDefs, columnId) {
+    const fieldsMap = this.getFieldsMap(fieldDefs);
+    return fieldsMap.get(columnId);
+  }
+
+  getFieldsMap(fieldDefs) {
+    const fieldsMap = new Map();
+    fieldDefs.forEach(element => {
+      fieldsMap.set(element.id, element);
+    });
+    return fieldsMap;
+  }
+
+  buildSelect(fieldDefs, colId, patchQueryFields = [], compositeKeys = []) {
+    const listFields: any = [];
+    if (colId) {
+      const field = this.getField(fieldDefs, colId);
+      listFields.push({
+        field: field.name
+      });
+    } else {
+      // NOTE: If we ever decide to not set up all the `fieldDefs` on select, ensure that the fields
+      //  corresponding to `state.groups` are set up. Needed in Client-mode grouping/pagination.
+      fieldDefs.forEach(field => {
+        if (!listFields.find(f => f.field === field.name)) {
+          listFields.push({
+            field: field.name
+          });
+        }
+      });
+      patchQueryFields.forEach(k => {
+        if (!listFields.find(f => f.field === k)) {
+          listFields.push({
+            field: k
+          });
+        }
+      });
+    }
+
+    compositeKeys.forEach(k => {
+      if (!listFields.find(f => f.field === k)) {
+        listFields.push({
+          field: k
+        });
+      }
+    });
+    return listFields;
+  }
+
+  addItemKeyInSelect(fieldDefs, itemKey, select, compositeKeys) {
+    const elementFound = this.getField(fieldDefs, itemKey);
+
+    if (
+      itemKey &&
+      !elementFound &&
+      Array.isArray(select) &&
+      !(compositeKeys !== null && compositeKeys?.length) &&
+      !select.find((sel: any) => sel.field === itemKey)
+    ) {
+      return [
+        ...select,
+        {
+          field: itemKey
+        }
+      ];
+    }
+
+    return select;
+  }
+
   attributeChangedCallback(name, oldValue, newValue) {
     // eslint-disable-next-line sonarjs/no-collapsible-if
     if (name === 'payload') {
@@ -214,10 +319,31 @@ class ListView extends BridgeBase {
     this.selectedValue = theConfigProps.value;
     this.selectedValues = theConfigProps.readonlyContextList;
 
+    this.selectionMode = theConfigProps.selectionMode;
+
     // const componentConfig = this.thePConn.getRawMetadata().config;
     // const refList = theConfigProps.referenceList;
     this.searchIcon = Utils.getImageSrc('search', Utils.getSDKStaticContentUrl());
-    this.getListData();
+
+    if (theConfigProps) {
+      if (!this.payload) {
+        this.payload = { referenceList: theConfigProps.referenceList };
+      }
+      init({
+        pConn$: this.thePConn,
+        bInForm$: this.inForm,
+        ...this.payload,
+        listContext: this.listContext,
+        ref: this.ref,
+        showDynamicFields: this.showDynamicFields,
+        xRayUid: this.xRayUid,
+        cosmosTableRef: this.cosmosTableRef,
+        selectionMode: this.selectionMode
+      }).then(response => {
+        this.listContext = response;
+        this.getListData();
+      });
+    }
   }
 
   /**
