@@ -96,7 +96,7 @@ class SimpleTableSelect extends BridgeBase {
         if (theSubstring) this.compositeKeys.push(theSubstring);
       }
     });
-    if (isMultiSelectMode && renderMode !== "ReadOnly") {
+    if (isMultiSelectMode && renderMode !== 'ReadOnly') {
       this.thePConn.getListActions().initDefaultPageInstructions(selectionList, this.compositeKeys);
     }
   }
