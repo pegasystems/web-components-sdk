@@ -44,7 +44,8 @@ class ListView extends BridgeBase {
 
   @property({ attribute: false, type: Array }) vaadinGridColumns;
   @property({ attribute: false, type: Array }) vaadinRowData;
-  @property({ attribute: true, type: String }) payload: any = {};
+  @property({ attribute: true, type: Object }) payload: any = {};
+  @property({ attribute: true, type: Boolean }) inForm = true;
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
   gridChoice = 'vaadin';
@@ -98,26 +99,7 @@ class ListView extends BridgeBase {
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    if (this.bDebug) {
-      debugger;
-    }
-
-    const theConfigProps = this.thePConn.getConfigProps() as ListViewProps;
-    this.rowClickAction = theConfigProps.rowClickAction;
-    const referenceType = theConfigProps.referenceType;
-    /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
-    const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
-    /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
-    this.compositeKeys = theConfigProps?.compositeKeys;
-    this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
-
-    this.selectedValue = theConfigProps.value;
-    this.selectedValues = theConfigProps.readonlyContextList;
-
-    // const componentConfig = this.thePConn.getRawMetadata().config;
-    // const refList = theConfigProps.referenceList;
-    this.searchIcon = Utils.getImageSrc('search', Utils.getSDKStaticContentUrl());
-    this.getListData();
+    this.updateSelf();
   }
 
   getListData() {
@@ -126,7 +108,14 @@ class ListView extends BridgeBase {
       this.selectionMode = theConfigProps.selectionMode;
       const componentConfig: any = this.thePConn.getRawMetadata()?.config; // try to remove any when getInheritedProps typedefs are fixed;
       const refList = theConfigProps.referenceList;
-      const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
+      const dataViewParameters = this.payload.parameters;
+      const workListData = !this.inForm
+        ? PCore.getDataApiUtils().getData(refList, this.payload)
+        : PCore.getDataPageUtils().getDataAsync(
+            refList,
+            this.thePConn.getContextName(),
+            this.payload.dataViewParameters ? this.payload.dataViewParameters : dataViewParameters
+          );
       workListData.then((workListJSON: any) => {
         if (this.bDebug) {
           debugger;
@@ -137,7 +126,7 @@ class ListView extends BridgeBase {
         // this is an unresolved version of this.fields, need unresolved, so can get the property reference
         const columnFields = componentConfig.presets[0].children[0].children;
 
-        const tableDataResults = workListJSON.data.data;
+        const tableDataResults = !this.inForm ? workListJSON.data.data : workListJSON.data;
 
         // displayedColumns is the array of property names associated with the columns.
         //  Derived from columnFields (unresolved configProps - above)
@@ -212,6 +201,23 @@ class ListView extends BridgeBase {
     if (this.bDebug) {
       debugger;
     }
+
+    const theConfigProps = this.thePConn.getConfigProps() as ListViewProps;
+    this.rowClickAction = theConfigProps.rowClickAction;
+    const referenceType = theConfigProps.referenceType;
+    /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
+    const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
+    /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
+    this.compositeKeys = theConfigProps?.compositeKeys;
+    this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
+
+    this.selectedValue = theConfigProps.value;
+    this.selectedValues = theConfigProps.readonlyContextList;
+
+    // const componentConfig = this.thePConn.getRawMetadata().config;
+    // const refList = theConfigProps.referenceList;
+    this.searchIcon = Utils.getImageSrc('search', Utils.getSDKStaticContentUrl());
+    this.getListData();
   }
 
   /**

@@ -255,8 +255,14 @@ class AutoComplete extends FormComponentBase {
   fieldOnModelValueChanged(event: any) {
     if (!event.detail?.isTriggeredByUser) return;
     const selected = event.target.modelValue;
-    this.value = selected != null ? String(selected) : '';
-    handleEvent(this.actionsApi, 'change', this.propName, this.value);
+    const newValue = selected != null ? String(selected) : '';
+    console.log(`${this.theComponentName}: fieldOnModelValueChanged with value: ${this.value} and event value: ${newValue}`);
+    if (newValue !== this.value) {
+      handleEvent(this.actionsApi, 'change', this.propName, newValue);
+      if (this.theConfigProps?.onRecordChange) {
+        this.theConfigProps.onRecordChange(event);
+      }
+    }
   }
 
   render() {
