@@ -26,16 +26,13 @@
     * Github: [PR-283](https://github.com/pegasystems/web-components-sdk/pull/283)
 
 *   Refactored the phone component to utilize the dedicated lion-input-tel-dropdown component rather than the generic lion-input
-    * Github: [PR-283](https://github.com/pegasystems/web-components-sdk/pull/288)
-
-*   Refactored the phone component to utilize the dedicated lion-input-tel-dropdown component rather than the generic lion-input
-    * Github: [PR-283](https://github.com/pegasystems/web-components-sdk/pull/288)
+    * Github: [PR-288](https://github.com/pegasystems/web-components-sdk/pull/288)
 
 *   Added support for Datapages data to populate in the Dropdown component
     * Github: [PR-291](https://github.com/pegasystems/web-components-sdk/pull/291)
 
 *   Implemented cascading functionality within the listview component.
-    * Github: [PR-291](https://github.com/pegasystems/web-components-sdk/pull/293)
+    * Github: [PR-293](https://github.com/pegasystems/web-components-sdk/pull/293)
 
 ### **Bug fixes**
 
