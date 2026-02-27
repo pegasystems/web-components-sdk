@@ -203,7 +203,7 @@ class SimpleTableSelect extends BridgeBase {
       return;
     }
 
-    this.theComponentToRender = html`<div><list-view-component .pConn=${this.thePConn}></list-view-component></div>`;
+    this.theComponentToRender = html`<div><list-view-component .pConn=${this.thePConn} .listViewProps=${listViewProps}></list-view-component></div>`;
   }
 
   /**

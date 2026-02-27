@@ -103,7 +103,7 @@ class ListPage extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const theContent = html`<list-view-component .pConn=${this.thePConn}></list-view-component>`;
+    const theContent = html`<list-view-component .pConn=${this.thePConn} .inForm=${false}></list-view-component>`;
     this.renderTemplates.push(theContent);
 
     // this.addChildTemplates();
