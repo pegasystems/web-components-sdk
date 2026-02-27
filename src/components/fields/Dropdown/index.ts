@@ -125,10 +125,15 @@ class Dropdown extends FormComponentBase {
       this.value = 'Select';
     }
 
-    if (this.theDatasource) {
+    // Only set options synchronously when datasource is an array (associated list).
+    // When datasource is a string (datapage), options will be set asynchronously in getData().
+    if (this.theDatasource && typeof datasource !== 'string') {
       const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
       optionsList?.unshift({ key: 'Select', value: this.thePConn.getLocalizedValue('Select...', '', '') });
       this.updateOptions(optionsList);
+    } else if (!this.options || this.options.length === 0) {
+      // Initialize options with just "Select" if not yet populated (first render before async data arrives)
+      this.options = [{ key: 'Select', value: this.thePConn.getLocalizedValue('Select...', '', '') }];
     }
 
     const propName = this.thePConn.getStateProps().value;
@@ -186,7 +191,7 @@ class Dropdown extends FormComponentBase {
 
     columns = preProcessColumns(columns) || [];
     if (listType !== 'associated' && typeof datasource === 'string') {
-      this.getData(datasource, parameters, columns, context, listType);
+      this.getData(datasource, parameters || {}, columns, context, listType);
     }
   }
 

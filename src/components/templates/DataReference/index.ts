@@ -148,7 +148,11 @@ class DataReference extends BridgeBase {
       if (this.firstChildMeta?.config?.readOnly) {
         delete this.firstChildMeta.config.readOnly;
       }
-      if (this.firstChildMeta?.type === 'Dropdown') {
+      if (
+        ['Dropdown', 'Checkbox', 'RadioButtons'].includes(this.firstChildMeta?.type) &&
+        !this.firstChildMeta.config.deferDatasource &&
+        this.firstChildMeta.config.datasource
+      ) {
         this.firstChildMeta.config.datasource.source = this.rawViewMetadata.config?.parameters
           ? this.dropDownDataSource
           : '@DATASOURCE '.concat(this.refList).concat('.pxResults');
