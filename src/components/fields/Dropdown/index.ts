@@ -244,7 +244,7 @@ class Dropdown extends FormComponentBase {
     }
     handleEvent(this.actionsApi, 'changeNblur', this.propName, event.target.value);
     const configProps = this.thePConn.getConfigProps() as DropdownProps;
-    if (configProps?.onRecordChange) {
+    if (configProps?.onRecordChange && event.target.value !== '') {
       configProps.onRecordChange(event);
     }
     this.thePConn.clearErrorMessages({
