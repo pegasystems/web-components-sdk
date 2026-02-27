@@ -120,11 +120,11 @@ test.describe('E2E test', () => {
 
     await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', 'ListOfRecords');
 
-    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-3"]');
+    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-12"]');
     selectedProductRow = selectedProduct.locator('input[type="checkbox"]');
     await selectedProductRow.click();
 
-    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-7"]');
+    selectedProduct = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-28"]');
     selectedProductRow = selectedProduct.locator('input[type="checkbox"]');
     await selectedProductRow.click();
 
@@ -204,12 +204,12 @@ test.describe('E2E test', () => {
 
     await page.selectOption('lion-select[datatestid="6f64b45d01d11d8efd1693dfcb63b735"] select', 'ListOfRecords');
 
-    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-23"] >> vaadin-grid-sorter').click();
-    const tableCell = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-8"]');
+    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-3"] >> vaadin-grid-sorter').click();
+    const tableCell = page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-13"]');
     await expect(await tableCell.textContent()).toBe('---');
 
     // await productNameHeader.click();
-    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-23"] >> vaadin-grid-sorter').click();
+    await page.locator('vaadin-grid-cell-content[slot="vaadin-grid-cell-content-3"] >> vaadin-grid-sorter').click();
 
     await expect(await tableCell.textContent()).toBe('Luxury Product');
 
