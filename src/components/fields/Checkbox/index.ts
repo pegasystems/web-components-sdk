@@ -223,7 +223,7 @@ class CheckBox extends FormComponentBase {
               checked: this.selectedvalues?.some?.(data => data[dataField] === element.key)
             }}
             @blur=${this.fieldOnBlur}
-            @change=${this.handleChangeMultiMode}
+            @model-value-changed=${this.handleChangeMultiMode}
           >
             <span slot="label">${element.text ?? element.value}</span>
           </lion-checkbox>
@@ -248,7 +248,7 @@ class CheckBox extends FormComponentBase {
               ?disabled=${this.bDisabled}
               .model-value=${{ value: this.caption, checked: this.isChecked }}
               @blur=${this.fieldOnBlur}
-              @change=${this.fieldOnChange}
+              @model-value-changed=${this.fieldOnChange}
             >
               <label slot="label">${this.annotatedLabel}</label>
             </lion-checkbox>`}
