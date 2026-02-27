@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
+import { init } from './listViewHelpers';
 
 // NOTE: you need to import ANY component you may render.
 import '@vaadin/grid';
@@ -13,7 +14,6 @@ import type { GridColumnBodyLitRenderer } from '@vaadin/grid/lit.js';
 
 // import the component's styles as HTML with <style>
 import { listViewStyles } from './list-view-styles';
-import { init } from './listViewHelpers';
 
 interface ListViewProps {
   // If any, enter additional props that only exist on this component
