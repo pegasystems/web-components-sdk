@@ -273,6 +273,8 @@ export class BridgeBase extends LitElement {
       this.thePConn?.removeFormField();
     }
 
+    if (!this.thePConn) return;
+
     const contextName = this.thePConn.getContextName();
     const pageReference = this.thePConn.getPageReference();
     const rawConfig = this.thePConn._rawConfig;
