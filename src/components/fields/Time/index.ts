@@ -123,9 +123,8 @@ class Time extends FormComponentBase {
                         .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                         ?readonly=${this.bReadonly}
                         ?disabled=${this.bDisabled}
-                        @click=${this.fieldOnChange}
                         @blur=${this.fieldOnBlur}
-                        @change=${this.fieldOnChange}>
+                        @model-value-changed=${this.fieldOnChange}>
                         <span slot="label">${this.annotatedLabel}</span>
                     </lion-input-timeoonly>
                 </div>

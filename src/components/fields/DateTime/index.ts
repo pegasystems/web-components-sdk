@@ -1,7 +1,6 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { FormComponentBase } from '../FormComponentBase';
-import handleEvent from '../../../helpers/event-utils';
 
 // NOTE: you need to import ANY component you may render.
 import '../../designSystemExtension/LionInputDateTime';
@@ -56,22 +55,6 @@ class DateTime extends FormComponentBase {
     }
   }
 
-  // NOTE: Special logic to handle value. Do nothing is the value is the same as current value.
-  //  When different, bypass super class version and call onChange directly with new value
-  fieldOnChange(event: any) {
-    if (this.bDebug) {
-      debugger;
-    }
-    let value = event.target.value;
-
-    if (this.value === value) return;
-    if (value) {
-      value = new Date(value).toISOString();
-    }
-
-    handleEvent(this.actionsApi, 'change', this.propName, value);
-  }
-
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -120,9 +103,8 @@ class DateTime extends FormComponentBase {
           .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
           ?readonly=${this.bReadonly}
           ?disabled=${this.bDisabled}
-          @click=${this.fieldOnChange}
+          @model-value-changed=${this.fieldOnChange}
           @blur=${this.fieldOnBlur}
-          @change=${this.fieldOnChange}
         >
           <span slot="label">${this.annotatedLabel}</span>
         </lion-input-datetime>
