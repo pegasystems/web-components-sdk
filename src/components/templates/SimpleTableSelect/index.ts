@@ -87,8 +87,8 @@ class SimpleTableSelect extends BridgeBase {
     }
 
     const { datasource: { parameters: fieldParameters = {} } = {}, pageClass } = isMultiSelectMode
-    ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
-    : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
+      ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
+      : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
     this.pageClass = pageClass;
     Object.values(fieldParameters).forEach((param: any) => {
       if (isSelfReferencedProperty(param, referenceProp)) {
@@ -129,7 +129,7 @@ class SimpleTableSelect extends BridgeBase {
     this.showLabel = theConfigProps.showLabel;
     this.viewName = theConfigProps.viewName;
     this.parameters = theConfigProps.parameters;
-    
+
     // Beginning of code from DX Component: SimpleTableSelect
 
     const propsToUse = {
@@ -150,7 +150,7 @@ class SimpleTableSelect extends BridgeBase {
       this.theComponentToRender = html`<div><simple-table-component .pConn=${this.thePConn}></simple-table-component></div>`;
       return;
     }
-  
+
     // setting default row height for select table
     const defaultRowHeight = '2';
 
