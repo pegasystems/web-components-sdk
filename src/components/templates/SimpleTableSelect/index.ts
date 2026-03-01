@@ -78,6 +78,7 @@ class SimpleTableSelect extends BridgeBase {
     const isMultiSelectMode = selectionMode === MULTI;
     const pageReference = this.thePConn.getPageReference();
     let referenceProp = isMultiSelectMode ? selectionList.substring(1) : pageReference.substring(pageReference.lastIndexOf('.') + 1);
+    this.dataRelationshipContext = theConfigProps.dataRelationshipContext;
     // Replace here to use the context name instead
     let contextPageReference;
     if (this.dataRelationshipContext !== null && selectionMode === 'single') {
@@ -128,7 +129,6 @@ class SimpleTableSelect extends BridgeBase {
     this.showLabel = theConfigProps.showLabel;
     this.viewName = theConfigProps.viewName;
     this.parameters = theConfigProps.parameters;
-    this.dataRelationshipContext = theConfigProps.dataRelationshipContext;
 
     // Beginning of code from DX Component: SimpleTableSelect
 
