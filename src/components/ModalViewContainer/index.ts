@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { keyed } from 'lit/directives/keyed.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
@@ -176,6 +176,61 @@ class ModalViewContainer extends BridgeBase {
   }
 
   /**
+   * Helper to reset the modal state when hidden
+   */
+  _resetModalState() {
+    this.bShowModal = false;
+    this.oCaseInfo = {};
+    this.requestUpdate();
+  }
+
+  /**
+   * Helper to process properties from latestItem
+   */
+  _processItemProperties(routingInfo, latestItem, pConnect) {
+    const caseInfo: any = pConnect.getCaseInfo();
+    const caseTypeName = caseInfo.getCaseTypeName();
+    const ID = caseInfo.getBusinessID() || caseInfo.getID();
+
+    const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
+    const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
+    const isMultiRecord = routingInfo.items[latestItem.context].isMultiRecordData;
+    const readOnly = routingInfo.items[latestItem.context].readOnly;
+    const itemActionID = routingInfo.items[latestItem.context].actionID;
+    const itemShowProgress = latestItem.showProgress;
+    const itemProgressMessage = latestItem.progressMessage;
+    const itemDataRecordKeys = latestItem.key;
+    const { actionName } = latestItem;
+
+    if (readOnly) {
+      pConnect.setInheritedProp('displayMode', 'DISPLAY_ONLY');
+      pConnect.setInheritedProp('readOnly', true);
+    }
+
+    // Determine heading
+    let headingValue = '';
+    if (isMultiRecord) {
+      headingValue = routingInfo.items[latestItem.context].heading || this.getModalHeading(dataObjectAction, actionName);
+    } else if (isDataObject) {
+      headingValue = actionName ? this.localizedVal(actionName, this.localeCategory) : this.getModalHeading(dataObjectAction, actionName);
+    } else {
+      headingValue = this.determineModalHeaderByAction(actionName, caseTypeName, ID, pConnect?.getCaseLocaleReference());
+    }
+
+    return {
+      isDataObject,
+      dataObjectAction,
+      isMultiRecord,
+      readOnly,
+      itemActionID,
+      itemShowProgress,
+      itemProgressMessage,
+      itemDataRecordKeys,
+      headingValue
+    };
+  }
+
+  /**
    * updateSelf
    */
   updateSelf() {
@@ -203,7 +258,7 @@ class ModalViewContainer extends BridgeBase {
 
       const currentOrder = routingInfo.accessedOrder;
 
-      if (undefined == currentOrder) {
+      if (!currentOrder) {
         return;
       }
 
@@ -214,40 +269,7 @@ class ModalViewContainer extends BridgeBase {
         const pConnect = configObject?.getPConnect();
 
         if (pConnect) {
-          // THIS is where the ViewContainer creates a View
-          //    The config has meta.config.type = "view"
-
-          const caseInfo: any = pConnect.getCaseInfo();
-          const caseTypeName = caseInfo.getCaseTypeName();
-          const ID = caseInfo.getBusinessID() || caseInfo.getID();
-
-          const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
-          const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
-          const isMultiRecord = routingInfo.items[latestItem.context].isMultiRecordData;
-          const readOnly = routingInfo.items[latestItem.context].readOnly;
-          const itemActionID = routingInfo.items[latestItem.context].actionID;
-          const itemShowProgress = latestItem.showProgress;
-          const itemProgressMessage = latestItem.progressMessage;
-          const itemDataRecordKeys = latestItem.key;
-          const { actionName } = latestItem;
-
-          if (readOnly) {
-            pConnect.setInheritedProp('displayMode', 'DISPLAY_ONLY');
-            pConnect.setInheritedProp('readOnly', true);
-          }
-
-          const headingValue = (() => {
-            if (isMultiRecord) {
-              return routingInfo.items[latestItem.context].heading || this.getModalHeading(dataObjectAction, actionName);
-            }
-            if (isDataObject) {
-              if (actionName) {
-                return this.localizedVal(actionName, this.localeCategory);
-              }
-              return this.getModalHeading(dataObjectAction, actionName);
-            }
-            return this.determineModalHeaderByAction(actionName, caseTypeName, ID, pConnect?.getCaseLocaleReference());
-          })();
+          const props = this._processItemProperties(routingInfo, latestItem, pConnect);
 
           this.createdViewPConn = pConnect; // Important for rendering children
 
@@ -260,23 +282,22 @@ class ModalViewContainer extends BridgeBase {
             this.arNewChildren = pConnect.getChildren();
           }
 
-          this.isMultiRecord = isMultiRecord;
-          this.isDataObject = isDataObject;
-          this.dataObjectAction = dataObjectAction;
-          this.dataRecordKeys = itemDataRecordKeys || '';
-          this.actionID = itemActionID || '';
-          this.isReadOnly = readOnly;
-          this.title = headingValue;
+          // Update state
+          this.isMultiRecord = props.isMultiRecord;
+          this.isDataObject = props.isDataObject;
+          this.dataObjectAction = props.dataObjectAction;
+          this.dataRecordKeys = props.itemDataRecordKeys || '';
+          this.actionID = props.itemActionID || '';
+          this.isReadOnly = props.readOnly;
+          this.title = props.headingValue;
           this.itemKey = key;
           this.bShowModal = true;
-          this.showProgress = itemShowProgress || false;
-          this.progressMessage = itemProgressMessage || '';
+          this.showProgress = props.itemShowProgress || false;
+          this.progressMessage = props.itemProgressMessage || '';
           this.context = latestItem.context;
         }
       } else {
-        this.bShowModal = false;
-        this.oCaseInfo = {};
-        this.requestUpdate();
+        this._resetModalState();
       }
     }
   }
@@ -308,6 +329,89 @@ class ModalViewContainer extends BridgeBase {
     }
   }
 
+  /**
+   * Helper method to render error banner if error occurs during rendering
+   */
+  _renderError() {
+    if (!this.error) return nothing;
+    return html`
+      <div class="psdk-error">${this.localizedVal('Failed to create the case. Contact the application administrator.', this.localeCategory)}</div>
+    `;
+  }
+
+  /**
+   * Helper method to render list view action buttons
+   * when the case is opened in a modal (not full page)
+   * and it is a multi record data object
+   */
+  _renderListViewButtons() {
+    if (this.isMultiRecord && !this.isReadOnly) {
+      return html`
+        <div>
+          <listview-action-buttons-component
+            .pConn=${this.createdViewPConn}
+            .context=${this.context}
+            @DismissModalContainer=${this._dismissModalContainer.bind(this)}
+          >
+          </listview-action-buttons-component>
+        </div>
+      `;
+    }
+    return html``;
+  }
+
+  /**
+   * Helper method to render data view action buttons
+   * when the case is opened in a modal (not full page)
+   * and it is a single record data object
+   */
+  _renderDataViewButtons() {
+    if (this.isDataObject && !this.isReadOnly) {
+      return html`
+        <div>
+          <data-view-action-buttons-component
+            .pConn=${this.createdViewPConn}
+            .context=${this.context}
+            .classId=${this.createdViewPConn.getValue('.classID')}
+            .dataObjectAction=${this.dataObjectAction}
+            .dataRecordKeys=${this.dataRecordKeys}
+            .actionID=${this.actionID}
+            .disableAllButtons=${false}
+            @DismissModalContainer=${this._dismissModalContainer.bind(this)}
+          >
+          </data-view-action-buttons-component>
+        </div>
+      `;
+    }
+    return nothing;
+  }
+
+  /**
+   * Helper method to render cancel alert dialog
+   * when user tries to close the modal with unsaved changes
+   */
+  _renderCancelAlert() {
+    if (!this.bShowCancelAlert) return html``;
+
+    return html`
+      <cancel-alert-component
+        .bShowAlert=${this.bShowCancelAlert}
+        @AlertState=${this._onAlertState.bind(this)}
+        .pConn=${this.cancelPConn}
+        .heading=${this.cancelAlertProps.heading}
+        .content=${this.cancelAlertProps.content}
+        .itemKey=${this.cancelAlertProps.itemKey}
+        .hideDelete=${this.cancelAlertProps.hideDelete}
+        .isDataObject=${this.cancelAlertProps.isDataObject}
+        .skipReleaseLockRequest=${this.cancelAlertProps.skipReleaseLockRequest}
+        .isInCreateStage=${this.cancelAlertProps.isInCreateStage}
+      ></cancel-alert-component>
+    `;
+  }
+
+  /**
+   * Generates the HTML for the modal view container
+   */
   getModalViewContainerHtml(): any {
     return html`
       ${this.bShowModal
@@ -316,65 +420,19 @@ class ModalViewContainer extends BridgeBase {
             html`
               <div id="dialog" class="psdk-dialog-background ">
                 <div class="psdk-modal-view-container-top" id="${this.buildName}">
-                  ${this.title != '' ? html`<h3>${this.title}</h3>` : html``}
-                  ${this.error
-                    ? html`<div class="psdk-error">
-                        ${this.localizedVal('Failed to create the case. Contact the application administrator.', this.localeCategory)}
-                      </div>`
-                    : html``}
+                  ${this.title != '' ? html`<h3>${this.title}</h3>` : html``} ${this._renderError()}
                   <assignment-component
                     .pConn=${this.createdViewPConn}
                     .arChildren=${this.arNewChildren}
                     itemKey=${this.itemKey}
                   ></assignment-component>
-                  ${this.isMultiRecord && !this.isReadOnly
-                    ? html`
-                        <div>
-                          <listview-action-buttons-component
-                            .pConn=${this.createdViewPConn}
-                            .context=${this.context}
-                            @DismissModalContainer=${this._dismissModalContainer.bind(this)}
-                          >
-                          </listview-action-buttons-component>
-                        </div>
-                      `
-                    : html``}
-                  ${this.isDataObject && !this.isReadOnly
-                    ? html`
-                        <div>
-                          <data-view-action-buttons-component
-                            .pConn=${this.createdViewPConn}
-                            .context=${this.context}
-                            .classId=${this.createdViewPConn.getValue('.classID')}
-                            .dataObjectAction=${this.dataObjectAction}
-                            .dataRecordKeys=${this.dataRecordKeys}
-                            .actionID=${this.actionID}
-                            .disableAllButtons=${false}
-                            @DismissModalContainer=${this._dismissModalContainer.bind(this)}
-                          >
-                          </data-view-action-buttons-component>
-                        </div>
-                      `
-                    : html``}
+                  ${this._renderListViewButtons()} ${this._renderDataViewButtons()}
                 </div>
               </div>
             `
           )
         : html``}
-      ${this.bShowCancelAlert
-        ? html` <cancel-alert-component
-            .bShowAlert=${this.bShowCancelAlert}
-            @AlertState=${this._onAlertState.bind(this)}
-            .pConn=${this.cancelPConn}
-            .heading=${this.cancelAlertProps.heading}
-            .content=${this.cancelAlertProps.content}
-            .itemKey=${this.cancelAlertProps.itemKey}
-            .hideDelete=${this.cancelAlertProps.hideDelete}
-            .isDataObject=${this.cancelAlertProps.isDataObject}
-            .skipReleaseLockRequest=${this.cancelAlertProps.skipReleaseLockRequest}
-            .isInCreateStage=${this.cancelAlertProps.isInCreateStage}
-          ></cancel-alert-component>`
-        : html``}
+      ${this._renderCancelAlert()}
     `;
   }
 
