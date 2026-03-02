@@ -258,7 +258,7 @@ class AutoComplete extends FormComponentBase {
     const newValue = selected != null ? String(selected) : '';
     if (newValue !== this.value) {
       handleEvent(this.actionsApi, 'change', this.propName, newValue);
-      if (this.theConfigProps?.onRecordChange && newValue !== '') {
+      if (this.theConfigProps?.onRecordChange) {
         this.theConfigProps.onRecordChange(event);
       }
     }
