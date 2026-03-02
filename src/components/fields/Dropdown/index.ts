@@ -291,7 +291,11 @@ class Dropdown extends FormComponentBase {
                     id=${this.theComponentId}
                     dataTestId=${this.testId}
                     .fieldName=${this.label}
-                    .modelValue=${this.thePConn.getLocalizedValue(this.value === '' && !this.bReadonly ? 'Select' : this.value, this.localePath, this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName))}
+                    .modelValue=${this.thePConn.getLocalizedValue(
+                      this.value === '' && !this.bReadonly ? 'Select' : this.value,
+                      this.localePath,
+                      this.thePConn.getLocaleRuleNameFromKeys(this.localeClass, this.localeContext, this.localeName)
+                    )}
                     .validators=${this.lionValidatorsArray}
                     .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
                     ?readonly=${this.bReadonly}
