@@ -482,20 +482,6 @@ class ModalViewContainer extends BridgeBase {
   }
 
   getConfigObject(item, pconnect) {
-    const isReverseCoexistence = (PCore.getCoexistenceManager().getBroadcastUtils() as any).isReverseCoexistenceCaseLoaded();
-    const isInCreateStage = false; // logic for isInCreateStage is complex in react, defaulting to false here as per current WC capabilities
-
-    if (isReverseCoexistence && !isInCreateStage) {
-      const config = {
-        options: {
-          pageReference: pconnect?.getPageReference(),
-          hasForm: true,
-          containerName: pconnect?.getContainerName() || PCore.getConstants().MODAL
-        }
-      };
-      return PCore.createPConnect(config);
-    }
-
     if (item) {
       const { context, view, isBulkAction } = item;
       const target = PCore.getContainerUtils().getTargetFromContainerItemID(context);
@@ -525,14 +511,13 @@ class ModalViewContainer extends BridgeBase {
 
   showAlert(payload) {
     const { latestItem } = this.getKeyAndLatestItem(this.routingInfoRef);
-    const isReverseCoexistence = (PCore.getCoexistenceManager().getBroadcastUtils() as any).isReverseCoexistenceCaseLoaded();
     const { isModalAction, hideDelete, isDataObject: isDataObjectPayload, skipReleaseLockRequest, isInCreateStage } = payload;
 
     /*
       If we are in create stage full page mode, created a new case and trying to click on cancel button
       it will show two alert dialogs which is not expected. Hence isModalAction flag to avoid that.
     */
-    if ((latestItem && isModalAction) || isReverseCoexistence) {
+    if (latestItem && isModalAction) {
       const configObject: any = this.getConfigObject(latestItem, this.thePConn);
       const contextName = configObject?.getPConnect().getContextName();
       this.cancelPConn = configObject.getPConnect();

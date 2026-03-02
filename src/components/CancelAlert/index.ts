@@ -36,23 +36,6 @@ class CancelAlert extends BridgeBase {
   }
 
   /**
-   * Helper to get coexistence utilities and status
-   */
-  _getCoexistenceUtils() {
-    const broadCastUtils: any = PCore.getCoexistenceManager().getBroadcastUtils();
-    const isReverseCoexistence = broadCastUtils.isReverseCoexistenceCaseLoaded();
-    return { broadCastUtils, isReverseCoexistence };
-  }
-
-  /**
-   * Handles discard actions in reverse coexistence scenarios
-   */
-  _handleReverseCoexistence() {
-    this.dismissAlert(true);
-    PCore.getPubSubUtils().publish((PCore.getConstants().PUB_SUB_EVENTS as any).REVERSE_COEXISTENCE_EVENTS.HANDLE_DISCARD);
-  }
-
-  /**
    * Handles the deletion of a case in create stage
    */
   _handleDeleteCase(actionsAPI: any) {
@@ -91,12 +74,6 @@ class CancelAlert extends BridgeBase {
     const containerManagerAPI = this.pConn.getContainerManager();
     const isLocalAction = this.pConn.getValue(PCore.getConstants().CASE_INFO.IS_LOCAL_ACTION);
     const isBulkAction = this.pConn.options?.isBulkAction;
-    const { isReverseCoexistence } = this._getCoexistenceUtils();
-
-    if (isReverseCoexistence && !this.isInCreateStage) {
-      this._handleReverseCoexistence();
-      return;
-    }
 
     if (!this.isDataObject && !isLocalAction && !isBulkAction) {
       this._handleDeleteCase(actionsAPI);
@@ -123,8 +100,6 @@ class CancelAlert extends BridgeBase {
     //  of any component that's a child of BridgeBase with a call to this.prepareForRender();
     this.prepareForRender();
 
-    const { broadCastUtils, isReverseCoexistence } = this._getCoexistenceUtils();
-
     const sContent = html`
       ${this.bShowAlert
         ? html`
@@ -139,10 +114,6 @@ class CancelAlert extends BridgeBase {
                     class="btn btn-secondary"
                     @click="${() => {
                       this.dismissAlert();
-                      if (isReverseCoexistence) {
-                        broadCastUtils.setCallBackFunction(null);
-                        broadCastUtils.setIsDirtyDialogActive(false);
-                      }
                     }}"
                   >
                     ${this.localizedVal('Go back', this.localeCategory)}
