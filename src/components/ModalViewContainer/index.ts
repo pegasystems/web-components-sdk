@@ -181,6 +181,7 @@ class ModalViewContainer extends BridgeBase {
   _resetModalState() {
     this.bShowModal = false;
     this.oCaseInfo = {};
+    this.error = false;
     this.requestUpdate();
   }
 
