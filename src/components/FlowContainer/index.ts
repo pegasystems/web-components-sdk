@@ -273,7 +273,10 @@ class FlowContainer extends BridgeBase {
     } else if (caseViewMode && caseViewMode == 'perform') {
       // perform
       this.todo_showTodo = false;
-      const isContainerInitialized = PCore.getContainerUtils().isContainerInitialized(this.thePConn.getContextName(), this.thePConn.getContainerName());
+      const isContainerInitialized = PCore.getContainerUtils().isContainerInitialized(
+        this.thePConn.getContextName(),
+        this.thePConn.getContainerName()
+      );
       if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true' || !isContainerInitialized) {
         this.initContainer();
       }
