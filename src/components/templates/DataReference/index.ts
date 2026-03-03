@@ -148,7 +148,11 @@ class DataReference extends BridgeBase {
       if (this.firstChildMeta?.config?.readOnly) {
         delete this.firstChildMeta.config.readOnly;
       }
-      if (this.firstChildMeta?.type === 'Dropdown') {
+      if (
+        ['Dropdown', 'Checkbox', 'RadioButtons'].includes(this.firstChildMeta?.type) &&
+        !this.firstChildMeta.config.deferDatasource &&
+        this.firstChildMeta.config.datasource
+      ) {
         this.firstChildMeta.config.datasource.source = this.rawViewMetadata.config?.parameters
           ? this.dropDownDataSource
           : '@DATASOURCE '.concat(this.refList).concat('.pxResults');
@@ -188,7 +192,16 @@ class DataReference extends BridgeBase {
   handleSelection = event => {
     const caseKey = this.thePConn.getCaseInfo().getKey();
 
-    const refreshOptions = { autoDetectRefresh: true };
+    const refreshOptions: { autoDetectRefresh: boolean; propertyName: string; classID?: string } = { autoDetectRefresh: true, propertyName: '' };
+
+    if (this.thePConn.getRawMetadata()?.children?.length > 0 && this.thePConn.getRawMetadata()?.children[0].config?.value) {
+      refreshOptions.propertyName = this.thePConn.getRawMetadata()?.children[0].config.value;
+      const rawMetadata = this.thePConn.getRawMetadata();
+      if (rawMetadata && 'classID' in rawMetadata) {
+        refreshOptions.classID = (rawMetadata as any).classID;
+      }
+    }
+
     if (this.canBeChangedInReviewMode && this.thePConn.getValue('__currentPageTabViewName')) {
       this.thePConn.getActionsApi().refreshCaseView(caseKey, this.thePConn.getValue('__currentPageTabViewName'), '', refreshOptions);
       PCore.getDeferLoadManager().refreshActiveComponents(this.thePConn.getContextName());

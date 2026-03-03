@@ -110,7 +110,7 @@ test.describe('E2E test', () => {
     await page.locator('lion-input[datatestid="202003240938510831291"] input').type('Cambridge');
     await page.locator('lion-input[datatestid="202003240938510831411"] input').type('MA');
     await page.locator('lion-input[datatestid="202003240938510832734"] input').type('02142');
-    await page.locator('lion-input[datatestid="1f8261d17452a959e013666c5df45e07"] input').type('6175551212');
+    await page.fill('lion-input-tel-dropdown[datatestid="1f8261d17452a959e013666c5df45e07"] input', '6175551212');
 
     /** Creating second row by clicking on `+Add` button */
     await page.locator('button:has-text("+ Add")').click();
@@ -120,7 +120,7 @@ test.describe('E2E test', () => {
     await page.locator('lion-input[datatestid="202003240938510831291"] input >> nth=1').type('California');
     await page.locator('lion-input[datatestid="202003240938510831411"] input >> nth=1').type('AK');
     await page.locator('lion-input[datatestid="202003240938510832734"] input >> nth=1').type('03142');
-    await page.locator('lion-input[datatestid="1f8261d17452a959e013666c5df45e07"] input >> nth=1').type('6175451212');
+    await page.fill('lion-input-tel-dropdown[datatestid="1f8261d17452a959e013666c5df45e07"] input >> nth=1', '6175451212');
 
     await page.locator('button:has-text("Next")').click();
 
@@ -161,7 +161,7 @@ test.describe('E2E test', () => {
     await page.locator('lion-input[datatestid="202003240938510831291"] input').type('Cambridge');
     await page.locator('lion-input[datatestid="202003240938510831411"] input').type('MA');
     await page.locator('lion-input[datatestid="202003240938510832734"] input').type('02142');
-    await page.locator('lion-input[datatestid="1f8261d17452a959e013666c5df45e07"] input').type('6175551212');
+    await page.fill('lion-input-tel-dropdown[datatestid="1f8261d17452a959e013666c5df45e07"] input', '6175551212');
 
     /** Creating another row by clicking on `+Add` button */
     await page.locator('button:has-text("+ Add")').click();
@@ -171,7 +171,7 @@ test.describe('E2E test', () => {
     await page.locator('lion-input[datatestid="202003240938510831291"] input >> nth=1').type('California');
     await page.locator('lion-input[datatestid="202003240938510831411"] input >> nth=1').type('AK');
     await page.locator('lion-input[datatestid="202003240938510832734"] input >> nth=1').type('03142');
-    await page.locator('lion-input[datatestid="1f8261d17452a959e013666c5df45e07"] input >> nth=1').type('6175451212');
+    await page.fill('lion-input-tel-dropdown[datatestid="1f8261d17452a959e013666c5df45e07"] input >> nth=1', '6175451212');
 
     await page.locator('button:has-text("Next")').click();
 
@@ -208,7 +208,7 @@ test.describe('E2E test', () => {
     await expect(page.locator('div >> text="California"')).toBeVisible();
     await expect(page.locator('div >> text="AK"')).toBeVisible();
     await expect(page.locator('div >> text="03142"')).toBeVisible();
-    await expect(page.locator('div >> text="6175451212"')).toBeVisible();
+    await expect(page.locator('div >> text="+16175451212"')).toBeVisible();
 
     await page.locator('button:has-text("Next")').click();
 

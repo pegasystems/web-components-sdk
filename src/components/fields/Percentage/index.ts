@@ -130,7 +130,7 @@ class Percentage extends FormComponentBase {
       ?readonly=${this.bReadonly}
       ?disabled=${this.bDisabled}
       @blur=${this.fieldOnBlur}
-      @change=${this.fieldOnChange}
+      @model-value-changed=${this.fieldOnChange}
     >
       <span slot="label">${this.annotatedLabel}</span>
     </lion-input-amount>`;

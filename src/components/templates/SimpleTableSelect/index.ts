@@ -41,6 +41,8 @@ class SimpleTableSelect extends BridgeBase {
 
   // Vars from Cosmos React DX Component implementation
   propsToUse: any = {};
+  pageClass: any;
+  compositeKeys: any = [];
 
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
@@ -69,6 +71,35 @@ class SimpleTableSelect extends BridgeBase {
 
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
+
+    const theConfigProps = this.thePConn.getConfigProps() as SimpleTableSelectProps;
+    const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
+    const { selectionMode, selectionList, renderMode } = theConfigProps;
+    const isMultiSelectMode = selectionMode === MULTI;
+    const pageReference = this.thePConn.getPageReference();
+    let referenceProp = isMultiSelectMode ? selectionList.substring(1) : pageReference.substring(pageReference.lastIndexOf('.') + 1);
+    this.dataRelationshipContext = theConfigProps.dataRelationshipContext;
+    // Replace here to use the context name instead
+    let contextPageReference;
+    if (this.dataRelationshipContext !== null && selectionMode === 'single') {
+      referenceProp = this.dataRelationshipContext;
+      contextPageReference = pageReference.concat('.').concat(referenceProp);
+    }
+
+    const { datasource: { parameters: fieldParameters = {} } = {}, pageClass } = isMultiSelectMode
+      ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
+      : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
+    this.pageClass = pageClass;
+    Object.values(fieldParameters).forEach((param: any) => {
+      if (isSelfReferencedProperty(param, referenceProp)) {
+        const substringOffset = param.lastIndexOf('.') + 1;
+        const theSubstring = substringOffset ? param.substring(substringOffset) : null;
+        if (theSubstring) this.compositeKeys.push(theSubstring);
+      }
+    });
+    if (isMultiSelectMode && renderMode !== 'ReadOnly') {
+      this.thePConn.getListActions().initDefaultPageInstructions(selectionList, this.compositeKeys);
+    }
   }
 
   disconnectedCallback() {
@@ -98,7 +129,6 @@ class SimpleTableSelect extends BridgeBase {
     this.showLabel = theConfigProps.showLabel;
     this.viewName = theConfigProps.viewName;
     this.parameters = theConfigProps.parameters;
-    this.dataRelationshipContext = theConfigProps.dataRelationshipContext;
 
     // Beginning of code from DX Component: SimpleTableSelect
 
@@ -113,40 +143,13 @@ class SimpleTableSelect extends BridgeBase {
     }
 
     const { MULTI } = PCore.getConstants().LIST_SELECTION_MODE;
-    const { selectionMode, selectionList } = theConfigProps;
+    const { selectionMode } = theConfigProps;
     const isMultiSelectMode = selectionMode === MULTI;
 
     if (isMultiSelectMode && this.renderMode === 'ReadOnly') {
       this.theComponentToRender = html`<div><simple-table-component .pConn=${this.thePConn}></simple-table-component></div>`;
       return;
     }
-
-    const pageReference = this.thePConn.getPageReference();
-    let referenceProp = isMultiSelectMode ? selectionList.substring(1) : pageReference.substring(pageReference.lastIndexOf('.') + 1);
-    // Replace here to use the context name instead
-    let contextPageReference;
-    if (this.dataRelationshipContext !== null && selectionMode === 'single') {
-      referenceProp = this.dataRelationshipContext;
-      contextPageReference = pageReference.concat('.').concat(referenceProp);
-    }
-
-    // Note that this syntax looks odd but it's really just a complex destructuring
-    //  of whichever call is made: getFieldMetadata or getCurrentPageFieldMetadata
-    //  Of special note: only the fieldParameters and pageClass variables are created.
-    //  The destructuring syntax pulls fieldParameters from the
-    //    datasource --> parameters --> fieldParameters if it exists.
-    const { datasource: { parameters: fieldParameters = {} } = {}, pageClass } = isMultiSelectMode
-      ? this.thePConn.getFieldMetadata(`@P .${referenceProp}`)
-      : this.thePConn.getCurrentPageFieldMetadata(contextPageReference);
-
-    const compositeKeys: any[] = [];
-    Object.values(fieldParameters).forEach((param: any) => {
-      if (isSelfReferencedProperty(param, referenceProp)) {
-        const substringOffset = param.lastIndexOf('.') + 1;
-        const theSubstring = substringOffset ? param.substring(substringOffset) : null;
-        if (theSubstring) compositeKeys.push(theSubstring);
-      }
-    });
 
     // setting default row height for select table
     const defaultRowHeight = '2';
@@ -178,7 +181,7 @@ class SimpleTableSelect extends BridgeBase {
       toggleFieldVisibility: false,
       basicMode: true,
       additionalTableConfig,
-      compositeKeys,
+      compositeKeys: this.compositeKeys,
       viewName: this.viewName,
       parameters: this.parameters
     };
@@ -194,13 +197,13 @@ class SimpleTableSelect extends BridgeBase {
         .viewName=${this.viewName}
         .filters=${filters}
         .listViewProps=${listViewProps}
-        .pageClass=${pageClass}
+        .pageClass=${this.pageClass}
         .parameters=${this.parameters}
       ></promoted-filters-component>`;
       return;
     }
 
-    this.theComponentToRender = html`<div><list-view-component .pConn=${this.thePConn}></list-view-component></div>`;
+    this.theComponentToRender = html`<div><list-view-component .pConn=${this.thePConn} .listViewProps=${listViewProps}></list-view-component></div>`;
   }
 
   /**

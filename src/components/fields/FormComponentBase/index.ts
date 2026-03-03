@@ -259,12 +259,13 @@ export class FormComponentBase extends BridgeBase {
       console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
 
-    if (event?.type === 'model-value-changed' && event?.target?.value === 'Select') {
-      const value = '';
-      handleEvent(this.actionsApi, 'change', this.propName, value);
-    } else {
-      const value = event?.target?.value;
-      handleEvent(this.actionsApi, 'change', this.propName, value);
+    const oldVal = this.value ?? '';
+    const isValueChanged = event.target.value.toString() !== oldVal.toString();
+
+    if (isValueChanged) {
+      this.thePConn.clearErrorMessages({
+        property: this.propName
+      });
     }
   }
 
@@ -287,6 +288,7 @@ export class FormComponentBase extends BridgeBase {
     if (this.bLogging) {
       console.log(`--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
+
     if (this.selectionMode === 'multi') {
       this.thePConn.getValidationApi().validate(this.selectedvalues, this.selectionList);
     } else {

@@ -252,34 +252,16 @@ class AutoComplete extends FormComponentBase {
     theFocusElement.opened = true;
   }
 
-  getErrorMessage() {
-    const tempError = `${this.theComponentName}: getErrorMessage needs to have a field control implemented.`;
-    const errMessage: string = tempError;
-
-    console.error(tempError);
-
-    // // look for validation messages for json, pre-defined or just an error pushed from workitem (400)
-    // if (this.fieldControl.hasError('message')) {
-    //   errMessage = this.validateMessage;
-    // }
-    // else if (this.fieldControl.hasError('required')) {
-
-    //   errMessage = 'You must enter a value';
-    // }
-    // else if (this.fieldControl.errors) {
-
-    //   errMessage = this.fieldControl.errors.toString();
-
-    // }
-
-    return errMessage;
-  }
-
   fieldOnModelValueChanged(event: any) {
     if (!event.detail?.isTriggeredByUser) return;
     const selected = event.target.modelValue;
-    this.value = selected != null ? String(selected) : '';
-    handleEvent(this.actionsApi, 'change', this.propName, this.value);
+    const newValue = selected != null ? String(selected) : '';
+    if (newValue !== this.value) {
+      handleEvent(this.actionsApi, 'change', this.propName, newValue);
+      if (this.theConfigProps?.onRecordChange) {
+        this.theConfigProps.onRecordChange(event);
+      }
+    }
   }
 
   render() {
@@ -318,7 +300,6 @@ class AutoComplete extends FormComponentBase {
     //    (Default seems to only show the overlay once the user has started typing.)
     //  @focus is added to mimic the Angular SDK behavior of showing the overlay of when the
     //    control gets focus.
-    // @click=${this.fieldOnChange}
     const theContent = html` <div>
       ${this.bVisible
         ? html`

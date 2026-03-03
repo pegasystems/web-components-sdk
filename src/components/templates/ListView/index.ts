@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../../bridge/BridgeBase';
 import { Utils } from '../../../helpers/utils';
+import { init } from './listViewHelpers';
 
 // NOTE: you need to import ANY component you may render.
 import '@vaadin/grid';
@@ -28,6 +29,7 @@ interface ListViewProps {
   grouping: string | boolean;
   value: any;
   readonlyContextList: any;
+  allowAddingNewRecords?: boolean;
 }
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -44,19 +46,32 @@ class ListView extends BridgeBase {
 
   @property({ attribute: false, type: Array }) vaadinGridColumns;
   @property({ attribute: false, type: Array }) vaadinRowData;
-  @property({ attribute: true, type: String }) payload: any = {};
+  @property({ attribute: true, type: Object }) payload;
+  @property({ attribute: true, type: Object }) listViewProps: any = null;
+  @property({ attribute: true, type: Boolean }) inForm = true;
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
   gridChoice = 'vaadin';
   bClickEventListenerAdded: Boolean = false;
   waitingForData: Boolean = true;
-  selectionMode = '';
+  selectionMode? = '';
   selectedValue: any;
   rowClickAction: any;
   rowID: any;
   response: any;
   compositeKeys: any;
   selectedValues: any;
+  listContext: any = {};
+  ref: any = {};
+  showDynamicFields: any;
+  xRayApis = PCore.getDebugger().getXRayRuntime();
+  xRayUid = this.xRayApis.startXRay();
+  cosmosTableRef: any;
+  fieldDefs: any;
+  query: any = null;
+  filterPayload: any;
+  paging: any;
+
   constructor() {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -98,35 +113,25 @@ class ListView extends BridgeBase {
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
-    if (this.bDebug) {
-      debugger;
-    }
-
-    const theConfigProps = this.thePConn.getConfigProps() as ListViewProps;
-    this.rowClickAction = theConfigProps.rowClickAction;
-    const referenceType = theConfigProps.referenceType;
-    /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
-    const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
-    /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
-    this.compositeKeys = theConfigProps?.compositeKeys;
-    this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
-
-    this.selectedValue = theConfigProps.value;
-    this.selectedValues = theConfigProps.readonlyContextList;
-
-    // const componentConfig = this.thePConn.getRawMetadata().config;
-    // const refList = theConfigProps.referenceList;
-    this.searchIcon = Utils.getImageSrc('search', Utils.getSDKStaticContentUrl());
-    this.getListData();
+    this.updateSelf();
   }
 
   getListData() {
     const theConfigProps = this.thePConn?.getConfigProps();
     if (theConfigProps) {
-      this.selectionMode = theConfigProps.selectionMode;
+      const query = this.preparePayload();
       const componentConfig: any = this.thePConn.getRawMetadata()?.config; // try to remove any when getInheritedProps typedefs are fixed;
       const refList = theConfigProps.referenceList;
-      const workListData = PCore.getDataApiUtils().getData(refList, this.payload);
+      const dataViewParameters = this.listViewProps?.parameters;
+      const workListData = !this.inForm
+        ? PCore.getDataApiUtils().getData(refList, this.payload)
+        : PCore.getDataPageUtils().getDataAsync(
+            refList,
+            this.thePConn.getContextName(),
+            this.payload ? this.payload.dataViewParameters : dataViewParameters,
+            this.paging,
+            query
+          );
       workListData.then((workListJSON: any) => {
         if (this.bDebug) {
           debugger;
@@ -137,7 +142,7 @@ class ListView extends BridgeBase {
         // this is an unresolved version of this.fields, need unresolved, so can get the property reference
         const columnFields = componentConfig.presets[0].children[0].children;
 
-        const tableDataResults = workListJSON.data.data;
+        const tableDataResults = !this.inForm ? workListJSON.data.data : workListJSON.data;
 
         // displayedColumns is the array of property names associated with the columns.
         //  Derived from columnFields (unresolved configProps - above)
@@ -178,14 +183,97 @@ class ListView extends BridgeBase {
     }
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    // eslint-disable-next-line sonarjs/no-collapsible-if
-    if (name === 'payload') {
-      if (oldValue !== newValue) {
-        this.payload = newValue;
-        this.getListData();
+  preparePayload() {
+    const { fieldDefs, itemKey, patchQueryFields } = this.listContext.meta;
+    let query = {};
+    this.fieldDefs = fieldDefs;
+    let listFields = fieldDefs ? this.buildSelect(fieldDefs, undefined, patchQueryFields, this.listViewProps?.compositeKeys) : [];
+    listFields = this.addItemKeyInSelect(fieldDefs, itemKey, listFields, this.listViewProps?.compositeKeys);
+    if (this.payload?.query) {
+      query = this.payload.query;
+    } else if (listFields?.length && this.listContext.meta.isQueryable) {
+      if (this.filterPayload) {
+        query = {
+          select: listFields,
+          filter: this.filterPayload?.query?.filter
+        };
+      } else {
+        query = { select: listFields };
       }
+    } else if (this.filterPayload) {
+      query = this.filterPayload?.query;
     }
+    return query;
+  }
+
+  getField(fieldDefs, columnId) {
+    const fieldsMap = this.getFieldsMap(fieldDefs);
+    return fieldsMap.get(columnId);
+  }
+
+  getFieldsMap(fieldDefs) {
+    const fieldsMap = new Map();
+    fieldDefs.forEach(element => {
+      fieldsMap.set(element.id, element);
+    });
+    return fieldsMap;
+  }
+
+  buildSelect(fieldDefs, colId, patchQueryFields = [], compositeKeys = []) {
+    const listFields: any = [];
+    if (colId) {
+      const field = this.getField(fieldDefs, colId);
+      listFields.push({
+        field: field.name
+      });
+    } else {
+      // NOTE: If we ever decide to not set up all the `fieldDefs` on select, ensure that the fields
+      //  corresponding to `state.groups` are set up. Needed in Client-mode grouping/pagination.
+      fieldDefs.forEach(field => {
+        if (!listFields.find(f => f.field === field.name)) {
+          listFields.push({
+            field: field.name
+          });
+        }
+      });
+      patchQueryFields.forEach(k => {
+        if (!listFields.find(f => f.field === k)) {
+          listFields.push({
+            field: k
+          });
+        }
+      });
+    }
+
+    compositeKeys.forEach(k => {
+      if (!listFields.find(f => f.field === k)) {
+        listFields.push({
+          field: k
+        });
+      }
+    });
+    return listFields;
+  }
+
+  addItemKeyInSelect(fieldDefs, itemKey, select, compositeKeys) {
+    const elementFound = this.getField(fieldDefs, itemKey);
+
+    if (
+      itemKey &&
+      !elementFound &&
+      Array.isArray(select) &&
+      !(compositeKeys !== null && compositeKeys?.length) &&
+      !select.find((sel: any) => sel.field === itemKey)
+    ) {
+      return [
+        ...select,
+        {
+          field: itemKey
+        }
+      ];
+    }
+
+    return select;
   }
 
   disconnectedCallback() {
@@ -211,6 +299,44 @@ class ListView extends BridgeBase {
     }
     if (this.bDebug) {
       debugger;
+    }
+
+    const theConfigProps = this.thePConn.getConfigProps() as ListViewProps;
+    this.rowClickAction = theConfigProps.rowClickAction;
+    const referenceType = theConfigProps.referenceType;
+    /** By default, pyGUID is used for Data classes and pyID is for Work classes as row-id/key */
+    const defRowID = referenceType === 'Case' ? 'pyID' : 'pyGUID';
+    /** If compositeKeys is defined, use dynamic value, else fallback to pyID or pyGUID. */
+    this.compositeKeys = theConfigProps?.compositeKeys;
+    this.rowID = this.compositeKeys && this.compositeKeys?.length === 1 ? this.compositeKeys[0] : defRowID;
+
+    this.selectedValue = theConfigProps.value;
+    this.selectedValues = theConfigProps.readonlyContextList;
+
+    this.selectionMode = theConfigProps.selectionMode;
+
+    // const componentConfig = this.thePConn.getRawMetadata().config;
+    // const refList = theConfigProps.referenceList;
+    this.searchIcon = Utils.getImageSrc('search', Utils.getSDKStaticContentUrl());
+
+    if (theConfigProps) {
+      if (!this.listViewProps) {
+        this.listViewProps = { referenceList: theConfigProps.referenceList };
+      }
+      init({
+        pConn$: this.thePConn,
+        bInForm$: this.inForm,
+        ...this.listViewProps,
+        listContext: this.listContext,
+        ref: this.ref,
+        showDynamicFields: this.showDynamicFields,
+        xRayUid: this.xRayUid,
+        cosmosTableRef: this.cosmosTableRef,
+        selectionMode: this.selectionMode
+      }).then(response => {
+        this.listContext = response;
+        this.getListData();
+      });
     }
   }
 
@@ -428,6 +554,33 @@ class ListView extends BridgeBase {
   //   }
   // }
 
+  getActionsContent() {
+    const actions = this.thePConn?.getConfigProps()?.actions || [];
+    const addRecordAction = actions.find(({ action }) => action === 'ADD_RECORD');
+    const { allowAddingNewRecords } = this.thePConn?.getConfigProps() as ListViewProps;
+
+    if (allowAddingNewRecords && addRecordAction) {
+      return html`
+        <div style="margin-top: 10px;">
+          <button
+            class="btn btn-link"
+            @click="${() => {
+              this.thePConn
+                ?.getActionsApi()
+                .showDataObjectCreateView(addRecordAction.config.dataType)
+                .catch(() => {
+                  PCore.getPubSubUtils().publish('ERROR_WHILE_RENDERING');
+                });
+            }}"
+          >
+            ${addRecordAction.config.label}
+          </button>
+        </div>
+      `;
+    }
+    return nothing;
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -506,6 +659,7 @@ class ListView extends BridgeBase {
     }
 
     this.renderTemplates.push(theContent);
+    this.renderTemplates.push(this.getActionsContent());
 
     if (this.waitingForData) {
       this.renderTemplates.push(html`<progress-extension id="${this.theComponentId}"></progress-extension>`);

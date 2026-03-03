@@ -129,29 +129,6 @@ class RadioButtons extends FormComponentBase {
     return this.value === buttonValue;
   }
 
-  getErrorMessage() {
-    const tempError = `${this.theComponentName}: getErrorMessage needs to have a field control implemented.`;
-    const errMessage: string = tempError;
-
-    console.error(tempError);
-
-    // // look for validation messages for json, pre-defined or just an error pushed from workitem (400)
-    // if (this.fieldControl.hasError('message')) {
-    //   errMessage = this.validateMessage;
-    // }
-    // else if (this.fieldControl.hasError('required')) {
-
-    //   errMessage = 'You must enter a value';
-    // }
-    // else if (this.fieldControl.errors) {
-
-    //   errMessage = this.fieldControl.errors.toString();
-
-    // }
-
-    return errMessage;
-  }
-
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -196,9 +173,8 @@ class RadioButtons extends FormComponentBase {
                 ?readonly=${this.bReadonly}
                 ?disabled=${this.bDisabled}
                 .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                @click=${this.fieldOnChange}
                 @blur=${this.fieldOnBlur}
-                @change=${this.fieldOnChange}
+                @model-value-changed=${this.fieldOnChange}
               >
                 <span slot="label" class="radio-group-label">${this.annotatedLabel}</span>
                 <div class=${this.inline ? 'psdk-radio-horizontal' : 'psdk-radio-vertical'}>

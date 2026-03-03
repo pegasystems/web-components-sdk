@@ -1,5 +1,5 @@
-import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { html, nothing } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { keyed } from 'lit/directives/keyed.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
 // NOTE: you need to import ANY component you may render.
@@ -9,17 +9,40 @@ import { modalViewContainerStyles } from './modal-view-container-styles';
 
 import '../CancelAlert';
 import '../ListViewActionButtons';
+import '../DataViewActionButtons';
 
-//
-// WARNING:  It is not expected that this file should be modified.  It is part of infrastructure code that works with
-// Redux and creation/update of Redux containers and PConnect.  Modifying this code could have undesireable results and
-// is totally at your own risk.
-//
+/**
+ * WARNING: This file is part of the infrastructure component responsible for working with Redux and managing the creation and update of Redux containers and PConnect.
+ * You may override Material components within this component if needed, but do not modify any container-related logic. Changing this logic can lead to unexpected behavior.
+ */
+
+interface ModalViewContainerProps {
+  getPConnect?: () => typeof PConnect;
+  loadingInfo?: boolean;
+  routingInfo?: any;
+  pageMessages?: string[];
+  httpMessages?: string[];
+  name?: string;
+  correlationID?: string;
+}
+
+interface CancelAlertProps {
+  heading?: string;
+  content?: string;
+  getPConnect?: () => typeof PConnect;
+  itemKey?: string;
+  hideDelete?: boolean;
+  isDataObject?: boolean;
+  skipReleaseLockRequest?: boolean;
+  isInCreateStage?: boolean;
+}
+
+const ERROR_WHILE_RENDERING = 'ERROR_WHILE_RENDERING';
 
 @customElement('modal-view-container-component')
 class ModalViewContainer extends BridgeBase {
   arNewChildren: any[] = [];
-  configProps: Object = {};
+  configProps: ModalViewContainerProps = {};
   templateName = '';
   buildName = '';
   context = '';
@@ -39,8 +62,22 @@ class ModalViewContainer extends BridgeBase {
   bShowCancelAlert = false;
   bAlertState = false;
   localizedVal: Function = () => {};
-  localeCategory = 'Data Object';
+  localeCategory = 'ModalContainer';
   isMultiRecord: any;
+
+  // New properties from React parity
+  isDataObject = false;
+  dataObjectAction = '';
+  dataRecordKeys = '';
+  actionID = '';
+  isReadOnly = false;
+  error = false;
+  actionsLoading = false;
+  showProgress = false;
+  progressMessage = '';
+
+  @state() cancelAlertProps: CancelAlertProps = {};
+
   // In Web Components, component is not unmounted if the next view also contains the same component.
   // From performance POV it reuses the component and triggers state change. So Lifecycle methods will not be executed.
   // So maintaining a unique id (localComponentId) in modal view container to be used in keyed, updated whenever it's pconn is updated.
@@ -94,14 +131,28 @@ class ModalViewContainer extends BridgeBase {
 
     // local Id will be same as the componentId created in bridge base
     this.localComponentId = this.theComponentId;
-    // const { CONTAINER_TYPE, PUB_SUB_EVENTS } = PCore.getConstants();
 
-    // window.PCore.getPubSubUtils().subscribe(
-    //   PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
-    //   this.showAlert,
-    //   PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */,
-    //   this.routingInfoRef
-    // );
+    // Setup Subscriptions
+    const { PUB_SUB_EVENTS } = PCore.getConstants();
+    PCore.getPubSubUtils().subscribe(
+      PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
+      payload => {
+        this.showAlert(payload);
+      },
+      PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT /* Unique string for subscription */,
+      this.routingInfoRef
+    );
+
+    PCore.getPubSubUtils().subscribe(
+      ERROR_WHILE_RENDERING,
+      () => {
+        this.error = true;
+        this.requestUpdate();
+      },
+      `${ERROR_WHILE_RENDERING}-mc-${this.thePConn.getContextName()}`,
+      false,
+      this.thePConn.getContextName()
+    );
   }
 
   disconnectedCallback() {
@@ -116,11 +167,67 @@ class ModalViewContainer extends BridgeBase {
 
     const { PUB_SUB_EVENTS } = PCore.getConstants();
 
-    PCore.getPubSubUtils().unsubscribe(
-      PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
-      PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT /* Should be same unique string passed during subscription */
-    );
+    PCore.getPubSubUtils().unsubscribe(PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT, PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT);
+
+    PCore.getPubSubUtils().unsubscribe(ERROR_WHILE_RENDERING, `${ERROR_WHILE_RENDERING}-mc-${this.thePConn.getContextName()}`);
+
     this.bSubscribed = false;
+  }
+
+  /**
+   * Helper to reset the modal state when hidden
+   */
+  _resetModalState() {
+    this.bShowModal = false;
+    this.oCaseInfo = {};
+    this.error = false;
+    this.requestUpdate();
+  }
+
+  /**
+   * Helper to process properties from latestItem
+   */
+  _processItemProperties(routingInfo, latestItem, pConnect) {
+    const caseInfo: any = pConnect.getCaseInfo();
+    const caseTypeName = caseInfo.getCaseTypeName();
+    const ID = caseInfo.getBusinessID() || caseInfo.getID();
+
+    const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
+    const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
+    const isMultiRecord = routingInfo.items[latestItem.context].isMultiRecordData;
+    const readOnly = routingInfo.items[latestItem.context].readOnly;
+    const itemActionID = routingInfo.items[latestItem.context].actionID;
+    const itemShowProgress = latestItem.showProgress;
+    const itemProgressMessage = latestItem.progressMessage;
+    const itemDataRecordKeys = latestItem.key;
+    const { actionName } = latestItem;
+
+    if (readOnly) {
+      pConnect.setInheritedProp('displayMode', 'DISPLAY_ONLY');
+      pConnect.setInheritedProp('readOnly', true);
+    }
+
+    // Determine heading
+    let headingValue = '';
+    if (isMultiRecord) {
+      headingValue = routingInfo.items[latestItem.context].heading || this.getModalHeading(dataObjectAction, actionName);
+    } else if (isDataObject) {
+      headingValue = actionName ? this.localizedVal(actionName, this.localeCategory) : this.getModalHeading(dataObjectAction, actionName);
+    } else {
+      headingValue = this.determineModalHeaderByAction(actionName, caseTypeName, ID, pConnect?.getCaseLocaleReference());
+    }
+
+    return {
+      isDataObject,
+      dataObjectAction,
+      isMultiRecord,
+      readOnly,
+      itemActionID,
+      itemShowProgress,
+      itemProgressMessage,
+      itemDataRecordKeys,
+      headingValue
+    };
   }
 
   /**
@@ -136,6 +243,7 @@ class ModalViewContainer extends BridgeBase {
 
     // routingInfo was added as component prop in populateAdditionalProps
     const routingInfo = this.getComponentProp('routingInfo');
+    this.routingInfoRef = routingInfo;
 
     const loadingInfo = this.thePConn.getLoadingStatus(''); // 1st arg empty string until typedefs properly allow optional;
     // const configProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps());
@@ -150,113 +258,46 @@ class ModalViewContainer extends BridgeBase {
 
       const currentOrder = routingInfo.accessedOrder;
 
-      if (undefined == currentOrder) {
+      if (!currentOrder) {
         return;
       }
 
-      const currentItems = routingInfo.items;
-      // let key = currentOrder[currentOrder.length - 1];
-
       const { key, latestItem } = this.getKeyAndLatestItem(routingInfo);
 
-      if (currentOrder.length > 0) {
-        if (currentItems[key] && currentItems[key].view && Object.keys(currentItems[key].view).length > 0) {
-          const currentItem = currentItems[key];
-          const rootView = currentItem.view;
-          const { context } = rootView.config;
-          const config: any = { meta: rootView };
-          config.options = {
-            context: currentItem.context,
-            hasForm: true,
-            pageReference: context || this.thePConn.getPageReference()
-          };
+      if (latestItem && currentOrder.length > 0) {
+        const configObject = this.getConfigObject(latestItem, null);
+        const pConnect = configObject?.getPConnect();
 
-          if (!this.bSubscribed) {
-            this.bSubscribed = true;
-            const { PUB_SUB_EVENTS } = PCore.getConstants();
-            this.routingInfoRef = routingInfo;
-            PCore.getPubSubUtils().subscribe(
-              PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
-              payload => {
-                this.showAlert(payload);
-              },
-              PUB_SUB_EVENTS.EVENT_SHOW_CANCEL_ALERT,
-              this.routingInfoRef
-            );
+        if (pConnect) {
+          const props = this._processItemProperties(routingInfo, latestItem, pConnect);
+
+          this.createdViewPConn = pConnect; // Important for rendering children
+
+          // Replaces the old child creation logic
+          const newCompName = pConnect.getComponentName();
+          if (newCompName === 'reference') {
+            const referencedViewPConn = pConnect.getReferencedViewPConnect(true);
+            this.arNewChildren = [referencedViewPConn];
+          } else {
+            this.arNewChildren = pConnect.getChildren();
           }
 
-          const configObject = this.getConfigObject(currentItem, null);
-
-          // THIS is where the ViewContainer creates a View
-          //    The config has meta.config.type = "view"
-          const newComp = configObject?.getPConnect();
-          const newCompName = newComp?.getComponentName();
-          const caseInfo = newComp && newComp.getDataObject() && newComp.getDataObject().caseInfo ? newComp.getDataObject().caseInfo : null;
-          if (newComp && caseInfo && this.compareCaseInfoIsDifferent(caseInfo)) {
-            this.createdViewPConn = newComp;
-            const newConfigProps = newComp.getConfigProps();
-            this.templateName = 'template' in newConfigProps ? newConfigProps.template : '';
-
-            const { actionName } = latestItem;
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            const caseInfo = newComp.getCaseInfo();
-            const ID = caseInfo.getID();
-
-            const caseTypeName = caseInfo.getCaseTypeName();
-            const isDataObject = routingInfo.items[latestItem.context].resourceType === PCore.getConstants().RESOURCE_TYPES.DATA;
-            const dataObjectAction = routingInfo.items[latestItem.context].resourceStatus;
-            this.isMultiRecord = routingInfo.items[latestItem.context].isMultiRecordData;
-            this.context = latestItem.context;
-            this.title =
-              isDataObject || this.isMultiRecord
-                ? this.getModalHeading(dataObjectAction)
-                : this.determineModalHeaderByAction(
-                    actionName,
-                    caseTypeName,
-                    ID,
-                    `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase()
-                  );
-            // // update children with new view's children
-
-            // With 8.7, the newly created component can be a Reference to a View
-            //  rather than a View itself
-            if (newCompName === 'reference') {
-              // Reference component doesn't have children. But we can get the
-              //  View that it references and that View's children.
-              //  So we set the children to the reference's View's children
-              //  Note: the underlying components want the children as an array
-              //  of getPConnect() and not the children components directly.
-              //  So, we need to get referenced View PConnect and get its children
-              //  and CANNOT use the simpler, getReferencedView().children
-
-              const referencedViewPConn = newComp.getReferencedViewPConnect(true);
-              // children needs to be an array!
-              this.arNewChildren = [referencedViewPConn];
-
-              // This approach below works, too. But it seems less clean to skip over
-              //  the Reference component like we do here. So, unless problems
-              //  are seen, using the approach above instead of this.
-              // const referencedChildren = newComp.getReferencedViewPConnect(true).getPConnect().getChildren();
-              // this.arNewChildren = referencedChildren;
-            } else {
-              this.arNewChildren = newComp.getChildren();
-            }
-            this.bShowModal = true;
-
-            // save off itemKey to be used for finishAssignment, etc.
-            this.itemKey = key;
-
-            this.requestUpdate();
-
-            // console.log("view container expect redraw");
-          }
-
-          // this will cause a redraw
-          // this.cdRef.detectChanges();
+          // Update state
+          this.isMultiRecord = props.isMultiRecord;
+          this.isDataObject = props.isDataObject;
+          this.dataObjectAction = props.dataObjectAction;
+          this.dataRecordKeys = props.itemDataRecordKeys || '';
+          this.actionID = props.itemActionID || '';
+          this.isReadOnly = props.readOnly;
+          this.title = props.headingValue;
+          this.itemKey = key;
+          this.bShowModal = true;
+          this.showProgress = props.itemShowProgress || false;
+          this.progressMessage = props.itemProgressMessage || '';
+          this.context = latestItem.context;
         }
       } else {
-        this.bShowModal = false;
-        this.oCaseInfo = {};
+        this._resetModalState();
       }
     }
   }
@@ -288,6 +329,89 @@ class ModalViewContainer extends BridgeBase {
     }
   }
 
+  /**
+   * Helper method to render error banner if error occurs during rendering
+   */
+  _renderError() {
+    if (!this.error) return nothing;
+    return html`
+      <div class="psdk-error">${this.localizedVal('Failed to create the case. Contact the application administrator.', this.localeCategory)}</div>
+    `;
+  }
+
+  /**
+   * Helper method to render list view action buttons
+   * when the case is opened in a modal (not full page)
+   * and it is a multi record data object
+   */
+  _renderListViewButtons() {
+    if (this.isMultiRecord && !this.isReadOnly) {
+      return html`
+        <div>
+          <listview-action-buttons-component
+            .pConn=${this.createdViewPConn}
+            .context=${this.context}
+            @DismissModalContainer=${this._dismissModalContainer.bind(this)}
+          >
+          </listview-action-buttons-component>
+        </div>
+      `;
+    }
+    return html``;
+  }
+
+  /**
+   * Helper method to render data view action buttons
+   * when the case is opened in a modal (not full page)
+   * and it is a single record data object
+   */
+  _renderDataViewButtons() {
+    if (this.isDataObject && !this.isReadOnly) {
+      return html`
+        <div>
+          <data-view-action-buttons-component
+            .pConn=${this.createdViewPConn}
+            .context=${this.context}
+            .classId=${this.createdViewPConn.getValue('.classID')}
+            .dataObjectAction=${this.dataObjectAction}
+            .dataRecordKeys=${this.dataRecordKeys}
+            .actionID=${this.actionID}
+            .disableAllButtons=${false}
+            @DismissModalContainer=${this._dismissModalContainer.bind(this)}
+          >
+          </data-view-action-buttons-component>
+        </div>
+      `;
+    }
+    return nothing;
+  }
+
+  /**
+   * Helper method to render cancel alert dialog
+   * when user tries to close the modal with unsaved changes
+   */
+  _renderCancelAlert() {
+    if (!this.bShowCancelAlert) return html``;
+
+    return html`
+      <cancel-alert-component
+        .bShowAlert=${this.bShowCancelAlert}
+        @AlertState=${this._onAlertState.bind(this)}
+        .pConn=${this.cancelPConn}
+        .heading=${this.cancelAlertProps.heading}
+        .content=${this.cancelAlertProps.content}
+        .itemKey=${this.cancelAlertProps.itemKey}
+        .hideDelete=${this.cancelAlertProps.hideDelete}
+        .isDataObject=${this.cancelAlertProps.isDataObject}
+        .skipReleaseLockRequest=${this.cancelAlertProps.skipReleaseLockRequest}
+        .isInCreateStage=${this.cancelAlertProps.isInCreateStage}
+      ></cancel-alert-component>
+    `;
+  }
+
+  /**
+   * Generates the HTML for the modal view container
+   */
   getModalViewContainerHtml(): any {
     return html`
       ${this.bShowModal
@@ -296,40 +420,27 @@ class ModalViewContainer extends BridgeBase {
             html`
               <div id="dialog" class="psdk-dialog-background ">
                 <div class="psdk-modal-view-container-top" id="${this.buildName}">
-                  ${this.title != '' ? html`<h3>${this.title}</h3>` : html``}
+                  ${this.title != '' ? html`<h3>${this.title}</h3>` : html``} ${this._renderError()}
                   <assignment-component
                     .pConn=${this.createdViewPConn}
                     .arChildren=${this.arNewChildren}
                     itemKey=${this.itemKey}
                   ></assignment-component>
-                  ${this.isMultiRecord
-                    ? html`
-                        <div>
-                          <listview-action-buttons-component
-                            .pConn=${this.createdViewPConn}
-                            .context=${this.context}
-                            @DismissModalContainer=${this._dismissModalContainer}
-                          >
-                          </listview-action-buttons-component>
-                        </div>
-                      `
-                    : html``}
+                  ${this._renderListViewButtons()} ${this._renderDataViewButtons()}
                 </div>
               </div>
             `
           )
         : html``}
-      ${this.bShowCancelAlert
-        ? html`
-      <cancel-alert-component .bShowAlert=${this.bShowCancelAlert} @AlertState=${this._onAlertState}" .pConn=${this.cancelPConn}></app-cancel-alert>`
-        : html``}
+      ${this._renderCancelAlert()}
     `;
   }
 
   _dismissModalContainer() {
     this.bShowModal = false;
     this.oCaseInfo = {};
-    this.render();
+
+    this.requestUpdate();
   }
 
   render() {
@@ -351,10 +462,15 @@ class ModalViewContainer extends BridgeBase {
     return this.renderTemplates;
   }
 
-  getModalHeading(dataObjectAction) {
-    return dataObjectAction === PCore.getConstants().RESOURCE_STATUS.CREATE
-      ? this.localizedVal('Add Record', this.localeCategory)
-      : this.localizedVal('Edit Record', this.localeCategory);
+  getModalHeading(dataObjectAction, actionName = '') {
+    switch (dataObjectAction) {
+      case PCore.getConstants().RESOURCE_STATUS.CREATE:
+        return this.localizedVal('Add Record', this.localeCategory);
+      case (PCore.getConstants() as any).RESOURCE_STATUS.OPEN_FLOW_ACTION:
+        return this.localizedVal(actionName, this.localeCategory);
+      default:
+        return this.localizedVal('Edit Record', this.localeCategory);
+    }
   }
 
   determineModalHeaderByAction(actionName, caseTypeName, ID, caseLocaleRef) {
@@ -364,17 +480,18 @@ class ModalViewContainer extends BridgeBase {
     return `${this.localizedVal('Create', this.localeCategory)} ${this.localizedVal(caseTypeName, undefined, caseLocaleRef)} (${ID})`;
   }
 
-  getConfigObject(item, pConnect) {
+  getConfigObject(item, pconnect) {
     if (item) {
-      const { context, view } = item;
+      const { context, view, isBulkAction } = item;
       const target = PCore.getContainerUtils().getTargetFromContainerItemID(context);
-      const config = {
+      const config: any = {
         meta: view,
         options: {
           context,
-          pageReference: view.config.context || pConnect.getPageReference(),
+          pageReference: view.config.context || pconnect?.getPageReference(),
           hasForm: true,
-          containerName: pConnect?.getContainerName() || PCore.getConstants().MODAL,
+          ...(isBulkAction && { isBulkAction }),
+          containerName: pconnect?.getContainerName() || PCore.getConstants().MODAL,
           target
         }
       };
@@ -387,12 +504,13 @@ class ModalViewContainer extends BridgeBase {
     this.bAlertState = e.detail.data;
     if (this.bAlertState === false) {
       this.bShowCancelAlert = false;
+      this.requestUpdate();
     }
   }
 
   showAlert(payload) {
     const { latestItem } = this.getKeyAndLatestItem(this.routingInfoRef);
-    const { isModalAction } = payload;
+    const { isModalAction, hideDelete, isDataObject: isDataObjectPayload, skipReleaseLockRequest, isInCreateStage } = payload;
 
     /*
       If we are in create stage full page mode, created a new case and trying to click on cancel button
@@ -400,10 +518,28 @@ class ModalViewContainer extends BridgeBase {
     */
     if (latestItem && isModalAction) {
       const configObject: any = this.getConfigObject(latestItem, this.thePConn);
+      const contextName = configObject?.getPConnect().getContextName();
       this.cancelPConn = configObject.getPConnect();
-      // Adding this as pub sub is happening after state update and hence no re-rendering is happening
-      this.render();
+
+      this.cancelAlertProps = {
+        heading: 'Discard unsaved changes?',
+        content: 'You have unsaved changes. You can discard them or go back to keep working.',
+        getPConnect: configObject?.getPConnect,
+        itemKey: contextName,
+        hideDelete,
+        isDataObject: isDataObjectPayload,
+        skipReleaseLockRequest,
+        isInCreateStage
+      };
+
+      this.bShowCancelAlert = true;
+      this.requestUpdate();
     }
+  }
+
+  _buildName(pConnect, name = '') {
+    const context = pConnect.getContextName();
+    return `${context}/${name}`;
   }
 
   hasContainerItems(routingInfo) {
@@ -415,12 +551,25 @@ class ModalViewContainer extends BridgeBase {
   }
 
   getKeyAndLatestItem(routinginfo) {
-    if (this.hasContainerItems(routinginfo)) {
+    const pConn = this.thePConn;
+    const containerName = pConn.getContainerName();
+    const { acTertiary = false } = (pConn.getConfigProps() as any) || {};
+
+    if (PCore.getContainerUtils().hasContainerItems(this._buildName(pConn, containerName))) {
       const { accessedOrder, items } = routinginfo;
-      const key = accessedOrder[accessedOrder.length - 1];
+      let key;
+
+      for (let i = accessedOrder.length - 1; i >= 0; i -= 1) {
+        const tempkey = accessedOrder[i];
+        if ((acTertiary && items[tempkey].acTertiary) || (!acTertiary && !items[tempkey].acTertiary)) {
+          key = tempkey;
+          break;
+        }
+      }
       const latestItem = items[key];
       return { key, latestItem };
     }
+
     return {};
   }
 
