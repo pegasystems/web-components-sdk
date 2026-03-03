@@ -143,7 +143,7 @@ class FlowContainer extends BridgeBase {
       if (!this.hasContainerItems(this.thePConn)) {
         addContainerItem(this.thePConn);
       }
-    } else if (!this.hasContainerItems(this.thePConn) && PCore.getEnvironmentInfo().isPortalLoaded) {
+    } else if (!this.hasContainerItems(this.thePConn)) {
       // On cancel or save for later, the container items are to be added if it is not embedded
       addContainerItem(this.thePConn);
     }
@@ -273,7 +273,8 @@ class FlowContainer extends BridgeBase {
     } else if (caseViewMode && caseViewMode == 'perform') {
       // perform
       this.todo_showTodo = false;
-      if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true') {
+      const isContainerInitialized = PCore.getContainerUtils().isContainerInitialized(this.thePConn.getContextName(), this.thePConn.getContainerName());
+      if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true' || !isContainerInitialized) {
         this.initContainer();
       }
     }
