@@ -68,6 +68,7 @@ interface IOption {
 @customElement('dropdown-form')
 class Dropdown extends FormComponentBase {
   @property({ attribute: false, type: Array }) options;
+  @property({ attribute: true, type: String }) datasource = '';
 
   dataList: any = [];
   fieldMetadata: any = [];
@@ -114,6 +115,12 @@ class Dropdown extends FormComponentBase {
 
     // Some additional processing
     const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as DropdownProps;
+
+    if (this.dataList.length > 0) {
+      theConfigProps.datasource = this.dataList;
+      theConfigProps.listType = 'associated';
+    }
+
     const datasource = theConfigProps.datasource;
 
     if (!isEqual(datasource, this.theDatasource)) {
@@ -156,6 +163,16 @@ class Dropdown extends FormComponentBase {
 
     this.localizedValue = this.options?.find(opt => opt.key === this.value)?.value || this.localizedValue;
     this.getDatapageData();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    // eslint-disable-next-line sonarjs/no-collapsible-if
+    if (name === 'datasource') {
+      if (newValue && oldValue !== newValue) {
+        this.dataList = JSON.parse(newValue);
+        this.updateSelf();
+      }
+    }
   }
 
   getDatapageData() {
