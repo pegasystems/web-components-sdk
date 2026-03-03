@@ -21,6 +21,7 @@ export const assignmentStyles = html`
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      gap: 0.5rem;
       border-radius: 4px;
       padding: 10px;
       margin: 5px 0px;

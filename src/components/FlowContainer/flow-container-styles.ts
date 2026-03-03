@@ -45,6 +45,7 @@ export const flowContainerStyles = html`
       border: 1px solid;
       display: flex;
       flex-direction: column;
+      gap: 0.5rem;
       align-items: flex-start;
       border-radius: 4px;
       padding: 10px;
