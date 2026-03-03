@@ -252,6 +252,8 @@ class Dropdown extends FormComponentBase {
   }
 
   fieldOnChange(event: any) {
+    if (!event.detail?.isTriggeredByUser) return;
+
     let newValue = event?.target?.value || event?.target?.modelValue || '';
     if (event?.target?.value === 'Select') {
       newValue = '';
