@@ -135,7 +135,6 @@ class FlowContainer extends BridgeBase {
     this.localeReference = `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase();
 
     window.sessionStorage.setItem('okToInitFlowContainer', 'false');
-
     const isContainerInitialized = PCore.getContainerUtils().isContainerInitialized(baseContext, containerName);
     if (!isContainerInitialized) {
       containerMgr.initializeContainers({
@@ -144,6 +143,9 @@ class FlowContainer extends BridgeBase {
       if (!this.hasContainerItems(this.thePConn)) {
         addContainerItem(this.thePConn);
       }
+    } else if (!this.hasContainerItems(this.thePConn) && PCore.getEnvironmentInfo().isPortalLoaded) {
+      // On cancel or save for later, the container items are to be added if it is not embedded
+      addContainerItem(this.thePConn);
     }
   }
 
@@ -265,14 +267,16 @@ class FlowContainer extends BridgeBase {
 
       this.todo_showTodo = true;
       this.todo_showTodoList = false;
+      // in React, when cancel is called, somehow the constructor for flowContainer is called which
+      // does init/add of containers.  This mimics that
+      this.initContainer();
     } else if (caseViewMode && caseViewMode == 'perform') {
       // perform
       this.todo_showTodo = false;
+      if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true') {
+        this.initContainer();
+      }
     }
-
-    // in React, when cancel is called, somehow the constructor for flowContainer is called which
-    // does init/add of containers.  This mimics that
-    this.initContainer();
 
     // if have caseMessage show message and end
     this.caseMessages = this.thePConn.getValue('caseMessages');
