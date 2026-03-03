@@ -19,7 +19,8 @@ export const assignmentStyles = html`
     .psdk-alert {
       border: 1px solid;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      align-items: flex-start;
       border-radius: 4px;
       padding: 10px;
       margin: 5px 0px;
