@@ -128,10 +128,6 @@ class Dropdown extends FormComponentBase {
       this.theDatasource = datasource || null;
     }
 
-    if (this.value === '' && !this.bReadonly) {
-      this.value = 'Select';
-    }
-
     // Only set options synchronously when datasource is an array (associated list).
     // When datasource is a string (datapage), options will be set asynchronously in getData().
     if (this.theDatasource && typeof datasource !== 'string') {
@@ -256,13 +252,16 @@ class Dropdown extends FormComponentBase {
   }
 
   fieldOnChange(event: any) {
+    let newValue = event?.target?.value || event?.target?.modelValue || '';
     if (event?.target?.value === 'Select') {
-      event.target.value = '';
+      newValue = '';
     }
-    handleEvent(this.actionsApi, 'changeNblur', this.propName, event.target.value);
-    const configProps = this.thePConn.getConfigProps() as DropdownProps;
-    if (configProps?.onRecordChange && event.target.value !== '') {
-      configProps.onRecordChange(event);
+    if (newValue !== this.value) {
+      handleEvent(this.actionsApi, 'changeNblur', this.propName, newValue);
+      const configProps = this.thePConn.getConfigProps() as DropdownProps;
+      if (configProps?.onRecordChange) {
+        configProps.onRecordChange(event);
+      }
     }
     this.thePConn.clearErrorMessages({
       property: this.propName
