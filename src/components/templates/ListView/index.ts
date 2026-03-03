@@ -29,6 +29,7 @@ interface ListViewProps {
   grouping: string | boolean;
   value: any;
   readonlyContextList: any;
+  allowAddingNewRecords?: boolean;
 }
 
 const SELECTION_MODE = { SINGLE: 'single', MULTI: 'multi' };
@@ -46,7 +47,7 @@ class ListView extends BridgeBase {
   @property({ attribute: false, type: Array }) vaadinGridColumns;
   @property({ attribute: false, type: Array }) vaadinRowData;
   @property({ attribute: true, type: Object }) payload;
-  @property({ attribute: true, type: Object }) listViewProps: any = {};
+  @property({ attribute: true, type: Object }) listViewProps: any = null;
   @property({ attribute: true, type: Boolean }) inForm = true;
   // During experimentation, change this to show a particular version
   //  values: "table" or "vaadin" (might add ag-grid later)
@@ -121,7 +122,7 @@ class ListView extends BridgeBase {
       const query = this.preparePayload();
       const componentConfig: any = this.thePConn.getRawMetadata()?.config; // try to remove any when getInheritedProps typedefs are fixed;
       const refList = theConfigProps.referenceList;
-      const dataViewParameters = this.listViewProps.parameters;
+      const dataViewParameters = this.listViewProps?.parameters;
       const workListData = !this.inForm
         ? PCore.getDataApiUtils().getData(refList, this.payload)
         : PCore.getDataPageUtils().getDataAsync(
@@ -553,6 +554,33 @@ class ListView extends BridgeBase {
   //   }
   // }
 
+  getActionsContent() {
+    const actions = this.thePConn?.getConfigProps()?.actions || [];
+    const addRecordAction = actions.find(({ action }) => action === 'ADD_RECORD');
+    const { allowAddingNewRecords } = this.thePConn?.getConfigProps() as ListViewProps;
+
+    if (allowAddingNewRecords && addRecordAction) {
+      return html`
+        <div style="margin-top: 10px;">
+          <button
+            class="btn btn-link"
+            @click="${() => {
+              this.thePConn
+                ?.getActionsApi()
+                .showDataObjectCreateView(addRecordAction.config.dataType)
+                .catch(() => {
+                  PCore.getPubSubUtils().publish('ERROR_WHILE_RENDERING');
+                });
+            }}"
+          >
+            ${addRecordAction.config.label}
+          </button>
+        </div>
+      `;
+    }
+    return nothing;
+  }
+
   render() {
     if (this.bLogging) {
       console.log(`${this.theComponentName}: render with pConn: ${JSON.stringify(this.pConn)}`);
@@ -631,6 +659,7 @@ class ListView extends BridgeBase {
     }
 
     this.renderTemplates.push(theContent);
+    this.renderTemplates.push(this.getActionsContent());
 
     if (this.waitingForData) {
       this.renderTemplates.push(html`<progress-extension id="${this.theComponentId}"></progress-extension>`);
