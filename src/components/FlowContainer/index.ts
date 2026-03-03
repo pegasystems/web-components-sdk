@@ -144,7 +144,7 @@ class FlowContainer extends BridgeBase {
         addContainerItem(this.thePConn);
       }
     } else if (!this.hasContainerItems(this.thePConn)) {
-      // On cancel or save for later, the container items are to be added if it is not embedded
+      // On cancel or save for later, the container items are to be added
       addContainerItem(this.thePConn);
     }
   }
