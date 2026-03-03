@@ -61,13 +61,18 @@ class Phone extends FormComponentBase {
       console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
 
+    const oldVal = this.value ?? '';
     let newVal = event.target.value ?? '';
     const phoneValue = event?.target?.value;
     let phoneNumber = phoneValue.split(' ').slice(1).join();
     phoneNumber = phoneNumber ? `+${phoneValue && phoneValue.replace(/\D+/g, '')}` : '';
     newVal = phoneNumber;
-    if (newVal) {
-      handleEvent(this.actionsApi, 'change', this.propName, newVal);
+
+    const isValueChanged = newVal.toString() !== oldVal.toString();
+    if (isValueChanged) {
+      this.thePConn.clearErrorMessages({
+        property: this.propName
+      });
     }
   }
 
@@ -136,8 +141,8 @@ class Phone extends FormComponentBase {
             .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
             ?readonly=${this.bReadonly}
             ?disabled=${this.bDisabled}
-            @click=${this.fieldOnChange}
             @blur=${this.fieldOnBlur}
+            @model-value-changed=${this.fieldOnChange}
           >
             <span slot="label">${this.annotatedLabel}</span>
           </lion-input-tel-dropdown>

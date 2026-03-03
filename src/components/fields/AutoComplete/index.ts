@@ -258,7 +258,7 @@ class AutoComplete extends FormComponentBase {
     const newValue = selected != null ? String(selected) : '';
     if (newValue !== this.value) {
       handleEvent(this.actionsApi, 'change', this.propName, newValue);
-      if (this.theConfigProps?.onRecordChange) {
+      if (this.theConfigProps?.onRecordChange && newValue !== '') {
         this.theConfigProps.onRecordChange(event);
       }
     }
@@ -300,7 +300,6 @@ class AutoComplete extends FormComponentBase {
     //    (Default seems to only show the overlay once the user has started typing.)
     //  @focus is added to mimic the Angular SDK behavior of showing the overlay of when the
     //    control gets focus.
-    // @click=${this.fieldOnChange}
     const theContent = html` <div>
       ${this.bVisible
         ? html`

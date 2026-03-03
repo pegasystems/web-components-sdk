@@ -22,6 +22,18 @@
 *   Added a `showModalsInEmbeddedMode` flag to sdk-config.json. When set to true, modals will open in embedded mode.
     * Github: [PR-276](https://github.com/pegasystems/web-components-sdk/pull/276)
 
+*   Enhanced BridgeBase to optimize subscription management and context clearing
+    * Github: [PR-283](https://github.com/pegasystems/web-components-sdk/pull/283)
+
+*   Refactored the phone component to utilize the dedicated lion-input-tel-dropdown component rather than the generic lion-input
+    * Github: [PR-288](https://github.com/pegasystems/web-components-sdk/pull/288)
+
+*   Added support for populating the Dropdown component with data sourced from a data page.
+    * Github: [PR-291](https://github.com/pegasystems/web-components-sdk/pull/291)
+
+*   Implemented cascading functionality within the listview component.
+    * Github: [PR-293](https://github.com/pegasystems/web-components-sdk/pull/293)
+
 ### **Bug fixes**
 
 *   **The issue with the DataReference SingleSelect displaying an "undefined" item has been fixed**
@@ -58,14 +70,16 @@
       * Github: [PR-266](https://github.com/pegasystems/web-components-sdk/pull/266)
 *   **The Pconn object passing from RootContainer to ViewContainer have been created and passing as expected**
       * Github: [PR-267](https://github.com/pegasystems/web-components-sdk/pull/267)
+*   **Fixed multiple issues related to checkbox label**
+      * Github: [PR-268](https://github.com/pegasystems/web-components-sdk/pull/268), [PR-271](https://github.com/pegasystems/web-components-sdk/pull/271)
 *   **The Checkbox component now correctly displays the required field indicator when mandatory**
       * Github: [PR-269](https://github.com/pegasystems/web-components-sdk/pull/269)
 *   **Playwright tests have been fixed**
-      * Github: [PR-270](https://github.com/pegasystems/web-components-sdk/pull/270)
-*   **Fixed multiple issues related to checkbox label**
-      * Github: [PR-268](https://github.com/pegasystems/web-components-sdk/pull/268), [PR-271](https://github.com/pegasystems/web-components-sdk/pull/271)
+      * Github: [PR-270](https://github.com/pegasystems/web-components-sdk/pull/270), [PR-290](https://github.com/pegasystems/web-components-sdk/pull/290)
 *   **Fixed an issue where the userReference value was not displaying correctly within the Details template**
-      * Github: [PR-277](https://github.com/pegasystems/web-components-sdk/pull/277)
+      * Github: [PR-277](https://github.com/pegasystems/web-components-sdk/pull/277), [PR-287](https://github.com/pegasystems/web-components-sdk/pull/287)
+*   **Fixed an issue where selected records in the Multiselect table were not being properly passed to pageInstructions**
+      * Github: [PR-294](https://github.com/pegasystems/web-components-sdk/pull/294)
 ---
 
 ### Refactoring

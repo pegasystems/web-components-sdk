@@ -68,6 +68,7 @@ interface IOption {
 @customElement('dropdown-form')
 class Dropdown extends FormComponentBase {
   @property({ attribute: false, type: Array }) options;
+  @property({ attribute: true, type: String }) datasource = '';
 
   dataList: any = [];
   fieldMetadata: any = [];
@@ -114,6 +115,12 @@ class Dropdown extends FormComponentBase {
 
     // Some additional processing
     const theConfigProps = this.thePConn.resolveConfigProps(this.thePConn.getConfigProps()) as DropdownProps;
+
+    if (this.dataList.length > 0) {
+      theConfigProps.datasource = this.dataList;
+      theConfigProps.listType = 'associated';
+    }
+
     const datasource = theConfigProps.datasource;
 
     if (!isEqual(datasource, this.theDatasource)) {
@@ -125,10 +132,15 @@ class Dropdown extends FormComponentBase {
       this.value = 'Select';
     }
 
-    if (this.theDatasource) {
+    // Only set options synchronously when datasource is an array (associated list).
+    // When datasource is a string (datapage), options will be set asynchronously in getData().
+    if (this.theDatasource && typeof datasource !== 'string') {
       const optionsList = Utils.getOptionList(theConfigProps, this.thePConn.getDataObject());
       optionsList?.unshift({ key: 'Select', value: this.thePConn.getLocalizedValue('Select...', '', '') });
       this.updateOptions(optionsList);
+    } else if (!this.options || this.options.length === 0) {
+      // Initialize options with just "Select" if not yet populated (first render before async data arrives)
+      this.options = [{ key: 'Select', value: this.thePConn.getLocalizedValue('Select...', '', '') }];
     }
 
     const propName = this.thePConn.getStateProps().value;
@@ -155,6 +167,16 @@ class Dropdown extends FormComponentBase {
 
     this.localizedValue = this.options?.find(opt => opt.key === this.value)?.value || this.localizedValue;
     this.getDatapageData();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    // eslint-disable-next-line sonarjs/no-collapsible-if
+    if (name === 'datasource') {
+      if (newValue && oldValue !== newValue) {
+        this.dataList = JSON.parse(newValue);
+        this.updateSelf();
+      }
+    }
   }
 
   getDatapageData() {
@@ -186,7 +208,7 @@ class Dropdown extends FormComponentBase {
 
     columns = preProcessColumns(columns) || [];
     if (listType !== 'associated' && typeof datasource === 'string') {
-      this.getData(datasource, parameters, columns, context, listType);
+      this.getData(datasource, parameters || {}, columns, context, listType);
     }
   }
 
@@ -239,7 +261,7 @@ class Dropdown extends FormComponentBase {
     }
     handleEvent(this.actionsApi, 'changeNblur', this.propName, event.target.value);
     const configProps = this.thePConn.getConfigProps() as DropdownProps;
-    if (configProps?.onRecordChange) {
+    if (configProps?.onRecordChange && event.target.value !== '') {
       configProps.onRecordChange(event);
     }
     this.thePConn.clearErrorMessages({

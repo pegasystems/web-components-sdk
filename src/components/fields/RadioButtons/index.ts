@@ -173,9 +173,8 @@ class RadioButtons extends FormComponentBase {
                 ?readonly=${this.bReadonly}
                 ?disabled=${this.bDisabled}
                 .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-                @click=${this.fieldOnChange}
                 @blur=${this.fieldOnBlur}
-                @change=${this.fieldOnChange}
+                @model-value-changed=${this.fieldOnChange}
               >
                 <span slot="label" class="radio-group-label">${this.annotatedLabel}</span>
                 <div class=${this.inline ? 'psdk-radio-horizontal' : 'psdk-radio-vertical'}>
