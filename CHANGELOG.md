@@ -34,6 +34,15 @@
 *   Implemented cascading functionality within the listview component.
     * Github: [PR-293](https://github.com/pegasystems/web-components-sdk/pull/293)
 
+*   The change event for form fields has been updated to use the model-value-changed event
+    *  Github: [PR-296](https://github.com/pegasystems/web-components-sdk/pull/296)
+
+*   The ListView component now supports adding records within a modal
+    *  Github: [PR-300](https://github.com/pegasystems/web-components-sdk/pull/300)
+
+*   Validations for fields are now displayed in banners
+    * Github: [PR-302](https://github.com/pegasystems/web-components-sdk/pull/302)
+
 ### **Bug fixes**
 
 *   **The issue with the DataReference SingleSelect displaying an "undefined" item has been fixed**
@@ -80,6 +89,10 @@
       * Github: [PR-277](https://github.com/pegasystems/web-components-sdk/pull/277), [PR-287](https://github.com/pegasystems/web-components-sdk/pull/287)
 *   **Fixed an issue where selected records in the Multiselect table were not being properly passed to pageInstructions**
       * Github: [PR-294](https://github.com/pegasystems/web-components-sdk/pull/294)
+*  **Fixed an issue in portal mode where an assignment would fail to open if it was reopened immediately after being cancelled or saved for later.**
+      * Github: [PR-303](https://github.com/pegasystems/web-components-sdk/pull/303)
+*  **The reference component has been refactored to improve the handling of the pageReference and inheritedProps properties**
+      * Github: [PR-304](https://github.com/pegasystems/web-components-sdk/pull/304)
 ---
 
 ### Refactoring
