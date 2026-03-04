@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
+import { type Banner, getValidationBanners, clearValidationBanners, renderBanners, CLEAR_BANNER_MESSAGES_EVENT } from '../../helpers/banner-utils';
 // NOTE: you need to import ANY component you may render.
 
 // import the component's styles as HTML with <style>
@@ -30,6 +31,10 @@ class Assignment extends BridgeBase {
 
   @state()
   private toastMessage: String = '';
+
+  // Field-level validation banners
+  @state()
+  private validationBanners: Banner[] = [];
 
   arCurrentStepIndicies: number[] = [];
   arNavigationSteps: any[] = [];
@@ -135,6 +140,9 @@ class Assignment extends BridgeBase {
 
     const bShouldUpdate = super.shouldComponentUpdate();
 
+    // Refresh field-level validation banners on every state change
+    this.validationBanners = getValidationBanners(this.itemKey);
+
     if (bShouldUpdate) {
       this.updateSelf();
     }
@@ -142,6 +150,7 @@ class Assignment extends BridgeBase {
 
   assignmentHtml(): any {
     return html`
+      <div>${renderBanners(this.validationBanners)}</div>
       ${this.bHasNavigation
         ? html` <div id="Assignment" class="psdk-stepper">
             <multi-step-component
@@ -282,7 +291,6 @@ class Assignment extends BridgeBase {
     this.showPage = actionsAPI.showPage.bind(actionsAPI);
     this.localizedVal = PCore.getLocaleUtils().getLocaleValue;
     this.localeReference = `${this.thePConn.getCaseInfo().getClassName()}!CASE!${this.thePConn.getCaseInfo().getName()}`.toUpperCase();
-    console.log('this.localeReference', this.localeReference);
     this.createButtons();
   }
 
@@ -379,6 +387,10 @@ class Assignment extends BridgeBase {
   }
 
   buttonClick(sAction: string, sButtonType: string) {
+    // Clear banners before processing action
+    this.validationBanners = clearValidationBanners();
+    PCore.getPubSubUtils().publish(CLEAR_BANNER_MESSAGES_EVENT);
+
     // right now, done on an individual basis, setting bReInit to true
     // upon the next flow container state change, will cause the flow container
     // to re-initialize
