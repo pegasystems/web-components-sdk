@@ -111,6 +111,6 @@
 
 | Package | Updated version |
 | :--- | :--- |
-| **@pega/constellationjs** | 24.2.2 |
+| **@pega/constellationjs** | 24.2.3 |
 | **@pega/auth** | 0.2.36 |
 | **@pega/pcore-pconnect-typedefs** | 3.2.2 |
