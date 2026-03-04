@@ -62,6 +62,9 @@ export class FormComponentBase extends BridgeBase {
   actionsApi: any;
   propName: any;
 
+  // When true, updateSelf() skips overwriting this.value with stale Redux value
+  private _hasUncommittedChange = false;
+
   constructor(inDebug = false, inLogging = false) {
     //  Note: BridgeBase constructor has 2 optional args:
     //  1st: inDebug - sets this.bLogging: false if not provided
@@ -89,7 +92,6 @@ export class FormComponentBase extends BridgeBase {
 
     // bind the change events to this
     this.fieldOnChange = this.fieldOnChange.bind(this);
-    this.fieldOnClick = this.fieldOnClick.bind(this);
     this.fieldOnBlur = this.fieldOnBlur.bind(this);
 
     // load default feedback (Lion validation) messages
@@ -144,7 +146,7 @@ export class FormComponentBase extends BridgeBase {
     // Clear out validators so they don't accumulate (since we're going to add them back below)
     this.lionValidatorsArray.length = 0;
 
-    if (theConfigProps.value != undefined) {
+    if (theConfigProps.value != undefined && !this._hasUncommittedChange) {
       this.value = theConfigProps.value;
     }
 
@@ -255,6 +257,11 @@ export class FormComponentBase extends BridgeBase {
       debugger;
     }
 
+    // Only process user-initiated changes; ignore programmatic modelValue mutations
+    if (!event.detail?.isTriggeredByUser) {
+      return;
+    }
+
     if (this.bLogging) {
       console.log(`--> fieldOnChange: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
@@ -263,20 +270,13 @@ export class FormComponentBase extends BridgeBase {
     const isValueChanged = event.target.value.toString() !== oldVal.toString();
 
     if (isValueChanged) {
+      // Set flag before clearErrorMessages to prevent updateSelf from overwriting this.value
+      this._hasUncommittedChange = true;
+      this.value = event.target.value;
+
       this.thePConn.clearErrorMessages({
         property: this.propName
       });
-    }
-  }
-
-  fieldOnClick() {
-    if (this.bDebug) {
-      debugger;
-    }
-    // currently a no-op
-
-    if (this.bLogging) {
-      console.log(`--> fieldOnClick: ${this.componentBaseComponentName} for ${this.theComponentName}`);
     }
   }
 
@@ -284,6 +284,9 @@ export class FormComponentBase extends BridgeBase {
     if (this.bDebug) {
       debugger;
     } // PConnect wants to use eventHandler for onBlur
+
+    // Value committed to Redux on blur — allow updateSelf to overwrite again
+    this._hasUncommittedChange = false;
 
     if (this.bLogging) {
       console.log(`--> fieldOnBlur: ${this.componentBaseComponentName} for ${this.theComponentName}`);
