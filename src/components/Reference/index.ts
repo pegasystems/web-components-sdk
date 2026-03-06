@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BridgeBase } from '../../bridge/BridgeBase';
+import resolveContext from './utils';
 
 /**
  * Reference component that resolves referenced views with proper configuration.
@@ -18,6 +19,12 @@ class Reference extends BridgeBase {
 
   connectedCallback() {
     super.connectedCallback();
+
+    const { context } = this.pConn.resolveConfigProps(this.pConn.getConfigProps());
+    this.pConn.registerAdditionalProps({
+      classID: `@P ${context}.classID`
+    });
+
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
   }
 
@@ -42,10 +49,23 @@ class Reference extends BridgeBase {
     delete referenceConfig?.visibility;
 
     const viewMetadata = this.pConn.getReferencedView();
-
     if (!viewMetadata) {
       this.referencedViewComponent = null;
       return;
+    }
+
+    if (viewMetadata.config.template === 'CaseView') {
+      const utilitiesIndex = viewMetadata.children?.findIndex(child => child.name === 'Utilities');
+      if (utilitiesIndex !== -1) {
+        // Utilities found in metadata
+        const caseID = this.pConn.getValue(PCore.getConstants().CASE_INFO.CASE_INFO_ID);
+        const unSupportedWidgets = ['FileUtility', 'Followers', 'RelatedCases', 'Stakeholders', 'Tags'];
+        if (!caseID) {
+          viewMetadata.children[utilitiesIndex].children = viewMetadata.children[utilitiesIndex].children.filter(
+            widget => !unSupportedWidgets.includes(widget.type)
+          );
+        }
+      }
     }
 
     const viewObject = {
@@ -57,10 +77,8 @@ class Reference extends BridgeBase {
     };
 
     const viewComponent = this.pConn.createComponent(viewObject, null, null, {
-      pageReference: context && context.startsWith('@CLASS') ? '' : context
+      pageReference: context && context.startsWith('@CLASS') ? '' : resolveContext(context)
     });
-
-    const newCompPConnect = viewComponent.getPConnect();
 
     // Handle inherited props if specified in the reference configuration
     if (referenceConfig.inheritedProps && referenceConfig.inheritedProps.length > 0) {
@@ -71,6 +89,7 @@ class Reference extends BridgeBase {
       }));
     }
 
+    const newCompPConnect = viewComponent.getPConnect();
     newCompPConnect.setInheritedConfig({
       ...referenceConfig,
       readOnly,
