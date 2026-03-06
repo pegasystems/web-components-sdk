@@ -427,8 +427,13 @@ class ListView extends BridgeBase {
     // initialize columnHeaders
     this.columnHeaders = [];
 
+    // Use labels from fieldDefs (resolved by initializeColumns in utils.ts) rather
+    // than from resolved config props (field.config.label). initializeColumns properly
+    // handles @FL annotations via PCore metadata + locale APIs, while PConnect resolution
+    const { fieldDefs } = this.listContext?.meta ?? {};
+
     fields.forEach((field: any, colIndex) => {
-      this.columnHeaders[colIndex] = field.config.label;
+      this.columnHeaders[colIndex] = fieldDefs?.[colIndex]?.label ?? field.config.label;
     });
 
     if (this.bLogging) {
@@ -474,8 +479,11 @@ class ListView extends BridgeBase {
         ${this.selectionMode === SELECTION_MODE.MULTI
           ? html`<vaadin-grid-column header="" flex-grow="0" auto-width ${columnBodyRenderer(this.checkboxRender, [])}></vaadin-grid-sort-column>`
           : nothing}
-        ${this.fields.map(field => {
-          return html`<vaadin-grid-sort-column header="${field.config.label}" path="${field.config.name}"></vaadin-grid-sort-column>`;
+        ${this.fields.map((field, index) => {
+          // Use fieldDefs labels (from initializeColumns) which properly resolve @FL annotations
+          // via PCore metadata + locale APIs. Falls back to resolved config label.
+          const headerLabel = this.fieldDefs?.[index]?.label ?? field.config.label;
+          return html`<vaadin-grid-sort-column header="${headerLabel}" path="${field.config.name}"></vaadin-grid-sort-column>`;
         })}
       </vaadin-grid>
     `;
