@@ -143,21 +143,23 @@ class Currency extends FormComponentBase {
 
     // lion-input-amount options as based on Intl.NumberFormat standard
     //  NOTE: we set modelValue to parseFloat(this.value). This helps validation.
-    const theContent = html` <lion-input-amount
-      id=${this.theComponentId}
-      dataTestId=${this.testId}
-      .modelValue=${parseFloat(this.value)}
-      .fieldName=${this.label}
-      .validators=${this.lionValidatorsArray}
-      .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
-      currency=${this.currencyISOCode}
-      ?readonly=${this.bReadonly}
-      ?disabled=${this.bDisabled}
-      @blur=${this.fieldOnBlur}
-      @model-value-changed=${this.fieldOnChange}
-    >
-      <span slot="label">${this.annotatedLabel}</span>
-    </lion-input-amount>`;
+    const theContent = html`<div class="form-group">
+      <lion-input-amount
+        id=${this.theComponentId}
+        dataTestId=${this.testId}
+        .modelValue=${parseFloat(this.value)}
+        .fieldName=${this.label}
+        .validators=${this.lionValidatorsArray}
+        .feedbackCondition=${this.requiredFeedbackCondition.bind(this)}
+        currency=${this.currencyISOCode}
+        ?readonly=${this.bReadonly}
+        ?disabled=${this.bDisabled}
+        @blur=${this.fieldOnBlur}
+        @model-value-changed=${this.fieldOnChange}
+      >
+        <span slot="label">${this.annotatedLabel}</span>
+      </lion-input-amount>
+    </div>`;
 
     this.renderTemplates.push(theContent);
 

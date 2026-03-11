@@ -12,6 +12,8 @@ import '../ToDo';
 // import the component's styles as HTML with <style>
 import { flowContainerStyles } from './flow-container-styles';
 
+import { type Banner, renderBanners, CLEAR_BANNER_MESSAGES_EVENT } from '../../helpers/banner-utils';
+
 /**
  * WARNING: This file is part of the infrastructure component responsible for working with Redux and managing the creation and update of Redux containers and PConnect.
  * You may override Material components within this component if needed, but do not modify any container-related logic. Changing this logic can lead to unexpected behavior.
@@ -49,7 +51,7 @@ class FlowContainer extends BridgeBase {
   caseMessages = '';
   bHasCaseMessages = false;
   checkSvg = '';
-  banners: any[] = [];
+  banners: Banner[] = [];
 
   svgCurrent = '';
   svgNotCurrent = '';
@@ -95,6 +97,16 @@ class FlowContainer extends BridgeBase {
     // NOTE: Need to bind the callback to 'this' so it has this element's context when it's called.
     this.registerAndSubscribeComponent(this.onStateChange.bind(this));
 
+    // Clear page-level banners when Assignment publishes the clear event
+    PCore.getPubSubUtils().subscribe(
+      CLEAR_BANNER_MESSAGES_EVENT,
+      () => {
+        this.banners = [];
+        this.requestUpdate();
+      },
+      'clearBannerMessages'
+    );
+
     // with init, force children to be loaded of global pConn
     this.initComponent(true);
 
@@ -113,6 +125,8 @@ class FlowContainer extends BridgeBase {
     if (this.bDebug) {
       debugger;
     }
+
+    PCore.getPubSubUtils().unsubscribe(CLEAR_BANNER_MESSAGES_EVENT, 'clearBannerMessages');
   }
 
   getBuildName(): string {
@@ -135,7 +149,6 @@ class FlowContainer extends BridgeBase {
     this.localeReference = `${caseInfo?.getClassName()}!CASE!${caseInfo.getName()}`.toUpperCase();
 
     window.sessionStorage.setItem('okToInitFlowContainer', 'false');
-
     const isContainerInitialized = PCore.getContainerUtils().isContainerInitialized(baseContext, containerName);
     if (!isContainerInitialized) {
       containerMgr.initializeContainers({
@@ -144,6 +157,9 @@ class FlowContainer extends BridgeBase {
       if (!this.hasContainerItems(this.thePConn)) {
         addContainerItem(this.thePConn);
       }
+    } else if (!this.hasContainerItems(this.thePConn)) {
+      // On cancel or save for later, the container items are to be added
+      addContainerItem(this.thePConn);
     }
   }
 
@@ -265,14 +281,20 @@ class FlowContainer extends BridgeBase {
 
       this.todo_showTodo = true;
       this.todo_showTodoList = false;
+      // in React, when cancel is called, somehow the constructor for flowContainer is called which
+      // does init/add of containers.  This mimics that
+      this.initContainer();
     } else if (caseViewMode && caseViewMode == 'perform') {
       // perform
       this.todo_showTodo = false;
+      const isContainerInitialized = PCore.getContainerUtils().isContainerInitialized(
+        this.thePConn.getContextName(),
+        this.thePConn.getContainerName()
+      );
+      if (window.sessionStorage.getItem('okToInitFlowContainer') == 'true' || !isContainerInitialized) {
+        this.initContainer();
+      }
     }
-
-    // in React, when cancel is called, somehow the constructor for flowContainer is called which
-    // does init/add of containers.  This mimics that
-    this.initContainer();
 
     // if have caseMessage show message and end
     this.caseMessages = this.thePConn.getValue('caseMessages');
@@ -455,22 +477,11 @@ class FlowContainer extends BridgeBase {
     this.banners = [{ messages: pageMessages?.map(msg => this.localizedVal(msg.message, 'Messages')), variant: 'urgent' }];
   }
 
+  // Renders page-level banners using the shared renderBanners() utility.
+  // This replaces the previous inline bannersHtml() implementation
+  // to avoid duplicating banner display logic across components.
   bannersHtml() {
-    return this.banners.map(banner => {
-      if (!banner.messages || banner.messages.length === 0) {
-        return nothing;
-      }
-
-      return html` <div class="psdk-alert psdk-alert-${banner.variant}">
-        ${banner.messages?.map(
-          (msg: string) =>
-            html` <div class="psdk-alert-message">
-              <span class="psdk-alert-icon">!</span>
-              <span>${msg}</span>
-            </div>`
-        )}
-      </div>`;
-    });
+    return renderBanners(this.banners);
   }
 
   // Unique key is assigned to assignment, If the key changes assignment will unmounted.

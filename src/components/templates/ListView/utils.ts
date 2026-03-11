@@ -536,6 +536,42 @@ function prepareExtraFields(metaFields, configFields, configFieldSet, reportColu
 
 const AssignDashObjects = ['Assign-Worklist', 'Assign-WorkBasket'];
 
+/**
+ * Checks if a label uses the @FL (field-level localization) annotation.
+ */
+function isFLProperty(label) {
+  return label?.startsWith('@FL');
+}
+
+/**
+ * Resolves a field label from an @FL annotation by looking up property metadata
+ * and applying locale-based localization.
+ *
+ * Data flow:
+ *   1. Strip the "@FL " prefix (4 chars) from the label
+ *   2. Extract the property name (last segment after splitting on '.')
+ *   3. Look up the property metadata via PCore.getMetadataUtils().getPropertyMetadata()
+ *   4. Use metadata label/caption or fall back to the raw property name
+ *   5. Localize the label via PCore.getLocaleUtils().getLocaleValue()
+ */
+function getFieldLabel(fieldConfig) {
+  const { label, classID, caption } = fieldConfig;
+  let fieldLabel = (label ?? caption)?.substring(4);
+  const labelSplit = fieldLabel?.split('.');
+  const propertyName = labelSplit?.pop();
+  const fieldMetaData: any = PCore.getMetadataUtils().getPropertyMetadata(propertyName, classID) ?? {};
+  fieldLabel = fieldMetaData.label ?? fieldMetaData.caption ?? propertyName;
+
+  const definedOnClassID = fieldMetaData.definedOnClassID;
+  const localeValue = PCore.getLocaleUtils().getLocaleValue(
+    fieldLabel,
+    `${definedOnClassID ?? fieldMetaData.classID ?? classID}.${propertyName}`,
+    PCore.getLocaleUtils().FIELD_LABELS_BUNDLE_KEY,
+    null
+  );
+  return localeValue || fieldLabel;
+}
+
 function populateRenderingOptions(name, config, field) {
   const shouldDisplayAsSemanticLink = 'displayAsLink' in field.config && field.config.displayAsLink;
   if (shouldDisplayAsSemanticLink) {
@@ -562,7 +598,11 @@ export function initializeColumns(fields: any[] = [], getMappedProperty: any = n
 
     let label = field.config.label || field.config.caption;
     const { show = true, displayAs } = field.config;
-    if (label.startsWith('@')) {
+    // Handle @FL (field-level localization) annotations
+    // by resolving via PCore metadata + locale APIs, before falling back to @L stripping.
+    if (isFLProperty(label)) {
+      label = getFieldLabel(field.config);
+    } else if (label.startsWith('@')) {
       label = label.substring(3);
     }
 
