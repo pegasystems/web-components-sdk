@@ -12,6 +12,7 @@ import '../../designSystemExtension/FieldValueList';
 
 // import the component's styles as HTML with <style>
 import { radioButtonStyles } from './radio-buttons-styles';
+import handleEvent from '../../../helpers/event-utils';
 
 interface RadioButtonsProps extends PConnFieldProps {
   // If any, enter additional props that only exist on RadioButtons here
@@ -127,6 +128,15 @@ class RadioButtons extends FormComponentBase {
 
   isSelected(buttonValue: string): boolean {
     return this.value === buttonValue;
+  }
+
+  fieldOnChange(event: any) {
+    if (!event.detail?.isTriggeredByUser) {
+      return;
+    }
+
+    const value = event?.target?.modelValue;
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, value);
   }
 
   render() {
