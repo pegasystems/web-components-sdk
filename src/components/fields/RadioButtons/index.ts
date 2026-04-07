@@ -9,6 +9,7 @@ import type { PConnFieldProps } from '../../../types/PConnProps.interface';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 import '../../designSystemExtension/FieldValueList';
+import handleEvent from '../../../helpers/event-utils';
 
 // import the component's styles as HTML with <style>
 import { radioButtonStyles } from './radio-buttons-styles';
@@ -127,6 +128,15 @@ class RadioButtons extends FormComponentBase {
 
   isSelected(buttonValue: string): boolean {
     return this.value === buttonValue;
+  }
+
+  fieldOnChange(event: any) {
+    if (!event.detail?.isTriggeredByUser) {
+      return;
+    }
+
+    const value = event?.target?.modelValue;
+    handleEvent(this.actionsApi, 'changeNblur', this.propName, value);
   }
 
   render() {
