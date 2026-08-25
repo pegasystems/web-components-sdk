@@ -1,181 +1,156 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: unversioned template → 1.0.0
-Bump type: MAJOR (initial ratification; all placeholders resolved)
+Version change: 1.0.0 → 2.0.0
+Bump type: MAJOR (principles rewritten as durable, non-technical rules; stack-specific
+and path-specific guidance removed)
 
 Modified principles:
-  - [PRINCIPLE_1_NAME] → I. Bridge-Isolated Constellation Integration (NON-NEGOTIABLE)
-  - [PRINCIPLE_2_NAME] → II. Lit + Lion Component Discipline
-  - [PRINCIPLE_3_NAME] → III. TypeScript Strictness Preserved
-  - [PRINCIPLE_4_NAME] → IV. Lint & Format Gates
-  - [PRINCIPLE_5_NAME] → V. E2E-Only Testing Reality
+  - I. Bridge-Isolated Constellation Integration → I. Stable Boundaries
+  - II. Lit + Lion Component Discipline → II. Consistency Over Novelty
+  - III. TypeScript Strictness Preserved → III. No Silent Weakening
+  - IV. Lint & Format Gates → IV. Shared Standards Are Not Optional
+  - V. E2E-Only Testing Reality → V. Honest Verification
 
 Added sections:
-  - Compatibility & Dependency Constraints (was [SECTION_2_NAME])
-  - Development Workflow & Quality Gates (was [SECTION_3_NAME])
-  - Governance (populated)
+  - Purpose
+  - Scope Discipline (replaces Compatibility & Dependency Constraints)
+  - Working Agreement (replaces Development Workflow & Quality Gates)
 
 Removed sections: none
 
-Templates / files requiring alignment review:
-  - .specify/templates/plan-template.md — verify "Constitution Check" gate references
-    principles I–V by name.
-  - .specify/templates/tasks-template.md — ensure tasks default to Playwright E2E, not TDD,
-    since Principle V supersedes generic TDD guidance.
-  - AGENTS.md — already aligned with these principles; keep in sync on future amendments.
+Notes:
+  - Tooling names, commands, versions, and file locations now live in the agent guide and the
+    architecture documentation. This document stays implementation-agnostic.
 
 Deferred / follow-up TODOs:
-  - TODO(RATIFICATION_DATE): confirm original adoption date with maintainers; placeholder
-    set to today's amendment date until confirmed.
+  - TODO(RATIFICATION_DATE): confirm original adoption date with maintainers.
 -->
 
 # Pega Web Components SDK Constitution
 
+## Purpose
+
+This document states the durable principles that govern work in this repository. It describes
+_what must remain true_, not _how to do it_. Tooling, commands, structure, and technical
+convention are documented separately and may change without amending this constitution.
+
 ## Core Principles
 
-### I. Bridge-Isolated Constellation Integration (NON-NEGOTIABLE)
+### I. Stable Boundaries (NON-NEGOTIABLE)
 
-All access to the Pega ConstellationJS Engine MUST flow through the bridge in
-`src/bridge/BridgeBase` and typed interfaces in `src/types` (backed by
-`@pega/pcore-pconnect-typedefs`). Components MUST NOT import from
-`@pega/constellationjs` directly or reach into engine internals. Rationale: the bridge is
-the single seam that lets this SDK track Pega Infinity `'24.2` engine changes without
-rewriting every component; leaking engine details into components breaks that contract and
-compounds upgrade cost.
+This SDK is a presentation layer over a platform it does not own. Every dependency on that
+platform MUST pass through a single, deliberately designed boundary and MUST use the typed
+contracts published for it.
 
-### II. Lit + Lion Component Discipline
+Contributors MUST NOT reach around the boundary, depend on platform internals, or spread
+platform knowledge across the codebase.
 
-Every DX component MUST follow the established Lit + Lion pattern:
+Rationale: the boundary is what lets the SDK absorb upstream platform releases at a known,
+bounded cost. Every leak turns a contained upgrade into a repository-wide migration.
 
-- One component per folder under `src/components/<Name>/`, entry file `index.ts` (or the
-  historical single-file form used by `hello-world`).
-- Public tag registered with `@customElement('kebab-case-tag')` from `lit/decorators.js`.
-- Reactive public state declared via `@property({ type: ... })`.
-- Any nested custom element rendered by the component MUST be imported explicitly in that
-  component's module.
-- Styles exceeding a few lines MUST live in a sibling `*-styles.ts` file
-  (see `ActionButtons`, `BridgeBase`).
+### II. Consistency Over Novelty
 
-Rationale: consistency with the existing Lion-derived design system is what makes this SDK
-extensible for customers replacing the Constellation design system; ad hoc component
-shapes break tooling (`ts-lit-plugin`, `lit-analyzer`, CEM analyzer).
+The repository has an established way of building things. New work MUST follow the shape of
+existing work — structure, naming, layering, and separation of concerns — even where a
+contributor would personally prefer a different approach.
 
-### III. TypeScript Strictness Preserved
+Introducing a second way of doing something already solved requires maintainer agreement and a
+stated reason why the existing approach cannot serve.
 
-`tsconfig.json` runs with `strict: true`, `noImplicitReturns: true`, and
-`noFallthroughCasesInSwitch: true`. Contributions MUST fix the underlying typing rather
-than silence errors. The following are prohibited unless accompanied by a written
-justification approved in the PR:
+Rationale: consumers extend and replace parts of this SDK. Predictable, uniform structure is a
+feature of the product, not a matter of taste, and divergence silently breaks tooling that
+assumes the established shape.
 
-- `// @ts-ignore`, `// @ts-expect-error` without an issue link
-- `as any` or `as unknown as X` casts across the Constellation bridge boundary
-- Widening a typed pconnect shape to `any` to bypass a compiler error
+### III. No Silent Weakening
 
-Rationale: `@pega/pcore-pconnect-typedefs` is the load-bearing contract with the engine;
-type erosion silently absorbs upstream breaking changes and surfaces as runtime failures
-in customer portals.
+Safeguards exist to fail loudly. Contributors MUST fix the underlying problem rather than
+suppress, bypass, or loosen the mechanism that reported it.
 
-### IV. Lint & Format Gates
+Suppressions are permitted only when they are narrow, explicitly justified in the change
+description, and approved in review. An undocumented suppression is a defect.
 
-Linting and formatting are governed by `@pega/configs` (ESLint + Prettier). Contributors:
+Rationale: every silenced check converts a build-time failure into a production surprise for a
+customer and erases the signal that would have caught an upstream breaking change.
 
-- MUST NOT introduce local `.eslintrc` / `.prettierrc` overrides.
-- MUST run `npm run lint` before declaring a task complete; `npm run fix` is the sanctioned
-  auto-fix path.
-- MUST NOT commit files that fail Prettier or ESLint.
+### IV. Shared Standards Are Not Optional
 
-Rationale: `@pega/configs` is shared across Pega's SDK repositories; drifting from it
-fragments developer experience and breaks the assumption that Pega tooling upgrades apply
-cleanly to this repo.
+Code style, formatting, and static analysis are defined centrally and shared across sibling
+projects. Contributors MUST conform to the shared configuration and MUST NOT introduce local
+overrides to make an individual change pass.
 
-### V. E2E-Only Testing Reality
+If a shared standard is genuinely wrong, it is corrected at its source, not forked here.
 
-There is no unit-test harness in this repository; Playwright suites under `tests/e2e`
-(`MediaCo`, `DigV2`) are the only automated tests, and they require a running Pega Infinity
-server and the MediaCo sample app.
+Rationale: a shared baseline keeps review focused on substance and lets platform-wide tooling
+upgrades apply cleanly. Local exceptions accumulate into an unmaintainable dialect.
 
-- New or modified components MUST update or add a Playwright scenario if a matching flow
-  exists in `MediaCo` or `DigV2`.
-- Contributions that cannot be reasonably automated without a live Pega server MUST call
-  that out in the PR and provide manual verification steps.
-- Tests MUST NOT be weakened or bypassed to make CI "pass" without the required server;
-  such gaps are escalated to maintainers instead.
+### V. Honest Verification
 
-Rationale: pretending an offline test harness exists produces false confidence; being
-explicit about the E2E-only reality forces contributors to negotiate verification with
-maintainers when live infrastructure is unavailable.
+Contributors MUST be truthful about how a change was verified. Automated coverage MUST be
+extended when a change falls within its reach. When a change cannot be verified automatically,
+the limitation MUST be stated plainly, together with the manual steps actually performed.
 
-## Compatibility & Dependency Constraints
+Verification MUST NOT be weakened, skipped, or narrowed in order to report a passing result.
+Gaps are escalated to maintainers instead.
 
-- **Pega Infinity target**: `'24.2 GA` and later. The SDK version stays aligned with the
-  supported Infinity release train (currently `24.2.11`).
-- **Runtime**: tested with Node `24.11.0` and npm `11.6.1`. Toolchain version bumps require
-  explicit maintainer approval; agents MUST NOT upgrade unilaterally.
-- **Package manager**: npm only. `package-lock.json` is authoritative; adding `yarn.lock`
-  or `pnpm-lock.yaml` is prohibited.
-- **Dependencies**: prefer editing existing code over adding dependencies. Any new runtime
-  dependency MUST be justified in the PR description; new `@pega/*` version bumps require
-  maintainer sign-off.
-- **Do-not-touch paths**: `dist/`, `types/` (generated `.d.ts`), `assets/**/*.br`
-  (Brotli-compressed outputs), `test-results/`, `tests/playwright-report/`, and everything
-  under `keys/`. Update the uncompressed source and let the build regenerate compressed
-  assets.
-- **Configuration samples**: `sdk-config.json` holds sample connection values that
-  customers replace locally; do not edit unless the user explicitly requests it.
-- **License**: Apache-2.0. Contributions under incompatible licenses MUST NOT be merged.
+Rationale: unverifiable claims are worse than acknowledged gaps, because they remove the
+maintainer's opportunity to compensate for them.
 
-## Development Workflow & Quality Gates
+## Scope Discipline
 
-- **Spec-Driven Development**: features MUST flow through the Spec-Kit workflow —
-  `/constitution` → `/specify` → `/clarify` → `/plan` → `/tasks` → `/analyze` →
-  `/implement`. Per-feature artifacts live under `specs/<NNN-slug>/`. Use `/analyze` before
-  `/implement` whenever `spec.md`, `plan.md`, and `tasks.md` may have drifted.
-- **Constitution Check gate**: `/plan` MUST verify the proposed design against Principles
-  I–V before generating design artifacts. Deviations MUST be recorded in the plan's
-  Complexity Tracking section with a Simpler Alternative Rejected justification.
-- **Public API stability**: the exports from `src/index.ts` and the bridge contract under
-  `src/bridge/BridgeBase` are the SDK's public API surface. Changes require maintainer
-  approval and a changelog entry.
-- **Documentation**: `docs/` and `README.md` are updated only when the change is
-  user-facing or the user asks. Agents MUST NOT create speculative documentation.
-- **Definition of Done** (before any PR is declared complete):
-  1. `npm run build:dev` succeeds.
-  2. `npm run lint` passes.
-  3. New/changed components follow Principle II.
-  4. No edits to any do-not-touch path (see previous section).
-  5. No silent dependency additions.
-  6. Playwright coverage updated per Principle V, or manual verification steps documented.
-  7. Originating issue / spec referenced in the PR body.
-- **Destructive operations**: `git push --force`, `git reset --hard`, branch deletion, and
-  `npm run clean` MUST NOT be executed without explicit user confirmation.
+- Changes MUST stay within what was asked. Unrequested refactors, redesigns, and speculative
+  abstractions are rejected on principle, not on merit.
+- A new external dependency is a long-term cost. It MUST be justified in the change description
+  and MUST NOT be introduced quietly.
+- Generated and build-produced content is owned by the tooling that produces it. Contributors
+  change the source, never the output.
+- Sample and configuration values that consumers replace locally are left alone unless changing
+  them is the point of the work.
+- Anything that widens the SDK's public surface is a commitment to everyone who depends on it.
+  Such changes require maintainer approval and MUST be communicated in the release notes.
+- Contributions MUST be compatible with the repository's license; incompatible material MUST NOT
+  be merged.
+
+## Working Agreement
+
+- **Specify before building.** Non-trivial work begins with an agreed statement of intent, then a
+  plan, then execution. Requirements, plan, and task breakdown MUST be reconciled before
+  implementation starts and MUST NOT be allowed to drift apart during it.
+- **Design is reviewed against these principles.** Planning MUST include an explicit check against
+  Principles I–V. Any accepted deviation MUST be recorded together with the simpler alternative
+  that was considered and why it was rejected.
+- **Done is binary.** A change is complete only when it builds, satisfies the shared standards,
+  respects every principle above, and has had its verification reported honestly.
+- **Documentation follows need.** Human-facing documentation is updated when a change is
+  user-facing or when it is requested. Speculative documentation MUST NOT be created.
+- **Irreversible actions require consent.** Destructive or hard-to-undo operations — discarding
+  work, rewriting shared history, deleting branches, wiping local state — MUST NOT be performed
+  without explicit confirmation from the person requesting the work.
+- **Secrets never enter the repository.** Credentials, tokens, keys, and customer data MUST NOT be
+  committed under any circumstance.
 
 ## Governance
 
-This constitution supersedes any conflicting practice documented in `README.md`,
-`docs/CONTRIBUTING.md`, `AGENTS.md`, or ad hoc code comments. Where those documents remain
-authoritative for tactical detail (commands, contributor mechanics, agent behavior), they
-MUST NOT contradict the principles here; discovered conflicts are resolved by amending the
-conflicting document, not by weakening the constitution.
+This constitution supersedes any conflicting practice documented elsewhere in the repository.
+Other documents remain authoritative for tactical detail, but MUST NOT contradict the principles
+here. A discovered conflict is resolved by correcting the conflicting document, not by weakening
+this one.
 
-**Amendment procedure**: amendments are proposed via a PR that updates
-`.specify/memory/constitution.md`, includes an updated Sync Impact Report, and is reviewed
-by at least one maintainer. Amendments MUST bump the version per the versioning policy
-below and update `LAST_AMENDED_DATE`.
+**Amendment procedure**: amendments are proposed as a change to this document, accompanied by an
+updated Sync Impact Report, and reviewed by at least one maintainer. Every amendment MUST bump the
+version per the policy below and update the last-amended date.
 
 **Versioning policy** (semantic):
 
-- **MAJOR**: removal, redefinition, or backward-incompatible narrowing of an existing
-  principle or governance rule.
-- **MINOR**: new principle, new normative section, or materially expanded guidance that
-  changes what contributors MUST do.
-- **PATCH**: clarifications, wording, typo fixes, or non-semantic refinements that do not
-  change what contributors MUST do.
+- **MAJOR**: removal, redefinition, or backward-incompatible narrowing of an existing principle or
+  governance rule.
+- **MINOR**: a new principle, a new normative section, or materially expanded guidance that changes
+  what contributors MUST do.
+- **PATCH**: clarifications, wording, and typo fixes that do not change what contributors MUST do.
 
-**Compliance review**: every PR review MUST verify constitution compliance. `/plan` and
-`/analyze` runs MUST re-check the design against Principles I–V and record any deviation.
-Agents working in this repository consult `AGENTS.md` for tactical guidance and this
-constitution for durable rules; when the two conflict, the constitution wins and
-`AGENTS.md` MUST be corrected in the same change set.
+**Compliance review**: every review MUST verify compliance with these principles, and any accepted
+deviation MUST be recorded in the change itself. Where tactical guidance and this constitution
+conflict, this constitution wins and the tactical document MUST be corrected in the same change
+set.
 
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): confirm original adoption date with maintainers | **Last Amended**: 2026-08-13
+**Version**: 2.0.0 | **Ratified**: TODO(RATIFICATION_DATE): confirm original adoption date with maintainers | **Last Amended**: 2026-08-25

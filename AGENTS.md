@@ -3,6 +3,11 @@
 Instructions for AI coding agents (Copilot, Claude, Cursor, etc.) working in this repository.
 Follow this file for every change unless the user explicitly overrides it.
 
+Companion documents:
+
+- [docs/architecture.md](docs/architecture.md) — tech stack, repository layout, component model.
+- [.specify/memory/constitution.md](.specify/memory/constitution.md) — durable project principles. If this file ever contradicts the constitution, the constitution wins.
+
 ---
 
 ## 1. Project overview
@@ -12,38 +17,13 @@ Follow this file for every change unless the user explicitly overrides it.
 - **Purpose:** DX components that bridge Pega's ConstellationJS Engine APIs to a non-Constellation design system.
 - **License:** Apache-2.0. Do not add code under incompatible licenses.
 
-## 2. Tech stack
-
-- **UI:** [Lit](https://lit.dev) (`LitElement` + `lit-html`) with [Lion web components](https://lion-web.netlify.app/) and Vaadin components.
-- **Language:** TypeScript (ES2022, `strict: true`) — see [tsconfig.json](tsconfig.json)
-- **Bundler:** Webpack 5 — see [webpack.config.js](webpack.config.js)
-- **E2E testing:** Playwright (Chromium) — see [playwright.config.js](playwright.config.js)
-
-## 3. Runtime & tooling
+## 2. Runtime & tooling
 
 - **Node:** 24.11.0 (as tested); **npm:** 11.6.1. Do not upgrade toolchain versions without being asked.
 - **Package manager:** npm (there is a `package-lock.json`, no yarn/pnpm).
 - Prefer editing existing files over introducing new dependencies. If a new dependency is truly required, call it out explicitly and justify it.
 
-## 4. Repository layout
-
-| Path | Purpose |
-|------|---------|
-| [src/index.ts](src/index.ts), [src/index.html](src/index.html) | SDK entry points |
-| [src/bridge/BridgeBase](src/bridge/BridgeBase) | Base bridge between Constellation engine and web components |
-| [src/components](src/components) | All DX web components (one folder per component) |
-| [src/components/fields](src/components/fields) | Field-level form components (extend `FormComponentBase`) |
-| [src/components/templates](src/components/templates) | View/template components |
-| [src/components/widgets](src/components/widgets) | Widget components |
-| [src/helpers](src/helpers) | Shared utility modules (formatting, dates, events, etc.) |
-| [src/samples](src/samples) | Sample apps: `Embedded`, `FullPortal`, `SimplePortal` |
-| [src/types](src/types) | Shared TS interfaces (e.g. `PConnProps`) |
-| [assets](assets) | CSS, icons, images (many pre-compressed `.br`) |
-| [tests/e2e](tests/e2e) | Playwright suites (`DigV2`, `MediaCo`) |
-| [types](types) | Generated `.d.ts` output — **do not hand-edit** |
-| [docs](docs) | Human-facing docs; edit only when asked |
-
-## 5. Coding conventions
+## 3. Coding conventions
 
 1. Follow the [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) as noted in [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md).
 2. Match the existing Lion / Lit patterns already used in this repo. Reference [src/components/hello-world/hello-world.ts](src/components/hello-world/hello-world.ts) as the minimal component template.
@@ -54,6 +34,7 @@ Follow this file for every change unless the user explicitly overrides it.
    - Keep one component per folder under `src/components/<Name>/index.ts`; co-locate styles in a sibling `*-styles.ts` file when they exceed a few lines (pattern used by `ActionButtons`, `BridgeBase`, etc.).
 4. **TypeScript:**
    - Respect `strict: true`; do not add `// @ts-ignore` or `any` casts to silence errors — fix the underlying typing.
+   - `// @ts-expect-error` needs an accompanying issue link; `as any` / `as unknown as X` casts across the bridge boundary are not acceptable.
    - `experimentalDecorators` is on; decorators are expected for Lit components.
    - `noImplicitReturns` and `noFallthroughCasesInSwitch` are enforced.
 5. **Pega/Constellation:**
@@ -71,7 +52,7 @@ Follow this file for every change unless the user explicitly overrides it.
    - Follow OWASP Top 10 practices; sanitize any user-provided HTML before feeding it to `unsafeHTML` or similar Lit helpers.
    - Do not run destructive git operations (`push --force`, `reset --hard`, branch deletion) without explicit user confirmation.
 
-## 6. Formatting & linting
+## 4. Formatting & linting
 
 - Config comes from [@pega/configs](https://www.npmjs.com/package/@pega/configs) (ESLint + Prettier). Do not create local `.eslintrc` / `.prettierrc` overrides.
 - Before finishing a task, run:
@@ -80,7 +61,7 @@ Follow this file for every change unless the user explicitly overrides it.
   ```
   Auto-fix with `npm run fix` when appropriate. Do not commit files that fail lint or prettier.
 
-## 7. Build, run, test
+## 5. Build, run, test
 
 Preferred commands (from [package.json](package.json)):
 
@@ -106,13 +87,13 @@ Before declaring a task complete:
 
 - [ ] Code compiles: `npm run build:dev`
 - [ ] `npm run lint` passes
-- [ ] New/changed components follow the Lit + Lion patterns in §5
+- [ ] New/changed components follow the Lit + Lion patterns in §3
 - [ ] No edits to `dist/`, `types/`, `assets/**/*.br`, or generated Playwright reports
 - [ ] No new dependencies added silently
 - [ ] Docs under [docs/](docs) or [README.md](README.md) updated **only if the user asked** or the change is user-facing
 - [ ] Referenced the originating issue / spec when applicable (see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md))
 
-## 8. When in doubt
+## 6. When in doubt
 
-- Read [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md), [docs/ImplementationNotes.md](docs/ImplementationNotes.md), and [docs/KeyReleaseUpdates.md](docs/KeyReleaseUpdates.md) before large refactors.
-- Ask the user before: bumping `@pega/*` versions, changing Webpack/Babel config, altering the public API surface exported from [src/index.ts](src/index.ts), or touching the bridge contract in [src/bridge/BridgeBase](src/bridge/BridgeBase).
+- Read [docs/architecture.md](docs/architecture.md), [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md), [docs/ImplementationNotes.md](docs/ImplementationNotes.md), and [docs/KeyReleaseUpdates.md](docs/KeyReleaseUpdates.md) before large refactors.
+- Ask the user before: bumping `@pega/*` versions, changing Webpack/Babel config, altering the public API surface exported from [src/index.ts](src/index.ts), or touching the bridge contract in [src/bridge/BridgeBase](src/bridge/BridgeBase). Public API changes also need a [CHANGELOG.md](CHANGELOG.md) entry.
