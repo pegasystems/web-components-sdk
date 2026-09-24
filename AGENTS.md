@@ -13,13 +13,13 @@ Companion documents:
 ## 1. Project overview
 
 - **Name:** `web-components-sdk` (Pega Web Components SDK, aka **SDK-WC**)
-- **Version target:** aligned with Pega Infinity `'24.2` — see [package.json](package.json)
+- **Version target:** see the compatibility notes in [README.md](README.md) for the supported Pega Infinity release
 - **Purpose:** DX components that bridge Pega's ConstellationJS Engine APIs to a non-Constellation design system.
 - **License:** Apache-2.0. Do not add code under incompatible licenses.
 
 ## 2. Runtime & tooling
 
-- **Node:** 24.11.0 (as tested); **npm:** 11.6.1. Do not upgrade toolchain versions without being asked.
+- **Node / npm:** use the tested versions listed in [README.md](README.md). Do not upgrade toolchain versions without being asked.
 - **Package manager:** npm (there is a `package-lock.json`, no yarn/pnpm).
 - Prefer editing existing files over introducing new dependencies. If a new dependency is truly required, call it out explicitly and justify it.
 
